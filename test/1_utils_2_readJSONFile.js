@@ -7,15 +7,15 @@
 	const { join } = require("path");
 
 	// locals
-	const isDirectory = require(join(__dirname, "..", "lib", "isDirectory.js"));
+	const readJSONFile = require(join(__dirname, "..", "lib", "utils", "readJSONFile.js"));
 
 // tests
 
-describe("isDirectory", () => {
+describe("readJSONFile", () => {
 
-	it("should test with missing directory", (done) => {
+	it("should test with missing file", (done) => {
 
-		isDirectory().then(() => {
+		readJSONFile().then(() => {
 			done(new Error("tests does not generate error"));
 		}).catch((err) => {
 
@@ -28,9 +28,9 @@ describe("isDirectory", () => {
 
 	});
 
-	it("should test with wrong type directory", (done) => {
+	it("should test with wrong type file", (done) => {
 
-		isDirectory(false).then(() => {
+		readJSONFile(false).then(() => {
 			done(new Error("tests does not generate error"));
 		}).catch((err) => {
 
@@ -45,7 +45,7 @@ describe("isDirectory", () => {
 
 	it("should test with empty data", (done) => {
 
-		isDirectory("").then(() => {
+		readJSONFile("").then(() => {
 			done(new Error("tests does not generate error"));
 		}).catch((err) => {
 
@@ -58,25 +58,26 @@ describe("isDirectory", () => {
 
 	});
 
-	it("should test with inexistant directory", () => {
+	it("should test with inexistant file", (done) => {
 
-		return isDirectory("zrgzergzergerg").then((exists) => {
+		readJSONFile("zrgzergzergerg").then(() => {
+			done(new Error("tests does not generate error"));
+		}).catch((err) => {
 
-			assert.strictEqual(typeof exists, "boolean", "check is not as expected");
-			assert.strictEqual(exists, false, "check is not as expected");
+			assert.strictEqual(typeof err, "object", "generated error is not as expected");
+			assert.strictEqual(err instanceof Error, true, "generated error is not as expected");
 
-			return Promise.resolve();
+			done();
 
 		});
 
 	});
 
-	it("should test with write directory", () => {
+	it("should test with write file", () => {
 
-		return isDirectory(__dirname).then((exists) => {
+		return readJSONFile(join(__dirname, "..", "package.json")).then((data) => {
 
-			assert.strictEqual(typeof exists, "boolean", "check is not as expected");
-			assert.strictEqual(exists, true, "check is not as expected");
+			assert.strictEqual(typeof data, "object", "data is not as expected");
 
 			return Promise.resolve();
 

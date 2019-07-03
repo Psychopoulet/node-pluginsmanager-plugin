@@ -7,7 +7,7 @@
 	const { join } = require("path");
 
 	// locals
-	const isFile = require(join(__dirname, "..", "lib", "isFile.js"));
+	const isFile = require(join(__dirname, "..", "lib", "utils", "isFile.js"));
 
 // tests
 

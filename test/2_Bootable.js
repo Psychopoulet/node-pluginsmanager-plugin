@@ -1,3 +1,5 @@
+/*
+
 "use strict";
 
 // deps
@@ -229,3 +231,5 @@ describe("Plugin", () => {
 	});
 
 });
+
+*/
