@@ -11,6 +11,7 @@
 
 // consts
 
+	const REQUEST_PATHNAME = "/thisisatest";
 	const RESPONSE_CODE = 201;
 	const RESPONSE_CONTENT = "Hello World";
 
@@ -20,7 +21,11 @@ module.exports = class ServerHerited extends Server {
 
 	appMiddleware (req, res, next) {
 
-		res.status(RESPONSE_CODE).send(RESPONSE_CONTENT);
+		if (REQUEST_PATHNAME === req.url) {
+
+			res.status(RESPONSE_CODE).send(RESPONSE_CONTENT);
+
+		}
 
 		return next();
 
@@ -30,7 +35,7 @@ module.exports = class ServerHerited extends Server {
 
 		const { pathname } = parse(req.url);
 
-		if ("/thisisatest" === pathname) {
+		if (REQUEST_PATHNAME === pathname) {
 
 			res.writeHead(RESPONSE_CODE, { "Content-Type": "text/html; charset=utf-8" });
 			res.end(RESPONSE_CONTENT, "utf-8");
