@@ -3,7 +3,7 @@
 // deps
 
 	// natives
-	const assert = require("assert");
+	const { strictEqual } = require("assert");
 	const { join } = require("path");
 
 	// locals
@@ -19,8 +19,8 @@ describe("readJSONFile", () => {
 			done(new Error("tests does not generate error"));
 		}).catch((err) => {
 
-			assert.strictEqual(typeof err, "object", "generated error is not as expected");
-			assert.strictEqual(err instanceof ReferenceError, true, "generated error is not as expected");
+			strictEqual(typeof err, "object", "generated error is not as expected");
+			strictEqual(err instanceof ReferenceError, true, "generated error is not as expected");
 
 			done();
 
@@ -34,8 +34,8 @@ describe("readJSONFile", () => {
 			done(new Error("tests does not generate error"));
 		}).catch((err) => {
 
-			assert.strictEqual(typeof err, "object", "generated error is not as expected");
-			assert.strictEqual(err instanceof TypeError, true, "generated error is not as expected");
+			strictEqual(typeof err, "object", "generated error is not as expected");
+			strictEqual(err instanceof TypeError, true, "generated error is not as expected");
 
 			done();
 
@@ -49,8 +49,8 @@ describe("readJSONFile", () => {
 			done(new Error("tests does not generate error"));
 		}).catch((err) => {
 
-			assert.strictEqual(typeof err, "object", "generated error is not as expected");
-			assert.strictEqual(err instanceof Error, true, "generated error is not as expected");
+			strictEqual(typeof err, "object", "generated error is not as expected");
+			strictEqual(err instanceof Error, true, "generated error is not as expected");
 
 			done();
 
@@ -64,8 +64,8 @@ describe("readJSONFile", () => {
 			done(new Error("tests does not generate error"));
 		}).catch((err) => {
 
-			assert.strictEqual(typeof err, "object", "generated error is not as expected");
-			assert.strictEqual(err instanceof Error, true, "generated error is not as expected");
+			strictEqual(typeof err, "object", "generated error is not as expected");
+			strictEqual(err instanceof Error, true, "generated error is not as expected");
 
 			done();
 
@@ -77,7 +77,7 @@ describe("readJSONFile", () => {
 
 		return readJSONFile(join(__dirname, "..", "package.json")).then((data) => {
 
-			assert.strictEqual(typeof data, "object", "data is not as expected");
+			strictEqual(typeof data, "object", "data is not as expected");
 
 			return Promise.resolve();
 

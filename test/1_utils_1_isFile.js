@@ -3,7 +3,7 @@
 // deps
 
 	// natives
-	const assert = require("assert");
+	const { strictEqual } = require("assert");
 	const { join } = require("path");
 
 	// locals
@@ -19,8 +19,8 @@ describe("isFile", () => {
 			done(new Error("tests does not generate error"));
 		}).catch((err) => {
 
-			assert.strictEqual(typeof err, "object", "generated error is not as expected");
-			assert.strictEqual(err instanceof ReferenceError, true, "generated error is not as expected");
+			strictEqual(typeof err, "object", "generated error is not as expected");
+			strictEqual(err instanceof ReferenceError, true, "generated error is not as expected");
 
 			done();
 
@@ -34,8 +34,8 @@ describe("isFile", () => {
 			done(new Error("tests does not generate error"));
 		}).catch((err) => {
 
-			assert.strictEqual(typeof err, "object", "generated error is not as expected");
-			assert.strictEqual(err instanceof TypeError, true, "generated error is not as expected");
+			strictEqual(typeof err, "object", "generated error is not as expected");
+			strictEqual(err instanceof TypeError, true, "generated error is not as expected");
 
 			done();
 
@@ -49,8 +49,8 @@ describe("isFile", () => {
 			done(new Error("tests does not generate error"));
 		}).catch((err) => {
 
-			assert.strictEqual(typeof err, "object", "generated error is not as expected");
-			assert.strictEqual(err instanceof Error, true, "generated error is not as expected");
+			strictEqual(typeof err, "object", "generated error is not as expected");
+			strictEqual(err instanceof Error, true, "generated error is not as expected");
 
 			done();
 
@@ -62,8 +62,8 @@ describe("isFile", () => {
 
 		return isFile("zrgzergzergerg").then((exists) => {
 
-			assert.strictEqual(typeof exists, "boolean", "check is not as expected");
-			assert.strictEqual(exists, false, "check is not as expected");
+			strictEqual(typeof exists, "boolean", "check is not as expected");
+			strictEqual(exists, false, "check is not as expected");
 
 			return Promise.resolve();
 
@@ -75,8 +75,8 @@ describe("isFile", () => {
 
 		return isFile(__filename).then((exists) => {
 
-			assert.strictEqual(typeof exists, "boolean", "check is not as expected");
-			assert.strictEqual(exists, true, "check is not as expected");
+			strictEqual(typeof exists, "boolean", "check is not as expected");
+			strictEqual(exists, true, "check is not as expected");
 
 			return Promise.resolve();
 

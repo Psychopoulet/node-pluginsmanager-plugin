@@ -1,208 +1,186 @@
-/*
-
 "use strict";
 
 // deps
 
 	// natives
 	const { join } = require("path");
-	const assert = require("assert");
+	const { createServer } = require("http");
+	const { strictEqual } = require("assert");
 	const Events = require("events");
 
+	// externals
+	const express = require("express");
+
 	// locals
+	const Bootable = require(join(__dirname, "..", "lib", "components", "Bootable.js"));
 	const Server = require(join(__dirname, "..", "lib", "components", "Server.js"));
+	const ServerHerited = require(join(__dirname, "utils", "ServerHerited.js"));
+	const httpRequestTest = require(join(__dirname, "utils", "httpRequestTest.js"));
+
+// consts
+
+	const PORT = "3000";
+	const RESPONSE_CONTENT = "Hello World";
 
 // tests
 
 describe("Server", () => {
 
-	let plugin = null;
-
 	it("should test constructor", () => {
 
-		plugin = new Server(__dirname);
+		const server = new Server();
 
-		assert.strictEqual(typeof plugin, "object", "Generated plugin is not an object");
-		assert.strictEqual(plugin instanceof Server, true, "Generated plugin is not a Server instance");
-
-		assert.strictEqual(typeof plugin.directory, "string", "Generated plugin directory is not a string");
-		assert.strictEqual(plugin.directory, __dirname, "Generated plugin directory is not as expected");
-
-		assert.strictEqual(typeof plugin.engines, "object", "Generated plugin engines is not an object");
-		assert.strictEqual(typeof plugin.engines.node, "string", "Generated plugin engines node is not a string");
-		assert.strictEqual(plugin.engines.node, ">=6.0.0", "Generated plugin engines node is not as expected");
-
-		assert.strictEqual(typeof plugin.license, "string", "Generated plugin license is not a string");
-		assert.strictEqual(plugin.license, "MIT", "Generated plugin license is not as expected");
-
-		assert.strictEqual(typeof plugin.main, "string", "Generated plugin main is not a string");
-		assert.strictEqual(plugin.main, "lib/main.js", "Generated plugin main is not as expected");
+		strictEqual(typeof server, "object", "Generated server is not an object");
+		strictEqual(server instanceof Events, true, "Generated server is not a Events instance");
+		strictEqual(server instanceof Bootable, true, "Generated server is not a Bootable instance");
+		strictEqual(server instanceof Server, true, "Generated server is not a Server instance");
 
 	});
 
 	it("should test event", () => {
 
+		const server = new Server();
+
 		return new Promise((resolve, reject) => {
 
-			plugin
+			server
 				.once("error", reject)
 				.once("test", resolve)
 				.emit("test");
 
 		}).then(() => {
-			return plugin.unload();
+			return server.release();
 		});
 
 	});
 
-	it("should load data from inexistant directory", (done) => {
+	it("should init server", () => {
+		return new Server().init("test init");
+	});
 
-		plugin.directory = join(__dirname, "zsgfzeojrfnoaziendfzoe");
-		plugin.loadDataFromPackageFile().then(() => {
-			done(new Error("Inexistant directory used"));
-		}).catch((err) => {
+	it("should release server", () => {
+		return new Server().release("test release");
+	});
 
-			assert.strictEqual(typeof err, "object", "Generated error is not an object");
-			assert.strictEqual(err instanceof Error, true, "Generated error is not an Error instance");
+	describe("network", () => {
 
-			done();
+		const server = new Server();
+		const serverHerited = new ServerHerited();
+
+		let runningServer = null;
+
+		afterEach(() => {
+
+			return runningServer ? new Promise((resolve) => {
+
+				runningServer.close(() => {
+					runningServer = null;
+					resolve();
+				});
+
+			}) : Promise.resolve();
 
 		});
 
-	});
+		it("should test app middleware", () => {
 
-	it("should load data from inexistant package file", (done) => {
+			return new Promise((resolve) => {
 
-		plugin.directory = join(__dirname);
-		plugin.loadDataFromPackageFile().then(() => {
-			done(new Error("Inexistant file loaded"));
-		}).catch((err) => {
+				const app = express();
 
-			assert.strictEqual(typeof err, "object", "Generated error is not an object");
-			assert.strictEqual(err instanceof Error, true, "Generated error is not an Error instance");
+				app.use(server.appMiddleware);
 
-			done();
+				app.get("/", (req, res) => {
+					res.send(RESPONSE_CONTENT);
+				});
+
+				runningServer = app.listen(PORT, () => {
+					resolve();
+				});
+
+			}).then(() => {
+
+				return httpRequestTest("/", 200, "OK");
+
+			});
 
 		});
 
-	});
+		it("should test http middleware", () => {
 
-	it("should load data from package file", () => {
+			return new Promise((resolve) => {
 
-		const DIRECTORY = join(__dirname, "..");
+				runningServer = createServer((req, res) => {
 
-		plugin.directory = DIRECTORY;
+					if (!server.httpMiddleware(req, res)) {
 
-		return plugin.loadDataFromPackageFile().then(() => {
+						res.writeHead(200, {
+							"Content-Type": "text/html; charset=utf-8"
+						});
 
-			return readJSONFile(join(plugin.directory, "package.json"));
+						res.write(RESPONSE_CONTENT);
 
-		}).then((data) => {
+						res.end();
 
-			// params
-			return Promise.resolve().then(() => {
+					}
 
-				assert.strictEqual(typeof plugin.directory, "string", "directory is not as expected");
-				assert.deepStrictEqual(plugin.directory, DIRECTORY, "directory is not as expected");
-
-				return Promise.resolve();
-
-			// native
-			}).then(() => {
-
-				assert.strictEqual(typeof plugin.authors, "object", "authors is not as expected");
-				assert.strictEqual(plugin.authors instanceof Array, true, "authors is not as expected");
-				assert.deepStrictEqual(plugin.authors, [ data.author ], "authors is not as expected");
-
-				return Promise.resolve();
+				}).listen(PORT, () => {
+					resolve();
+				});
 
 			}).then(() => {
 
-				assert.strictEqual(typeof plugin.description, "string", "description is not as expected");
-				assert.deepStrictEqual(plugin.description, data.description, "description is not as expected");
+				return httpRequestTest("/", 200, "OK");
 
-				return Promise.resolve();
+			});
 
-			}).then(() => {
+		});
 
-				assert.strictEqual(typeof plugin.dependencies, "object", "dependencies is not as expected");
-				assert.deepStrictEqual(plugin.dependencies, data.dependencies, "dependencies is not as expected");
+		it("should test app middleware with specific url", () => {
 
-				return Promise.resolve();
+			return new Promise((resolve) => {
 
-			}).then(() => {
+				const app = express();
 
-				assert.strictEqual(typeof plugin.devDependencies, "object", "devDependencies is not as expected");
-				assert.deepStrictEqual(plugin.devDependencies, data.devDependencies, "devDependencies is not as expected");
+				app.use(serverHerited.appMiddleware);
 
-				return Promise.resolve();
-
-			}).then(() => {
-
-				assert.strictEqual(typeof plugin.engines, "object", "engines is not as expected");
-				assert.deepStrictEqual(plugin.engines, data.engines, "engines is not as expected");
-
-				return Promise.resolve();
+				runningServer = app.listen(PORT, () => {
+					resolve();
+				});
 
 			}).then(() => {
 
-				assert.strictEqual(typeof plugin.license, "string", "license is not as expected");
-				assert.deepStrictEqual(plugin.license, data.license, "license is not as expected");
+				return httpRequestTest("/thisisatest", 201, "Created");
 
-				return Promise.resolve();
+			});
 
-			}).then(() => {
+		});
 
-				assert.strictEqual(typeof plugin.main, "string", "main is not as expected");
-				assert.deepStrictEqual(plugin.main, data.main, "main is not as expected");
+		it("should test http middleware with specific url", () => {
 
-				return Promise.resolve();
+			return new Promise((resolve) => {
 
-			}).then(() => {
+				runningServer = createServer((req, res) => {
 
-				assert.strictEqual(typeof plugin.name, "string", "name is not as expected");
-				assert.deepStrictEqual(plugin.name, data.name, "name is not as expected");
+					if (!serverHerited.httpMiddleware(req, res)) {
 
-				return Promise.resolve();
+						res.writeHead(200, {
+							"Content-Type": "text/html; charset=utf-8"
+						});
 
-			}).then(() => {
+						res.write(RESPONSE_CONTENT);
 
-				assert.strictEqual(typeof plugin.scripts, "object", "scripts is not as expected");
-				assert.deepStrictEqual(plugin.scripts, data.scripts, "scripts is not as expected");
+						res.end();
 
-				return Promise.resolve();
+					}
 
-			}).then(() => {
-
-				assert.strictEqual(typeof plugin.version, "string", "version is not as expected");
-				assert.deepStrictEqual(plugin.version, data.version, "version is not as expected");
-
-				return Promise.resolve();
-
-			// specifics
-			}).then(() => {
-
-				assert.strictEqual(typeof plugin.designs, "object", "designs is not as expected");
-				assert.strictEqual(plugin.designs instanceof Array, true, "designs is not as expected");
-				assert.deepStrictEqual(plugin.designs, [ join(DIRECTORY, "styles", "test.css") ], "designs is not as expected");
-
-				return Promise.resolve();
+				}).listen(PORT, () => {
+					resolve();
+				});
 
 			}).then(() => {
 
-				assert.strictEqual(typeof plugin.javascripts, "object", "javascripts is not as expected");
-				assert.strictEqual(plugin.javascripts instanceof Array, true, "javascripts is not as expected");
-				assert.deepStrictEqual(plugin.javascripts, [ join(DIRECTORY, "scripts", "test.js") ], "javascripts is not as expected");
-
-				return Promise.resolve();
-
-			}).then(() => {
-
-				assert.strictEqual(typeof plugin.templates, "object", "templates is not as expected");
-				assert.strictEqual(plugin.templates instanceof Array, true, "templates is not as expected");
-				assert.deepStrictEqual(plugin.templates, [ join(DIRECTORY, "templates", "test.html") ], "templates is not as expected");
-
-				return Promise.resolve();
+				return httpRequestTest("/thisisatest", 201, "Created");
 
 			});
 
@@ -210,14 +188,4 @@ describe("Server", () => {
 
 	});
 
-	it("should init plugin", () => {
-		return plugin.init("test init");
-	});
-
-	it("should release plugin", () => {
-		return plugin.release("test release");
-	});
-
 });
-
-*/

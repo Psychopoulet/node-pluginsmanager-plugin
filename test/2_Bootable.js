@@ -4,7 +4,7 @@
 
 	// natives
 	const { join } = require("path");
-	const assert = require("assert");
+	const { strictEqual } = require("assert");
 	const Events = require("events");
 
 	// locals
@@ -20,9 +20,9 @@ describe("Bootable", () => {
 
 		bootable = new Bootable();
 
-		assert.strictEqual(typeof bootable, "object", "Generated bootable is not an object");
-		assert.strictEqual(bootable instanceof Events, true, "Generated bootable is not a Events instance");
-		assert.strictEqual(bootable instanceof Bootable, true, "Generated bootable is not a Bootable instance");
+		strictEqual(typeof bootable, "object", "Generated bootable is not an object");
+		strictEqual(bootable instanceof Events, true, "Generated bootable is not a Events instance");
+		strictEqual(bootable instanceof Bootable, true, "Generated bootable is not a Bootable instance");
 
 	});
 

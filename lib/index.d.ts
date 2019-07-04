@@ -44,6 +44,11 @@ declare module "node-pluginsmanager-plugin" {
 
 	export class Server extends MediatorUser {
 
+		// methods
+
+			public appMiddleware(req: Request, res: Response, next: Function): void;
+			public httpMiddleware(req: Request, res: Response): boolean;
+
 	}
 
 	export class Orchestrator extends MediatorUser {

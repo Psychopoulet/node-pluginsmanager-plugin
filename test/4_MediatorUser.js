@@ -4,7 +4,7 @@
 
 	// natives
 	const { join } = require("path");
-	const assert = require("assert");
+	const { strictEqual } = require("assert");
 	const Events = require("events");
 
 	// locals
@@ -20,13 +20,13 @@ describe("MediatorUser", () => {
 
 		const mediatorUser = new MediatorUser();
 
-		assert.strictEqual(typeof mediatorUser, "object", "Generated mediatorUser is not an object");
-		assert.strictEqual(mediatorUser instanceof Events, true, "Generated mediatorUser is not a Events instance");
-		assert.strictEqual(mediatorUser instanceof Bootable, true, "Generated mediatorUser is not a Bootable instance");
-		assert.strictEqual(mediatorUser instanceof MediatorUser, true, "Generated mediatorUser is not a MediatorUser instance");
+		strictEqual(typeof mediatorUser, "object", "Generated mediatorUser is not an object");
+		strictEqual(mediatorUser instanceof Events, true, "Generated mediatorUser is not a Events instance");
+		strictEqual(mediatorUser instanceof Bootable, true, "Generated mediatorUser is not a Bootable instance");
+		strictEqual(mediatorUser instanceof MediatorUser, true, "Generated mediatorUser is not a MediatorUser instance");
 
-		assert.strictEqual(typeof mediatorUser._Mediator, "object", "Generated mediatorUser _Mediator is not an object");
-		assert.strictEqual(mediatorUser._Mediator, null, "Generated mediatorUser _Mediator is not as expected");
+		strictEqual(typeof mediatorUser._Mediator, "object", "Generated mediatorUser _Mediator is not an object");
+		strictEqual(mediatorUser._Mediator, null, "Generated mediatorUser _Mediator is not as expected");
 
 	});
 
@@ -36,10 +36,10 @@ describe("MediatorUser", () => {
 			"mediator": new Mediator()
 		});
 
-		assert.strictEqual(typeof mediatorUser._Mediator, "object", "Generated mediatorUser _Mediator is not an object");
-		assert.strictEqual(mediatorUser._Mediator instanceof Events, true, "Generated mediatorUser _Mediator is not a Events instance");
-		assert.strictEqual(mediatorUser._Mediator instanceof Bootable, true, "Generated mediatorUser _Mediator is not a Bootable instance");
-		assert.strictEqual(mediatorUser._Mediator instanceof Mediator, true, "Generated mediatorUser _Mediator is not a Mediator instance");
+		strictEqual(typeof mediatorUser._Mediator, "object", "Generated mediatorUser _Mediator is not an object");
+		strictEqual(mediatorUser._Mediator instanceof Events, true, "Generated mediatorUser _Mediator is not a Events instance");
+		strictEqual(mediatorUser._Mediator instanceof Bootable, true, "Generated mediatorUser _Mediator is not a Bootable instance");
+		strictEqual(mediatorUser._Mediator instanceof Mediator, true, "Generated mediatorUser _Mediator is not a Mediator instance");
 
 	});
 
@@ -90,9 +90,9 @@ describe("MediatorUser", () => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
-				assert.strictEqual(typeof err, "object", "Generated error is not an object");
-				assert.strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
-				assert.strictEqual(err instanceof ReferenceError, true, "Generated error is not a ReferenceError instance");
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+				strictEqual(err instanceof ReferenceError, true, "Generated error is not a ReferenceError instance");
 
 				done();
 
@@ -108,9 +108,9 @@ describe("MediatorUser", () => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
-				assert.strictEqual(typeof err, "object", "Generated error is not an object");
-				assert.strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
-				assert.strictEqual(err instanceof TypeError, true, "Generated error is not a TypeError instance");
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+				strictEqual(err instanceof TypeError, true, "Generated error is not a TypeError instance");
 
 				done();
 
@@ -126,9 +126,9 @@ describe("MediatorUser", () => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
-				assert.strictEqual(typeof err, "object", "Generated error is not an object");
-				assert.strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
-				assert.strictEqual(err instanceof TypeError, true, "Generated error is not a TypeError instance");
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+				strictEqual(err instanceof TypeError, true, "Generated error is not a TypeError instance");
 
 				done();
 
@@ -144,8 +144,8 @@ describe("MediatorUser", () => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
-				assert.strictEqual(typeof err, "object", "Generated error is not an object");
-				assert.strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
 
 				done();
 

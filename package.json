@@ -37,6 +37,7 @@
     "check-version-modules": "1.1.1",
     "coveralls": "3.0.4",
     "eslint": "6.0.1",
+    "express": "4.17.1",
     "husky": "3.0.0",
     "mocha": "6.1.4",
     "nyc": "14.1.1"
@@ -44,14 +45,5 @@
   "homepage": "https://github.com/Psychopoulet/node-pluginsmanager-plugin#readme",
   "engines": {
     "node": ">=6.0.0"
-  },
-  "designs": [
-    "styles/test.css"
-  ],
-  "javascripts": [
-    "scripts/test.js"
-  ],
-  "templates": [
-    "templates/test.html"
-  ]
+  }
 }
