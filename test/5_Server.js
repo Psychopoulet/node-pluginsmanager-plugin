@@ -7,23 +7,23 @@
 	// natives
 	const { join } = require("path");
 	const assert = require("assert");
+	const Events = require("events");
 
 	// locals
-	const readJSONFile = require(join(__dirname, "..", "lib", "readJSONFile.js"));
-	const Plugin = require(join(__dirname, "..", "lib", "main.js"));
+	const Server = require(join(__dirname, "..", "lib", "components", "Server.js"));
 
 // tests
 
-describe("Plugin", () => {
+describe("Server", () => {
 
 	let plugin = null;
 
 	it("should test constructor", () => {
 
-		plugin = new Plugin(__dirname);
+		plugin = new Server(__dirname);
 
 		assert.strictEqual(typeof plugin, "object", "Generated plugin is not an object");
-		assert.strictEqual(plugin instanceof Plugin, true, "Generated plugin is not a Plugin instance");
+		assert.strictEqual(plugin instanceof Server, true, "Generated plugin is not a Server instance");
 
 		assert.strictEqual(typeof plugin.directory, "string", "Generated plugin directory is not a string");
 		assert.strictEqual(plugin.directory, __dirname, "Generated plugin directory is not as expected");
@@ -210,24 +210,12 @@ describe("Plugin", () => {
 
 	});
 
-	it("should load plugin", () => {
-		return plugin.load("test load");
+	it("should init plugin", () => {
+		return plugin.init("test init");
 	});
 
-	it("should unload plugin", () => {
-		return plugin.unload("test unload");
-	});
-
-	it("should install plugin", () => {
-		return plugin.install("test install");
-	});
-
-	it("should update plugin", () => {
-		return plugin.update("test update");
-	});
-
-	it("should uninstall plugin", () => {
-		return plugin.uninstall("test uninstall");
+	it("should release plugin", () => {
+		return plugin.release("test release");
 	});
 
 });
