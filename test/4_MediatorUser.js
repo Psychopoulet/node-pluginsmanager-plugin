@@ -100,7 +100,7 @@ describe("MediatorUser", () => {
 
 		});
 
-		it("should check with wrong mediator", (done) => {
+		it("should check with wrong mediator (string)", (done) => {
 
 			new MediatorUser({
 				"mediator": "test"
@@ -118,7 +118,7 @@ describe("MediatorUser", () => {
 
 		});
 
-		it("should check with wrong mediator 2", (done) => {
+		it("should check with wrong mediator (object)", (done) => {
 
 			new MediatorUser({
 				"mediator": {}
@@ -136,7 +136,7 @@ describe("MediatorUser", () => {
 
 		});
 
-		it("should check with wrong mediator 2", (done) => {
+		it("should check with not initialized mediator", (done) => {
 
 			new MediatorUser({
 				"mediator": new Mediator()
