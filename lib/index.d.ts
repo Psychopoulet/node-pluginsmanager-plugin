@@ -3,12 +3,8 @@
 declare module "node-pluginsmanager-plugin" {
 
 	import Events = require("events");
-	
+
 	class Bootable extends Events {
-
-		// constructor
-
-			constructor (options: object | null);
 
 		// methods
 
@@ -26,11 +22,21 @@ declare module "node-pluginsmanager-plugin" {
 		// methods
 
 			protected _fireInitialized(): Promise<void>;
-			public checkConf(data?: any): Promise<void>;
+			public checkConf(): Promise<void>;
+
+	}
+
+	class MediatorUserOptions extends Object {
+
+		public mediator: Mediator;
 
 	}
 
 	class MediatorUser extends Bootable {
+
+		// constructor
+
+			constructor (options: MediatorUserOptions);
 
 		// attributes
 
@@ -51,7 +57,19 @@ declare module "node-pluginsmanager-plugin" {
 
 	}
 
+	class OrchestratorOptions extends MediatorUserOptions {
+
+		public packageFile: string;
+		public mediatorFile: string;
+		public serverFile: string;
+
+	}
+
 	export class Orchestrator extends MediatorUser {
+
+		// constructor
+
+			constructor (options: OrchestratorOptions);
 
 		// attributes
 
@@ -70,8 +88,8 @@ declare module "node-pluginsmanager-plugin" {
 			public engines: object | null;
 			public license: string;
 			public main: string;
-			public scripts: object | null;
 			public name: string;
+			public scripts: object | null;
 			public version: string;
 
 		// methods

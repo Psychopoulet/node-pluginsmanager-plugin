@@ -464,22 +464,4 @@ describe("Orchestrator", () => {
 
 	});
 
-	it("should install plugin", () => {
-
-		return new Orchestrator().install();
-
-	});
-
-	it("should update plugin", () => {
-
-		return new Orchestrator().update();
-
-	});
-
-	it("should uninstall plugin", () => {
-
-		return new Orchestrator().uninstall();
-
-	});
-
 });
