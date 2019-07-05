@@ -13,6 +13,7 @@
 
 	// locals
 	const Bootable = require(join(__dirname, "..", "lib", "components", "Bootable.js"));
+	const MediatorUser = require(join(__dirname, "..", "lib", "components", "MediatorUser.js"));
 	const Server = require(join(__dirname, "..", "lib", "components", "Server.js"));
 	const ServerHerited = require(join(__dirname, "utils", "ServerHerited.js"));
 	const httpRequestTest = require(join(__dirname, "utils", "httpRequestTest.js"));
@@ -33,6 +34,7 @@ describe("Server", () => {
 		strictEqual(typeof server, "object", "Generated server is not an object");
 		strictEqual(server instanceof Events, true, "Generated server is not a Events instance");
 		strictEqual(server instanceof Bootable, true, "Generated server is not a Bootable instance");
+		strictEqual(server instanceof MediatorUser, true, "Generated server is not a MediatorUser instance");
 		strictEqual(server instanceof Server, true, "Generated server is not a Server instance");
 
 	});
