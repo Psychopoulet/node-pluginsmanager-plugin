@@ -57,8 +57,8 @@ declare module "node-pluginsmanager-plugin" {
 
 			// params
 			protected _packageFile: string;
-			protected _MediatorFile: string;
-			protected _ServerFile: string;
+			protected _mediatorFile: string;
+			protected _serverFile: string;
 
 			protected _Server: Server | null;
 
@@ -75,6 +75,9 @@ declare module "node-pluginsmanager-plugin" {
 			public version: string;
 
 		// methods
+
+			public checkFiles(): Promise<void>;
+			public checkServer(): Promise<void>;
 
 			// read
 

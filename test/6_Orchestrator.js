@@ -1,4 +1,6 @@
 /*
+	eslint-disable max-statements
+*/
 
 "use strict";
 
@@ -6,201 +8,379 @@
 
 	// natives
 	const { join } = require("path");
-	const assert = require("assert");
+	const { deepStrictEqual, strictEqual } = require("assert");
 	const Events = require("events");
 
 	// locals
-	const Orchestrator = require(join(__dirname, "..", "lib", "components", "Orchestrator.js"));
+	const readJSONFile = require(join(__dirname, "..", "lib", "utils", "readJSONFile.js"));
+	const Bootable = require(join(__dirname, "..", "lib", "components", "Bootable.js"));
+		const Mediator = require(join(__dirname, "..", "lib", "components", "Mediator.js"));
+		const MediatorUser = require(join(__dirname, "..", "lib", "components", "MediatorUser.js"));
+			const Server = require(join(__dirname, "..", "lib", "components", "Server.js"));
+			const Orchestrator = require(join(__dirname, "..", "lib", "components", "Orchestrator.js"));
+
+// consts
+
+	const EMPTY_CLASS_TEST = join(__dirname, "utils", "EmptyClassTest.js");
+
+	const GOOD_OPTIONS = {
+		"packageFile": join(__dirname, "..", "package.json"),
+		"mediatorFile": join(__dirname, "..", "lib", "components", "Mediator.js"),
+		"serverFile": join(__dirname, "..", "lib", "components", "Server.js")
+	};
 
 // tests
 
 describe("Orchestrator", () => {
 
-	let plugin = null;
-
 	it("should test constructor", () => {
 
-		plugin = new Orchestrator(__dirname);
+		const orchestrator = new Orchestrator({
+			"packageFile": "packageFile",
+			"mediatorFile": "mediatorFile",
+			"serverFile": "serverFile"
+		});
 
-		assert.strictEqual(typeof plugin, "object", "Generated plugin is not an object");
-		assert.strictEqual(plugin instanceof Orchestrator, true, "Generated plugin is not a Orchestrator instance");
+		strictEqual(typeof orchestrator, "object", "Generated orchestrator is not an object");
+		strictEqual(orchestrator instanceof Events, true, "Generated orchestrator is not a Events instance");
+		strictEqual(orchestrator instanceof Bootable, true, "Generated orchestrator is not a Bootable instance");
+		strictEqual(orchestrator instanceof MediatorUser, true, "Generated orchestrator is not a MediatorUser instance");
+		strictEqual(orchestrator instanceof Orchestrator, true, "Generated orchestrator is not a Orchestrator instance");
 
-		assert.strictEqual(typeof plugin.directory, "string", "Generated plugin directory is not a string");
-		assert.strictEqual(plugin.directory, __dirname, "Generated plugin directory is not as expected");
+		strictEqual(typeof orchestrator._Server, "object", "Generated orchestrator _Server is not an object");
+		strictEqual(orchestrator._Server, null, "Generated orchestrator _Server is not as expected");
 
-		assert.strictEqual(typeof plugin.engines, "object", "Generated plugin engines is not an object");
-		assert.strictEqual(typeof plugin.engines.node, "string", "Generated plugin engines node is not a string");
-		assert.strictEqual(plugin.engines.node, ">=6.0.0", "Generated plugin engines node is not as expected");
+		// params
 
-		assert.strictEqual(typeof plugin.license, "string", "Generated plugin license is not a string");
-		assert.strictEqual(plugin.license, "MIT", "Generated plugin license is not as expected");
+		strictEqual(typeof orchestrator._packageFile, "string", "Generated orchestrator _packageFile is not a string");
+		strictEqual(orchestrator._packageFile, "packageFile", "Generated orchestrator _packageFile is not as expected");
 
-		assert.strictEqual(typeof plugin.main, "string", "Generated plugin main is not a string");
-		assert.strictEqual(plugin.main, "lib/main.js", "Generated plugin main is not as expected");
+		strictEqual(typeof orchestrator._mediatorFile, "string", "Generated orchestrator _mediatorFile is not a string");
+		strictEqual(orchestrator._mediatorFile, "mediatorFile", "Generated orchestrator _mediatorFile is not as expected");
+
+		strictEqual(typeof orchestrator._serverFile, "string", "Generated orchestrator _serverFile is not a string");
+		strictEqual(orchestrator._serverFile, "serverFile", "Generated orchestrator _serverFile is not as expected");
+
+		// native
+
+		strictEqual(typeof orchestrator.authors, "object", "Generated orchestrator authors is not an object");
+		strictEqual(orchestrator.authors instanceof Array, true, "Generated orchestrator authors is not an Array");
+		deepStrictEqual(orchestrator.authors, [], "Generated orchestrator authors is not as expected");
+
+		strictEqual(typeof orchestrator.description, "string", "Generated orchestrator description is not a string");
+		strictEqual(orchestrator.description, "", "Generated orchestrator description is not as expected");
+
+		strictEqual(typeof orchestrator.dependencies, "object", "Generated orchestrator dependencies is not an object");
+		deepStrictEqual(orchestrator.dependencies, {}, "Generated orchestrator dependencies is not as expected");
+
+		strictEqual(typeof orchestrator.devDependencies, "object", "Generated orchestrator devDependencies is not an object");
+		deepStrictEqual(orchestrator.devDependencies, {}, "Generated orchestrator devDependencies is not as expected");
+
+		strictEqual(typeof orchestrator.engines, "object", "Generated orchestrator engines is not an object");
+		deepStrictEqual(orchestrator.engines, {
+			"node": ">=6.0.0"
+		}, "Generated orchestrator engines is not as expected");
+
+		strictEqual(typeof orchestrator.license, "string", "Generated orchestrator license is not a string");
+		strictEqual(orchestrator.license, "MIT", "Generated orchestrator license is not as expected");
+
+		strictEqual(typeof orchestrator.main, "string", "Generated orchestrator main is not a string");
+		strictEqual(orchestrator.main, "lib/main.js", "Generated orchestrator main is not as expected");
+
+		strictEqual(typeof orchestrator.name, "string", "Generated orchestrator name is not a string");
+		strictEqual(orchestrator.name, "", "Generated orchestrator name is not as expected");
+
+		strictEqual(typeof orchestrator.scripts, "object", "Generated orchestrator scripts is not an object");
+		deepStrictEqual(orchestrator.scripts, {}, "Generated orchestrator scripts is not as expected");
+
+		strictEqual(typeof orchestrator.version, "string", "Generated orchestrator version is not a string");
+		strictEqual(orchestrator.version, "", "Generated orchestrator version is not as expected");
+
+		return Promise.resolve();
 
 	});
 
 	it("should test event", () => {
 
+		const orchestrator = new Orchestrator();
+
 		return new Promise((resolve, reject) => {
 
-			plugin
+			orchestrator
 				.once("error", reject)
 				.once("test", resolve)
 				.emit("test");
 
 		}).then(() => {
-			return plugin.release();
+			return orchestrator.release();
 		});
 
 	});
 
-	it("should init data from inexistant directory", (done) => {
+	describe("checkServer", () => {
 
-		plugin.directory = join(__dirname, "zsgfzeojrfnoaziendfzoe");
-		plugin.initDataFromPackageFile().then(() => {
-			done(new Error("Inexistant directory used"));
-		}).catch((err) => {
+		it("should check without server", (done) => {
 
-			assert.strictEqual(typeof err, "object", "Generated error is not an object");
-			assert.strictEqual(err instanceof Error, true, "Generated error is not an Error instance");
+			new Orchestrator().checkServer().then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
 
-			done();
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+				strictEqual(err instanceof ReferenceError, true, "Generated error is not a ReferenceError instance");
+
+				done();
+
+			});
+
+		});
+
+		it("should check with wrong server (string)", (done) => {
+
+			const orchestrator = new Orchestrator();
+			orchestrator._Server = "test";
+
+			orchestrator.checkServer().then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+				strictEqual(err instanceof TypeError, true, "Generated error is not a TypeError instance");
+
+				done();
+
+			});
+
+		});
+
+		it("should check with wrong server (object)", (done) => {
+
+			const orchestrator = new Orchestrator();
+			orchestrator._Server = {};
+
+			orchestrator.checkServer().then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+				strictEqual(err instanceof TypeError, true, "Generated error is not a TypeError instance");
+
+				done();
+
+			});
+
+		});
+
+		it("should check with right server", () => {
+
+			const orchestrator = new Orchestrator();
+			orchestrator._Server = new Server();
+
+			return orchestrator.checkServer();
 
 		});
 
 	});
 
-	it("should init data from inexistant package file", (done) => {
+	describe("checkFiles", () => {
 
-		plugin.directory = join(__dirname);
-		plugin.initDataFromPackageFile().then(() => {
-			done(new Error("Inexistant file inited"));
-		}).catch((err) => {
+		describe("packageFile", () => {
 
-			assert.strictEqual(typeof err, "object", "Generated error is not an object");
-			assert.strictEqual(err instanceof Error, true, "Generated error is not an Error instance");
+			it("should check without file", (done) => {
 
-			done();
+				new Orchestrator().checkFiles().then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not an object");
+					strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+
+					done();
+
+				});
+
+			});
+
+			it("should check with inexistant file", (done) => {
+
+				new Orchestrator({
+					"packageFile": "ezsorfnzlmefnzmùe"
+				}).checkFiles().then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not an object");
+					strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+
+					done();
+
+				});
+
+			});
+
+		});
+
+		describe("mediatorFile", () => {
+
+			it("should check without file", (done) => {
+
+				new Orchestrator({
+					"packageFile": join(__dirname, "..", "package.json")
+				}).checkFiles().then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not an object");
+					strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+
+					done();
+
+				});
+
+			});
+
+			it("should check with inexistant file", (done) => {
+
+				new Orchestrator({
+					"packageFile": join(__dirname, "..", "package.json"),
+					"mediatorFile": "ezsorfnzlmefnzmùe"
+				}).checkFiles().then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not an object");
+					strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+
+					done();
+
+				});
+
+			});
+
+		});
+
+		describe("serverFile", () => {
+
+			it("should check without file", (done) => {
+
+				new Orchestrator({
+					"packageFile": join(__dirname, "..", "package.json"),
+					"mediatorFile": join(__dirname, "..", "lib", "components", "Mediator.json")
+				}).checkFiles().then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not an object");
+					strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+
+					done();
+
+				});
+
+			});
+
+			it("should check with inexistant file", (done) => {
+
+				new Orchestrator({
+					"packageFile": join(__dirname, "..", "package.json"),
+					"mediatorFile": join(__dirname, "..", "lib", "components", "Mediator.json"),
+					"serverFile": "ezsorfnzlmefnzmùe"
+				}).checkFiles().then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not an object");
+					strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+
+					done();
+
+				});
+
+			});
+
+		});
+
+		it("should check with existant files", () => {
+
+			return new Orchestrator(GOOD_OPTIONS).checkFiles();
 
 		});
 
 	});
 
-	it("should init data from package file", () => {
+	it("should test package file loader", () => {
 
-		const DIRECTORY = join(__dirname, "..");
+		const orchestrator = new Orchestrator(GOOD_OPTIONS);
 
-		plugin.directory = DIRECTORY;
+		return orchestrator.loadDataFromPackageFile().then(() => {
 
-		return plugin.initDataFromPackageFile().then(() => {
+			strictEqual(typeof orchestrator._Mediator, "object", "Generated orchestrator _Mediator is not an object");
+			strictEqual(orchestrator._Mediator, null, "Generated orchestrator _Mediator is not as expected");
 
-			return readJSONFile(join(plugin.directory, "package.json"));
+			strictEqual(typeof orchestrator._Server, "object", "Generated orchestrator _Server is not an object");
+			strictEqual(orchestrator._Server, null, "Generated orchestrator _Server is not as expected");
+
+			// params
+
+			strictEqual(typeof orchestrator._packageFile, "string", "Generated orchestrator _packageFile is not a string");
+			strictEqual(orchestrator._packageFile, GOOD_OPTIONS.packageFile, "Generated orchestrator _packageFile is not as expected");
+
+			strictEqual(typeof orchestrator._mediatorFile, "string", "Generated orchestrator _mediatorFile is not a string");
+			strictEqual(orchestrator._mediatorFile, GOOD_OPTIONS.mediatorFile, "Generated orchestrator _mediatorFile is not as expected");
+
+			strictEqual(typeof orchestrator._serverFile, "string", "Generated orchestrator _serverFile is not a string");
+			strictEqual(orchestrator._serverFile, GOOD_OPTIONS.serverFile, "Generated orchestrator _serverFile is not as expected");
+
+			return readJSONFile(GOOD_OPTIONS.packageFile);
 
 		}).then((data) => {
 
-			// params
-			return Promise.resolve().then(() => {
-
-				assert.strictEqual(typeof plugin.directory, "string", "directory is not as expected");
-				assert.deepStrictEqual(plugin.directory, DIRECTORY, "directory is not as expected");
-
-				return Promise.resolve();
-
 			// native
-			}).then(() => {
 
-				assert.strictEqual(typeof plugin.authors, "object", "authors is not as expected");
-				assert.strictEqual(plugin.authors instanceof Array, true, "authors is not as expected");
-				assert.deepStrictEqual(plugin.authors, [ data.author ], "authors is not as expected");
+			strictEqual(typeof orchestrator.authors, "object", "Generated orchestrator authors is not an object");
+			strictEqual(orchestrator.authors instanceof Array, true, "Generated orchestrator authors is not an Array");
+			deepStrictEqual(orchestrator.authors, [ data.author ], "Generated orchestrator authors is not as expected");
 
-				return Promise.resolve();
+			strictEqual(typeof orchestrator.description, "string", "Generated orchestrator description is not a string");
+			strictEqual(orchestrator.description, data.description, "Generated orchestrator description is not as expected");
 
-			}).then(() => {
+			strictEqual(typeof orchestrator.dependencies, "object", "Generated orchestrator dependencies is not an object");
+			deepStrictEqual(orchestrator.dependencies, data.dependencies, "Generated orchestrator dependencies is not as expected");
 
-				assert.strictEqual(typeof plugin.description, "string", "description is not as expected");
-				assert.deepStrictEqual(plugin.description, data.description, "description is not as expected");
+			strictEqual(typeof orchestrator.devDependencies, "object", "Generated orchestrator devDependencies is not an object");
+			deepStrictEqual(orchestrator.devDependencies, data.devDependencies, "Generated orchestrator devDependencies is not as expected");
 
-				return Promise.resolve();
+			strictEqual(typeof orchestrator.engines, "object", "Generated orchestrator engines is not an object");
+			deepStrictEqual(orchestrator.engines, data.engines, "Generated orchestrator engines is not as expected");
 
-			}).then(() => {
+			strictEqual(typeof orchestrator.license, "string", "Generated orchestrator license is not a string");
+			strictEqual(orchestrator.license, data.license, "Generated orchestrator license is not as expected");
 
-				assert.strictEqual(typeof plugin.dependencies, "object", "dependencies is not as expected");
-				assert.deepStrictEqual(plugin.dependencies, data.dependencies, "dependencies is not as expected");
+			strictEqual(typeof orchestrator.main, "string", "Generated orchestrator main is not a string");
+			strictEqual(orchestrator.main, data.main, "Generated orchestrator main is not as expected");
 
-				return Promise.resolve();
+			strictEqual(typeof orchestrator.name, "string", "Generated orchestrator name is not a string");
+			strictEqual(orchestrator.name, data.name, "Generated orchestrator name is not as expected");
 
-			}).then(() => {
+			strictEqual(typeof orchestrator.scripts, "object", "Generated orchestrator scripts is not an object");
+			deepStrictEqual(orchestrator.scripts, data.scripts, "Generated orchestrator scripts is not as expected");
 
-				assert.strictEqual(typeof plugin.devDependencies, "object", "devDependencies is not as expected");
-				assert.deepStrictEqual(plugin.devDependencies, data.devDependencies, "devDependencies is not as expected");
+			strictEqual(typeof orchestrator.version, "string", "Generated orchestrator version is not a string");
+			strictEqual(orchestrator.version, data.version, "Generated orchestrator version is not as expected");
 
-				return Promise.resolve();
+			return Promise.resolve();
 
-			}).then(() => {
+		}).then(() => {
 
-				assert.strictEqual(typeof plugin.engines, "object", "engines is not as expected");
-				assert.deepStrictEqual(plugin.engines, data.engines, "engines is not as expected");
+			orchestrator._packageFile = join(__dirname, "utils", "packageWithMultipleAuthors.json");
 
-				return Promise.resolve();
+			return orchestrator.loadDataFromPackageFile().then(() => {
 
-			}).then(() => {
-
-				assert.strictEqual(typeof plugin.license, "string", "license is not as expected");
-				assert.deepStrictEqual(plugin.license, data.license, "license is not as expected");
-
-				return Promise.resolve();
-
-			}).then(() => {
-
-				assert.strictEqual(typeof plugin.main, "string", "main is not as expected");
-				assert.deepStrictEqual(plugin.main, data.main, "main is not as expected");
-
-				return Promise.resolve();
-
-			}).then(() => {
-
-				assert.strictEqual(typeof plugin.name, "string", "name is not as expected");
-				assert.deepStrictEqual(plugin.name, data.name, "name is not as expected");
-
-				return Promise.resolve();
-
-			}).then(() => {
-
-				assert.strictEqual(typeof plugin.scripts, "object", "scripts is not as expected");
-				assert.deepStrictEqual(plugin.scripts, data.scripts, "scripts is not as expected");
-
-				return Promise.resolve();
-
-			}).then(() => {
-
-				assert.strictEqual(typeof plugin.version, "string", "version is not as expected");
-				assert.deepStrictEqual(plugin.version, data.version, "version is not as expected");
-
-				return Promise.resolve();
-
-			// specifics
-			}).then(() => {
-
-				assert.strictEqual(typeof plugin.designs, "object", "designs is not as expected");
-				assert.strictEqual(plugin.designs instanceof Array, true, "designs is not as expected");
-				assert.deepStrictEqual(plugin.designs, [ join(DIRECTORY, "styles", "test.css") ], "designs is not as expected");
-
-				return Promise.resolve();
-
-			}).then(() => {
-
-				assert.strictEqual(typeof plugin.javascripts, "object", "javascripts is not as expected");
-				assert.strictEqual(plugin.javascripts instanceof Array, true, "javascripts is not as expected");
-				assert.deepStrictEqual(plugin.javascripts, [ join(DIRECTORY, "scripts", "test.js") ], "javascripts is not as expected");
-
-				return Promise.resolve();
-
-			}).then(() => {
-
-				assert.strictEqual(typeof plugin.templates, "object", "templates is not as expected");
-				assert.strictEqual(plugin.templates instanceof Array, true, "templates is not as expected");
-				assert.deepStrictEqual(plugin.templates, [ join(DIRECTORY, "templates", "test.html") ], "templates is not as expected");
+				strictEqual(typeof orchestrator.authors, "object", "Generated orchestrator authors is not an object");
+				strictEqual(orchestrator.authors instanceof Array, true, "Generated orchestrator authors is not an Array");
+				deepStrictEqual(orchestrator.authors, [ "Sébastien VIDAL" ], "Generated orchestrator authors is not as expected");
 
 				return Promise.resolve();
 
@@ -210,14 +390,96 @@ describe("Orchestrator", () => {
 
 	});
 
-	it("should init plugin", () => {
-		return plugin.init("test init");
+	describe("init", () => {
+
+		it("should init orchestrator with wrong Mediator", (done) => {
+
+			const opt = JSON.parse(JSON.stringify(GOOD_OPTIONS));
+			opt.mediatorFile = EMPTY_CLASS_TEST;
+
+			new Orchestrator(opt).init().then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+
+				done();
+
+			});
+
+		});
+
+		it("should init orchestrator with wrong Server", (done) => {
+
+			const opt = JSON.parse(JSON.stringify(GOOD_OPTIONS));
+			opt.serverFile = EMPTY_CLASS_TEST;
+
+			new Orchestrator(opt).init().then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+
+				done();
+
+			});
+
+		});
+
+		it("should init orchestrator", () => {
+
+			const orchestrator = new Orchestrator(GOOD_OPTIONS);
+
+			return orchestrator.init().then(() => {
+
+				strictEqual(typeof orchestrator._Mediator, "object", "Generated orchestrator _Mediator is not an object");
+				strictEqual(orchestrator._Mediator instanceof Mediator, true, "Generated orchestrator _Mediator is not as expected");
+
+				strictEqual(typeof orchestrator._Server, "object", "Generated orchestrator _Server is not an object");
+				strictEqual(orchestrator._Server instanceof Server, true, "Generated orchestrator _Mediator is not as expected");
+
+				return Promise.resolve();
+
+			});
+
+		});
+
 	});
 
-	it("should release plugin", () => {
-		return plugin.release("test release");
+	it("should release orchestrator", () => {
+
+		const orchestrator = new Orchestrator(GOOD_OPTIONS);
+
+		return orchestrator.init().then(() => {
+			return orchestrator.release("test release");
+		});
+
+	});
+
+	it("should destroy orchestrator", () => {
+
+		return new Orchestrator().destroy();
+
+	});
+
+	it("should install plugin", () => {
+
+		return new Orchestrator().install();
+
+	});
+
+	it("should update plugin", () => {
+
+		return new Orchestrator().update();
+
+	});
+
+	it("should uninstall plugin", () => {
+
+		return new Orchestrator().uninstall();
+
 	});
 
 });
-
-*/
