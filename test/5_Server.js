@@ -88,17 +88,12 @@ describe("Server", () => {
 
 			return new Promise((resolve) => {
 
-				const app = express();
-
-				app.use(server.appMiddleware);
-
-				app.get("/", (req, res) => {
-					res.send(RESPONSE_CONTENT);
-				});
-
-				runningServer = app.listen(PORT, () => {
-					resolve();
-				});
+				runningServer = express()
+					.use(server.appMiddleware)
+					.get("/", (req, res) => {
+						res.send(RESPONSE_CONTENT);
+					})
+					.listen(PORT, resolve);
 
 			}).then(() => {
 
@@ -126,9 +121,7 @@ describe("Server", () => {
 
 					}
 
-				}).listen(PORT, () => {
-					resolve();
-				});
+				}).listen(PORT, resolve);
 
 			}).then(() => {
 
@@ -142,13 +135,12 @@ describe("Server", () => {
 
 			return new Promise((resolve) => {
 
-				const app = express();
-
-				app.use(serverHerited.appMiddleware);
-
-				runningServer = app.listen(PORT, () => {
-					resolve();
-				});
+				runningServer = express()
+					.use(serverHerited.appMiddleware)
+					.get("/", (req, res) => {
+						res.send(RESPONSE_CONTENT);
+					})
+					.listen(PORT, resolve);
 
 			}).then(() => {
 
@@ -176,9 +168,7 @@ describe("Server", () => {
 
 					}
 
-				}).listen(PORT, () => {
-					resolve();
-				});
+				}).listen(PORT, resolve);
 
 			}).then(() => {
 

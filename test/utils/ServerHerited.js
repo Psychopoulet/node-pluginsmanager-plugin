@@ -21,13 +21,7 @@ module.exports = class ServerHerited extends Server {
 
 	appMiddleware (req, res, next) {
 
-		if (REQUEST_PATHNAME === req.url) {
-
-			res.status(RESPONSE_CODE).send(RESPONSE_CONTENT);
-
-		}
-
-		return next();
+		return REQUEST_PATHNAME === req.url ? res.status(RESPONSE_CODE).send(RESPONSE_CONTENT) : next();
 
 	}
 
