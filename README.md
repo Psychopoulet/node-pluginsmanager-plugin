@@ -20,22 +20,13 @@ $ npm install node-pluginsmanager-plugin
   * proper architecture for simple plugin creation
   * heritable classes for each usage
 
-## Classes
-
-[Classes](./documentation/extends.jpg)
-
-  * [EventEmitter](#events)
-  * [Bootable](#bootable)
-  * [Mediator](#mediator)
-  * [MediatorUser](#mediatoruser)
-  * [Server](#server)
-  * [Orchestrator](#orchestrator)
-
 ## Architecture
 
-[Architecture](./documentation/functional.jpg)
+![Architecture](./documentation/functional.jpg)
 
-## Doc
+## Classes
+
+![Classes](./documentation/extends.jpg)
 
 ### Bootable (extends EventEmitter)
 
