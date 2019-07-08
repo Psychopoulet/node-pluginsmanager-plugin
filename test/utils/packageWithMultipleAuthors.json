@@ -1,0 +1,8 @@
+{
+  "name": "node-pluginsmanager-plugin",
+  "version": "1.0.0",
+  "description": "An abstract parent plugin for node-pluginsmanager",
+  "main": "lib/main.js",
+  "authors": [ "Sébastien VIDAL" ],
+  "author": "test"
+}

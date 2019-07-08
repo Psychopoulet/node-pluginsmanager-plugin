@@ -1,15 +1,13 @@
 /// <reference path="../../lib/index.d.ts" />
 
-import Plugin = require("../../lib/main.js");
+import { Mediator, Orchestrator, Server } from '../../lib/main.js';
 
-console.log(Plugin);
+console.log(Mediator);
 
-const plugin = new Plugin();
+const mediator = new Mediator();
 
-console.log(plugin);
+console.log(mediator);
 
-console.log(plugin.directory);
-
-plugin.load().then(() => {
-	return plugin.unload();
+mediator.init().then(() => {
+	return mediator.release();
 });
