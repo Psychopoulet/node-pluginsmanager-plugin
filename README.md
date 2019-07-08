@@ -141,7 +141,7 @@ $ npm install node-pluginsmanager-plugin
 ```javascript
 "use strict";
 
-const { get } = require('http');
+const { get } = require('https');
 const { Mediator } = require('node-pluginsmanager-plugin');
 
 class MyPluginMediator extends Mediator {
