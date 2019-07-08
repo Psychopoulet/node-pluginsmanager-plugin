@@ -22,27 +22,30 @@ module.exports = class ServerHerited extends Server {
 
 	appMiddleware (req, res, next) {
 
-		if (REQUEST_PATHNAME === req.url) {
+		switch (req.url) {
 
-			res.status(RESPONSE_CODE).send(RESPONSE_CONTENT);
+			case REQUEST_PATHNAME:
 
-			return null;
-
-		}
-		else if (REQUEST_FULLSTACK_PATHNAME === req.url) {
-
-			this.checkMediator().then(() => {
 				res.status(RESPONSE_CODE).send(RESPONSE_CONTENT);
-			}).catch((err) => {
-				res.status(500).send(err.message ? err.message : err);
-			});
 
-			return null;
+			break;
+
+			case REQUEST_FULLSTACK_PATHNAME:
+
+				this.checkMediator().then(() => {
+					res.status(RESPONSE_CODE).send(RESPONSE_CONTENT);
+				}).catch((err) => {
+					res.status(500).send(err.message ? err.message : err);
+				});
+
+			break;
+
+			default:
+				return next();
 
 		}
-		else {
-			return next();
-		}
+
+		return null;
 
 	}
 

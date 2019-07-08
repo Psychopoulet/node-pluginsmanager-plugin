@@ -126,7 +126,7 @@ $ npm install node-pluginsmanager-plugin
   "dependencies": {
     "simpletts": "^1.3.0"
   },
-  "description": "A test for simpleplugin",
+  "description": "A test for node-pluginsmanager-plugin",
   "license": "ISC",
   "main": "main.js",
   "name": "MyPlugin",
@@ -136,7 +136,106 @@ $ npm install node-pluginsmanager-plugin
 }
 ```
 
- * main.js sample
+ * Mediator sample
+
+```javascript
+"use strict";
+
+const { get } = require('http');
+const { Mediator } = require('node-pluginsmanager-plugin');
+
+class MyPluginMediator extends Mediator {
+
+  _query (search) {
+
+    return new Promise((resolve, reject) => {
+
+      get("https://www.google.fr/search?q=" + search, (res) => {
+
+        try {
+
+          res.setEncoding("utf8");
+
+          let rawData = "";
+
+          res.on("data", (chunk) => {
+            rawData += chunk;
+          }).on("end", () => {
+            resolve(rawData);
+          });
+
+        }
+        catch (e) {
+          reject(e.message ? e.message : e);
+        }
+
+      });
+
+    });
+
+  }
+
+  page1 () {
+    return this._query("page1");
+  }
+
+  page2 () {
+    return this._query("page2");
+  }
+
+}
+```
+
+ * Server sample
+
+```javascript
+"use strict";
+
+const { Server } = require('node-pluginsmanager-plugin');
+
+class MyPluginServer extends Server {
+
+  appMiddleware (req, res, next) {
+
+    switch (req.url) {
+
+      case "/myplugin/page1":
+
+        this.checkMediator().then(() => {
+          return this._Mediator.page1();
+        }).then((data) => {
+          res.status(200).send(data);
+        }).catch((err) => {
+          res.status(500).send(err.message ? err.message : err);
+        });
+
+      break;
+
+      case "/myplugin/page2":
+
+        this.checkMediator().then(() => {
+          this._Mediator.page2();
+        }).then((data) => {
+          res.status(200).send(data);
+        }).catch((err) => {
+          res.status(500).send(err.message ? err.message : err);
+        });
+
+      break;
+
+      default:
+        return next();
+
+    }
+
+    return null;
+
+  }
+
+}
+```
+
+ * Orchestrator sample
 
 ```javascript
 "use strict";
@@ -152,76 +251,6 @@ class MyPluginOrchestrator extends Orchestrator {
         "packageFile": join(__dirname, "package.json"),
         "mediatorFile": join(__dirname, "Mediator.js"),
         "serverFile": join(__dirname, "Server.js")
-      });
-
-    }
-
-    init (data) {
-
-      return super.init().then(() => {
-
-        console.log("your working place");
-        console.log("automatically called by \"install\" & \"update\" methods, create virtual ressources like array, sockets, etc...");
-        console.log("optional data", data);
-
-        return Promise.resolve();
-
-      });
-
-    }
-
-    release (data) {
-
-      return super.release().then(() => {
-
-        console.log("your working place");
-        console.log("automatically called by \"uninstall\" & \"update\" methods, close & release virtual ressources like array, sockets, etc...");
-        console.log("optional data", data);
-
-        return Promise.resolve();
-
-      });
-
-    }
-
-    install (data) {
-
-      return super.install().then(() => {
-
-        console.log("your working place");
-        console.log("create physical ressources like directories, files, etc...");
-        console.log("optional data", data);
-
-        return Promise.resolve();
-
-      });
-
-    }
-
-    update (data) {
-
-      return super.update().then(() => {
-
-        console.log("your working place");
-        console.log("update your ressources like sql database structure, etc...");
-        console.log("optional data", data);
-
-        return Promise.resolve();
-
-      });
-
-    }
-
-    uninstall (data) {
-
-      return super.uninstall().then(() => {
-
-        console.log("your working place");
-        console.log("remove all the created ressources like directories, files, etc...");
-        console.log("optional data", data);
-
-        return Promise.resolve();
-
       });
 
     }
