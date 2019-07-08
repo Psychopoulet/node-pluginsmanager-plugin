@@ -48,14 +48,14 @@ module.exports = function httpRequestTest (urlpath, returnCode, returnResponse) 
 
 					}
 					catch (_e) {
-						reject(_e);
+						reject(_e.message ? _e.message : _e);
 					}
 
 				});
 
 			}
 			catch (e) {
-				reject(e);
+				reject(e.message ? e.message : e);
 			}
 
 		});

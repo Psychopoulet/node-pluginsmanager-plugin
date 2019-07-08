@@ -12,6 +12,7 @@
 // consts
 
 	const REQUEST_PATHNAME = "/thisisatest";
+	const REQUEST_FULLSTACK_PATHNAME = "/fullstack";
 	const RESPONSE_CODE = 201;
 	const RESPONSE_CONTENT = "Hello World";
 
@@ -21,7 +22,27 @@ module.exports = class ServerHerited extends Server {
 
 	appMiddleware (req, res, next) {
 
-		return REQUEST_PATHNAME === req.url ? res.status(RESPONSE_CODE).send(RESPONSE_CONTENT) : next();
+		if (REQUEST_PATHNAME === req.url) {
+
+			res.status(RESPONSE_CODE).send(RESPONSE_CONTENT);
+
+			return null;
+
+		}
+		else if (REQUEST_FULLSTACK_PATHNAME === req.url) {
+
+			this.checkMediator().then(() => {
+				res.status(RESPONSE_CODE).send(RESPONSE_CONTENT);
+			}).catch((err) => {
+				res.status(500).send(err.message ? err.message : err);
+			});
+
+			return null;
+
+		}
+		else {
+			return next();
+		}
 
 	}
 
@@ -33,6 +54,29 @@ module.exports = class ServerHerited extends Server {
 
 			res.writeHead(RESPONSE_CODE, { "Content-Type": "text/html; charset=utf-8" });
 			res.end(RESPONSE_CONTENT, "utf-8");
+
+			return true;
+
+		}
+		else if (REQUEST_FULLSTACK_PATHNAME === pathname) {
+
+			this.checkMediator().then(() => {
+
+				return this._Mediator.fullStack();
+
+			}).then(() => {
+
+				res.writeHead(RESPONSE_CODE, { "Content-Type": "text/html; charset=utf-8" });
+				res.end(RESPONSE_CONTENT, "utf-8");
+
+				return Promise.resolve();
+
+			}).catch((err) => {
+
+				res.writeHead(500, { "Content-Type": "text/html; charset=utf-8" });
+				res.end(err.message ? err.message : err, "utf-8");
+
+			});
 
 			return true;
 

@@ -1,5 +1,5 @@
 /*
-	eslint-disable max-statements
+	eslint-disable max-statements, no-sync, max-lines
 */
 
 "use strict";
@@ -10,8 +10,13 @@
 	const { join } = require("path");
 	const { deepStrictEqual, strictEqual } = require("assert");
 	const Events = require("events");
+	const { createServer } = require("http");
+
+	// externals
+	const express = require("express");
 
 	// locals
+	const httpRequestTest = require(join(__dirname, "utils", "httpRequestTest.js"));
 	const readJSONFile = require(join(__dirname, "..", "lib", "utils", "readJSONFile.js"));
 	const Bootable = require(join(__dirname, "..", "lib", "components", "Bootable.js"));
 		const Mediator = require(join(__dirname, "..", "lib", "components", "Mediator.js"));
@@ -28,6 +33,9 @@
 		"mediatorFile": join(__dirname, "..", "lib", "components", "Mediator.js"),
 		"serverFile": join(__dirname, "..", "lib", "components", "Server.js")
 	};
+
+	const PORT = "3000";
+	const RESPONSE_CONTENT = "Hello World";
 
 // tests
 
@@ -117,11 +125,45 @@ describe("Orchestrator", () => {
 
 	});
 
+	it("should test install", () => {
+		return new Orchestrator().install();
+	});
+
+	it("should test update", () => {
+		return new Orchestrator().update();
+	});
+
+	it("should test uninstall", () => {
+		return new Orchestrator().uninstall();
+	});
+
 	describe("checkServer", () => {
 
 		it("should check without server", (done) => {
 
-			new Orchestrator().checkServer().then(() => {
+			const orchestrator = new Orchestrator();
+			delete orchestrator._Server;
+
+			orchestrator.checkServer().then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+				strictEqual(err instanceof ReferenceError, true, "Generated error is not a ReferenceError instance");
+
+				done();
+
+			});
+
+		});
+
+		it("should check with null server", (done) => {
+
+			const orchestrator = new Orchestrator();
+			orchestrator._Server = null;
+
+			orchestrator.checkServer().then(() => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
@@ -179,6 +221,70 @@ describe("Orchestrator", () => {
 			orchestrator._Server = new Server();
 
 			return orchestrator.checkServer();
+
+		});
+
+	});
+
+	describe("checkServerSync", () => {
+
+		it("should check without server", () => {
+
+			const orchestrator = new Orchestrator();
+			delete orchestrator._Server;
+
+			const res = orchestrator.checkServerSync();
+
+			strictEqual(typeof res, "boolean", "Generated result is not as expected");
+			strictEqual(res, false, "Generated result is not as expected");
+
+		});
+
+		it("should check with null server", () => {
+
+			const orchestrator = new Orchestrator();
+			orchestrator._Server = null;
+
+			const res = orchestrator.checkServerSync();
+
+			strictEqual(typeof res, "boolean", "Generated result is not as expected");
+			strictEqual(res, false, "Generated result is not as expected");
+
+		});
+
+		it("should check with wrong server (string)", () => {
+
+			const orchestrator = new Orchestrator();
+			orchestrator._Server = "test";
+
+			const res = new Orchestrator().checkServerSync();
+
+			strictEqual(typeof res, "boolean", "Generated result is not as expected");
+			strictEqual(res, false, "Generated result is not as expected");
+
+		});
+
+		it("should check with wrong server (object)", () => {
+
+			const orchestrator = new Orchestrator();
+			orchestrator._Server = {};
+
+			const res = new Orchestrator().checkServerSync();
+
+			strictEqual(typeof res, "boolean", "Generated result is not as expected");
+			strictEqual(res, false, "Generated result is not as expected");
+
+		});
+
+		it("should check with right server", () => {
+
+			const orchestrator = new Orchestrator();
+			orchestrator._Server = new Server();
+
+			const res = orchestrator.checkServerSync();
+
+			strictEqual(typeof res, "boolean", "Generated result is not as expected");
+			strictEqual(res, true, "Generated result is not as expected");
 
 		});
 
@@ -461,6 +567,111 @@ describe("Orchestrator", () => {
 	it("should destroy orchestrator", () => {
 
 		return new Orchestrator().destroy();
+
+	});
+
+	describe("fullstack", () => {
+
+		it("should test with full stack http", () => {
+
+			const opt = JSON.parse(JSON.stringify(GOOD_OPTIONS));
+			opt.mediatorFile = join(__dirname, "utils", "MediatorHerited.js");
+			opt.serverFile = join(__dirname, "utils", "ServerHerited.js");
+
+			const orchestrator = new Orchestrator(opt);
+			let runningServer = null;
+
+			return orchestrator.init().then(() => {
+
+				return new Promise((resolve) => {
+
+					runningServer = createServer((req, res) => {
+
+						if (!orchestrator.httpMiddleware(req, res)) {
+
+							res.writeHead(200, {
+								"Content-Type": "text/html; charset=utf-8"
+							});
+
+							res.write(RESPONSE_CONTENT);
+
+							res.end();
+
+						}
+
+					}).listen(PORT, resolve);
+
+				});
+
+			}).then(() => {
+
+				return httpRequestTest("/", 200, "OK");
+
+			}).then(() => {
+
+				return httpRequestTest("/fullstack", 201, "Created");
+
+			}).then(() => {
+
+				return runningServer ? new Promise((resolve) => {
+
+					runningServer.close(() => {
+						runningServer = null;
+						resolve();
+					});
+
+				}) : Promise.resolve();
+
+			});
+
+		});
+
+		it("should test with full stack app", () => {
+
+			const opt = JSON.parse(JSON.stringify(GOOD_OPTIONS));
+			opt.mediatorFile = join(__dirname, "utils", "MediatorHerited.js");
+			opt.serverFile = join(__dirname, "utils", "ServerHerited.js");
+
+			const orchestrator = new Orchestrator(opt);
+			let runningServer = null;
+
+			return orchestrator.init().then(() => {
+
+				return new Promise((resolve) => {
+
+					runningServer = express()
+						.use((req, res, next) => {
+							orchestrator.appMiddleware(req, res, next);
+						})
+						.get("/", (req, res) => {
+							res.send(RESPONSE_CONTENT);
+						})
+						.listen(PORT, resolve);
+
+				});
+
+			}).then(() => {
+
+				return httpRequestTest("/", 200, "OK");
+
+			}).then(() => {
+
+				return httpRequestTest("/fullstack", 201, "Created");
+
+			}).then(() => {
+
+				return runningServer ? new Promise((resolve) => {
+
+					runningServer.close(() => {
+						runningServer = null;
+						resolve();
+					});
+
+				}) : Promise.resolve();
+
+			});
+
+		});
 
 	});
 
