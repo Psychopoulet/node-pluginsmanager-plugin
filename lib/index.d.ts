@@ -96,6 +96,8 @@ declare module "node-pluginsmanager-plugin" {
 
 			public checkFiles(): Promise<void>;
 			public checkServer(): Promise<void>;
+			public appMiddleware(req: Request, res: Response, next: Function): Promise<void>;
+			public httpMiddleware(req: Request, res: Response): Promise<void>;
 
 			// read
 

@@ -122,6 +122,8 @@ $ npm install node-pluginsmanager-plugin
   * ``` install(data?: any): Promise<void> ``` used after plugin installation (create ressources). should be re-writted.
   * ``` update(data?: any): Promise<void> ``` used after plugin update. should be re-writted.
   * ``` uninstall(data?: any): Promise<void> ``` used before plugin uninstall (remove ressources). should be re-writted.
+  * ``` appMiddleware(req: Request, res: Response, next: function): void ``` transfert request to Server middleware (if the plugin is initialized)
+  * ``` httpMiddleware(req: Request, res: Response): boolean ``` transfert request to Server middleware (if the plugin is initialized)
 
 ## Examples
 
