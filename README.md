@@ -16,40 +16,105 @@ $ npm install node-pluginsmanager-plugin
 
 ## Features
 
-  * create a inheritable parent for node-pluginsmanager's plugins
+  * inheritable parent for node-pluginsmanager's plugins
+  * proper architecture for simple plugin creation
+  * heritable classes for each usage
 
-## Doc
+## Architecture
 
-  -- Attributes -- 
+![Architecture](./documentation/functional.jpg)
 
+## Classes
+
+![Classes](./documentation/extends.jpg)
+
+### Bootable (extends EventEmitter)
+
+  -- Methods --
+
+  * ``` init(data?: any): Promise<void> ``` method used in EACH child. must be re-writted.
+  * ``` release(data?: any): Promise<void> ``` method used in EACH child. can be re-writted, but don't forget to call removeAllListeners.
+
+### Mediator (extends Bootable)
+
+  -- Events --
+
+  * ``` initialized ``` fired when mediator is initialized
+
+  -- Attributes --
+
+  * ``` initialized: boolean ```
+
+  -- Methods --
+
+  * ``` _fireInitialized(void): Promise<void> ``` set "initialized" to true and fire "initialized" event
+  * ``` checkConf(void): Promise<void> ``` used to check plugin's configuration. should be re-writted.
+
+### MediatorUserOptions (extends object)
+
+  * ``` mediator: Mediator ``` mediator used by the class
+
+### MediatorUser (extends Bootable)
+
+  -- Constructor --
+
+  * ``` constructor(options: MediatorUserOptions) ```
+
+  -- Attributes --
+
+  * ``` _Mediator: Mediator | null ```
+
+  -- Methods --
+
+  * ``` checkMediator(void): Promise<void> ``` check mediator, ensure inheritance & "initialized" status
+
+### Server (extends MediatorUser)
+
+  -- Methods --
+
+  * ``` appMiddleware(req: Request, res: Response, next: function): void ``` middleware for express & others to add routes, should be re-writted
+  * ``` httpMiddleware(req: Request, res: Response): boolean ``` middleware for native http[s] server to add routes, should be re-writted
+
+### OrchestratorOptions (extends MediatorUserOptions)
+
+  * ``` packageFile: string ``` package file used by the plugin (absolute path)
+  * ``` mediatorFile: string ``` mediator file used by the plugin (absolute path)
+  * ``` serverFile: string ``` server file used by the plugin (absolute path)
+
+### Orchestrator (extends MediatorUser)
+
+  -- Constructor --
+
+  * ``` constructor(options: OrchestratorOptions) ```
+
+  -- Attributes --
+
+  * ``` _Server: Server | null ```
+  * ``` _packageFile: string ```
+  * ``` _mediatorFile: string ```
+  * ``` _serverFile: string ```
   * ``` authors: Array<string> ```
   * ``` description: string ```
-  * ``` dependencies: object ```
-  * ``` devDependencies: object ```
-  * ``` engines: object ```
+  * ``` dependencies: object | null ```
+  * ``` devDependencies: object | null ```
+  * ``` engines: object | null ```
   * ``` license: string ```
   * ``` main: string ```
   * ``` name: string ```
   * ``` scripts: object ```
   * ``` version: string ```
 
-  * ``` directory: string ``` current plugin directory
-  * ``` designs: Array<string> ``` css files for this plugin (ex : "css/design.css")
-  * ``` javascripts: Array<string> ``` js files for this plugin (ex : "scripts/controller.js")
-  * ``` templates: Array<string> ``` html files for this plugin (ex : "templates/myPlugin.html")
-
-  -- Constructor --
-
-  * ``` constructor(directory : string) ```
-
   -- Methods --
 
-  * ``` loadDataFromPackageFile(void): Promise<Plugin> ``` load all package data. automaticly add non-managed data to the plugin instance.
-  * ``` load(): Promise<void> ``` init plugin (communications, crons, etc...). automatically called by "install" & "update" methods.
-  * ``` unload(destroy = false : boolean): Promise<void> ``` release plugin (free sockets, stop tasks, etc...). "destroy" is use to force attributes destruction. automatically called by "uninstall" & "update" methods.
-  * ``` install(): Promise<void> ``` process for specific plugin's installation (download ressources, files creations, etc...)
-  * ``` update(): Promise<void> ``` process for specific plugin's update
-  * ``` uninstall(): Promise<void> ``` process for specific plugin's removal (remove created files, etc...)
+  * ``` checkFiles(void): Promise<void> ``` check files existance
+  * ``` checkServer(void): Promise<void> ``` check server, ensure inheritance
+  * ``` loadDataFromPackageFile(void): Promise<void> ``` load all data from package file, dynamically add new attributes
+  * ``` destroy(void): Promise<void> ``` reset standards attributes (release does not do that)
+  * ``` install(data?: any): Promise<void> ``` used after plugin installation (create ressources). should be re-writted.
+  * ``` update(data?: any): Promise<void> ``` used after plugin update. should be re-writted.
+  * ``` uninstall(data?: any): Promise<void> ``` used before plugin uninstall (remove ressources). should be re-writted.
+  * ``` appMiddleware(req: Request, res: Response, next: function): void ``` transfert request to Server middleware (if the plugin is initialized)
+  * ``` httpMiddleware(req: Request, res: Response): boolean ``` transfert request to Server middleware (if the plugin is initialized)
 
 ## Examples
 
@@ -61,92 +126,133 @@ $ npm install node-pluginsmanager-plugin
   "dependencies": {
     "simpletts": "^1.3.0"
   },
-  "designs": [ "design.css"],
-  "description": "A test for simpleplugin",
-  "javascripts": [ "javascript.js"],
+  "description": "A test for node-pluginsmanager-plugin",
   "license": "ISC",
   "main": "main.js",
   "name": "MyPlugin",
   "version": "0.0.2",
-  "templates": [ "template.html" ],
   "core": false,
   "linuxOnly": true
 }
 ```
 
- * main.js sample
+ * Mediator sample
 
 ```javascript
 "use strict";
 
-class MyPlugin extends require('node-pluginsmanager-plugin') {
+const { get } = require('https');
+const { Mediator } = require('node-pluginsmanager-plugin');
 
-    load (data) {
+class MyPluginMediator extends Mediator {
 
-      return super.load().then(() => {
+  _query (search) {
 
-        console.log("your working place");
-        console.log("automatically called by \"install\" & \"update\" methods, create virtual ressources like array, sockets, etc...");
-        console.log("optional data", data);
+    return new Promise((resolve, reject) => {
 
-        return Promise.resolve();
+      get("https://www.google.fr/search?q=" + search, (res) => {
 
-      });
+        try {
 
-    }
+          res.setEncoding("utf8");
 
-    unload (data) {
+          let rawData = "";
 
-      return super.unload().then(() => {
+          res.on("error", (err) => {
+            reject(err);
+          }).on("data", (chunk) => {
+            rawData += chunk;
+          }).on("end", () => {
+            resolve(rawData);
+          });
 
-        console.log("your working place");
-        console.log("automatically called by \"uninstall\" & \"update\" methods, close & release virtual ressources like array, sockets, etc...");
-        console.log("optional data", data);
-
-        return Promise.resolve();
-
-      });
-
-    }
-
-    install (data) {
-
-      return super.install().then(() => {
-
-        console.log("your working place");
-        console.log("create physical ressources like directories, files, etc...");
-        console.log("optional data", data);
-
-        return Promise.resolve();
+        }
+        catch (e) {
+          reject(e);
+        }
 
       });
 
+    });
+
+  }
+
+  page1 () {
+    return this._query("page1");
+  }
+
+  page2 () {
+    return this._query("page2");
+  }
+
+}
+```
+
+ * Server sample
+
+```javascript
+"use strict";
+
+const { Server } = require('node-pluginsmanager-plugin');
+
+class MyPluginServer extends Server {
+
+  appMiddleware (req, res, next) {
+
+    switch (req.url) {
+
+      case "/myplugin/page1":
+
+        this.checkMediator().then(() => {
+          return this._Mediator.page1();
+        }).then((data) => {
+          res.status(200).send(data);
+        }).catch((err) => {
+          res.status(500).send(err.message ? err.message : err);
+        });
+
+      break;
+
+      case "/myplugin/page2":
+
+        this.checkMediator().then(() => {
+          this._Mediator.page2();
+        }).then((data) => {
+          res.status(200).send(data);
+        }).catch((err) => {
+          res.status(500).send(err.message ? err.message : err);
+        });
+
+      break;
+
+      default:
+        return next();
+
     }
 
-    update (data) {
+    return null;
 
-      return super.update().then(() => {
+  }
 
-        console.log("your working place");
-        console.log("update your ressources like sql database structure, etc...");
-        console.log("optional data", data);
+}
+```
 
-        return Promise.resolve();
+ * Orchestrator sample
 
-      });
+```javascript
+"use strict";
 
-    }
+const { join } = require('path');
+const { Orchestrator } = require('node-pluginsmanager-plugin');
 
-    uninstall (data) {
+class MyPluginOrchestrator extends Orchestrator {
 
-      return super.uninstall().then(() => {
+    constructor (options) {
 
-        console.log("your working place");
-        console.log("remove all the created ressources like directories, files, etc...");
-        console.log("optional data", data);
-
-        return Promise.resolve();
-
+      super({
+        "packageFile": join(__dirname, "package.json"),
+        "mediatorFile": join(__dirname, "Mediator.js"),
+        "serverFile": join(__dirname, "Server.js")
       });
 
     }

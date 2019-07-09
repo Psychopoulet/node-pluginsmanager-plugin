@@ -1,15 +1,34 @@
 /// <reference path="../../lib/index.d.ts" />
 
-import Plugin = require("../../lib/main.js");
+import { join } from 'path';
+import { Mediator, Orchestrator, Server } from '../../lib/main.js';
 
-console.log(Plugin);
+console.log(Orchestrator);
+console.log(Mediator);
+console.log(Server);
 
-const plugin = new Plugin();
+const orchestrator = new Orchestrator({
+	"packageFile": join(__dirname, "..", "..", "package.json"),
+	"mediatorFile": join(__dirname, "..", "..", "lib", "components", "Mediator.js"),
+	"serverFile": join(__dirname, "..", "..", "lib", "components", "Server.js")
+});
 
-console.log(plugin);
+console.log(orchestrator);
 
-console.log(plugin.directory);
+orchestrator.init().then(() => {
 
-plugin.load().then(() => {
-	return plugin.unload();
+	console.log(orchestrator);
+
+	return orchestrator.release();
+
+}).then(() => {
+
+	console.log(orchestrator);
+
+	return orchestrator.destroy();
+
+}).then(() => {
+
+	console.log(orchestrator);
+
 });

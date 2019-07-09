@@ -1,6 +1,6 @@
 {
   "name": "node-pluginsmanager-plugin",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "An abstract parent plugin for node-pluginsmanager",
   "main": "lib/main.js",
   "typings": "lib/index.d.ts",
@@ -33,25 +33,17 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@types/node": "12.0.2",
+    "@types/node": "12.6.1",
     "check-version-modules": "1.1.1",
-    "coveralls": "3.0.3",
-    "eslint": "5.16.0",
-    "husky": "2.3.0",
+    "coveralls": "3.0.4",
+    "eslint": "6.0.1",
+    "express": "4.17.1",
+    "husky": "3.0.0",
     "mocha": "6.1.4",
     "nyc": "14.1.1"
   },
   "homepage": "https://github.com/Psychopoulet/node-pluginsmanager-plugin#readme",
   "engines": {
     "node": ">=6.0.0"
-  },
-  "designs": [
-    "styles/test.css"
-  ],
-  "javascripts": [
-    "scripts/test.js"
-  ],
-  "templates": [
-    "templates/test.html"
-  ]
+  }
 }
