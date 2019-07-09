@@ -496,6 +496,26 @@ describe("Orchestrator", () => {
 
 	});
 
+	it("should test http middleware without Server", () => {
+
+		const res = new Orchestrator(GOOD_OPTIONS).httpMiddleware(null, null);
+
+		strictEqual(typeof res, "boolean", "Generated result is not an object");
+		strictEqual(res, false, "Generated result is not as expected");
+
+	});
+
+	it("should test app middleware without Server", () => {
+
+		const res = new Orchestrator(GOOD_OPTIONS).appMiddleware(null, null, () => {
+			return false;
+		});
+
+		strictEqual(typeof res, "boolean", "Generated result is not an object");
+		strictEqual(res, false, "Generated result is not as expected");
+
+	});
+
 	describe("init", () => {
 
 		it("should init orchestrator with wrong Mediator", (done) => {
