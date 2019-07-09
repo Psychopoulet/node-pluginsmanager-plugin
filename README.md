@@ -158,7 +158,9 @@ class MyPluginMediator extends Mediator {
 
           let rawData = "";
 
-          res.on("data", (chunk) => {
+          res.on("error", (err) => {
+            reject(err);
+          }).on("data", (chunk) => {
             rawData += chunk;
           }).on("end", () => {
             resolve(rawData);
@@ -166,7 +168,7 @@ class MyPluginMediator extends Mediator {
 
         }
         catch (e) {
-          reject(e.message ? e.message : e);
+          reject(e);
         }
 
       });
