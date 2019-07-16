@@ -2,7 +2,7 @@
 
 declare module "node-pluginsmanager-plugin" {
 
-	import Events = require("events");
+	import * as Events from"events";
 
 	class Bootable extends Events {
 
