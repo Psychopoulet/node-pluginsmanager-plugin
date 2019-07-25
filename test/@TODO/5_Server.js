@@ -27,9 +27,13 @@
 
 describe("Server", () => {
 
-	it("should test constructor", () => {
+	const server = new Server();
 
-		const server = new Server();
+	afterEach(() => {
+		return server.release();
+	});
+
+	it("should test constructor", () => {
 
 		strictEqual(typeof server, "object", "Generated server is not an object");
 		strictEqual(server instanceof Events, true, "Generated server is not a Events instance");
@@ -40,8 +44,6 @@ describe("Server", () => {
 	});
 
 	it("should test event", () => {
-
-		const server = new Server();
 
 		return new Promise((resolve, reject) => {
 
@@ -57,16 +59,15 @@ describe("Server", () => {
 	});
 
 	it("should init server", () => {
-		return new Server().init("test init");
+		return server.init("test init");
 	});
 
 	it("should release server", () => {
-		return new Server().release("test release");
+		return server.release("test release");
 	});
 
 	describe("network", () => {
 
-		const server = new Server();
 		const serverHerited = new ServerHerited();
 
 		let runningServer = null;
@@ -163,7 +164,6 @@ describe("Server", () => {
 						});
 
 						res.write(RESPONSE_CONTENT);
-
 						res.end();
 
 					}

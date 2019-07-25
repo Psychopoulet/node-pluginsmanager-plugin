@@ -4,16 +4,25 @@ declare module "node-pluginsmanager-plugin" {
 
 	import * as Events from"events";
 
-	class Bootable extends Events {
+	// options
 
-		// methods
+	export class MediatorUserOptions extends Object {
 
-			public init(data?: any): Promise<void>;
-			public release(data?: any): Promise<void>;
+		public mediator: Mediator;
 
 	}
 
-	export class Mediator extends Bootable {
+	export class OrchestratorOptions extends MediatorUserOptions {
+
+		public packageFile: string;
+		public mediatorFile: string;
+		public serverFile: string;
+
+	}
+
+	// classes
+
+	class Bootable extends Events {
 
 		// attributes
 
@@ -21,16 +30,18 @@ declare module "node-pluginsmanager-plugin" {
 
 		// methods
 
+			protected _initWorkSpace(data?: any): Promise<void>;
+			protected _releaseWorkSpace(data?: any): Promise<void>;
+
 			protected _fireInitialized(): Promise<void>;
-			public checkConf(): Promise<void>;
+			protected _fireReleased(): Promise<void>;
+
+			public init(data?: any): Promise<void>;
+			public release(data?: any): Promise<void>;
 
 	}
 
-	class MediatorUserOptions extends Object {
-
-		public mediator: Mediator;
-
-	}
+	export class Mediator extends Bootable { }
 
 	class MediatorUser extends Bootable {
 
@@ -45,6 +56,7 @@ declare module "node-pluginsmanager-plugin" {
 		// methods
 
 			public checkMediator(): Promise<void>;
+			public checkMediatorSync(): boolean;
 
 	}
 
@@ -57,14 +69,6 @@ declare module "node-pluginsmanager-plugin" {
 
 	}
 
-	class OrchestratorOptions extends MediatorUserOptions {
-
-		public packageFile: string;
-		public mediatorFile: string;
-		public serverFile: string;
-
-	}
-
 	export class Orchestrator extends MediatorUser {
 
 		// constructor
@@ -73,45 +77,61 @@ declare module "node-pluginsmanager-plugin" {
 
 		// attributes
 
-			// params
-			protected _packageFile: string;
-			protected _mediatorFile: string;
-			protected _serverFile: string;
+			// protected
 
-			protected _Server: Server | null;
+				protected _Server: Server | null;
 
-			// native
-			public authors: Array<string> | null;
-			public description: string;
-			public dependencies: object | null;
-			public devDependencies: object | null;
-			public engines: object | null;
-			public license: string;
-			public main: string;
-			public name: string;
-			public scripts: object | null;
-			public version: string;
+				// params
+				protected _packageFile: string;
+				protected _mediatorFile: string;
+				protected _serverFile: string;
+
+			// public
+
+				public enable: boolean;
+
+				// native
+				public authors: Array<string> | null;
+				public description: string;
+				public dependencies: object | null;
+				public devDependencies: object | null;
+				public engines: object | null;
+				public license: string;
+				public main: string;
+				public name: string;
+				public scripts: object | null;
+				public version: string;
 
 		// methods
 
-			public checkFiles(): Promise<void>;
-			public checkServer(): Promise<void>;
-			public appMiddleware(req: Request, res: Response, next: Function): Promise<void>;
-			public httpMiddleware(req: Request, res: Response): Promise<void>;
+			// protected
 
-			// read
+				protected _loadDataFromPackageFile(): Promise<void>;
 
-			public loadDataFromPackageFile(): Promise<void>;
+			// public
 
-			// load
+				// checkers
 
-			public destroy(): Promise<void>;
+				public checkConf(): Promise<void>;
+				public checkEnable(): Promise<void>;
+				public checkFiles(): Promise<void>;
+				public checkServer(): Promise<void>;
+				public checkServerSync(): boolean;
 
-			// write
+				// middleware
 
-			public install(data?: any): Promise<void>;
-			public update(data?: any): Promise<void>;
-			public uninstall(data?: any): Promise<void>;
+				public appMiddleware(req: Request, res: Response, next: Function): Promise<void>;
+				public httpMiddleware(req: Request, res: Response): Promise<void>;
+
+				// init / release
+
+				public destroy(data?: any): Promise<void>;
+
+				// write
+
+				public install(data?: any): Promise<void>;
+				public update(data?: any): Promise<void>;
+				public uninstall(data?: any): Promise<void>;
 
 	}
 

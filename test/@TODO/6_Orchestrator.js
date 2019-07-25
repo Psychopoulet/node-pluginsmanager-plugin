@@ -16,13 +16,18 @@
 	const express = require("express");
 
 	// locals
-	const httpRequestTest = require(join(__dirname, "utils", "httpRequestTest.js"));
-	const readJSONFile = require(join(__dirname, "..", "lib", "utils", "readJSONFile.js"));
-	const Bootable = require(join(__dirname, "..", "lib", "components", "Bootable.js"));
-		const Mediator = require(join(__dirname, "..", "lib", "components", "Mediator.js"));
-		const MediatorUser = require(join(__dirname, "..", "lib", "components", "MediatorUser.js"));
-			const Server = require(join(__dirname, "..", "lib", "components", "Server.js"));
-			const Orchestrator = require(join(__dirname, "..", "lib", "components", "Orchestrator.js"));
+
+		// plugin
+		const readJSONFile = require(join(__dirname, "..", "lib", "utils", "readJSONFile.js"));
+		const Bootable = require(join(__dirname, "..", "lib", "components", "Bootable.js"));
+			const Mediator = require(join(__dirname, "..", "lib", "components", "Mediator.js"));
+			const MediatorUser = require(join(__dirname, "..", "lib", "components", "MediatorUser.js"));
+				const Server = require(join(__dirname, "..", "lib", "components", "Server.js"));
+				const Orchestrator = require(join(__dirname, "..", "lib", "components", "Orchestrator.js"));
+
+		// utils
+		const httpRequestTest = require(join(__dirname, "utils", "httpRequestTest.js"));
+		const NonEnabledOrchestrator = require(join(__dirname, "utils", "NonEnabledOrchestrator.js"));
 
 // consts
 
@@ -420,7 +425,7 @@ describe("Orchestrator", () => {
 
 		const orchestrator = new Orchestrator(GOOD_OPTIONS);
 
-		return orchestrator.loadDataFromPackageFile().then(() => {
+		return orchestrator._loadDataFromPackageFile().then(() => {
 
 			strictEqual(typeof orchestrator._Mediator, "object", "Generated orchestrator _Mediator is not an object");
 			strictEqual(orchestrator._Mediator, null, "Generated orchestrator _Mediator is not as expected");
@@ -482,7 +487,7 @@ describe("Orchestrator", () => {
 
 			orchestrator._packageFile = join(__dirname, "utils", "packageWithMultipleAuthors.json");
 
-			return orchestrator.loadDataFromPackageFile().then(() => {
+			return orchestrator._loadDataFromPackageFile().then(() => {
 
 				strictEqual(typeof orchestrator.authors, "object", "Generated orchestrator authors is not an object");
 				strictEqual(orchestrator.authors instanceof Array, true, "Generated orchestrator authors is not an Array");
@@ -558,7 +563,15 @@ describe("Orchestrator", () => {
 
 			const orchestrator = new Orchestrator(GOOD_OPTIONS);
 
-			return orchestrator.init().then(() => {
+			return new Promise((resolve, reject) => {
+
+				orchestrator
+					.once("initialized", resolve)
+					.once("error", reject);
+
+				orchestrator.init().catch(reject);
+
+			}).then(() => {
 
 				strictEqual(typeof orchestrator._Mediator, "object", "Generated orchestrator _Mediator is not an object");
 				strictEqual(orchestrator._Mediator instanceof Mediator, true, "Generated orchestrator _Mediator is not as expected");
@@ -566,9 +579,55 @@ describe("Orchestrator", () => {
 				strictEqual(typeof orchestrator._Server, "object", "Generated orchestrator _Server is not an object");
 				strictEqual(orchestrator._Server instanceof Server, true, "Generated orchestrator _Mediator is not as expected");
 
+				strictEqual(typeof orchestrator.initialized, "boolean", "Generated orchestrator initialized is not a boolean");
+				strictEqual(orchestrator.initialized, true, "Generated orchestrator initialized is not as expected");
+
 				return Promise.resolve();
 
 			});
+
+		});
+
+		it("should init non enabled orchestrator", () => {
+
+			const orchestrator = new NonEnabledOrchestrator(GOOD_OPTIONS);
+
+			return new Promise((resolve, reject) => {
+
+				orchestrator
+					.once("initialized", resolve)
+					.once("error", reject);
+
+				orchestrator.init().then(() => {
+
+					strictEqual(typeof orchestrator.initialized, "boolean", "Generated orchestrator initialized is not a boolean");
+					strictEqual(orchestrator.initialized, false, "Generated orchestrator initialized is not as expected");
+
+					resolve();
+
+				}).catch(reject);
+
+			});
+
+		});
+
+		it("should init delayed mediator", () => {
+
+			const opts = JSON.parse(JSON.stringify(GOOD_OPTIONS));
+
+				opts.mediatorFile = join(__dirname, "utils", "DelayedMediator.js");
+
+			return new Orchestrator(opts).init();
+
+		});
+
+		it("should init delayed server", () => {
+
+			const opts = JSON.parse(JSON.stringify(GOOD_OPTIONS));
+
+				opts.serverFile = join(__dirname, "utils", "DelayedServer.js");
+
+			return new Orchestrator(opts).init();
 
 		});
 

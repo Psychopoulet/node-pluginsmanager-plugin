@@ -7,7 +7,7 @@
 	const { parse } = require("url");
 
 	// locals
-	const Server = require(join(__dirname, "..", "..", "lib", "components", "Server.js"));
+	const Server = require(join(__dirname, "..", "..", "..", "lib", "components", "Server.js"));
 
 // consts
 
@@ -18,7 +18,7 @@
 
 // module
 
-module.exports = class ServerHerited extends Server {
+module.exports = class HeritedServer extends Server {
 
 	appMiddleware (req, res, next) {
 
