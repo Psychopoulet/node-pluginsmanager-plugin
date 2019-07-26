@@ -6,11 +6,11 @@
 	const { join } = require("path");
 
 	// locals
-	const Mediator = require(join(__dirname, "..", "..", "..", "lib", "components", "Mediator.js"));
+	const LocalMediator = require(join(__dirname, "LocalMediator.js"));
 
 // module
 
-module.exports = class HeritedMediator extends Mediator {
+module.exports = class HeritedMediator extends LocalMediator {
 
 	fullStack () {
 		return Promise.resolve();

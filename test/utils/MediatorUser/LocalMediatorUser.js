@@ -6,11 +6,11 @@
 	const { join } = require("path");
 
 	// locals
-	const Mediator = require(join(__dirname, "..", "..", "..", "lib", "components", "Mediator.js"));
+	const MediatorUser = require(join(__dirname, "..", "..", "..", "lib", "components", "MediatorUser.js"));
 
 // module
 
-module.exports = class LocalMediator extends Mediator {
+module.exports = class LocalMediatorUser extends MediatorUser {
 
 	_initWorkSpace () {
 

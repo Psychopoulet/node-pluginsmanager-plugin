@@ -33,8 +33,8 @@ declare module "node-pluginsmanager-plugin" {
 			protected _initWorkSpace(data?: any): Promise<void>;
 			protected _releaseWorkSpace(data?: any): Promise<void>;
 
-			protected _fireInitialized(): Promise<void>;
-			protected _fireReleased(): Promise<void>;
+			protected _fireInitialized(): this;
+			protected _fireReleased(): this;
 
 			public init(data?: any): Promise<void>;
 			public release(data?: any): Promise<void>;

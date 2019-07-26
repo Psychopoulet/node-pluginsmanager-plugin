@@ -8,7 +8,9 @@
 	const Events = require("events");
 
 	// locals
+
 	const Bootable = require(join(__dirname, "..", "lib", "components", "Bootable.js"));
+
 	const LocalBootable = require(join(__dirname, "utils", "Bootable", "LocalBootable.js"));
 
 // tests
@@ -46,21 +48,6 @@ describe("Bootable", () => {
 
 	});
 
-	it("should test non-herited init", (done) => {
-
-		new Bootable().init().then(() => {
-			done(new Error("There is no generated Error"));
-		}).catch((err) => {
-
-			strictEqual(typeof err, "object", "Generated Error is not as expected");
-			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
-
-			done();
-
-		});
-
-	});
-
 	it("should test init", () => {
 
 		return new Promise((resolve, reject) => {
@@ -81,18 +68,26 @@ describe("Bootable", () => {
 
 	});
 
-	it("should test non-herited release", (done) => {
+	it("should test non-herited _initWorkSpace", (done) => {
 
-		new Bootable().release().then(() => {
-			done(new Error("There is no generated Error"));
-		}).catch((err) => {
+		const nonHerited = new Bootable();
 
-			strictEqual(typeof err, "object", "Generated Error is not as expected");
-			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+		nonHerited
+			.once("initialized", () => {
+				done(new Error("There is no generated Error"));
+			})
+			.once("error", (err) => {
 
-			done();
+				strictEqual(nonHerited.initialized, false, "Generated nonHerited is not as expected");
 
-		});
+				strictEqual(typeof err, "object", "Generated Error is not as expected");
+				strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+
+				done();
+
+			});
+
+		nonHerited.init().catch(done);
 
 	});
 
@@ -117,6 +112,29 @@ describe("Bootable", () => {
 			return Promise.resolve();
 
 		});
+
+	});
+
+	it("should test non-herited _releaseWorkSpace", (done) => {
+
+		const nonHerited = new Bootable();
+
+		nonHerited
+			.once("released", () => {
+				done(new Error("There is no generated Error"));
+			})
+			.once("error", (err) => {
+
+				strictEqual(nonHerited.initialized, false, "Generated nonHerited is not as expected");
+
+				strictEqual(typeof err, "object", "Generated Error is not as expected");
+				strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+
+				done();
+
+			});
+
+		nonHerited.release().catch(done);
 
 	});
 

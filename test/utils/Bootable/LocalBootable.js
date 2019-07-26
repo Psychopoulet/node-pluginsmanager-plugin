@@ -14,13 +14,17 @@ module.exports = class LocalBootable extends Bootable {
 
 	_initWorkSpace () {
 
-		return this._fireInitialized();
+		this._fireInitialized();
+
+		return Promise.resolve();
 
 	}
 
 	_releaseWorkSpace () {
 
-		return this._fireReleased();
+		this._fireReleased();
+
+		return Promise.resolve();
 
 	}
 

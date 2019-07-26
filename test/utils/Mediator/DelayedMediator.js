@@ -6,18 +6,18 @@
 	const { join } = require("path");
 
 	// locals
-	const Mediator = require(join(__dirname, "..", "..", "..", "lib", "components", "Mediator.js"));
+	const LocalMediator = require(join(__dirname, "LocalMediator.js"));
 
 // module
 
-module.exports = class DelayedMediator extends Mediator {
+module.exports = class DelayedMediator extends LocalMediator {
 
-	init () {
+	_initWorkSpace () {
 
-		return new Promise(function delay (resolve) {
-			setTimeout(resolve, 500);
+		return new Promise((resolve) => {
+			setTimeout(resolve, 250);
 		}).then(() => {
-			return super.init();
+			return super._initWorkSpace();
 		});
 
 	}

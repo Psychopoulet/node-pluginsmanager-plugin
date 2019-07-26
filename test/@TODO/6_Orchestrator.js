@@ -27,7 +27,8 @@
 
 		// utils
 		const httpRequestTest = require(join(__dirname, "utils", "httpRequestTest.js"));
-		const NonEnabledOrchestrator = require(join(__dirname, "utils", "NonEnabledOrchestrator.js"));
+		const LocalOrchestrator = require(join(__dirname, "utils", "Orchestrator", "LocalOrchestrator.js"));
+		const NonEnabledOrchestrator = require(join(__dirname, "utils", "Orchestrator", "NonEnabledOrchestrator.js"));
 
 // consts
 
@@ -35,8 +36,8 @@
 
 	const GOOD_OPTIONS = {
 		"packageFile": join(__dirname, "..", "package.json"),
-		"mediatorFile": join(__dirname, "..", "lib", "components", "Mediator.js"),
-		"serverFile": join(__dirname, "..", "lib", "components", "Server.js")
+		"mediatorFile": join(__dirname, "utils", "Mediator", "LocalMediator.js"),
+		"serverFile": join(__dirname, "utils", "Server", "LocalServer.js")
 	};
 
 	const PORT = "3000";
@@ -48,7 +49,7 @@ describe("Orchestrator", () => {
 
 	it("should test constructor", () => {
 
-		const orchestrator = new Orchestrator({
+		const orchestrator = new LocalOrchestrator({
 			"packageFile": "packageFile",
 			"mediatorFile": "mediatorFile",
 			"serverFile": "serverFile"
@@ -59,6 +60,7 @@ describe("Orchestrator", () => {
 		strictEqual(orchestrator instanceof Bootable, true, "Generated orchestrator is not a Bootable instance");
 		strictEqual(orchestrator instanceof MediatorUser, true, "Generated orchestrator is not a MediatorUser instance");
 		strictEqual(orchestrator instanceof Orchestrator, true, "Generated orchestrator is not a Orchestrator instance");
+		strictEqual(orchestrator instanceof LocalOrchestrator, true, "Generated orchestrator is not a LocalOrchestrator instance");
 
 		strictEqual(typeof orchestrator._Server, "object", "Generated orchestrator _Server is not an object");
 		strictEqual(orchestrator._Server, null, "Generated orchestrator _Server is not as expected");
@@ -115,7 +117,7 @@ describe("Orchestrator", () => {
 
 	it("should test event", () => {
 
-		const orchestrator = new Orchestrator();
+		const orchestrator = new LocalOrchestrator();
 
 		return new Promise((resolve, reject) => {
 
@@ -131,22 +133,22 @@ describe("Orchestrator", () => {
 	});
 
 	it("should test install", () => {
-		return new Orchestrator().install();
+		return new LocalOrchestrator().install();
 	});
 
 	it("should test update", () => {
-		return new Orchestrator().update();
+		return new LocalOrchestrator().update();
 	});
 
 	it("should test uninstall", () => {
-		return new Orchestrator().uninstall();
+		return new LocalOrchestrator().uninstall();
 	});
 
 	describe("checkServer", () => {
 
 		it("should check without server", (done) => {
 
-			const orchestrator = new Orchestrator();
+			const orchestrator = new LocalOrchestrator();
 			delete orchestrator._Server;
 
 			orchestrator.checkServer().then(() => {
@@ -165,7 +167,7 @@ describe("Orchestrator", () => {
 
 		it("should check with null server", (done) => {
 
-			const orchestrator = new Orchestrator();
+			const orchestrator = new LocalOrchestrator();
 			orchestrator._Server = null;
 
 			orchestrator.checkServer().then(() => {
@@ -184,7 +186,7 @@ describe("Orchestrator", () => {
 
 		it("should check with wrong server (string)", (done) => {
 
-			const orchestrator = new Orchestrator();
+			const orchestrator = new LocalOrchestrator();
 			orchestrator._Server = "test";
 
 			orchestrator.checkServer().then(() => {
@@ -203,7 +205,7 @@ describe("Orchestrator", () => {
 
 		it("should check with wrong server (object)", (done) => {
 
-			const orchestrator = new Orchestrator();
+			const orchestrator = new LocalOrchestrator();
 			orchestrator._Server = {};
 
 			orchestrator.checkServer().then(() => {
@@ -222,7 +224,7 @@ describe("Orchestrator", () => {
 
 		it("should check with right server", () => {
 
-			const orchestrator = new Orchestrator();
+			const orchestrator = new LocalOrchestrator();
 			orchestrator._Server = new Server();
 
 			return orchestrator.checkServer();
@@ -235,7 +237,7 @@ describe("Orchestrator", () => {
 
 		it("should check without server", () => {
 
-			const orchestrator = new Orchestrator();
+			const orchestrator = new LocalOrchestrator();
 			delete orchestrator._Server;
 
 			const res = orchestrator.checkServerSync();
@@ -247,7 +249,7 @@ describe("Orchestrator", () => {
 
 		it("should check with null server", () => {
 
-			const orchestrator = new Orchestrator();
+			const orchestrator = new LocalOrchestrator();
 			orchestrator._Server = null;
 
 			const res = orchestrator.checkServerSync();
@@ -259,10 +261,10 @@ describe("Orchestrator", () => {
 
 		it("should check with wrong server (string)", () => {
 
-			const orchestrator = new Orchestrator();
+			const orchestrator = new LocalOrchestrator();
 			orchestrator._Server = "test";
 
-			const res = new Orchestrator().checkServerSync();
+			const res = new LocalOrchestrator().checkServerSync();
 
 			strictEqual(typeof res, "boolean", "Generated result is not as expected");
 			strictEqual(res, false, "Generated result is not as expected");
@@ -271,10 +273,10 @@ describe("Orchestrator", () => {
 
 		it("should check with wrong server (object)", () => {
 
-			const orchestrator = new Orchestrator();
+			const orchestrator = new LocalOrchestrator();
 			orchestrator._Server = {};
 
-			const res = new Orchestrator().checkServerSync();
+			const res = new LocalOrchestrator().checkServerSync();
 
 			strictEqual(typeof res, "boolean", "Generated result is not as expected");
 			strictEqual(res, false, "Generated result is not as expected");
@@ -283,7 +285,7 @@ describe("Orchestrator", () => {
 
 		it("should check with right server", () => {
 
-			const orchestrator = new Orchestrator();
+			const orchestrator = new LocalOrchestrator();
 			orchestrator._Server = new Server();
 
 			const res = orchestrator.checkServerSync();
@@ -301,7 +303,7 @@ describe("Orchestrator", () => {
 
 			it("should check without file", (done) => {
 
-				new Orchestrator().checkFiles().then(() => {
+				new LocalOrchestrator().checkFiles().then(() => {
 					done(new Error("There is no generated error"));
 				}).catch((err) => {
 
@@ -316,7 +318,7 @@ describe("Orchestrator", () => {
 
 			it("should check with inexistant file", (done) => {
 
-				new Orchestrator({
+				new LocalOrchestrator({
 					"packageFile": "ezsorfnzlmefnzmùe"
 				}).checkFiles().then(() => {
 					done(new Error("There is no generated error"));
@@ -337,7 +339,7 @@ describe("Orchestrator", () => {
 
 			it("should check without file", (done) => {
 
-				new Orchestrator({
+				new LocalOrchestrator({
 					"packageFile": join(__dirname, "..", "package.json")
 				}).checkFiles().then(() => {
 					done(new Error("There is no generated error"));
@@ -354,7 +356,7 @@ describe("Orchestrator", () => {
 
 			it("should check with inexistant file", (done) => {
 
-				new Orchestrator({
+				new LocalOrchestrator({
 					"packageFile": join(__dirname, "..", "package.json"),
 					"mediatorFile": "ezsorfnzlmefnzmùe"
 				}).checkFiles().then(() => {
@@ -376,7 +378,7 @@ describe("Orchestrator", () => {
 
 			it("should check without file", (done) => {
 
-				new Orchestrator({
+				new LocalOrchestrator({
 					"packageFile": join(__dirname, "..", "package.json"),
 					"mediatorFile": join(__dirname, "..", "lib", "components", "Mediator.json")
 				}).checkFiles().then(() => {
@@ -394,7 +396,7 @@ describe("Orchestrator", () => {
 
 			it("should check with inexistant file", (done) => {
 
-				new Orchestrator({
+				new LocalOrchestrator({
 					"packageFile": join(__dirname, "..", "package.json"),
 					"mediatorFile": join(__dirname, "..", "lib", "components", "Mediator.json"),
 					"serverFile": "ezsorfnzlmefnzmùe"
@@ -415,7 +417,7 @@ describe("Orchestrator", () => {
 
 		it("should check with existant files", () => {
 
-			return new Orchestrator(GOOD_OPTIONS).checkFiles();
+			return new LocalOrchestrator(GOOD_OPTIONS).checkFiles();
 
 		});
 
@@ -423,7 +425,7 @@ describe("Orchestrator", () => {
 
 	it("should test package file loader", () => {
 
-		const orchestrator = new Orchestrator(GOOD_OPTIONS);
+		const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
 
 		return orchestrator._loadDataFromPackageFile().then(() => {
 
@@ -503,7 +505,7 @@ describe("Orchestrator", () => {
 
 	it("should test http middleware without Server", () => {
 
-		const res = new Orchestrator(GOOD_OPTIONS).httpMiddleware(null, null);
+		const res = new LocalOrchestrator(GOOD_OPTIONS).httpMiddleware(null, null);
 
 		strictEqual(typeof res, "boolean", "Generated result is not an object");
 		strictEqual(res, false, "Generated result is not as expected");
@@ -512,7 +514,7 @@ describe("Orchestrator", () => {
 
 	it("should test app middleware without Server", () => {
 
-		const res = new Orchestrator(GOOD_OPTIONS).appMiddleware(null, null, () => {
+		const res = new LocalOrchestrator(GOOD_OPTIONS).appMiddleware(null, null, () => {
 			return false;
 		});
 
@@ -528,7 +530,7 @@ describe("Orchestrator", () => {
 			const opt = JSON.parse(JSON.stringify(GOOD_OPTIONS));
 			opt.mediatorFile = EMPTY_CLASS_TEST;
 
-			new Orchestrator(opt).init().then(() => {
+			new LocalOrchestrator(opt).init().then(() => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
@@ -546,7 +548,7 @@ describe("Orchestrator", () => {
 			const opt = JSON.parse(JSON.stringify(GOOD_OPTIONS));
 			opt.serverFile = EMPTY_CLASS_TEST;
 
-			new Orchestrator(opt).init().then(() => {
+			new LocalOrchestrator(opt).init().then(() => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
@@ -561,7 +563,7 @@ describe("Orchestrator", () => {
 
 		it("should init orchestrator", () => {
 
-			const orchestrator = new Orchestrator(GOOD_OPTIONS);
+			const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
 
 			return new Promise((resolve, reject) => {
 
@@ -615,9 +617,9 @@ describe("Orchestrator", () => {
 
 			const opts = JSON.parse(JSON.stringify(GOOD_OPTIONS));
 
-				opts.mediatorFile = join(__dirname, "utils", "DelayedMediator.js");
+				opts.mediatorFile = join(__dirname, "utils", "Mediator", "DelayedMediator.js");
 
-			return new Orchestrator(opts).init();
+			return new LocalOrchestrator(opts).init();
 
 		});
 
@@ -625,9 +627,32 @@ describe("Orchestrator", () => {
 
 			const opts = JSON.parse(JSON.stringify(GOOD_OPTIONS));
 
-				opts.serverFile = join(__dirname, "utils", "DelayedServer.js");
+				opts.serverFile = join(__dirname, "utils", "Server", "DelayedServer.js");
 
-			return new Orchestrator(opts).init();
+			return new LocalOrchestrator(opts).init();
+
+		});
+
+		it("should test non-herited _initWorkSpace", (done) => {
+
+			const nonHerited = new Orchestrator();
+
+			nonHerited
+				.once("initialized", () => {
+					done(new Error("There is no generated Error"));
+				})
+				.once("error", (err) => {
+
+					strictEqual(nonHerited.initialized, false, "Generated nonHerited is not as expected");
+
+					strictEqual(typeof err, "object", "Generated Error is not as expected");
+					strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+
+					done();
+
+				});
+
+			nonHerited.init().catch(done);
 
 		});
 
@@ -635,7 +660,7 @@ describe("Orchestrator", () => {
 
 	it("should release orchestrator", () => {
 
-		const orchestrator = new Orchestrator(GOOD_OPTIONS);
+		const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
 
 		return orchestrator.init().then(() => {
 			return orchestrator.release("test release");
@@ -643,9 +668,32 @@ describe("Orchestrator", () => {
 
 	});
 
+	it("should test non-herited _releaseWorkSpace", (done) => {
+
+		const nonHerited = new Orchestrator();
+
+		nonHerited
+			.once("released", () => {
+				done(new Error("There is no generated Error"));
+			})
+			.once("error", (err) => {
+
+				strictEqual(nonHerited.initialized, false, "Generated nonHerited is not as expected");
+
+				strictEqual(typeof err, "object", "Generated Error is not as expected");
+				strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+
+				done();
+
+			});
+
+		nonHerited.release().catch(done);
+
+	});
+
 	it("should destroy orchestrator", () => {
 
-		return new Orchestrator().destroy();
+		return new LocalOrchestrator().destroy();
 
 	});
 
@@ -654,10 +702,10 @@ describe("Orchestrator", () => {
 		it("should test with full stack http", () => {
 
 			const opt = JSON.parse(JSON.stringify(GOOD_OPTIONS));
-			opt.mediatorFile = join(__dirname, "utils", "MediatorHerited.js");
-			opt.serverFile = join(__dirname, "utils", "ServerHerited.js");
+			opt.mediatorFile = join(__dirname, "utils", "Mediator", "HeritedMediator.js");
+			opt.serverFile = join(__dirname, "utils", "Server", "HeritedServer.js");
 
-			const orchestrator = new Orchestrator(opt);
+			const orchestrator = new LocalOrchestrator(opt);
 			let runningServer = null;
 
 			return orchestrator.init().then(() => {
@@ -708,10 +756,10 @@ describe("Orchestrator", () => {
 		it("should test with full stack app", () => {
 
 			const opt = JSON.parse(JSON.stringify(GOOD_OPTIONS));
-			opt.mediatorFile = join(__dirname, "utils", "MediatorHerited.js");
-			opt.serverFile = join(__dirname, "utils", "ServerHerited.js");
+			opt.mediatorFile = join(__dirname, "utils", "Mediator", "HeritedMediator.js");
+			opt.serverFile = join(__dirname, "utils", "Server", "HeritedServer.js");
 
-			const orchestrator = new Orchestrator(opt);
+			const orchestrator = new LocalOrchestrator(opt);
 			let runningServer = null;
 
 			return orchestrator.init().then(() => {

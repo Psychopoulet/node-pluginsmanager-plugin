@@ -6,11 +6,11 @@
 	const { join } = require("path");
 
 	// locals
-	const Orchestrator = require(join(__dirname, "..", "..", "..", "lib", "components", "Orchestrator.js"));
+	const LocalOrchestrator = require(join(__dirname, "LocalOrchestrator.js"));
 
 // module
 
-module.exports = class NonEnabledOrchestrator extends Orchestrator {
+module.exports = class NonEnabledOrchestrator extends LocalOrchestrator {
 
 	checkEnable () {
 

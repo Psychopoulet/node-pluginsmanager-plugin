@@ -6,18 +6,18 @@
 	const { join } = require("path");
 
 	// locals
-	const Server = require(join(__dirname, "..", "..", "..", "lib", "components", "Server.js"));
+	const LocalServer = require(join(__dirname, "LocalServer.js"));
 
 // module
 
-module.exports = class ServerDelayed extends Server {
+module.exports = class ServerDelayed extends LocalServer {
 
-	init () {
+	_initWorkSpace () {
 
-		return new Promise(function delay (resolve) {
-			setTimeout(resolve, 500);
+		return new Promise((resolve) => {
+			setTimeout(resolve, 250);
 		}).then(() => {
-			return super.init();
+			return super._initWorkSpace();
 		});
 
 	}

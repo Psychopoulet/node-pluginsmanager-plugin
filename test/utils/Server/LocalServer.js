@@ -6,21 +6,25 @@
 	const { join } = require("path");
 
 	// locals
-	const Orchestrator = require(join(__dirname, "..", "..", "..", "lib", "components", "Orchestrator.js"));
+	const Server = require(join(__dirname, "..", "..", "..", "lib", "components", "Server.js"));
 
 // module
 
-module.exports = class DelayedServer extends Orchestrator {
+module.exports = class LocalServer extends Server {
 
 	_initWorkSpace () {
 
-		return this._fireInitialized();
+		this._fireInitialized();
+
+		return Promise.resolve();
 
 	}
 
 	_releaseWorkSpace () {
 
-		return this._fireReleased();
+		this._fireReleased();
+
+		return Promise.resolve();
 
 	}
 
