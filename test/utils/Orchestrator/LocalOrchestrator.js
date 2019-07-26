@@ -14,13 +14,11 @@ module.exports = class LocalOrchestrator extends Orchestrator {
 
 	_initWorkSpace () {
 
-		return this._fireInitialized();
+		return Promise.resolve();
 
 	}
 
 	_releaseWorkSpace () {
-
-		this._fireReleased();
 
 		return Promise.resolve();
 

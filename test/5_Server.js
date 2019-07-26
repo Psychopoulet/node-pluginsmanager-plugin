@@ -16,7 +16,7 @@
 	const httpRequestTest = require(join(__dirname, "utils", "httpRequestTest.js"));
 	const Bootable = require(join(__dirname, "..", "lib", "components", "Bootable.js"));
 	const MediatorUser = require(join(__dirname, "..", "lib", "components", "MediatorUser.js"));
-	const { Server } = require(join(__dirname, "..", "lib", "main.js"));
+	const { Mediator, Server } = require(join(__dirname, "..", "lib", "main.js"));
 	const LocalServer = require(join(__dirname, "utils", "Server", "LocalServer.js"));
 	const HeritedServer = require(join(__dirname, "utils", "Server", "HeritedServer.js"));
 
@@ -29,13 +29,9 @@
 
 describe("Server", () => {
 
-	const server = new LocalServer();
-
-	afterEach(() => {
-		return server.release();
-	});
-
 	it("should test constructor", () => {
+
+		const server = new LocalServer();
 
 		strictEqual(typeof server, "object", "Generated server is not an object");
 		strictEqual(server instanceof Events, true, "Generated server is not a Events instance");
@@ -47,6 +43,8 @@ describe("Server", () => {
 	});
 
 	it("should test event", () => {
+
+		const server = new LocalServer();
 
 		return new Promise((resolve, reject) => {
 
@@ -61,62 +59,78 @@ describe("Server", () => {
 
 	});
 
-	it("should init server", () => {
-		return server.init("test init");
+	it("should init server without Mediator", (done) => {
+
+		new LocalServer().init("test init").then(() => {
+
+			done(new Error("There is no generated Error"));
+
+		}).catch((err) => {
+
+			strictEqual(typeof err, "object", "Generated Error is not as expected");
+			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+
+			done();
+
+		});
+
+	});
+
+	it("should init server with Mediator", () => {
+
+		const mediator = new Mediator();
+
+		return new LocalServer({
+			"mediator": mediator
+		}).init("test init");
+
 	});
 
 	it("should test non-herited _initWorkSpace", (done) => {
 
 		const nonHerited = new Server();
 
-		nonHerited
-			.once("initialized", () => {
-				done(new Error("There is no generated Error"));
-			})
-			.once("error", (err) => {
+		nonHerited.init().then(() => {
 
-				strictEqual(nonHerited.initialized, false, "Generated nonHerited is not as expected");
+			done(new Error("There is no generated Error"));
 
-				strictEqual(typeof err, "object", "Generated Error is not as expected");
-				strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+		}).catch((err) => {
 
-				done();
+			strictEqual(typeof err, "object", "Generated Error is not as expected");
+			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
 
-			});
+			done();
 
-		nonHerited.init().catch(done);
+		});
 
 	});
 
 	it("should release server", () => {
-		return server.release("test release");
+		return new LocalServer().release("test release");
 	});
 
 	it("should test non-herited _releaseWorkSpace", (done) => {
 
 		const nonHerited = new Server();
 
-		nonHerited
-			.once("released", () => {
-				done(new Error("There is no generated Error"));
-			})
-			.once("error", (err) => {
+		nonHerited.release().then(() => {
 
-				strictEqual(nonHerited.initialized, false, "Generated nonHerited is not as expected");
+			done(new Error("There is no generated Error"));
 
-				strictEqual(typeof err, "object", "Generated Error is not as expected");
-				strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+		}).catch((err) => {
 
-				done();
+			strictEqual(typeof err, "object", "Generated Error is not as expected");
+			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
 
-			});
+			done();
 
-		nonHerited.release().catch(done);
+		});
 
 	});
 
 	describe("network", () => {
 
+		const server = new LocalServer();
 		const serverHerited = new HeritedServer();
 
 		let runningServer = null;

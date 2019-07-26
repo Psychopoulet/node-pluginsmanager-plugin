@@ -80,22 +80,18 @@ describe("MediatorUser", () => {
 
 		const nonHerited = new MediatorUser();
 
-		nonHerited
-			.once("initialized", () => {
-				done(new Error("There is no generated Error"));
-			})
-			.once("error", (err) => {
+		nonHerited.init().then(() => {
 
-				strictEqual(nonHerited.initialized, false, "Generated nonHerited is not as expected");
+			done(new Error("There is no generated Error"));
 
-				strictEqual(typeof err, "object", "Generated Error is not as expected");
-				strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+		}).catch((err) => {
 
-				done();
+			strictEqual(typeof err, "object", "Generated Error is not as expected");
+			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
 
-			});
+			done();
 
-		nonHerited.init().catch(done);
+		});
 
 	});
 
@@ -117,22 +113,18 @@ describe("MediatorUser", () => {
 
 		const nonHerited = new MediatorUser();
 
-		nonHerited
-			.once("released", () => {
-				done(new Error("There is no generated Error"));
-			})
-			.once("error", (err) => {
+		nonHerited.release().then(() => {
 
-				strictEqual(nonHerited.initialized, false, "Generated nonHerited is not as expected");
+			done(new Error("There is no generated Error"));
 
-				strictEqual(typeof err, "object", "Generated Error is not as expected");
-				strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+		}).catch((err) => {
 
-				done();
+			strictEqual(typeof err, "object", "Generated Error is not as expected");
+			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
 
-			});
+			done();
 
-		nonHerited.release().catch(done);
+		});
 
 	});
 
@@ -212,23 +204,6 @@ describe("MediatorUser", () => {
 
 		});
 
-		it("should check with not initialized mediator", (done) => {
-
-			new LocalMediatorUser({
-				"mediator": new Mediator()
-			}).checkMediator().then(() => {
-				done(new Error("There is no generated error"));
-			}).catch((err) => {
-
-				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
-
-				done();
-
-			});
-
-		});
-
 		it("should check with right mediator", () => {
 
 			const mediator = new LocalMediator();
@@ -238,86 +213,6 @@ describe("MediatorUser", () => {
 				return new LocalMediatorUser({
 					"mediator": mediator
 				}).checkMediator();
-
-			});
-
-		});
-
-	});
-
-	describe("checkMediatorSync", () => {
-
-		it("should check without mediator", () => {
-
-			const mediatorUser = new LocalMediatorUser();
-			delete mediatorUser._Mediator;
-
-			const res = mediatorUser.checkMediatorSync();
-
-			strictEqual(typeof res, "boolean", "Generated result is not as expected");
-			strictEqual(res, false, "Generated result is not as expected");
-
-		});
-
-		it("should check with null mediator", () => {
-
-			const mediatorUser = new LocalMediatorUser();
-			mediatorUser._Mediator = null;
-
-			const res = mediatorUser.checkMediatorSync();
-
-			strictEqual(typeof res, "boolean", "Generated result is not as expected");
-			strictEqual(res, false, "Generated result is not as expected");
-
-		});
-
-		it("should check with wrong mediator (string)", () => {
-
-			const res = new LocalMediatorUser({
-				"mediator": "test"
-			}).checkMediatorSync();
-
-			strictEqual(typeof res, "boolean", "Generated result is not as expected");
-			strictEqual(res, false, "Generated result is not as expected");
-
-		});
-
-		it("should check with wrong mediator (object)", () => {
-
-			const res = new LocalMediatorUser({
-				"mediator": {}
-			}).checkMediatorSync();
-
-			strictEqual(typeof res, "boolean", "Generated result is not as expected");
-			strictEqual(res, false, "Generated result is not as expected");
-
-		});
-
-		it("should check with not initialized mediator", () => {
-
-			const res = new LocalMediatorUser({
-				"mediator": new Mediator()
-			}).checkMediatorSync();
-
-			strictEqual(typeof res, "boolean", "Generated result is not as expected");
-			strictEqual(res, false, "Generated result is not as expected");
-
-		});
-
-		it("should check with right mediator", (done) => {
-
-			const mediator = new LocalMediator();
-
-			mediator.init().then(() => {
-
-				const res = new LocalMediatorUser({
-					"mediator": mediator
-				}).checkMediatorSync();
-
-				strictEqual(typeof res, "boolean", "Generated result is not as expected");
-				strictEqual(res, true, "Generated result is not as expected");
-
-				done();
 
 			});
 

@@ -51,7 +51,9 @@ describe("Bootable", () => {
 		const nonHerited = new Bootable();
 
 		nonHerited.init().then(() => {
+
 			done(new Error("There is no generated Error"));
+
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "Generated Error is not as expected");
@@ -68,7 +70,9 @@ describe("Bootable", () => {
 		const bootable = new LocalBootable();
 
 		return bootable.init().then(() => {
+
 			return bootable.release();
+
 		});
 
 	});
@@ -78,7 +82,9 @@ describe("Bootable", () => {
 		const nonHerited = new Bootable();
 
 		nonHerited.release().then(() => {
+
 			done(new Error("There is no generated Error"));
+
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "Generated Error is not as expected");

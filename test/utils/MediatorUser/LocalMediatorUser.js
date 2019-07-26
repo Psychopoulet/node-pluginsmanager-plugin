@@ -14,15 +14,11 @@ module.exports = class LocalMediatorUser extends MediatorUser {
 
 	_initWorkSpace () {
 
-		this._fireInitialized();
-
 		return Promise.resolve();
 
 	}
 
 	_releaseWorkSpace () {
-
-		this._fireReleased();
 
 		return Promise.resolve();
 
