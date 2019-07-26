@@ -13,13 +13,12 @@
 
 	// locals
 
+	const httpRequestTest = require(join(__dirname, "utils", "httpRequestTest.js"));
 	const Bootable = require(join(__dirname, "..", "lib", "components", "Bootable.js"));
 	const MediatorUser = require(join(__dirname, "..", "lib", "components", "MediatorUser.js"));
-	const Server = require(join(__dirname, "..", "lib", "components", "Server.js"));
-
-	const httpRequestTest = require(join(__dirname, "utils", "httpRequestTest.js"));
-	const HeritedServer = require(join(__dirname, "utils", "Server", "HeritedServer.js"));
+	const { Server } = require(join(__dirname, "..", "lib", "main.js"));
 	const LocalServer = require(join(__dirname, "utils", "Server", "LocalServer.js"));
+	const HeritedServer = require(join(__dirname, "utils", "Server", "HeritedServer.js"));
 
 // consts
 

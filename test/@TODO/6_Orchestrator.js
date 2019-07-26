@@ -20,10 +20,8 @@
 		// plugin
 		const readJSONFile = require(join(__dirname, "..", "lib", "utils", "readJSONFile.js"));
 		const Bootable = require(join(__dirname, "..", "lib", "components", "Bootable.js"));
-			const Mediator = require(join(__dirname, "..", "lib", "components", "Mediator.js"));
-			const MediatorUser = require(join(__dirname, "..", "lib", "components", "MediatorUser.js"));
-				const Server = require(join(__dirname, "..", "lib", "components", "Server.js"));
-				const Orchestrator = require(join(__dirname, "..", "lib", "components", "Orchestrator.js"));
+		const MediatorUser = require(join(__dirname, "..", "lib", "components", "MediatorUser.js"));
+		const { Mediator, Server, Orchestrator } = require(join(__dirname, "..", "lib", "main.js"));
 
 		// utils
 		const httpRequestTest = require(join(__dirname, "utils", "httpRequestTest.js"));
@@ -635,7 +633,7 @@ describe("Orchestrator", () => {
 
 		it("should test non-herited _initWorkSpace", (done) => {
 
-			const nonHerited = new Orchestrator();
+			const nonHerited = new Orchestrator(GOOD_OPTIONS);
 
 			nonHerited
 				.once("initialized", () => {
