@@ -51,23 +51,6 @@ describe("MediatorUser", () => {
 
 	});
 
-	it("should test event", () => {
-
-		const mediatorUser = new LocalMediatorUser();
-
-		return new Promise((resolve, reject) => {
-
-			mediatorUser
-				.once("error", reject)
-				.once("test", resolve)
-				.emit("test");
-
-		}).then(() => {
-			return mediatorUser.release();
-		});
-
-	});
-
 	it("should init mediatorUser", () => {
 
 		return new LocalMediatorUser({
@@ -213,6 +196,69 @@ describe("MediatorUser", () => {
 				return new LocalMediatorUser({
 					"mediator": mediator
 				}).checkMediator();
+
+			});
+
+		});
+
+	});
+
+	describe("events", () => {
+
+		it("should test events before init", () => {
+
+			const mediatorUser = new LocalMediator();
+
+			return Promise.resolve().then(() => {
+
+				return new Promise((resolve) => {
+
+					mediatorUser
+						.once("test", resolve)
+						.emit("test");
+
+				});
+
+			});
+
+		});
+
+		it("should test events after init", () => {
+
+			const mediatorUser = new LocalMediator();
+
+			return new Promise((resolve, reject) => {
+
+				mediatorUser
+					.once("test", resolve);
+
+				mediatorUser.init().then(() => {
+					mediatorUser.emit("test");
+				}).catch(reject);
+
+			});
+
+		});
+
+		it("should test events after release", () => {
+
+			const mediatorUser = new LocalMediator();
+
+			return new Promise((resolve, reject) => {
+
+				mediatorUser.once("test", () => {
+					reject(new Error("Should not fire this event"));
+				});
+
+				mediatorUser.init().then(() => {
+					return mediatorUser.release();
+				}).then(() => {
+
+					mediatorUser.emit("test");
+
+					resolve();
+
+				}).catch(reject);
 
 			});
 

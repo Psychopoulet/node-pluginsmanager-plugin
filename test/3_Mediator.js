@@ -104,4 +104,67 @@ describe("Mediator", () => {
 
 	});
 
+	describe("events", () => {
+
+		it("should test events before init", () => {
+
+			const mediator = new LocalMediator();
+
+			return Promise.resolve().then(() => {
+
+				return new Promise((resolve) => {
+
+					mediator
+						.once("test", resolve)
+						.emit("test");
+
+				});
+
+			});
+
+		});
+
+		it("should test events after init", () => {
+
+			const mediator = new LocalMediator();
+
+			return new Promise((resolve, reject) => {
+
+				mediator
+					.once("test", resolve);
+
+				mediator.init().then(() => {
+					mediator.emit("test");
+				}).catch(reject);
+
+			});
+
+		});
+
+		it("should test events after release", () => {
+
+			const mediator = new LocalMediator();
+
+			return new Promise((resolve, reject) => {
+
+				mediator.once("test", () => {
+					reject(new Error("Should not fire this event"));
+				});
+
+				mediator.init().then(() => {
+					return mediator.release();
+				}).then(() => {
+
+					mediator.emit("test");
+
+					resolve();
+
+				}).catch(reject);
+
+			});
+
+		});
+
+	});
+
 });

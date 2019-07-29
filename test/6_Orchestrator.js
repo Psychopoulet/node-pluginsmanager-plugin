@@ -129,23 +129,6 @@ describe("Orchestrator", () => {
 
 	});
 
-	it("should test event", () => {
-
-		const orchestrator = new LocalOrchestrator();
-
-		return new Promise((resolve, reject) => {
-
-			orchestrator
-				.once("error", reject)
-				.once("test", resolve)
-				.emit("test");
-
-		}).then(() => {
-			return orchestrator.release();
-		});
-
-	});
-
 	describe("checkServer", () => {
 
 		it("should check without server", (done) => {
@@ -717,6 +700,69 @@ describe("Orchestrator", () => {
 
 		it("should test uninstall", () => {
 			return new LocalOrchestrator().uninstall();
+		});
+
+	});
+
+	describe("events", () => {
+
+		it("should test events before init", () => {
+
+			const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
+
+			return Promise.resolve().then(() => {
+
+				return new Promise((resolve) => {
+
+					orchestrator
+						.once("test", resolve)
+						.emit("test");
+
+				});
+
+			});
+
+		});
+
+		it("should test events after init", () => {
+
+			const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
+
+			return new Promise((resolve, reject) => {
+
+				orchestrator
+					.once("test", resolve);
+
+				orchestrator.init().then(() => {
+					orchestrator.emit("test");
+				}).catch(reject);
+
+			});
+
+		});
+
+		it("should test events after release", () => {
+
+			const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
+
+			return new Promise((resolve, reject) => {
+
+				orchestrator.once("test", () => {
+					reject(new Error("Should not fire this event"));
+				});
+
+				orchestrator.init().then(() => {
+					return orchestrator.release();
+				}).then(() => {
+
+					orchestrator.emit("test");
+
+					resolve();
+
+				}).catch(reject);
+
+			});
+
 		});
 
 	});

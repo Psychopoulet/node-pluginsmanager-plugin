@@ -42,23 +42,6 @@ describe("Server", () => {
 
 	});
 
-	it("should test event", () => {
-
-		const server = new LocalServer();
-
-		return new Promise((resolve, reject) => {
-
-			server
-				.once("error", reject)
-				.once("test", resolve)
-				.emit("test");
-
-		}).then(() => {
-			return server.release();
-		});
-
-	});
-
 	it("should init server without Mediator", (done) => {
 
 		new LocalServer().init("test init").then(() => {
@@ -236,6 +219,77 @@ describe("Server", () => {
 			}).then(() => {
 
 				return httpRequestTest("/thisisatest", 201, "Created");
+
+			});
+
+		});
+
+	});
+
+	describe("events", () => {
+
+		const mediator = new Mediator();
+
+		it("should test events before init", () => {
+
+			const server = new LocalServer({
+				"mediator": mediator
+			});
+
+			return Promise.resolve().then(() => {
+
+				return new Promise((resolve) => {
+
+					server
+						.once("test", resolve)
+						.emit("test");
+
+				});
+
+			});
+
+		});
+
+		it("should test events after init", () => {
+
+			const server = new LocalServer({
+				"mediator": mediator
+			});
+
+			return new Promise((resolve, reject) => {
+
+				server
+					.once("test", resolve);
+
+				server.init().then(() => {
+					server.emit("test");
+				}).catch(reject);
+
+			});
+
+		});
+
+		it("should test events after release", () => {
+
+			const server = new LocalServer({
+				"mediator": mediator
+			});
+
+			return new Promise((resolve, reject) => {
+
+				server.once("test", () => {
+					reject(new Error("Should not fire this event"));
+				});
+
+				server.init().then(() => {
+					return server.release();
+				}).then(() => {
+
+					server.emit("test");
+
+					resolve();
+
+				}).catch(reject);
 
 			});
 

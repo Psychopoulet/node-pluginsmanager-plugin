@@ -27,19 +27,6 @@ describe("Bootable", () => {
 
 	});
 
-	it("should test event", () => {
-
-		return new Promise((resolve, reject) => {
-
-			new LocalBootable()
-				.once("error", reject)
-				.once("test", resolve)
-				.emit("test");
-
-		});
-
-	});
-
 	it("should test init", () => {
 
 		return new LocalBootable().init();
@@ -91,6 +78,69 @@ describe("Bootable", () => {
 			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
 
 			done();
+
+		});
+
+	});
+
+	describe("events", () => {
+
+		it("should test events before init", () => {
+
+			const bootable = new LocalBootable();
+
+			return Promise.resolve().then(() => {
+
+				return new Promise((resolve) => {
+
+					bootable
+						.once("test", resolve)
+						.emit("test");
+
+				});
+
+			});
+
+		});
+
+		it("should test events after init", () => {
+
+			const bootable = new LocalBootable();
+
+			return new Promise((resolve, reject) => {
+
+				bootable
+					.once("test", resolve);
+
+				bootable.init().then(() => {
+					bootable.emit("test");
+				}).catch(reject);
+
+			});
+
+		});
+
+		it("should test events after release", () => {
+
+			const bootable = new LocalBootable();
+
+			return new Promise((resolve, reject) => {
+
+				bootable.once("test", () => {
+					reject(new Error("Should not fire this event"));
+				});
+
+				bootable.init().then(() => {
+					return bootable.release();
+				}).then(() => {
+
+					bootable.emit("test");
+
+					resolve();
+
+				}).catch(reject);
+
+			});
 
 		});
 
