@@ -731,11 +731,9 @@ describe("Orchestrator", () => {
 			return new Promise((resolve, reject) => {
 
 				orchestrator
-					.once("test", resolve);
+					.once("initialized", resolve);
 
-				orchestrator.init().then(() => {
-					orchestrator.emit("test");
-				}).catch(reject);
+				orchestrator.init().catch(reject);
 
 			});
 
@@ -747,17 +745,19 @@ describe("Orchestrator", () => {
 
 			return new Promise((resolve, reject) => {
 
-				orchestrator.once("test", () => {
-					reject(new Error("Should not fire this event"));
-				});
+				orchestrator
+					.once("test", () => {
+						reject(new Error("Should not fire this event"));
+					})
+					.once("released", resolve);
 
 				orchestrator.init().then(() => {
 					return orchestrator.release();
 				}).then(() => {
 
-					orchestrator.emit("test");
+					mediator.emit("test");
 
-					resolve();
+					return Promise.resolve();
 
 				}).catch(reject);
 

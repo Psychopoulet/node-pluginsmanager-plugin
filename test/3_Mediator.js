@@ -72,6 +72,9 @@ describe("Mediator", () => {
 
 		return mediator.init().then(() => {
 
+			strictEqual(typeof mediator.initialized, "boolean", "Generated mediator is not as expected");
+			strictEqual(mediator.initialized, true, "Generated mediator is not as expected");
+
 			return mediator.release();
 
 		}).then(() => {
@@ -131,11 +134,9 @@ describe("Mediator", () => {
 			return new Promise((resolve, reject) => {
 
 				mediator
-					.once("test", resolve);
+					.once("initialized", resolve);
 
-				mediator.init().then(() => {
-					mediator.emit("test");
-				}).catch(reject);
+				mediator.init().catch(reject);
 
 			});
 
@@ -147,9 +148,11 @@ describe("Mediator", () => {
 
 			return new Promise((resolve, reject) => {
 
-				mediator.once("test", () => {
-					reject(new Error("Should not fire this event"));
-				});
+				mediator
+					.once("test", () => {
+						reject(new Error("Should not fire this event"));
+					})
+					.once("released", resolve);
 
 				mediator.init().then(() => {
 					return mediator.release();
@@ -157,7 +160,7 @@ describe("Mediator", () => {
 
 					mediator.emit("test");
 
-					resolve();
+					return Promise.resolve();
 
 				}).catch(reject);
 
