@@ -12,9 +12,9 @@
 
 module.exports = class NonEnabledOrchestrator extends LocalOrchestrator {
 
-	checkEnable () {
+	isEnable () {
 
-		this.enable = false;
+		this.enabled = false;
 
 		return Promise.resolve();
 
