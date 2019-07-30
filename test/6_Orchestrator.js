@@ -11,18 +11,24 @@
 	const { deepStrictEqual, strictEqual } = require("assert");
 	const Events = require("events");
 	const { createServer } = require("http");
+	const WebSocketServer = require("ws").Server;
 
 	// externals
 	const express = require("express");
 
 	// locals
-	const httpRequestTest = require(join(__dirname, "utils", "httpRequestTest.js"));
-	const readJSONFile = require(join(__dirname, "..", "lib", "utils", "readJSONFile.js"));
-	const Bootable = require(join(__dirname, "..", "lib", "components", "Bootable.js"));
-		const Mediator = require(join(__dirname, "..", "lib", "components", "Mediator.js"));
+
+		// plugin
+		const readJSONFile = require(join(__dirname, "..", "lib", "utils", "readJSONFile.js"));
+		const Bootable = require(join(__dirname, "..", "lib", "components", "Bootable.js"));
 		const MediatorUser = require(join(__dirname, "..", "lib", "components", "MediatorUser.js"));
-			const Server = require(join(__dirname, "..", "lib", "components", "Server.js"));
-			const Orchestrator = require(join(__dirname, "..", "lib", "components", "Orchestrator.js"));
+		const { Mediator, Server, Orchestrator } = require(join(__dirname, "..", "lib", "main.js"));
+
+		// utils
+		const httpRequestTest = require(join(__dirname, "utils", "httpRequestTest.js"));
+		const socketRequestTest = require(join(__dirname, "utils", "socketRequestTest.js"));
+		const LocalOrchestrator = require(join(__dirname, "utils", "Orchestrator", "LocalOrchestrator.js"));
+		const NonEnabledOrchestrator = require(join(__dirname, "utils", "Orchestrator", "NonEnabledOrchestrator.js"));
 
 // consts
 
@@ -30,11 +36,12 @@
 
 	const GOOD_OPTIONS = {
 		"packageFile": join(__dirname, "..", "package.json"),
-		"mediatorFile": join(__dirname, "..", "lib", "components", "Mediator.js"),
-		"serverFile": join(__dirname, "..", "lib", "components", "Server.js")
+		"mediatorFile": join(__dirname, "utils", "Mediator", "LocalMediator.js"),
+		"serverFile": join(__dirname, "utils", "Server", "LocalServer.js")
 	};
 
-	const PORT = "3000";
+	const PORT = 3000;
+	const PORT_SOCKET = PORT + 1;
 	const RESPONSE_CONTENT = "Hello World";
 
 // tests
@@ -43,7 +50,7 @@ describe("Orchestrator", () => {
 
 	it("should test constructor", () => {
 
-		const orchestrator = new Orchestrator({
+		const orchestrator = new LocalOrchestrator({
 			"packageFile": "packageFile",
 			"mediatorFile": "mediatorFile",
 			"serverFile": "serverFile"
@@ -54,94 +61,79 @@ describe("Orchestrator", () => {
 		strictEqual(orchestrator instanceof Bootable, true, "Generated orchestrator is not a Bootable instance");
 		strictEqual(orchestrator instanceof MediatorUser, true, "Generated orchestrator is not a MediatorUser instance");
 		strictEqual(orchestrator instanceof Orchestrator, true, "Generated orchestrator is not a Orchestrator instance");
+		strictEqual(orchestrator instanceof LocalOrchestrator, true, "Generated orchestrator is not a LocalOrchestrator instance");
 
-		strictEqual(typeof orchestrator._Server, "object", "Generated orchestrator _Server is not an object");
-		strictEqual(orchestrator._Server, null, "Generated orchestrator _Server is not as expected");
+		// protected
 
-		// params
+			strictEqual(typeof orchestrator._Server, "object", "Generated orchestrator _Server is not an object");
+			strictEqual(orchestrator._Server, null, "Generated orchestrator _Server is not as expected");
 
-		strictEqual(typeof orchestrator._packageFile, "string", "Generated orchestrator _packageFile is not a string");
-		strictEqual(orchestrator._packageFile, "packageFile", "Generated orchestrator _packageFile is not as expected");
+			// params
 
-		strictEqual(typeof orchestrator._mediatorFile, "string", "Generated orchestrator _mediatorFile is not a string");
-		strictEqual(orchestrator._mediatorFile, "mediatorFile", "Generated orchestrator _mediatorFile is not as expected");
+			strictEqual(typeof orchestrator._packageFile, "string", "Generated orchestrator _packageFile is not a string");
+			strictEqual(orchestrator._packageFile, "packageFile", "Generated orchestrator _packageFile is not as expected");
 
-		strictEqual(typeof orchestrator._serverFile, "string", "Generated orchestrator _serverFile is not a string");
-		strictEqual(orchestrator._serverFile, "serverFile", "Generated orchestrator _serverFile is not as expected");
+			strictEqual(typeof orchestrator._mediatorFile, "string", "Generated orchestrator _mediatorFile is not a string");
+			strictEqual(orchestrator._mediatorFile, "mediatorFile", "Generated orchestrator _mediatorFile is not as expected");
 
-		// native
+			strictEqual(typeof orchestrator._serverFile, "string", "Generated orchestrator _serverFile is not a string");
+			strictEqual(orchestrator._serverFile, "serverFile", "Generated orchestrator _serverFile is not as expected");
 
-		strictEqual(typeof orchestrator.authors, "object", "Generated orchestrator authors is not an object");
-		strictEqual(orchestrator.authors instanceof Array, true, "Generated orchestrator authors is not an Array");
-		deepStrictEqual(orchestrator.authors, [], "Generated orchestrator authors is not as expected");
+			// extended
 
-		strictEqual(typeof orchestrator.description, "string", "Generated orchestrator description is not a string");
-		strictEqual(orchestrator.description, "", "Generated orchestrator description is not as expected");
+			strictEqual(typeof orchestrator._extended, "object", "Generated orchestrator extended is not an object");
+			strictEqual(orchestrator._extended instanceof Array, true, "Generated orchestrator extended is not an Array");
+			deepStrictEqual(orchestrator._extended, [], "Generated orchestrator extended is not as expected");
 
-		strictEqual(typeof orchestrator.dependencies, "object", "Generated orchestrator dependencies is not an object");
-		deepStrictEqual(orchestrator.dependencies, {}, "Generated orchestrator dependencies is not as expected");
+		// public
 
-		strictEqual(typeof orchestrator.devDependencies, "object", "Generated orchestrator devDependencies is not an object");
-		deepStrictEqual(orchestrator.devDependencies, {}, "Generated orchestrator devDependencies is not as expected");
+			strictEqual(typeof orchestrator.enabled, "boolean", "Generated orchestrator enabled is not a boolean");
+			strictEqual(orchestrator.enabled, true, "Generated orchestrator enabled is not as expected");
 
-		strictEqual(typeof orchestrator.engines, "object", "Generated orchestrator engines is not an object");
-		deepStrictEqual(orchestrator.engines, {
-			"node": ">=6.0.0"
-		}, "Generated orchestrator engines is not as expected");
+			strictEqual(typeof orchestrator.initialized, "boolean", "Generated orchestrator initialized is not a boolean");
+			strictEqual(orchestrator.initialized, false, "Generated orchestrator initialized is not as expected");
 
-		strictEqual(typeof orchestrator.license, "string", "Generated orchestrator license is not a string");
-		strictEqual(orchestrator.license, "MIT", "Generated orchestrator license is not as expected");
+			// native
 
-		strictEqual(typeof orchestrator.main, "string", "Generated orchestrator main is not a string");
-		strictEqual(orchestrator.main, "lib/main.js", "Generated orchestrator main is not as expected");
+			strictEqual(typeof orchestrator.authors, "object", "Generated orchestrator authors is not an object");
+			deepStrictEqual(orchestrator.authors, null, "Generated orchestrator authors is not as expected");
 
-		strictEqual(typeof orchestrator.name, "string", "Generated orchestrator name is not a string");
-		strictEqual(orchestrator.name, "", "Generated orchestrator name is not as expected");
+			strictEqual(typeof orchestrator.description, "string", "Generated orchestrator description is not a string");
+			strictEqual(orchestrator.description, "", "Generated orchestrator description is not as expected");
 
-		strictEqual(typeof orchestrator.scripts, "object", "Generated orchestrator scripts is not an object");
-		deepStrictEqual(orchestrator.scripts, {}, "Generated orchestrator scripts is not as expected");
+			strictEqual(typeof orchestrator.dependencies, "object", "Generated orchestrator dependencies is not an object");
+			deepStrictEqual(orchestrator.dependencies, null, "Generated orchestrator dependencies is not as expected");
 
-		strictEqual(typeof orchestrator.version, "string", "Generated orchestrator version is not a string");
-		strictEqual(orchestrator.version, "", "Generated orchestrator version is not as expected");
+			strictEqual(typeof orchestrator.devDependencies, "object", "Generated orchestrator devDependencies is not an object");
+			deepStrictEqual(orchestrator.devDependencies, null, "Generated orchestrator devDependencies is not as expected");
+
+			strictEqual(typeof orchestrator.engines, "object", "Generated orchestrator engines is not an object");
+			deepStrictEqual(orchestrator.engines, null, "Generated orchestrator engines is not as expected");
+
+			strictEqual(typeof orchestrator.license, "string", "Generated orchestrator license is not a string");
+			strictEqual(orchestrator.license, "", "Generated orchestrator license is not as expected");
+
+			strictEqual(typeof orchestrator.main, "string", "Generated orchestrator main is not a string");
+			strictEqual(orchestrator.main, "", "Generated orchestrator main is not as expected");
+
+			strictEqual(typeof orchestrator.name, "string", "Generated orchestrator name is not a string");
+			strictEqual(orchestrator.name, "", "Generated orchestrator name is not as expected");
+
+			strictEqual(typeof orchestrator.scripts, "object", "Generated orchestrator scripts is not an object");
+			deepStrictEqual(orchestrator.scripts, null, "Generated orchestrator scripts is not as expected");
+
+			strictEqual(typeof orchestrator.version, "string", "Generated orchestrator version is not a string");
+			strictEqual(orchestrator.version, "", "Generated orchestrator version is not as expected");
 
 		return Promise.resolve();
 
-	});
-
-	it("should test event", () => {
-
-		const orchestrator = new Orchestrator();
-
-		return new Promise((resolve, reject) => {
-
-			orchestrator
-				.once("error", reject)
-				.once("test", resolve)
-				.emit("test");
-
-		}).then(() => {
-			return orchestrator.release();
-		});
-
-	});
-
-	it("should test install", () => {
-		return new Orchestrator().install();
-	});
-
-	it("should test update", () => {
-		return new Orchestrator().update();
-	});
-
-	it("should test uninstall", () => {
-		return new Orchestrator().uninstall();
 	});
 
 	describe("checkServer", () => {
 
 		it("should check without server", (done) => {
 
-			const orchestrator = new Orchestrator();
+			const orchestrator = new LocalOrchestrator();
 			delete orchestrator._Server;
 
 			orchestrator.checkServer().then(() => {
@@ -151,6 +143,8 @@ describe("Orchestrator", () => {
 				strictEqual(typeof err, "object", "Generated error is not an object");
 				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
 				strictEqual(err instanceof ReferenceError, true, "Generated error is not a ReferenceError instance");
+
+				strictEqual(orchestrator.checkServerSync(), false, "Sync check is not as expected");
 
 				done();
 
@@ -160,7 +154,7 @@ describe("Orchestrator", () => {
 
 		it("should check with null server", (done) => {
 
-			const orchestrator = new Orchestrator();
+			const orchestrator = new LocalOrchestrator();
 			orchestrator._Server = null;
 
 			orchestrator.checkServer().then(() => {
@@ -171,6 +165,8 @@ describe("Orchestrator", () => {
 				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
 				strictEqual(err instanceof ReferenceError, true, "Generated error is not a ReferenceError instance");
 
+				strictEqual(orchestrator.checkServerSync(), false, "Sync check is not as expected");
+
 				done();
 
 			});
@@ -179,7 +175,7 @@ describe("Orchestrator", () => {
 
 		it("should check with wrong server (string)", (done) => {
 
-			const orchestrator = new Orchestrator();
+			const orchestrator = new LocalOrchestrator();
 			orchestrator._Server = "test";
 
 			orchestrator.checkServer().then(() => {
@@ -189,6 +185,8 @@ describe("Orchestrator", () => {
 				strictEqual(typeof err, "object", "Generated error is not an object");
 				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
 				strictEqual(err instanceof TypeError, true, "Generated error is not a TypeError instance");
+
+				strictEqual(orchestrator.checkServerSync(), false, "Sync check is not as expected");
 
 				done();
 
@@ -198,7 +196,7 @@ describe("Orchestrator", () => {
 
 		it("should check with wrong server (object)", (done) => {
 
-			const orchestrator = new Orchestrator();
+			const orchestrator = new LocalOrchestrator();
 			orchestrator._Server = {};
 
 			orchestrator.checkServer().then(() => {
@@ -209,6 +207,8 @@ describe("Orchestrator", () => {
 				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
 				strictEqual(err instanceof TypeError, true, "Generated error is not a TypeError instance");
 
+				strictEqual(orchestrator.checkServerSync(), false, "Sync check is not as expected");
+
 				done();
 
 			});
@@ -217,74 +217,16 @@ describe("Orchestrator", () => {
 
 		it("should check with right server", () => {
 
-			const orchestrator = new Orchestrator();
+			const orchestrator = new LocalOrchestrator();
 			orchestrator._Server = new Server();
 
-			return orchestrator.checkServer();
+			return orchestrator.checkServer().then(() => {
 
-		});
+				strictEqual(orchestrator.checkServerSync(), true, "Sync check is not as expected");
 
-	});
+				return Promise.resolve();
 
-	describe("checkServerSync", () => {
-
-		it("should check without server", () => {
-
-			const orchestrator = new Orchestrator();
-			delete orchestrator._Server;
-
-			const res = orchestrator.checkServerSync();
-
-			strictEqual(typeof res, "boolean", "Generated result is not as expected");
-			strictEqual(res, false, "Generated result is not as expected");
-
-		});
-
-		it("should check with null server", () => {
-
-			const orchestrator = new Orchestrator();
-			orchestrator._Server = null;
-
-			const res = orchestrator.checkServerSync();
-
-			strictEqual(typeof res, "boolean", "Generated result is not as expected");
-			strictEqual(res, false, "Generated result is not as expected");
-
-		});
-
-		it("should check with wrong server (string)", () => {
-
-			const orchestrator = new Orchestrator();
-			orchestrator._Server = "test";
-
-			const res = new Orchestrator().checkServerSync();
-
-			strictEqual(typeof res, "boolean", "Generated result is not as expected");
-			strictEqual(res, false, "Generated result is not as expected");
-
-		});
-
-		it("should check with wrong server (object)", () => {
-
-			const orchestrator = new Orchestrator();
-			orchestrator._Server = {};
-
-			const res = new Orchestrator().checkServerSync();
-
-			strictEqual(typeof res, "boolean", "Generated result is not as expected");
-			strictEqual(res, false, "Generated result is not as expected");
-
-		});
-
-		it("should check with right server", () => {
-
-			const orchestrator = new Orchestrator();
-			orchestrator._Server = new Server();
-
-			const res = orchestrator.checkServerSync();
-
-			strictEqual(typeof res, "boolean", "Generated result is not as expected");
-			strictEqual(res, true, "Generated result is not as expected");
+			});
 
 		});
 
@@ -296,7 +238,7 @@ describe("Orchestrator", () => {
 
 			it("should check without file", (done) => {
 
-				new Orchestrator().checkFiles().then(() => {
+				new LocalOrchestrator().checkFiles().then(() => {
 					done(new Error("There is no generated error"));
 				}).catch((err) => {
 
@@ -311,7 +253,7 @@ describe("Orchestrator", () => {
 
 			it("should check with inexistant file", (done) => {
 
-				new Orchestrator({
+				new LocalOrchestrator({
 					"packageFile": "ezsorfnzlmefnzmùe"
 				}).checkFiles().then(() => {
 					done(new Error("There is no generated error"));
@@ -332,7 +274,7 @@ describe("Orchestrator", () => {
 
 			it("should check without file", (done) => {
 
-				new Orchestrator({
+				new LocalOrchestrator({
 					"packageFile": join(__dirname, "..", "package.json")
 				}).checkFiles().then(() => {
 					done(new Error("There is no generated error"));
@@ -349,7 +291,7 @@ describe("Orchestrator", () => {
 
 			it("should check with inexistant file", (done) => {
 
-				new Orchestrator({
+				new LocalOrchestrator({
 					"packageFile": join(__dirname, "..", "package.json"),
 					"mediatorFile": "ezsorfnzlmefnzmùe"
 				}).checkFiles().then(() => {
@@ -371,7 +313,7 @@ describe("Orchestrator", () => {
 
 			it("should check without file", (done) => {
 
-				new Orchestrator({
+				new LocalOrchestrator({
 					"packageFile": join(__dirname, "..", "package.json"),
 					"mediatorFile": join(__dirname, "..", "lib", "components", "Mediator.json")
 				}).checkFiles().then(() => {
@@ -389,7 +331,7 @@ describe("Orchestrator", () => {
 
 			it("should check with inexistant file", (done) => {
 
-				new Orchestrator({
+				new LocalOrchestrator({
 					"packageFile": join(__dirname, "..", "package.json"),
 					"mediatorFile": join(__dirname, "..", "lib", "components", "Mediator.json"),
 					"serverFile": "ezsorfnzlmefnzmùe"
@@ -410,85 +352,206 @@ describe("Orchestrator", () => {
 
 		it("should check with existant files", () => {
 
-			return new Orchestrator(GOOD_OPTIONS).checkFiles();
+			return new LocalOrchestrator(GOOD_OPTIONS).checkFiles();
 
 		});
 
 	});
 
-	it("should test package file loader", () => {
+	describe("load / init", () => {
 
-		const orchestrator = new Orchestrator(GOOD_OPTIONS);
+		describe("load", () => {
 
-		return orchestrator.loadDataFromPackageFile().then(() => {
+			it("should test package file loader", () => {
 
-			strictEqual(typeof orchestrator._Mediator, "object", "Generated orchestrator _Mediator is not an object");
-			strictEqual(orchestrator._Mediator, null, "Generated orchestrator _Mediator is not as expected");
+				const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
 
-			strictEqual(typeof orchestrator._Server, "object", "Generated orchestrator _Server is not an object");
-			strictEqual(orchestrator._Server, null, "Generated orchestrator _Server is not as expected");
+				return orchestrator.load().then(() => {
 
-			// params
+					strictEqual(typeof orchestrator._Mediator, "object", "Generated orchestrator _Mediator is not an object");
+					strictEqual(orchestrator._Mediator, null, "Generated orchestrator _Mediator is not as expected");
 
-			strictEqual(typeof orchestrator._packageFile, "string", "Generated orchestrator _packageFile is not a string");
-			strictEqual(orchestrator._packageFile, GOOD_OPTIONS.packageFile, "Generated orchestrator _packageFile is not as expected");
+					strictEqual(typeof orchestrator._Server, "object", "Generated orchestrator _Server is not an object");
+					strictEqual(orchestrator._Server, null, "Generated orchestrator _Server is not as expected");
 
-			strictEqual(typeof orchestrator._mediatorFile, "string", "Generated orchestrator _mediatorFile is not a string");
-			strictEqual(orchestrator._mediatorFile, GOOD_OPTIONS.mediatorFile, "Generated orchestrator _mediatorFile is not as expected");
+					// params
 
-			strictEqual(typeof orchestrator._serverFile, "string", "Generated orchestrator _serverFile is not a string");
-			strictEqual(orchestrator._serverFile, GOOD_OPTIONS.serverFile, "Generated orchestrator _serverFile is not as expected");
+					strictEqual(typeof orchestrator._packageFile, "string", "Generated orchestrator _packageFile is not a string");
+					strictEqual(orchestrator._packageFile, GOOD_OPTIONS.packageFile, "Generated orchestrator _packageFile is not as expected");
 
-			return readJSONFile(GOOD_OPTIONS.packageFile);
+					strictEqual(typeof orchestrator._mediatorFile, "string", "Generated orchestrator _mediatorFile is not a string");
+					strictEqual(orchestrator._mediatorFile, GOOD_OPTIONS.mediatorFile, "Generated orchestrator _mediatorFile is not as expected");
 
-		}).then((data) => {
+					strictEqual(typeof orchestrator._serverFile, "string", "Generated orchestrator _serverFile is not a string");
+					strictEqual(orchestrator._serverFile, GOOD_OPTIONS.serverFile, "Generated orchestrator _serverFile is not as expected");
 
-			// native
+					// extended
 
-			strictEqual(typeof orchestrator.authors, "object", "Generated orchestrator authors is not an object");
-			strictEqual(orchestrator.authors instanceof Array, true, "Generated orchestrator authors is not an Array");
-			deepStrictEqual(orchestrator.authors, [ data.author ], "Generated orchestrator authors is not as expected");
+					strictEqual(typeof orchestrator._extended, "object", "Generated orchestrator extended is not an object");
+					strictEqual(orchestrator._extended instanceof Array, true, "Generated orchestrator extended is not an Array");
+					deepStrictEqual(orchestrator._extended, [
+						"typings",
+						"husky",
+						"repository",
+						"keywords",
+						"bugs",
+						"homepage"
+					], "Generated orchestrator extended is not as expected");
 
-			strictEqual(typeof orchestrator.description, "string", "Generated orchestrator description is not a string");
-			strictEqual(orchestrator.description, data.description, "Generated orchestrator description is not as expected");
+					return readJSONFile(GOOD_OPTIONS.packageFile);
 
-			strictEqual(typeof orchestrator.dependencies, "object", "Generated orchestrator dependencies is not an object");
-			deepStrictEqual(orchestrator.dependencies, data.dependencies, "Generated orchestrator dependencies is not as expected");
+				}).then((data) => {
 
-			strictEqual(typeof orchestrator.devDependencies, "object", "Generated orchestrator devDependencies is not an object");
-			deepStrictEqual(orchestrator.devDependencies, data.devDependencies, "Generated orchestrator devDependencies is not as expected");
+					// native
 
-			strictEqual(typeof orchestrator.engines, "object", "Generated orchestrator engines is not an object");
-			deepStrictEqual(orchestrator.engines, data.engines, "Generated orchestrator engines is not as expected");
+					strictEqual(typeof orchestrator.authors, "object", "Generated orchestrator authors is not an object");
+					strictEqual(orchestrator.authors instanceof Array, true, "Generated orchestrator authors is not an Array");
+					deepStrictEqual(orchestrator.authors, [ data.author ], "Generated orchestrator authors is not as expected");
 
-			strictEqual(typeof orchestrator.license, "string", "Generated orchestrator license is not a string");
-			strictEqual(orchestrator.license, data.license, "Generated orchestrator license is not as expected");
+					strictEqual(typeof orchestrator.description, "string", "Generated orchestrator description is not a string");
+					strictEqual(orchestrator.description, data.description, "Generated orchestrator description is not as expected");
 
-			strictEqual(typeof orchestrator.main, "string", "Generated orchestrator main is not a string");
-			strictEqual(orchestrator.main, data.main, "Generated orchestrator main is not as expected");
+					strictEqual(typeof orchestrator.dependencies, "object", "Generated orchestrator dependencies is not an object");
+					deepStrictEqual(orchestrator.dependencies, data.dependencies, "Generated orchestrator dependencies is not as expected");
 
-			strictEqual(typeof orchestrator.name, "string", "Generated orchestrator name is not a string");
-			strictEqual(orchestrator.name, data.name, "Generated orchestrator name is not as expected");
+					strictEqual(typeof orchestrator.devDependencies, "object", "Generated orchestrator devDependencies is not an object");
+					deepStrictEqual(orchestrator.devDependencies, data.devDependencies, "Generated orchestrator devDependencies is not as expected");
 
-			strictEqual(typeof orchestrator.scripts, "object", "Generated orchestrator scripts is not an object");
-			deepStrictEqual(orchestrator.scripts, data.scripts, "Generated orchestrator scripts is not as expected");
+					strictEqual(typeof orchestrator.engines, "object", "Generated orchestrator engines is not an object");
+					deepStrictEqual(orchestrator.engines, data.engines, "Generated orchestrator engines is not as expected");
 
-			strictEqual(typeof orchestrator.version, "string", "Generated orchestrator version is not a string");
-			strictEqual(orchestrator.version, data.version, "Generated orchestrator version is not as expected");
+					strictEqual(typeof orchestrator.license, "string", "Generated orchestrator license is not a string");
+					strictEqual(orchestrator.license, data.license, "Generated orchestrator license is not as expected");
 
-			return Promise.resolve();
+					strictEqual(typeof orchestrator.main, "string", "Generated orchestrator main is not a string");
+					strictEqual(orchestrator.main, data.main, "Generated orchestrator main is not as expected");
 
-		}).then(() => {
+					strictEqual(typeof orchestrator.name, "string", "Generated orchestrator name is not a string");
+					strictEqual(orchestrator.name, data.name, "Generated orchestrator name is not as expected");
 
-			orchestrator._packageFile = join(__dirname, "utils", "packageWithMultipleAuthors.json");
+					strictEqual(typeof orchestrator.scripts, "object", "Generated orchestrator scripts is not an object");
+					deepStrictEqual(orchestrator.scripts, data.scripts, "Generated orchestrator scripts is not as expected");
 
-			return orchestrator.loadDataFromPackageFile().then(() => {
+					strictEqual(typeof orchestrator.version, "string", "Generated orchestrator version is not a string");
+					strictEqual(orchestrator.version, data.version, "Generated orchestrator version is not as expected");
 
-				strictEqual(typeof orchestrator.authors, "object", "Generated orchestrator authors is not an object");
-				strictEqual(orchestrator.authors instanceof Array, true, "Generated orchestrator authors is not an Array");
-				deepStrictEqual(orchestrator.authors, [ "Sébastien VIDAL" ], "Generated orchestrator authors is not as expected");
+					return Promise.resolve();
 
-				return Promise.resolve();
+				});
+
+			});
+
+			it("should test package file loader with multiple authors", () => {
+
+				const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
+
+					orchestrator._packageFile = join(__dirname, "utils", "packageWithMultipleAuthors.json");
+
+				return orchestrator.load().then(() => {
+
+					strictEqual(typeof orchestrator.authors, "object", "Generated orchestrator authors is not an object");
+					strictEqual(orchestrator.authors instanceof Array, true, "Generated orchestrator authors is not an Array");
+					deepStrictEqual(orchestrator.authors, [ "Sébastien VIDAL" ], "Generated orchestrator authors is not as expected");
+
+					return Promise.resolve();
+
+				});
+
+			});
+
+		});
+
+		describe("init", () => {
+
+			it("should init orchestrator with wrong Mediator", (done) => {
+
+				const opt = JSON.parse(JSON.stringify(GOOD_OPTIONS));
+				opt.mediatorFile = EMPTY_CLASS_TEST;
+
+				new LocalOrchestrator(opt).init().then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not an object");
+					strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+
+					done();
+
+				});
+
+			});
+
+			it("should init orchestrator with wrong Server", (done) => {
+
+				const opt = JSON.parse(JSON.stringify(GOOD_OPTIONS));
+				opt.serverFile = EMPTY_CLASS_TEST;
+
+				new LocalOrchestrator(opt).init().then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not an object");
+					strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+
+					done();
+
+				});
+
+			});
+
+			it("should init orchestrator", () => {
+
+				const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
+
+				return new Promise((resolve, reject) => {
+
+					orchestrator
+						.once("initialized", resolve)
+						.once("error", reject);
+
+					orchestrator.init().catch(reject);
+
+				}).then(() => {
+
+					strictEqual(typeof orchestrator._Mediator, "object", "Generated orchestrator _Mediator is not an object");
+					strictEqual(orchestrator._Mediator instanceof Mediator, true, "Generated orchestrator _Mediator is not as expected");
+
+					strictEqual(typeof orchestrator._Server, "object", "Generated orchestrator _Server is not an object");
+					strictEqual(orchestrator._Server instanceof Server, true, "Generated orchestrator _Mediator is not as expected");
+
+					strictEqual(typeof orchestrator.initialized, "boolean", "Generated orchestrator initialized is not a boolean");
+					strictEqual(orchestrator.initialized, true, "Generated orchestrator initialized is not as expected");
+
+					return Promise.resolve();
+
+				});
+
+			});
+
+			it("should init non enabled orchestrator", () => {
+
+				const orchestrator = new NonEnabledOrchestrator(GOOD_OPTIONS);
+
+				strictEqual(typeof orchestrator.enabled, "boolean", "Generated orchestrator enabled is not a boolean");
+				strictEqual(orchestrator.enabled, true, "Generated orchestrator enabled is not as expected");
+
+				return orchestrator.init().then(() => {
+
+					strictEqual(typeof orchestrator.enabled, "boolean", "Generated orchestrator enabled is not a boolean");
+					strictEqual(orchestrator.enabled, false, "Generated orchestrator enabled is not as expected");
+
+					strictEqual(typeof orchestrator.initialized, "boolean", "Generated orchestrator initialized is not a boolean");
+					strictEqual(orchestrator.initialized, false, "Generated orchestrator initialized is not as expected");
+
+					return Promise.resolve();
+
+				});
+
+			});
+
+			it("should test non-herited _initWorkSpace", () => {
+
+				return new Orchestrator(GOOD_OPTIONS).init();
 
 			});
 
@@ -496,97 +559,111 @@ describe("Orchestrator", () => {
 
 	});
 
-	it("should test http middleware without Server", () => {
+	describe("server", () => {
 
-		const res = new Orchestrator(GOOD_OPTIONS).httpMiddleware(null, null);
+		it("should test http middleware without Server", () => {
 
-		strictEqual(typeof res, "boolean", "Generated result is not an object");
-		strictEqual(res, false, "Generated result is not as expected");
+			const res = new LocalOrchestrator(GOOD_OPTIONS).httpMiddleware(null, null);
+
+			strictEqual(typeof res, "boolean", "Generated result is not a boolean");
+			strictEqual(res, false, "Generated result is not as expected");
+
+		});
+
+		it("should test app middleware without Server", () => {
+
+			const res = new LocalOrchestrator(GOOD_OPTIONS).appMiddleware(null, null, () => {
+				return false;
+			});
+
+			strictEqual(typeof res, "undefined", "Generated result is not undefined");
+
+		});
 
 	});
 
-	it("should test app middleware without Server", () => {
+	describe("release / destroy", () => {
 
-		const res = new Orchestrator(GOOD_OPTIONS).appMiddleware(null, null, () => {
-			return false;
-		});
+		it("should release orchestrator", () => {
 
-		strictEqual(typeof res, "boolean", "Generated result is not an object");
-		strictEqual(res, false, "Generated result is not as expected");
-
-	});
-
-	describe("init", () => {
-
-		it("should init orchestrator with wrong Mediator", (done) => {
-
-			const opt = JSON.parse(JSON.stringify(GOOD_OPTIONS));
-			opt.mediatorFile = EMPTY_CLASS_TEST;
-
-			new Orchestrator(opt).init().then(() => {
-				done(new Error("There is no generated error"));
-			}).catch((err) => {
-
-				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
-
-				done();
-
-			});
-
-		});
-
-		it("should init orchestrator with wrong Server", (done) => {
-
-			const opt = JSON.parse(JSON.stringify(GOOD_OPTIONS));
-			opt.serverFile = EMPTY_CLASS_TEST;
-
-			new Orchestrator(opt).init().then(() => {
-				done(new Error("There is no generated error"));
-			}).catch((err) => {
-
-				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
-
-				done();
-
-			});
-
-		});
-
-		it("should init orchestrator", () => {
-
-			const orchestrator = new Orchestrator(GOOD_OPTIONS);
+			const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
 
 			return orchestrator.init().then(() => {
+				return orchestrator.release("test release");
+			});
 
-				strictEqual(typeof orchestrator._Mediator, "object", "Generated orchestrator _Mediator is not an object");
-				strictEqual(orchestrator._Mediator instanceof Mediator, true, "Generated orchestrator _Mediator is not as expected");
+		});
 
-				strictEqual(typeof orchestrator._Server, "object", "Generated orchestrator _Server is not an object");
-				strictEqual(orchestrator._Server instanceof Server, true, "Generated orchestrator _Mediator is not as expected");
+		it("should test non-herited _releaseWorkSpace", () => {
+
+			return new Orchestrator().release();
+
+		});
+
+		it("should destroy orchestrator", () => {
+
+			const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
+
+			return orchestrator.load().then(() => {
+
+				return orchestrator.destroy();
+
+			}).then(() => {
+
+				// params
+
+				strictEqual(typeof orchestrator._packageFile, "string", "Generated orchestrator _packageFile is not a string");
+				strictEqual(orchestrator._packageFile, "", "Generated orchestrator _packageFile is not as expected");
+
+				strictEqual(typeof orchestrator._mediatorFile, "string", "Generated orchestrator _mediatorFile is not a string");
+				strictEqual(orchestrator._mediatorFile, "", "Generated orchestrator _mediatorFile is not as expected");
+
+				strictEqual(typeof orchestrator._serverFile, "string", "Generated orchestrator _serverFile is not a string");
+				strictEqual(orchestrator._serverFile, "", "Generated orchestrator _serverFile is not as expected");
+
+				// extended
+
+				strictEqual(typeof orchestrator._extended, "object", "Generated orchestrator extended is not an object");
+				strictEqual(orchestrator._extended instanceof Array, true, "Generated orchestrator extended is not an Array");
+				deepStrictEqual(orchestrator._extended, [], "Generated orchestrator extended is not as expected");
+
+				// native
+
+				strictEqual(typeof orchestrator.authors, "object", "Generated orchestrator authors is not an object");
+				strictEqual(orchestrator.authors, null, "Generated orchestrator authors is not as expected");
+
+				strictEqual(typeof orchestrator.description, "string", "Generated orchestrator description is not a string");
+				strictEqual(orchestrator.description, "", "Generated orchestrator description is not as expected");
+
+				strictEqual(typeof orchestrator.dependencies, "object", "Generated orchestrator dependencies is not an object");
+				strictEqual(orchestrator.dependencies, null, "Generated orchestrator dependencies is not as expected");
+
+				strictEqual(typeof orchestrator.devDependencies, "object", "Generated orchestrator devDependencies is not an object");
+				strictEqual(orchestrator.devDependencies, null, "Generated orchestrator devDependencies is not as expected");
+
+				strictEqual(typeof orchestrator.engines, "object", "Generated orchestrator engines is not an object");
+				strictEqual(orchestrator.engines, null, "Generated orchestrator engines is not as expected");
+
+				strictEqual(typeof orchestrator.license, "string", "Generated orchestrator license is not a string");
+				strictEqual(orchestrator.license, "", "Generated orchestrator license is not as expected");
+
+				strictEqual(typeof orchestrator.main, "string", "Generated orchestrator main is not a string");
+				strictEqual(orchestrator.main, "", "Generated orchestrator main is not as expected");
+
+				strictEqual(typeof orchestrator.name, "string", "Generated orchestrator name is not a string");
+				strictEqual(orchestrator.name, "", "Generated orchestrator name is not as expected");
+
+				strictEqual(typeof orchestrator.scripts, "object", "Generated orchestrator scripts is not an object");
+				strictEqual(orchestrator.scripts, null, "Generated orchestrator scripts is not as expected");
+
+				strictEqual(typeof orchestrator.version, "string", "Generated orchestrator version is not a string");
+				strictEqual(orchestrator.version, "", "Generated orchestrator version is not as expected");
 
 				return Promise.resolve();
 
 			});
 
 		});
-
-	});
-
-	it("should release orchestrator", () => {
-
-		const orchestrator = new Orchestrator(GOOD_OPTIONS);
-
-		return orchestrator.init().then(() => {
-			return orchestrator.release("test release");
-		});
-
-	});
-
-	it("should destroy orchestrator", () => {
-
-		return new Orchestrator().destroy();
 
 	});
 
@@ -595,12 +672,13 @@ describe("Orchestrator", () => {
 		it("should test with full stack http", () => {
 
 			const opt = JSON.parse(JSON.stringify(GOOD_OPTIONS));
-			opt.mediatorFile = join(__dirname, "utils", "MediatorHerited.js");
-			opt.serverFile = join(__dirname, "utils", "ServerHerited.js");
+			opt.mediatorFile = join(__dirname, "utils", "Mediator", "HeritedMediator.js");
+			opt.serverFile = join(__dirname, "utils", "Server", "HeritedServer.js");
 
-			const orchestrator = new Orchestrator(opt);
+			const orchestrator = new LocalOrchestrator(opt);
 			let runningServer = null;
 
+			// middleware
 			return orchestrator.init().then(() => {
 
 				return new Promise((resolve) => {
@@ -623,14 +701,70 @@ describe("Orchestrator", () => {
 
 				});
 
+			// request server
 			}).then(() => {
 
 				return httpRequestTest("/", 200, "OK");
 
+			// request server
 			}).then(() => {
 
 				return httpRequestTest("/fullstack", 201, "Created");
 
+			// close server
+			}).then(() => {
+
+				return runningServer ? new Promise((resolve) => {
+
+					runningServer.close(() => {
+						runningServer = null;
+						resolve();
+					});
+
+				}) : Promise.resolve();
+
+			});
+
+		});
+
+		it("should test with full stack socket", () => {
+
+			const opt = JSON.parse(JSON.stringify(GOOD_OPTIONS));
+
+				opt.mediatorFile = join(__dirname, "utils", "Mediator", "HeritedMediator.js");
+				opt.serverFile = join(__dirname, "utils", "Server", "HeritedServer.js");
+
+			const orchestrator = new LocalOrchestrator(opt);
+
+			let runningServer = null;
+
+			// middleware
+			return orchestrator.init().then(() => {
+
+				return new Promise((resolve) => {
+
+					runningServer = express()
+						.use((req, res, next) => {
+							orchestrator.appMiddleware(req, res, next);
+						})
+						.get("/", (req, res) => {
+							res.send(RESPONSE_CONTENT);
+						})
+						.listen(PORT, resolve);
+
+				});
+
+			// request server
+			}).then(() => {
+
+				return httpRequestTest("/", 200, "OK");
+
+			// request server
+			}).then(() => {
+
+				return httpRequestTest("/fullstack", 201, "Created");
+
+			// close server
 			}).then(() => {
 
 				return runningServer ? new Promise((resolve) => {
@@ -649,45 +783,130 @@ describe("Orchestrator", () => {
 		it("should test with full stack app", () => {
 
 			const opt = JSON.parse(JSON.stringify(GOOD_OPTIONS));
-			opt.mediatorFile = join(__dirname, "utils", "MediatorHerited.js");
-			opt.serverFile = join(__dirname, "utils", "ServerHerited.js");
 
-			const orchestrator = new Orchestrator(opt);
-			let runningServer = null;
+				opt.mediatorFile = join(__dirname, "utils", "Mediator", "HeritedMediator.js");
+				opt.serverFile = join(__dirname, "utils", "Server", "HeritedServer.js");
 
+			const orchestrator = new LocalOrchestrator(opt);
+
+			// DebugStep
+			let pinged = false;
+			orchestrator.on("ping", () => {
+				pinged = true;
+			});
+
+			// create server
+			const runningServer = new WebSocketServer({
+				"port": PORT_SOCKET
+			});
+
+			// middleware
 			return orchestrator.init().then(() => {
 
-				return new Promise((resolve) => {
+				orchestrator.socketMiddleware(runningServer);
 
-					runningServer = express()
-						.use((req, res, next) => {
-							orchestrator.appMiddleware(req, res, next);
-						})
-						.get("/", (req, res) => {
-							res.send(RESPONSE_CONTENT);
-						})
-						.listen(PORT, resolve);
+				return Promise.resolve();
+
+			// request server
+			}).then(() => {
+
+				return socketRequestTest("ping", "pong").then(() => {
+
+					strictEqual(pinged, true, "DebugStep is not as expected");
+
+					return Promise.resolve();
 
 				});
 
-			}).then(() => {
-
-				return httpRequestTest("/", 200, "OK");
-
-			}).then(() => {
-
-				return httpRequestTest("/fullstack", 201, "Created");
-
+			// close server
 			}).then(() => {
 
 				return runningServer ? new Promise((resolve) => {
 
 					runningServer.close(() => {
-						runningServer = null;
 						resolve();
 					});
 
 				}) : Promise.resolve();
+
+			});
+
+		});
+
+	});
+
+	describe("write", () => {
+
+		it("should test install", () => {
+			return new LocalOrchestrator().install();
+		});
+
+		it("should test update", () => {
+			return new LocalOrchestrator().update();
+		});
+
+		it("should test uninstall", () => {
+			return new LocalOrchestrator().uninstall();
+		});
+
+	});
+
+	describe("events", () => {
+
+		it("should test events before init", () => {
+
+			const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
+
+			return Promise.resolve().then(() => {
+
+				return new Promise((resolve) => {
+
+					orchestrator
+						.once("test", resolve)
+						.emit("test");
+
+				});
+
+			});
+
+		});
+
+		it("should test events after init", () => {
+
+			const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
+
+			return new Promise((resolve, reject) => {
+
+				orchestrator
+					.once("initialized", resolve);
+
+				orchestrator.init().catch(reject);
+
+			});
+
+		});
+
+		it("should test events after release", () => {
+
+			const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
+
+			return new Promise((resolve, reject) => {
+
+				orchestrator
+					.once("test", () => {
+						reject(new Error("Should not fire this event"));
+					})
+					.once("released", resolve);
+
+				orchestrator.init().then(() => {
+					return orchestrator.release();
+				}).then(() => {
+
+					orchestrator.emit("test");
+
+					return Promise.resolve();
+
+				}).catch(reject);
 
 			});
 
