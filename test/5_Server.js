@@ -7,6 +7,7 @@
 	const { createServer } = require("http");
 	const { strictEqual } = require("assert");
 	const Events = require("events");
+	const WebSocketServer = require("ws").Server;
 
 	// externals
 	const express = require("express");
@@ -14,6 +15,7 @@
 	// locals
 
 	const httpRequestTest = require(join(__dirname, "utils", "httpRequestTest.js"));
+	const socketRequestTest = require(join(__dirname, "utils", "socketRequestTest.js"));
 	const Bootable = require(join(__dirname, "..", "lib", "components", "Bootable.js"));
 	const MediatorUser = require(join(__dirname, "..", "lib", "components", "MediatorUser.js"));
 	const { Mediator, Server } = require(join(__dirname, "..", "lib", "main.js"));
@@ -22,7 +24,8 @@
 
 // consts
 
-	const PORT = "3000";
+	const PORT = 3000;
+	const PORT_SOCKET = PORT + 1;
 	const RESPONSE_CONTENT = "Hello World";
 
 // tests
@@ -224,6 +227,49 @@ describe("Server", () => {
 
 		});
 
+		it("should test socket server", () => {
+
+			return Promise.resolve().then(() => {
+
+				// DebugStep
+				let pinged = false;
+				serverHerited.on("ping", () => {
+					pinged = true;
+				});
+
+				// create server
+				const socketServer = new WebSocketServer({
+					"port": PORT_SOCKET
+				});
+
+				serverHerited.socketServer(socketServer);
+
+				// request server
+				return socketRequestTest("ping", "pong").then(() => {
+
+					strictEqual(pinged, true, "DebugStep is not as expected");
+
+					return Promise.resolve();
+
+				// close server
+				}).then(() => {
+
+					return new Promise((resolve, reject) => {
+
+						socketServer.removeAllListeners();
+
+						socketServer.close((err) => {
+							return err ? reject(err) : resolve();
+						});
+
+					});
+
+				});
+
+			});
+
+		});
+
 	});
 
 	describe("events", () => {
@@ -236,15 +282,11 @@ describe("Server", () => {
 				"mediator": mediator
 			});
 
-			return Promise.resolve().then(() => {
+			return new Promise((resolve) => {
 
-				return new Promise((resolve) => {
-
-					server
-						.once("test", resolve)
-						.emit("test");
-
-				});
+				server
+					.once("test", resolve)
+					.emit("test");
 
 			});
 

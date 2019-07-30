@@ -141,6 +141,8 @@ describe("Orchestrator", () => {
 				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
 				strictEqual(err instanceof ReferenceError, true, "Generated error is not a ReferenceError instance");
 
+				strictEqual(orchestrator.checkServerSync(), false, "Sync check is not as expected");
+
 				done();
 
 			});
@@ -159,6 +161,8 @@ describe("Orchestrator", () => {
 				strictEqual(typeof err, "object", "Generated error is not an object");
 				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
 				strictEqual(err instanceof ReferenceError, true, "Generated error is not a ReferenceError instance");
+
+				strictEqual(orchestrator.checkServerSync(), false, "Sync check is not as expected");
 
 				done();
 
@@ -179,6 +183,8 @@ describe("Orchestrator", () => {
 				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
 				strictEqual(err instanceof TypeError, true, "Generated error is not a TypeError instance");
 
+				strictEqual(orchestrator.checkServerSync(), false, "Sync check is not as expected");
+
 				done();
 
 			});
@@ -198,6 +204,8 @@ describe("Orchestrator", () => {
 				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
 				strictEqual(err instanceof TypeError, true, "Generated error is not a TypeError instance");
 
+				strictEqual(orchestrator.checkServerSync(), false, "Sync check is not as expected");
+
 				done();
 
 			});
@@ -209,7 +217,13 @@ describe("Orchestrator", () => {
 			const orchestrator = new LocalOrchestrator();
 			orchestrator._Server = new Server();
 
-			return orchestrator.checkServer();
+			return orchestrator.checkServer().then(() => {
+
+				strictEqual(orchestrator.checkServerSync(), true, "Sync check is not as expected");
+
+				return Promise.resolve();
+
+			});
 
 		});
 
@@ -372,7 +386,14 @@ describe("Orchestrator", () => {
 
 					strictEqual(typeof orchestrator._extended, "object", "Generated orchestrator extended is not an object");
 					strictEqual(orchestrator._extended instanceof Array, true, "Generated orchestrator extended is not an Array");
-					deepStrictEqual(orchestrator._extended, [ "typings", "husky", "repository", "keywords", "bugs", "homepage" ], "Generated orchestrator extended is not as expected");
+					deepStrictEqual(orchestrator._extended, [
+						"typings",
+						"husky",
+						"repository",
+						"keywords",
+						"bugs",
+						"homepage"
+					], "Generated orchestrator extended is not as expected");
 
 					return readJSONFile(GOOD_OPTIONS.packageFile);
 
@@ -636,7 +657,7 @@ describe("Orchestrator", () => {
 				strictEqual(orchestrator.version, "", "Generated orchestrator version is not as expected");
 
 				return Promise.resolve();
-				
+
 			});
 
 		});
@@ -815,7 +836,7 @@ describe("Orchestrator", () => {
 					return orchestrator.release();
 				}).then(() => {
 
-					mediator.emit("test");
+					orchestrator.emit("test");
 
 					return Promise.resolve();
 

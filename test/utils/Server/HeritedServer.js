@@ -89,4 +89,29 @@ module.exports = class HeritedServer extends LocalServer {
 
 	}
 
+	socketServer (server) {
+
+		server.on("connection", (socket) => {
+
+			socket.on("message", (payload) => {
+
+				const req = JSON.parse(payload);
+
+				if (req.name && "ping" === req.name) {
+
+					this.emit("ping");
+
+					socket.send(JSON.stringify({
+						"name": "pong",
+						"params": [ "test" ]
+					}));
+
+				}
+
+			});
+
+		});
+
+	}
+
 };

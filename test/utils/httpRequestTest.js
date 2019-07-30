@@ -8,7 +8,7 @@
 
 // consts
 
-	const PORT = "3000";
+	const PORT = 3000;
 	const MAIN_URL = "http://127.0.0.1:" + PORT;
 	const RESPONSE_CONTENT = "Hello World";
 
