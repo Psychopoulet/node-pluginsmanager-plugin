@@ -113,15 +113,11 @@ describe("Mediator", () => {
 
 			const mediator = new LocalMediator();
 
-			return Promise.resolve().then(() => {
+			return new Promise((resolve) => {
 
-				return new Promise((resolve) => {
-
-					mediator
-						.once("test", resolve)
-						.emit("test");
-
-				});
+				mediator
+					.once("test", resolve)
+					.emit("test");
 
 			});
 

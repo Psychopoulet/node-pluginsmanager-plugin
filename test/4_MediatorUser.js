@@ -209,15 +209,11 @@ describe("MediatorUser", () => {
 
 			const mediatorUser = new LocalMediator();
 
-			return Promise.resolve().then(() => {
+			return new Promise((resolve) => {
 
-				return new Promise((resolve) => {
-
-					mediatorUser
-						.once("test", resolve)
-						.emit("test");
-
-				});
+				mediatorUser
+					.once("test", resolve)
+					.emit("test");
 
 			});
 

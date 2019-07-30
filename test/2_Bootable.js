@@ -89,15 +89,11 @@ describe("Bootable", () => {
 
 			const bootable = new LocalBootable();
 
-			return Promise.resolve().then(() => {
+			return new Promise((resolve) => {
 
-				return new Promise((resolve) => {
-
-					bootable
-						.once("test", resolve)
-						.emit("test");
-
-				});
+				bootable
+					.once("test", resolve)
+					.emit("test");
 
 			});
 
