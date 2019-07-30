@@ -11,6 +11,7 @@
 	const { deepStrictEqual, strictEqual } = require("assert");
 	const Events = require("events");
 	const { createServer } = require("http");
+	const WebSocketServer = require("ws").Server;
 
 	// externals
 	const express = require("express");
@@ -25,6 +26,7 @@
 
 		// utils
 		const httpRequestTest = require(join(__dirname, "utils", "httpRequestTest.js"));
+		const socketRequestTest = require(join(__dirname, "utils", "socketRequestTest.js"));
 		const LocalOrchestrator = require(join(__dirname, "utils", "Orchestrator", "LocalOrchestrator.js"));
 		const NonEnabledOrchestrator = require(join(__dirname, "utils", "Orchestrator", "NonEnabledOrchestrator.js"));
 
@@ -38,7 +40,8 @@
 		"serverFile": join(__dirname, "utils", "Server", "LocalServer.js")
 	};
 
-	const PORT = "3000";
+	const PORT = 3000;
+	const PORT_SOCKET = PORT + 1;
 	const RESPONSE_CONTENT = "Hello World";
 
 // tests
@@ -675,6 +678,7 @@ describe("Orchestrator", () => {
 			const orchestrator = new LocalOrchestrator(opt);
 			let runningServer = null;
 
+			// middleware
 			return orchestrator.init().then(() => {
 
 				return new Promise((resolve) => {
@@ -697,14 +701,70 @@ describe("Orchestrator", () => {
 
 				});
 
+			// request server
 			}).then(() => {
 
 				return httpRequestTest("/", 200, "OK");
 
+			// request server
 			}).then(() => {
 
 				return httpRequestTest("/fullstack", 201, "Created");
 
+			// close server
+			}).then(() => {
+
+				return runningServer ? new Promise((resolve) => {
+
+					runningServer.close(() => {
+						runningServer = null;
+						resolve();
+					});
+
+				}) : Promise.resolve();
+
+			});
+
+		});
+
+		it("should test with full stack socket", () => {
+
+			const opt = JSON.parse(JSON.stringify(GOOD_OPTIONS));
+
+				opt.mediatorFile = join(__dirname, "utils", "Mediator", "HeritedMediator.js");
+				opt.serverFile = join(__dirname, "utils", "Server", "HeritedServer.js");
+
+			const orchestrator = new LocalOrchestrator(opt);
+
+			let runningServer = null;
+
+			// middleware
+			return orchestrator.init().then(() => {
+
+				return new Promise((resolve) => {
+
+					runningServer = express()
+						.use((req, res, next) => {
+							orchestrator.appMiddleware(req, res, next);
+						})
+						.get("/", (req, res) => {
+							res.send(RESPONSE_CONTENT);
+						})
+						.listen(PORT, resolve);
+
+				});
+
+			// request server
+			}).then(() => {
+
+				return httpRequestTest("/", 200, "OK");
+
+			// request server
+			}).then(() => {
+
+				return httpRequestTest("/fullstack", 201, "Created");
+
+			// close server
 			}).then(() => {
 
 				return runningServer ? new Promise((resolve) => {
@@ -723,41 +783,47 @@ describe("Orchestrator", () => {
 		it("should test with full stack app", () => {
 
 			const opt = JSON.parse(JSON.stringify(GOOD_OPTIONS));
-			opt.mediatorFile = join(__dirname, "utils", "Mediator", "HeritedMediator.js");
-			opt.serverFile = join(__dirname, "utils", "Server", "HeritedServer.js");
+
+				opt.mediatorFile = join(__dirname, "utils", "Mediator", "HeritedMediator.js");
+				opt.serverFile = join(__dirname, "utils", "Server", "HeritedServer.js");
 
 			const orchestrator = new LocalOrchestrator(opt);
-			let runningServer = null;
 
+			// DebugStep
+			let pinged = false;
+			orchestrator.on("ping", () => {
+				pinged = true;
+			});
+
+			// create server
+			const runningServer = new WebSocketServer({
+				"port": PORT_SOCKET
+			});
+
+			// middleware
 			return orchestrator.init().then(() => {
 
-				return new Promise((resolve) => {
+				orchestrator.socketMiddleware(runningServer);
 
-					runningServer = express()
-						.use((req, res, next) => {
-							orchestrator.appMiddleware(req, res, next);
-						})
-						.get("/", (req, res) => {
-							res.send(RESPONSE_CONTENT);
-						})
-						.listen(PORT, resolve);
+				return Promise.resolve();
+
+			// request server
+			}).then(() => {
+
+				return socketRequestTest("ping", "pong").then(() => {
+
+					strictEqual(pinged, true, "DebugStep is not as expected");
+
+					return Promise.resolve();
 
 				});
 
-			}).then(() => {
-
-				return httpRequestTest("/", 200, "OK");
-
-			}).then(() => {
-
-				return httpRequestTest("/fullstack", 201, "Created");
-
+			// close server
 			}).then(() => {
 
 				return runningServer ? new Promise((resolve) => {
 
 					runningServer.close(() => {
-						runningServer = null;
 						resolve();
 					});
 

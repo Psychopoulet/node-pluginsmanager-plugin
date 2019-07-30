@@ -89,7 +89,7 @@ module.exports = class HeritedServer extends LocalServer {
 
 	}
 
-	socketServer (server) {
+	socketMiddleware (server) {
 
 		server.on("connection", (socket) => {
 

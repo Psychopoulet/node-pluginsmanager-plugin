@@ -14,6 +14,10 @@ module.exports = class LocalOrchestrator extends Orchestrator {
 
 	_initWorkSpace () {
 
+		this._Server.on("ping", () => {
+			this.emit("ping");
+		});
+
 		return Promise.resolve();
 
 	}

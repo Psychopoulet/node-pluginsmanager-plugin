@@ -242,14 +242,23 @@ describe("Server", () => {
 					"port": PORT_SOCKET
 				});
 
-				serverHerited.socketServer(socketServer);
+				// middleware
+				return Promise.resolve().then(() => {
 
-				// request server
-				return socketRequestTest("ping", "pong").then(() => {
-
-					strictEqual(pinged, true, "DebugStep is not as expected");
+					serverHerited.socketMiddleware(socketServer);
 
 					return Promise.resolve();
+
+				// request server
+				}).then(() => {
+
+					return socketRequestTest("ping", "pong").then(() => {
+
+						strictEqual(pinged, true, "DebugStep is not as expected");
+
+						return Promise.resolve();
+
+					});
 
 				// close server
 				}).then(() => {
@@ -259,7 +268,9 @@ describe("Server", () => {
 						socketServer.removeAllListeners();
 
 						socketServer.close((err) => {
+
 							return err ? reject(err) : resolve();
+
 						});
 
 					});
