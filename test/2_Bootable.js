@@ -9,8 +9,9 @@
 
 	// locals
 
-	const Bootable = require(join(__dirname, "..", "lib", "components", "Bootable.js"));
-	const LocalBootable = require(join(__dirname, "utils", "Bootable", "LocalBootable.js"));
+		// plugin
+		const Bootable = require(join(__dirname, "..", "lib", "components", "Bootable.js"));
+		const LocalBootable = require(join(__dirname, "utils", "Bootable", "LocalBootable.js"));
 
 // tests
 

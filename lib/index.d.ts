@@ -2,17 +2,18 @@
 
 declare module "node-pluginsmanager-plugin" {
 
-	import * as Events from"events";
+	import * as Events from "events";
+	import Server as WebSocketServer from "ws";
 
 	// options
 
-	export class MediatorUserOptions extends Object {
+	export class ServerOptions extends Object {
 
 		public mediator: Mediator;
 
 	}
 
-	export class OrchestratorOptions extends MediatorUserOptions {
+	export class OrchestratorOptions extends Object {
 
 		public packageFile: string;
 		public mediatorFile: string;
@@ -24,30 +25,25 @@ declare module "node-pluginsmanager-plugin" {
 
 	class Bootable extends Events {
 
-		// attributes
-
-			public initialized: boolean;
-
 		// methods
 
 			protected _initWorkSpace(data?: any): Promise<void>;
 			protected _releaseWorkSpace(data?: any): Promise<void>;
-
-			protected _fireInitialized(): this;
-			protected _fireReleased(): this;
 
 			public init(data?: any): Promise<void>;
 			public release(data?: any): Promise<void>;
 
 	}
 
-	export class Mediator extends Bootable { }
+	export class Mediator extends Bootable {
+
+		// attributes
+
+			public initialized: boolean;
+
+	}
 
 	class MediatorUser extends Bootable {
-
-		// constructor
-
-			constructor (options: MediatorUserOptions);
 
 		// attributes
 
@@ -56,16 +52,20 @@ declare module "node-pluginsmanager-plugin" {
 		// methods
 
 			public checkMediator(): Promise<void>;
-			public checkMediatorSync(): boolean;
 
 	}
 
 	export class Server extends MediatorUser {
 
+		// constructor
+
+			constructor (options: ServerOptions);
+
 		// methods
 
 			public appMiddleware(req: Request, res: Response, next: Function): void;
 			public httpMiddleware(req: Request, res: Response): boolean;
+			public socketMiddleware(server: WebSocketServer): void;
 
 	}
 
@@ -86,9 +86,12 @@ declare module "node-pluginsmanager-plugin" {
 				protected _mediatorFile: string;
 				protected _serverFile: string;
 
+				protected _extended: boolean;
+
 			// public
 
-				public enable: boolean;
+				public enabled: boolean;
+				public initialized: boolean;
 
 				// native
 				public authors: Array<string> | null;
@@ -104,16 +107,12 @@ declare module "node-pluginsmanager-plugin" {
 
 		// methods
 
-			// protected
-
-				protected _loadDataFromPackageFile(): Promise<void>;
-
 			// public
 
 				// checkers
 
 				public checkConf(): Promise<void>;
-				public checkEnable(): Promise<void>;
+				public isEnable(): Promise<void>;
 				public checkFiles(): Promise<void>;
 				public checkServer(): Promise<void>;
 				public checkServerSync(): boolean;
@@ -122,10 +121,12 @@ declare module "node-pluginsmanager-plugin" {
 
 				public appMiddleware(req: Request, res: Response, next: Function): Promise<void>;
 				public httpMiddleware(req: Request, res: Response): Promise<void>;
+				public socketMiddleware(server: WebSocketServer): void;
 
 				// init / release
 
-				public destroy(data?: any): Promise<void>;
+				public load(): Promise<void>;
+				public destroy(): Promise<void>;
 
 				// write
 

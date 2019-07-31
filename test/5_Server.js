@@ -14,13 +14,17 @@
 
 	// locals
 
-	const httpRequestTest = require(join(__dirname, "utils", "httpRequestTest.js"));
-	const socketRequestTest = require(join(__dirname, "utils", "socketRequestTest.js"));
-	const Bootable = require(join(__dirname, "..", "lib", "components", "Bootable.js"));
-	const MediatorUser = require(join(__dirname, "..", "lib", "components", "MediatorUser.js"));
-	const { Mediator, Server } = require(join(__dirname, "..", "lib", "main.js"));
-	const LocalServer = require(join(__dirname, "utils", "Server", "LocalServer.js"));
-	const HeritedServer = require(join(__dirname, "utils", "Server", "HeritedServer.js"));
+		// plugin
+		const Bootable = require(join(__dirname, "..", "lib", "components", "Bootable.js"));
+		const MediatorUser = require(join(__dirname, "..", "lib", "components", "MediatorUser.js"));
+		const { Mediator, Server } = require(join(__dirname, "..", "lib", "main.js"));
+
+		// utils
+		const httpRequestTest = require(join(__dirname, "utils", "httpRequestTest.js"));
+		const socketRequestTest = require(join(__dirname, "utils", "socketRequestTest.js"));
+		const LocalMediator = require(join(__dirname, "utils", "Mediator", "LocalMediator.js"));
+		const LocalServer = require(join(__dirname, "utils", "Server", "LocalServer.js"));
+		const HeritedServer = require(join(__dirname, "utils", "Server", "HeritedServer.js"));
 
 // consts
 
@@ -65,10 +69,16 @@ describe("Server", () => {
 	it("should init server with Mediator", () => {
 
 		const mediator = new Mediator();
-
-		return new LocalServer({
+		const server = new LocalServer({
 			"mediator": mediator
-		}).init("test init");
+		});
+
+		strictEqual(typeof server._Mediator, "object", "Generated server _Mediator is not an object");
+		strictEqual(server._Mediator instanceof Events, true, "Generated server _Mediator is not a Events instance");
+		strictEqual(server._Mediator instanceof Bootable, true, "Generated server _Mediator is not a Bootable instance");
+		strictEqual(server._Mediator instanceof Mediator, true, "Generated server _Mediator is not a Mediator instance");
+
+		return server.init("test init");
 
 	});
 
@@ -109,6 +119,99 @@ describe("Server", () => {
 			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
 
 			done();
+
+		});
+
+	});
+
+	describe("checkMediator", () => {
+
+		it("should check without mediator", (done) => {
+
+			const server = new LocalServer();
+			delete server._Mediator;
+
+			server.checkMediator().then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+				strictEqual(err instanceof ReferenceError, true, "Generated error is not a ReferenceError instance");
+
+				done();
+
+			});
+
+		});
+
+		it("should check with null mediator", (done) => {
+
+			const server = new LocalServer();
+
+				server._Mediator = null;
+
+			server.checkMediator().then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+				strictEqual(err instanceof ReferenceError, true, "Generated error is not a ReferenceError instance");
+
+				done();
+
+			});
+
+		});
+
+		it("should check with wrong mediator (string)", (done) => {
+
+			new LocalServer({
+				"mediator": "test"
+			}).checkMediator().then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+				strictEqual(err instanceof TypeError, true, "Generated error is not a TypeError instance");
+
+				done();
+
+			});
+
+		});
+
+		it("should check with wrong mediator (object)", (done) => {
+
+			new LocalServer({
+				"mediator": {}
+			}).checkMediator().then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+				strictEqual(err instanceof TypeError, true, "Generated error is not a TypeError instance");
+
+				done();
+
+			});
+
+		});
+
+		it("should check with right mediator", () => {
+
+			const mediator = new LocalMediator();
+
+			return mediator.init().then(() => {
+
+				return new LocalServer({
+					"mediator": mediator
+				}).checkMediator();
+
+			});
 
 		});
 

@@ -13,11 +13,14 @@
 
 	// locals
 
-	const Bootable = require(join(__dirname, "..", "lib", "components", "Bootable.js"));
-	const { Mediator } = require(join(__dirname, "..", "lib", "main.js"));
-	const LocalMediator = require(join(__dirname, "utils", "Mediator", "LocalMediator.js"));
-	const MediatorUser = require(join(__dirname, "..", "lib", "components", "MediatorUser.js"));
-	const LocalMediatorUser = require(join(__dirname, "utils", "MediatorUser", "LocalMediatorUser.js"));
+		// plugin
+		const Bootable = require(join(__dirname, "..", "lib", "components", "Bootable.js"));
+		const MediatorUser = require(join(__dirname, "..", "lib", "components", "MediatorUser.js"));
+		const { Mediator } = require(join(__dirname, "..", "lib", "main.js"));
+
+		// utils
+		const LocalMediator = require(join(__dirname, "utils", "Mediator", "LocalMediator.js"));
+		const LocalMediatorUser = require(join(__dirname, "utils", "MediatorUser", "LocalMediatorUser.js"));
 
 // tests
 
@@ -35,19 +38,6 @@ describe("MediatorUser", () => {
 
 		strictEqual(typeof mediatorUser._Mediator, "object", "Generated mediatorUser _Mediator is not an object");
 		strictEqual(mediatorUser._Mediator, null, "Generated mediatorUser _Mediator is not as expected");
-
-	});
-
-	it("should test constructor with Mediator", () => {
-
-		const mediatorUser = new LocalMediatorUser({
-			"mediator": new Mediator()
-		});
-
-		strictEqual(typeof mediatorUser._Mediator, "object", "Generated mediatorUser _Mediator is not an object");
-		strictEqual(mediatorUser._Mediator instanceof Events, true, "Generated mediatorUser _Mediator is not a Events instance");
-		strictEqual(mediatorUser._Mediator instanceof Bootable, true, "Generated mediatorUser _Mediator is not a Bootable instance");
-		strictEqual(mediatorUser._Mediator instanceof Mediator, true, "Generated mediatorUser _Mediator is not a Mediator instance");
 
 	});
 
@@ -135,7 +125,8 @@ describe("MediatorUser", () => {
 		it("should check with null mediator", (done) => {
 
 			const mediatorUser = new LocalMediatorUser();
-			mediatorUser._Mediator = null;
+
+				mediatorUser._Mediator = null;
 
 			mediatorUser.checkMediator().then(() => {
 				done(new Error("There is no generated error"));
@@ -153,9 +144,11 @@ describe("MediatorUser", () => {
 
 		it("should check with wrong mediator (string)", (done) => {
 
-			new LocalMediatorUser({
-				"mediator": "test"
-			}).checkMediator().then(() => {
+			const mediatorUser = new LocalMediatorUser();
+
+				mediatorUser._Mediator = "test";
+
+			mediatorUser.checkMediator().then(() => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
@@ -171,9 +164,11 @@ describe("MediatorUser", () => {
 
 		it("should check with wrong mediator (object)", (done) => {
 
-			new LocalMediatorUser({
-				"mediator": {}
-			}).checkMediator().then(() => {
+			const mediatorUser = new LocalMediatorUser();
+
+				mediatorUser._Mediator = {};
+
+			mediatorUser.checkMediator().then(() => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
@@ -193,9 +188,11 @@ describe("MediatorUser", () => {
 
 			return mediator.init().then(() => {
 
-				return new LocalMediatorUser({
-					"mediator": mediator
-				}).checkMediator();
+				const mediatorUser = new LocalMediatorUser();
+
+					mediatorUser._Mediator = mediator;
+
+				return mediatorUser.checkMediator();
 
 			});
 

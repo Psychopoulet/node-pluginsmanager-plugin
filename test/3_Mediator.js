@@ -9,9 +9,10 @@
 
 	// locals
 
-	const Bootable = require(join(__dirname, "..", "lib", "components", "Bootable.js"));
-	const { Mediator } = require(join(__dirname, "..", "lib", "main.js"));
-	const LocalMediator = require(join(__dirname, "utils", "Mediator", "LocalMediator.js"));
+		// plugin
+		const Bootable = require(join(__dirname, "..", "lib", "components", "Bootable.js"));
+		const { Mediator } = require(join(__dirname, "..", "lib", "main.js"));
+		const LocalMediator = require(join(__dirname, "utils", "Mediator", "LocalMediator.js"));
 
 // tests
 
