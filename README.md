@@ -36,8 +36,8 @@ $ npm install node-pluginsmanager-plugin
 
     --- protected ---
 
-  * ``` protected _initWorkSpace(data?: any): Promise<void>; ``` MUST be re-writted. Used to avoid full init logic re-writting.
-  * ``` protected _releaseWorkSpace(data?: any): Promise<void>; ``` MUST be re-writted. Used to avoid full release logic re-writting.
+  * ``` protected _initWorkSpace(data?: any): Promise<void>; ``` MUST be re-writted (except in Orchestrator childs). Used to avoid full init logic re-writting.
+  * ``` protected _releaseWorkSpace(data?: any): Promise<void>; ``` MUST be re-writted (except in Orchestrator childs). Used to avoid full release logic re-writting.
 
     --- public ---
 
