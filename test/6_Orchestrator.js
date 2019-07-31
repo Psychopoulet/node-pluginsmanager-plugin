@@ -391,6 +391,7 @@ describe("Orchestrator", () => {
 					strictEqual(orchestrator._extended instanceof Array, true, "Generated orchestrator extended is not an Array");
 					deepStrictEqual(orchestrator._extended, [
 						"typings",
+						"files",
 						"husky",
 						"repository",
 						"keywords",
