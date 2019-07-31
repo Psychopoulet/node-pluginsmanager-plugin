@@ -263,6 +263,9 @@ class MyPluginOrchestrator extends Orchestrator {
 ## Tests
 
 ```bash
+$ git clone git://github.com/Psychopoulet/node-pluginsmanager-plugin.git
+$ cd ./node-pluginsmanager-plugin
+$ npm install
 $ npm run-script tests
 ```
 
