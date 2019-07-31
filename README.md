@@ -41,8 +41,8 @@ $ npm install node-pluginsmanager-plugin
 
     --- public ---
 
-  * ``` init(data?: any): Promise<void> ``` should not be re-writted. Each child has is own init logic.
-  * ``` release(data?: any): Promise<void> ``` should not be re-writted. Each child has is own release logic.
+  * ``` init(data?: any): Promise<void> ``` should NOT be re-writted. Each child has is own init logic.
+  * ``` release(data?: any): Promise<void> ``` should NOT be re-writted. Each child has is own release logic.
 
 ### Mediator (extends Bootable)
 
