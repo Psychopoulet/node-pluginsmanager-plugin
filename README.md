@@ -28,37 +28,34 @@ $ npm install node-pluginsmanager-plugin
 
 ![Classes](./documentation/extends.jpg)
 
+> Please note the fact that, in this version, init & release methods of each classes should not be re-writted anymore...
+
 ### Bootable (extends EventEmitter)
 
   -- Methods --
 
-  * ``` init(data?: any): Promise<void> ``` method used in EACH child. must be re-writted.
-  * ``` release(data?: any): Promise<void> ``` method used in EACH child. can be re-writted, but don't forget to call removeAllListeners.
+    --- protected ---
+
+  * ``` protected _initWorkSpace(data?: any): Promise<void>; ``` MUST be re-writted. Used to avoid full init logic re-writting.
+  * ``` protected _releaseWorkSpace(data?: any): Promise<void>; ``` MUST be re-writted. Used to avoid full release logic re-writting.
+
+    --- public ---
+
+  * ``` init(data?: any): Promise<void> ``` should not be re-writted. Each child has is own init logic.
+  * ``` release(data?: any): Promise<void> ``` should not be re-writted. Each child has is own release logic.
 
 ### Mediator (extends Bootable)
 
   -- Events --
 
   * ``` initialized ``` fired when mediator is initialized
+  * ``` released ``` fired when mediator is released
 
   -- Attributes --
 
-  * ``` initialized: boolean ```
-
-  -- Methods --
-
-  * ``` _fireInitialized(void): Promise<void> ``` set "initialized" to true and fire "initialized" event
-  * ``` checkConf(void): Promise<void> ``` used to check plugin's configuration. should be re-writted.
-
-### MediatorUserOptions (extends object)
-
-  * ``` mediator: Mediator ``` mediator used by the class
+  * ``` initialized: boolean ``` mediator status
 
 ### MediatorUser (extends Bootable)
-
-  -- Constructor --
-
-  * ``` constructor(options: MediatorUserOptions) ```
 
   -- Attributes --
 
@@ -66,16 +63,25 @@ $ npm install node-pluginsmanager-plugin
 
   -- Methods --
 
-  * ``` checkMediator(void): Promise<void> ``` check mediator, ensure inheritance & "initialized" status
+  * ``` checkMediator(void): Promise<void> ``` check mediator
+
+### ServerOptions (extends object)
+
+  * ``` mediator: Mediator ``` mediator used by the class
 
 ### Server (extends MediatorUser)
+
+  -- Constructor --
+
+  * ``` constructor(options: ServerOptions) ```
 
   -- Methods --
 
   * ``` appMiddleware(req: Request, res: Response, next: function): void ``` middleware for express & others to add routes, should be re-writted
   * ``` httpMiddleware(req: Request, res: Response): boolean ``` middleware for native http[s] server to add routes, should be re-writted
+  * ``` socketMiddleware(server: WebSocketServer): void ``` middleware for socket to add bilateral push events, should be re-writted if used
 
-### OrchestratorOptions (extends MediatorUserOptions)
+### OrchestratorOptions (extends object)
 
   * ``` packageFile: string ``` package file used by the plugin (absolute path)
   * ``` mediatorFile: string ``` mediator file used by the plugin (absolute path)
@@ -83,16 +89,31 @@ $ npm install node-pluginsmanager-plugin
 
 ### Orchestrator (extends MediatorUser)
 
+> "there is a major difference between "load" & "init" methods : "load" just load data from package file (and will always be executed), "init" create Mediator & Server instance and run the plugin (only if declared as enabled)
+> "there is a major difference between "release" & "destroy" methods : "release" stop the plugin and destroy the Mediator and the Server instances but keep package data, "destroy" release the data (used when uninstall, update, etc...)
+> you don't have to inherit "_initWorkSpace" & "_releaseWorkSpace" methods in Orchestrator childs
+
   -- Constructor --
 
   * ``` constructor(options: OrchestratorOptions) ```
 
   -- Attributes --
 
-  * ``` _Server: Server | null ```
-  * ``` _packageFile: string ```
-  * ``` _mediatorFile: string ```
-  * ``` _serverFile: string ```
+    --- protected ---
+
+  * ``` _Server: Server | null ``` server used by the class
+
+  * ``` _packageFile: string ``` package file used by the plugin (absolute path) (see OrchestratorOptions)
+  * ``` _mediatorFile: string ``` mediator file used by the plugin (absolute path) (see OrchestratorOptions)
+  * ``` _serverFile: string ``` server file used by the plugin (absolute path) (see OrchestratorOptions)
+
+  * ``` _extended: Array<string> ``` non-managed data's names, extracted from package file, used to properly destroy plugin if necessary
+
+    --- public ---
+
+  * ``` enabled: boolean ``` is plugin enable ? default=true (you should define it by re-write "isEnable" method)
+  * ``` initialized: boolean ``` is plugin initialized ?
+
   * ``` authors: Array<string> ```
   * ``` description: string ```
   * ``` dependencies: object | null ```
@@ -106,15 +127,30 @@ $ npm install node-pluginsmanager-plugin
 
   -- Methods --
 
+    --- checkers ---
+
+  * ``` checkConf(void): Promise<void> ``` check plugin's conf (optional, should be re-writted if a specific conf is used)
+  * ``` isEnable(void): Promise<void> ``` used to define plugin execution
   * ``` checkFiles(void): Promise<void> ``` check files existance
-  * ``` checkServer(void): Promise<void> ``` check server, ensure inheritance
-  * ``` loadDataFromPackageFile(void): Promise<void> ``` load all data from package file, dynamically add new attributes
-  * ``` destroy(void): Promise<void> ``` reset standards attributes (release does not do that)
+  * ``` checkServer(void): Promise<void> ``` check server
+  * ``` checkServerSync(void): boolean ``` check server in a synchronous way
+
+    --- middlewares ---
+
+  * ``` appMiddleware(req: Request, res: Response, next: function): void ``` transfert to Server middleware
+  * ``` httpMiddleware(req: Request, res: Response): boolean ``` transfert to Server middleware
+  * ``` socketMiddleware(server: WebSocketServer): void ``` transfert to Server middleware
+
+    --- load / destroy ---
+
+  * ``` load(void): Promise<void> ``` load all data from package file, dynamically add new attributes
+  * ``` destroy(void): Promise<void> ``` reset attributes (release does not do that)
+
+    --- write ---
+
   * ``` install(data?: any): Promise<void> ``` used after plugin installation (create ressources). should be re-writted.
   * ``` update(data?: any): Promise<void> ``` used after plugin update. should be re-writted.
   * ``` uninstall(data?: any): Promise<void> ``` used before plugin uninstall (remove ressources). should be re-writted.
-  * ``` appMiddleware(req: Request, res: Response, next: function): void ``` transfert request to Server middleware (if the plugin is initialized)
-  * ``` httpMiddleware(req: Request, res: Response): boolean ``` transfert request to Server middleware (if the plugin is initialized)
 
 ## Examples
 
@@ -145,6 +181,14 @@ const { get } = require('https');
 const { Mediator } = require('node-pluginsmanager-plugin');
 
 class MyPluginMediator extends Mediator {
+
+  _initWorkSpace () {
+    return Promise.resolve();
+  }
+
+  _releaseWorkSpace () {
+    return Promise.resolve();
+  }
 
   _query (search) {
 
@@ -196,6 +240,14 @@ class MyPluginMediator extends Mediator {
 const { Server } = require('node-pluginsmanager-plugin');
 
 class MyPluginServer extends Server {
+
+  _initWorkSpace () {
+    return Promise.resolve();
+  }
+
+  _releaseWorkSpace () {
+    return Promise.resolve();
+  }
 
   appMiddleware (req, res, next) {
 
