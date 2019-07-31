@@ -1,9 +1,10 @@
 /// <reference types="node" />
+/// <reference types="ws" />
 
 declare module "node-pluginsmanager-plugin" {
 
 	import * as Events from "events";
-	import Server as WebSocketServer from "ws";
+	import { Server as WebSocketServer } from "ws";
 
 	// options
 

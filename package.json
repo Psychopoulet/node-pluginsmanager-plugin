@@ -37,6 +37,7 @@
   "dependencies": {},
   "devDependencies": {
     "@types/node": "12.6.8",
+    "@types/ws": "6.0.1",
     "check-version-modules": "1.2.1",
     "coveralls": "3.0.5",
     "eslint": "6.1.0",

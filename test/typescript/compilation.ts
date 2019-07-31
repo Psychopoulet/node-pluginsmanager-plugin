@@ -15,7 +15,13 @@ const orchestrator = new Orchestrator({
 
 console.log(orchestrator);
 
-orchestrator.init().then(() => {
+orchestrator.load().then(() => {
+
+	console.log(orchestrator);
+
+	return orchestrator.init();
+
+}).then(() => {
 
 	console.log(orchestrator);
 
@@ -30,5 +36,9 @@ orchestrator.init().then(() => {
 }).then(() => {
 
 	console.log(orchestrator);
+
+}).catch((err) => {
+
+	console.error(err);
 
 });
