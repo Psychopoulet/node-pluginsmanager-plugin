@@ -8,18 +8,14 @@ declare module "node-pluginsmanager-plugin" {
 
 	// options
 
-	export class ServerOptions extends Object {
-
-		public mediator: Mediator;
-
+	interface iServerOptions {
+		"mediator": Mediator;
 	}
 
-	export class OrchestratorOptions extends Object {
-
-		public packageFile: string;
-		public mediatorFile: string;
-		public serverFile: string;
-
+	interface iOrchestratorOptions {
+		"packageFile": string;
+		"mediatorFile": string;
+		"serverFile": string;
 	}
 
 	// classes
@@ -60,7 +56,7 @@ declare module "node-pluginsmanager-plugin" {
 
 		// constructor
 
-			constructor (options: ServerOptions);
+			constructor (options: iServerOptions);
 
 		// methods
 
@@ -74,7 +70,7 @@ declare module "node-pluginsmanager-plugin" {
 
 		// constructor
 
-			constructor (options: OrchestratorOptions);
+			constructor (options: iOrchestratorOptions);
 
 		// attributes
 

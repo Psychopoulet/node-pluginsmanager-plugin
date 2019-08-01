@@ -24,6 +24,27 @@ $ npm install node-pluginsmanager-plugin
 
 ![Architecture](./documentation/functional.jpg)
 
+## Interfaces
+
+
+### iServerOptions
+
+```typescript
+interface iServerOptions {
+  "mediator": Mediator; // mediator used by the class
+}
+```
+
+### iOrchestratorOptions
+
+```typescript
+interface iOrchestratorOptions {
+  "packageFile": string; // package file used by the plugin (absolute path)
+  "mediatorFile": string; // mediator file used by the plugin (absolute path)
+  "serverFile": string; // server file used by the plugin (absolute path)
+}
+```
+
 ## Classes
 
 ![Classes](./documentation/extends.jpg)
@@ -65,27 +86,17 @@ $ npm install node-pluginsmanager-plugin
 
   * ``` checkMediator(void): Promise<void> ``` check mediator
 
-### ServerOptions (extends object)
-
-  * ``` mediator: Mediator ``` mediator used by the class
-
 ### Server (extends MediatorUser)
 
   -- Constructor --
 
-  * ``` constructor(options: ServerOptions) ```
+  * ``` constructor(options: iServerOptions) ```
 
   -- Methods --
 
   * ``` appMiddleware(req: Request, res: Response, next: function): void ``` middleware for express & others to add routes, should be re-writted
   * ``` httpMiddleware(req: Request, res: Response): boolean ``` middleware for native http[s] server to add routes, should be re-writted
   * ``` socketMiddleware(server: WebSocketServer): void ``` middleware for socket to add bilateral push events, should be re-writted if used
-
-### OrchestratorOptions (extends object)
-
-  * ``` packageFile: string ``` package file used by the plugin (absolute path)
-  * ``` mediatorFile: string ``` mediator file used by the plugin (absolute path)
-  * ``` serverFile: string ``` server file used by the plugin (absolute path)
 
 ### Orchestrator (extends MediatorUser)
 
@@ -95,7 +106,7 @@ $ npm install node-pluginsmanager-plugin
 
   -- Constructor --
 
-  * ``` constructor(options: OrchestratorOptions) ```
+  * ``` constructor(options: iOrchestratorOptions) ```
 
   -- Attributes --
 
