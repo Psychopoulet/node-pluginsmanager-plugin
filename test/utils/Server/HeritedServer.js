@@ -7,7 +7,7 @@
 	const { parse } = require("url");
 
 	// locals
-	const Server = require(join(__dirname, "..", "..", "lib", "components", "Server.js"));
+	const LocalServer = require(join(__dirname, "LocalServer.js"));
 
 // consts
 
@@ -18,7 +18,7 @@
 
 // module
 
-module.exports = class ServerHerited extends Server {
+module.exports = class HeritedServer extends LocalServer {
 
 	appMiddleware (req, res, next) {
 
@@ -86,6 +86,31 @@ module.exports = class ServerHerited extends Server {
 		}
 
 		return false;
+
+	}
+
+	socketMiddleware (server) {
+
+		server.on("connection", (socket) => {
+
+			socket.on("message", (payload) => {
+
+				const req = JSON.parse(payload);
+
+				if (req.name && "ping" === req.name) {
+
+					this.emit("ping");
+
+					socket.send(JSON.stringify({
+						"name": "pong",
+						"params": [ "test" ]
+					}));
+
+				}
+
+			});
+
+		});
 
 	}
 

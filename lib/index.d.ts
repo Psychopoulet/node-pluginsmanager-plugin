@@ -1,12 +1,31 @@
 /// <reference types="node" />
+/// <reference types="ws" />
 
 declare module "node-pluginsmanager-plugin" {
 
-	import * as Events from"events";
+	import * as Events from "events";
+	import { Server as WebSocketServer } from "ws";
+
+	// options
+
+	interface iServerOptions {
+		"mediator": Mediator;
+	}
+
+	interface iOrchestratorOptions {
+		"packageFile": string;
+		"mediatorFile": string;
+		"serverFile": string;
+	}
+
+	// classes
 
 	class Bootable extends Events {
 
 		// methods
+
+			protected _initWorkSpace(data?: any): Promise<void>;
+			protected _releaseWorkSpace(data?: any): Promise<void>;
 
 			public init(data?: any): Promise<void>;
 			public release(data?: any): Promise<void>;
@@ -19,24 +38,9 @@ declare module "node-pluginsmanager-plugin" {
 
 			public initialized: boolean;
 
-		// methods
-
-			protected _fireInitialized(): Promise<void>;
-			public checkConf(): Promise<void>;
-
-	}
-
-	class MediatorUserOptions extends Object {
-
-		public mediator: Mediator;
-
 	}
 
 	class MediatorUser extends Bootable {
-
-		// constructor
-
-			constructor (options: MediatorUserOptions);
 
 		// attributes
 
@@ -50,18 +54,15 @@ declare module "node-pluginsmanager-plugin" {
 
 	export class Server extends MediatorUser {
 
+		// constructor
+
+			constructor (options: iServerOptions);
+
 		// methods
 
 			public appMiddleware(req: Request, res: Response, next: Function): void;
 			public httpMiddleware(req: Request, res: Response): boolean;
-
-	}
-
-	class OrchestratorOptions extends MediatorUserOptions {
-
-		public packageFile: string;
-		public mediatorFile: string;
-		public serverFile: string;
+			public socketMiddleware(server: WebSocketServer): void;
 
 	}
 
@@ -69,49 +70,66 @@ declare module "node-pluginsmanager-plugin" {
 
 		// constructor
 
-			constructor (options: OrchestratorOptions);
+			constructor (options: iOrchestratorOptions);
 
 		// attributes
 
-			// params
-			protected _packageFile: string;
-			protected _mediatorFile: string;
-			protected _serverFile: string;
+			// protected
 
-			protected _Server: Server | null;
+				protected _Server: Server | null;
 
-			// native
-			public authors: Array<string> | null;
-			public description: string;
-			public dependencies: object | null;
-			public devDependencies: object | null;
-			public engines: object | null;
-			public license: string;
-			public main: string;
-			public name: string;
-			public scripts: object | null;
-			public version: string;
+				// params
+				protected _packageFile: string;
+				protected _mediatorFile: string;
+				protected _serverFile: string;
+
+				protected _extended: boolean;
+
+			// public
+
+				public enabled: boolean;
+				public initialized: boolean;
+
+				// native
+				public authors: Array<string> | null;
+				public description: string;
+				public dependencies: object | null;
+				public devDependencies: object | null;
+				public engines: object | null;
+				public license: string;
+				public main: string;
+				public name: string;
+				public scripts: object | null;
+				public version: string;
 
 		// methods
 
-			public checkFiles(): Promise<void>;
-			public checkServer(): Promise<void>;
-			public appMiddleware(req: Request, res: Response, next: Function): Promise<void>;
-			public httpMiddleware(req: Request, res: Response): Promise<void>;
+			// public
 
-			// read
+				// checkers
 
-			public loadDataFromPackageFile(): Promise<void>;
+				public checkConf(): Promise<void>;
+				public isEnable(): Promise<void>;
+				public checkFiles(): Promise<void>;
+				public checkServer(): Promise<void>;
+				public checkServerSync(): boolean;
 
-			// load
+				// middleware
 
-			public destroy(): Promise<void>;
+				public appMiddleware(req: Request, res: Response, next: Function): Promise<void>;
+				public httpMiddleware(req: Request, res: Response): Promise<void>;
+				public socketMiddleware(server: WebSocketServer): void;
 
-			// write
+				// init / release
 
-			public install(data?: any): Promise<void>;
-			public update(data?: any): Promise<void>;
-			public uninstall(data?: any): Promise<void>;
+				public load(): Promise<void>;
+				public destroy(): Promise<void>;
+
+				// write
+
+				public install(data?: any): Promise<void>;
+				public update(data?: any): Promise<void>;
+				public uninstall(data?: any): Promise<void>;
 
 	}
 
