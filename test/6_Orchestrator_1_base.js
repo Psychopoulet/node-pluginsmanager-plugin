@@ -23,11 +23,14 @@
 
 // consts
 
+	const EXTERNAL_RESSOURCES_DIRECTORY = join(__dirname, "external-ressources");
+
 	const GOOD_OPTIONS = {
 		"packageFile": join(__dirname, "..", "package.json"),
 		"descriptorFile": join(__dirname, "utils", "Descriptor.json"),
 		"mediatorFile": join(__dirname, "utils", "Mediator", "LocalMediator.js"),
-		"serverFile": join(__dirname, "utils", "Server", "LocalServer.js")
+		"serverFile": join(__dirname, "utils", "Server", "LocalServer.js"),
+		"externalRessourcesDirectory": EXTERNAL_RESSOURCES_DIRECTORY
 	};
 
 // tests
@@ -38,8 +41,10 @@ describe("Orchestrator", () => {
 
 		const orchestrator = new LocalOrchestrator({
 			"packageFile": "packageFile",
+			"descriptorFile": "descriptorFile",
 			"mediatorFile": "mediatorFile",
-			"serverFile": "serverFile"
+			"serverFile": "serverFile",
+			"externalRessourcesDirectory": "test"
 		});
 
 		strictEqual(typeof orchestrator, "object", "Generated orchestrator is not an object");
@@ -58,6 +63,9 @@ describe("Orchestrator", () => {
 
 			strictEqual(typeof orchestrator._packageFile, "string", "Generated orchestrator _packageFile is not a string");
 			strictEqual(orchestrator._packageFile, "packageFile", "Generated orchestrator _packageFile is not as expected");
+
+			strictEqual(typeof orchestrator._descriptorFile, "string", "Generated orchestrator _descriptorFile is not a string");
+			strictEqual(orchestrator._descriptorFile, "descriptorFile", "Generated orchestrator _descriptorFile is not as expected");
 
 			strictEqual(typeof orchestrator._mediatorFile, "string", "Generated orchestrator _mediatorFile is not a string");
 			strictEqual(orchestrator._mediatorFile, "mediatorFile", "Generated orchestrator _mediatorFile is not as expected");
@@ -78,6 +86,15 @@ describe("Orchestrator", () => {
 
 			strictEqual(typeof orchestrator.initialized, "boolean", "Generated orchestrator initialized is not a boolean");
 			strictEqual(orchestrator.initialized, false, "Generated orchestrator initialized is not as expected");
+
+			strictEqual(
+				typeof orchestrator.externalRessourcesDirectory, "string",
+				"Generated orchestrator externalRessourcesDirectory is not a boolean"
+			);
+			strictEqual(
+				orchestrator.externalRessourcesDirectory, "test",
+				"Generated orchestrator externalRessourcesDirectory is not as expected"
+			);
 
 			// native
 
@@ -111,7 +128,44 @@ describe("Orchestrator", () => {
 			strictEqual(typeof orchestrator.version, "string", "Generated orchestrator version is not a string");
 			strictEqual(orchestrator.version, "", "Generated orchestrator version is not as expected");
 
-		return Promise.resolve();
+	});
+
+	it("should test constructor without params", () => {
+
+		const orchestrator = new LocalOrchestrator();
+
+		// protected
+
+			// params
+
+			strictEqual(typeof orchestrator._packageFile, "string", "Generated orchestrator _packageFile is not a string");
+			strictEqual(orchestrator._packageFile, "", "Generated orchestrator _packageFile is not as expected");
+
+			strictEqual(typeof orchestrator._descriptorFile, "string", "Generated orchestrator _descriptorFile is not a string");
+			strictEqual(orchestrator._descriptorFile, "", "Generated orchestrator _descriptorFile is not as expected");
+
+			strictEqual(typeof orchestrator._mediatorFile, "string", "Generated orchestrator _mediatorFile is not a string");
+			strictEqual(orchestrator._mediatorFile, "", "Generated orchestrator _mediatorFile is not as expected");
+
+			strictEqual(typeof orchestrator._serverFile, "string", "Generated orchestrator _serverFile is not a string");
+			strictEqual(orchestrator._serverFile, "", "Generated orchestrator _serverFile is not as expected");
+
+			// extended
+
+			strictEqual(typeof orchestrator._extended, "object", "Generated orchestrator extended is not an object");
+			strictEqual(orchestrator._extended instanceof Array, true, "Generated orchestrator extended is not an Array");
+			deepStrictEqual(orchestrator._extended, [], "Generated orchestrator extended is not as expected");
+
+		// public
+
+			strictEqual(
+				typeof orchestrator.externalRessourcesDirectory, "string",
+				"Generated orchestrator externalRessourcesDirectory is not a boolean"
+			);
+			strictEqual(
+				orchestrator.externalRessourcesDirectory, "",
+				"Generated orchestrator externalRessourcesDirectory is not as expected"
+			);
 
 	});
 

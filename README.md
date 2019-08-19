@@ -26,6 +26,14 @@ $ npm install node-pluginsmanager-plugin
 
 ## Interfaces
 
+### iMediatorOptions
+
+```typescript
+interface iMediatorOptions {
+  "externalRessourcesDirectory": string; // used to write local data like sqlite database, json files, pictures, etc...
+}
+```
+
 ### iServerOptions
 
 ```typescript
@@ -38,7 +46,7 @@ interface iServerOptions {
 ### iOrchestratorOptions
 
 ```typescript
-interface iOrchestratorOptions {
+interface iOrchestratorOptions extends iMediatorOptions {
   "packageFile": string; // package file used by the plugin (absolute path)
   "descriptorFile": string; // descriptor file used by the plugin (absolute path)
   "mediatorFile": string; // mediator file used by the plugin (absolute path)
@@ -84,6 +92,10 @@ interface iPath {
 
 ### Mediator (extends Bootable)
 
+  -- Constructor --
+
+  * ``` constructor(options: iMediatorOptions) ```
+
   -- Events --
 
   * ``` initialized ``` fired when mediator is initialized
@@ -92,6 +104,8 @@ interface iPath {
   -- Attributes --
 
   * ``` initialized: boolean ``` mediator status
+
+  * ``` externalRessourcesDirectory: string ``` used to write local data like sqlite database, json files, pictures, etc... (see iMediatorOptions)
 
 ### MediatorUser (extends Bootable)
 
@@ -145,6 +159,8 @@ interface iPath {
 
   * ``` enabled: boolean ``` is plugin enable ? default=true (you should define it by re-write "isEnable" method)
   * ``` initialized: boolean ``` is plugin initialized ?
+
+  * ``` externalRessourcesDirectory: string ``` used to write local data like sqlite database, json files, pictures, etc... (see iOrchestratorOptions)
 
   * ``` authors: Array<string> ```
   * ``` description: string ```
