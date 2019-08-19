@@ -20,7 +20,7 @@ declare module "node-pluginsmanager-plugin" {
 		"serverFile": string;
 	}
 
-	interface iPaths {
+	interface iPath {
 		"path": string;
 		"method": string;
 	}
@@ -59,7 +59,7 @@ declare module "node-pluginsmanager-plugin" {
 			public checkDescriptor(): Promise<void>;
 			public checkMediator(): Promise<void>;
 
-			public getPaths(): Promise<iPaths>;
+			public getPaths(): Promise<Array<iPath>>;
 
 	}
 
