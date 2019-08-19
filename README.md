@@ -43,6 +43,7 @@ interface iOrchestratorOptions {
   "descriptorFile": string; // descriptor file used by the plugin (absolute path)
   "mediatorFile": string; // mediator file used by the plugin (absolute path)
   "serverFile": string; // server file used by the plugin (absolute path)
+  "externalRessourcesDirectory": string; // used to write local data like sqlite database, json files, pictures, etc...
 }
 ```
 
@@ -142,6 +143,8 @@ interface iPath {
   * ``` _extended: Array<string> ``` non-managed data's names, extracted from package file, used to properly destroy plugin if necessary
 
     --- public ---
+
+  * ``` externalRessourcesDirectory: string ``` used to write local data like sqlite database, json files, pictures, etc... (see iOrchestratorOptions)
 
   * ``` enabled: boolean ``` is plugin enable ? default=true (you should define it by re-write "isEnable" method)
   * ``` initialized: boolean ``` is plugin initialized ?

@@ -18,6 +18,7 @@ declare module "node-pluginsmanager-plugin" {
 		"descriptorFile": string;
 		"mediatorFile": string;
 		"serverFile": string;
+		"externalRessourcesDirectory": string;
 	}
 
 	interface iPath {
