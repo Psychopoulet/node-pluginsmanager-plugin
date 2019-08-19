@@ -18,7 +18,7 @@
 
 describe("Mediator", () => {
 
-	it("should test constructor", () => {
+	it("should test constructor without externalRessourcesDirectory", () => {
 
 		const mediator = new LocalMediator();
 
@@ -30,6 +30,20 @@ describe("Mediator", () => {
 
 		strictEqual(typeof mediator.initialized, "boolean", "Generated mediator is not as expected");
 		strictEqual(mediator.initialized, false, "Generated mediator is not as expected");
+
+		strictEqual(typeof mediator.externalRessourcesDirectory, "string", "Generated mediator is not as expected");
+		strictEqual(mediator.externalRessourcesDirectory, "", "Generated mediator is not as expected");
+
+	});
+
+	it("should test constructor with externalRessourcesDirectory", () => {
+
+		const mediator = new LocalMediator({
+			"externalRessourcesDirectory": __dirname
+		});
+
+		strictEqual(typeof mediator.externalRessourcesDirectory, "string", "Generated mediator is not as expected");
+		strictEqual(mediator.externalRessourcesDirectory, __dirname, "Generated mediator is not as expected");
 
 	});
 
