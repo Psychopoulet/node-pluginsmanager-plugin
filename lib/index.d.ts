@@ -8,17 +8,20 @@ declare module "node-pluginsmanager-plugin" {
 
 	// options
 
+	interface iMediatorOptions {
+		"externalRessourcesDirectory": string;
+	}
+
 	interface iServerOptions {
 		"descriptor": object;
 		"mediator": Mediator;
 	}
 
-	interface iOrchestratorOptions {
+	interface iOrchestratorOptions extends iMediatorOptions {
 		"packageFile": string;
 		"descriptorFile": string;
 		"mediatorFile": string;
 		"serverFile": string;
-		"externalRessourcesDirectory": string;
 	}
 
 	interface iPath {
@@ -32,19 +35,28 @@ declare module "node-pluginsmanager-plugin" {
 
 		// methods
 
-			protected _initWorkSpace(data?: any): Promise<void>;
-			protected _releaseWorkSpace(data?: any): Promise<void>;
+			// protected
 
-			public init(data?: any): Promise<void>;
-			public release(data?: any): Promise<void>;
+				protected _initWorkSpace(data?: any): Promise<void>;
+				protected _releaseWorkSpace(data?: any): Promise<void>;
+
+			// public
+
+				public init(data?: any): Promise<void>;
+				public release(data?: any): Promise<void>;
 
 	}
 
 	export class Mediator extends Bootable {
 
+		// constructor
+
+			constructor (options: iMediatorOptions);
+
 		// attributes
 
 			public initialized: boolean;
+			public externalRessourcesDirectory: string;
 
 	}
 
@@ -103,6 +115,8 @@ declare module "node-pluginsmanager-plugin" {
 				public enabled: boolean;
 				public initialized: boolean;
 
+				public externalRessourcesDirectory: string;
+
 				// native
 				public authors: Array<string> | null;
 				public description: string;
@@ -117,32 +131,30 @@ declare module "node-pluginsmanager-plugin" {
 
 		// methods
 
-			// public
+			// checkers
 
-				// checkers
+			public checkConf(): Promise<void>;
+			public isEnable(): Promise<void>;
+			public checkFiles(): Promise<void>;
+			public checkServer(): Promise<void>;
+			public checkServerSync(): boolean;
 
-				public checkConf(): Promise<void>;
-				public isEnable(): Promise<void>;
-				public checkFiles(): Promise<void>;
-				public checkServer(): Promise<void>;
-				public checkServerSync(): boolean;
+			// middleware
 
-				// middleware
+			public appMiddleware(req: Request, res: Response, next: Function): Promise<void>;
+			public httpMiddleware(req: Request, res: Response): Promise<void>;
+			public socketMiddleware(server: WebSocketServer): void;
 
-				public appMiddleware(req: Request, res: Response, next: Function): Promise<void>;
-				public httpMiddleware(req: Request, res: Response): Promise<void>;
-				public socketMiddleware(server: WebSocketServer): void;
+			// init / release
 
-				// init / release
+			public load(): Promise<void>;
+			public destroy(): Promise<void>;
 
-				public load(): Promise<void>;
-				public destroy(): Promise<void>;
+			// write
 
-				// write
-
-				public install(data?: any): Promise<void>;
-				public update(data?: any): Promise<void>;
-				public uninstall(data?: any): Promise<void>;
+			public install(data?: any): Promise<void>;
+			public update(data?: any): Promise<void>;
+			public uninstall(data?: any): Promise<void>;
 
 	}
 
