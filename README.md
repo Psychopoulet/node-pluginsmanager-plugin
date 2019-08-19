@@ -26,11 +26,19 @@ $ npm install node-pluginsmanager-plugin
 
 ## Interfaces
 
+### iMediatorOptions
+
+```typescript
+interface iMediatorOptions {
+  "externalRessourcesDirectory": string; // used to write local data like sqlite database, json files, pictures, etc...
+}
+```
 
 ### iServerOptions
 
 ```typescript
 interface iServerOptions {
+  "descriptor": object;
   "mediator": Mediator; // mediator used by the class
 }
 ```
@@ -38,10 +46,20 @@ interface iServerOptions {
 ### iOrchestratorOptions
 
 ```typescript
-interface iOrchestratorOptions {
+interface iOrchestratorOptions extends iMediatorOptions {
   "packageFile": string; // package file used by the plugin (absolute path)
+  "descriptorFile": string; // descriptor file used by the plugin (absolute path)
   "mediatorFile": string; // mediator file used by the plugin (absolute path)
   "serverFile": string; // server file used by the plugin (absolute path)
+}
+```
+
+### iPath
+
+```typescript
+interface iPath {
+  "path": string;
+  "method": string;
 }
 ```
 
@@ -50,6 +68,13 @@ interface iOrchestratorOptions {
 ![Classes](./documentation/extends.jpg)
 
 > Please note the fact that, in this version, init & release methods of each classes should not be re-writted anymore...
+
+### Resume
+
+* Mediator : contains the plugin's logic (communication with targeted device/api/whatever)
+* Server : expose plugin's roots to external use (API)
+* Descriptor : OpenAPI (v3) description for Server endpoints (this is NOT a js file, but a json OpenAPI file)
+* Orchestrator : plugin's data (extracted from plugin's package.json) and Descriptor, Mediator & Server initializer
 
 ### Bootable (extends EventEmitter)
 
@@ -67,6 +92,10 @@ interface iOrchestratorOptions {
 
 ### Mediator (extends Bootable)
 
+  -- Constructor --
+
+  * ``` constructor(options: iMediatorOptions) ```
+
   -- Events --
 
   * ``` initialized ``` fired when mediator is initialized
@@ -76,15 +105,20 @@ interface iOrchestratorOptions {
 
   * ``` initialized: boolean ``` mediator status
 
+  * ``` externalRessourcesDirectory: string ``` used to write local data like sqlite database, json files, pictures, etc... (see iMediatorOptions)
+
 ### MediatorUser (extends Bootable)
 
   -- Attributes --
 
+  * ``` _Descriptor: object | null ```
   * ``` _Mediator: Mediator | null ```
 
   -- Methods --
 
-  * ``` checkMediator(void): Promise<void> ``` check mediator
+  * ``` checkDescriptor(void): Promise<void> ``` check Descriptor
+  * ``` checkMediator(void): Promise<void> ``` check Mediator
+  * ``` getPaths(void): Promise<Array<iPath>> ``` return paths into Descriptor
 
 ### Server (extends MediatorUser)
 
@@ -114,9 +148,10 @@ interface iOrchestratorOptions {
 
   * ``` _Server: Server | null ``` server used by the class
 
-  * ``` _packageFile: string ``` package file used by the plugin (absolute path) (see OrchestratorOptions)
-  * ``` _mediatorFile: string ``` mediator file used by the plugin (absolute path) (see OrchestratorOptions)
-  * ``` _serverFile: string ``` server file used by the plugin (absolute path) (see OrchestratorOptions)
+  * ``` _packageFile: string ``` package file used by the plugin (absolute path) (see iOrchestratorOptions)
+  * ``` _descriptorFile: string ``` descriptor file used by the plugin (absolute path) (see iOrchestratorOptions)
+  * ``` _mediatorFile: string ``` mediator file used by the plugin (absolute path) (see iOrchestratorOptions)
+  * ``` _serverFile: string ``` server file used by the plugin (absolute path) (see iOrchestratorOptions)
 
   * ``` _extended: Array<string> ``` non-managed data's names, extracted from package file, used to properly destroy plugin if necessary
 
@@ -124,6 +159,8 @@ interface iOrchestratorOptions {
 
   * ``` enabled: boolean ``` is plugin enable ? default=true (you should define it by re-write "isEnable" method)
   * ``` initialized: boolean ``` is plugin initialized ?
+
+  * ``` externalRessourcesDirectory: string ``` used to write local data like sqlite database, json files, pictures, etc... (see iOrchestratorOptions)
 
   * ``` authors: Array<string> ```
   * ``` description: string ```
@@ -183,6 +220,58 @@ interface iOrchestratorOptions {
 }
 ```
 
+ * Descriptor.json sample
+
+```json
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "MyPlugin",
+    "version": "0.0.2",
+    "description": "A test for node-pluginsmanager-plugin",
+    "contact": {
+      "name": "Sébastien VIDAL",
+      "url": "https://github.com/Psychopoulet/node-pluginsmanager-plugin/issues"
+    },
+    "license": {
+      "name": "ISC",
+      "url": "https://en.wikipedia.org/wiki/ISC_license"
+    }
+  },
+  "paths": {
+    "/api/myplugin/page1": {
+      "get": {
+        "description": "",
+        "summary": "Require google",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Everything is fine"
+          },
+          "500": {
+            "description": "An error occured"
+          }
+        }
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:3000",
+      "description": "Test server for HTTP requests"
+    },
+    {
+      "url": "ws://127.0.0.1:3001",
+      "description": "Test server for sockets requests"
+    }
+  ],
+  "externalDocs": {
+    "description": "Find out more about this API",
+    "url": "https://github.com/Psychopoulet/node-pluginsmanager-plugin#readme"
+  }
+}
+```
+
  * Mediator sample
 
 ```javascript
@@ -236,10 +325,6 @@ class MyPluginMediator extends Mediator {
     return this._query("page1");
   }
 
-  page2 () {
-    return this._query("page2");
-  }
-
 }
 ```
 
@@ -264,22 +349,10 @@ class MyPluginServer extends Server {
 
     switch (req.url) {
 
-      case "/myplugin/page1":
+      case "/api/myplugin/page1":
 
         this.checkMediator().then(() => {
           return this._Mediator.page1();
-        }).then((data) => {
-          res.status(200).send(data);
-        }).catch((err) => {
-          res.status(500).send(err.message ? err.message : err);
-        });
-
-      break;
-
-      case "/myplugin/page2":
-
-        this.checkMediator().then(() => {
-          this._Mediator.page2();
         }).then((data) => {
           res.status(200).send(data);
         }).catch((err) => {
@@ -314,6 +387,7 @@ class MyPluginOrchestrator extends Orchestrator {
 
       super({
         "packageFile": join(__dirname, "package.json"),
+        "descriptorFile": join(__dirname, "Descriptor.json"),
         "mediatorFile": join(__dirname, "Mediator.js"),
         "serverFile": join(__dirname, "Server.js")
       });
