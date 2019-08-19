@@ -6,8 +6,7 @@
 		"description": "An abstract parent plugin for node-pluginsmanager",
 		"contact": {
 			"name": "Sébastien VIDAL",
-			"url": "https://github.com/Psychopoulet/node-pluginsmanager-plugin/issues",
-			"email": "support@example.com"
+			"url": "https://github.com/Psychopoulet/node-pluginsmanager-plugin/issues"
 		},
 		"license": {
 			"name": "ISC",
