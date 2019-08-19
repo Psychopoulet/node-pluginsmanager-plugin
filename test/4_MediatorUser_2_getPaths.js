@@ -12,11 +12,11 @@
 		const readJSONFile = require(join(__dirname, "..", "lib", "utils", "readJSONFile.js"));
 
 		// utils
-		const LocalServer = require(join(__dirname, "utils", "Server", "LocalServer.js"));
+		const LocalMediatorUser = require(join(__dirname, "utils", "MediatorUser", "LocalMediatorUser.js"));
 
 // tests
 
-describe("Server / getPaths", () => {
+describe("MediatorUser / getPaths", () => {
 
 	let descriptor = null;
 	let paths = null;
@@ -41,9 +41,9 @@ describe("Server / getPaths", () => {
 
 	it("should test without descriptor", (done) => {
 
-		const server = new LocalServer();
+		const mediatorUser = new LocalMediatorUser();
 
-		server.getPaths().then(() => {
+		mediatorUser.getPaths().then(() => {
 			done(new Error("There is no generated Error"));
 		}).catch((err) => {
 
@@ -58,13 +58,12 @@ describe("Server / getPaths", () => {
 
 	it("should test with descriptor without paths", () => {
 
-		const server = new LocalServer({
-			"descriptor": descriptor
-		});
+		const mediatorUser = new LocalMediatorUser();
 
-			delete server._Descriptor.paths;
+			mediatorUser._Descriptor = descriptor;
+			delete mediatorUser._Descriptor.paths;
 
-		return server.getPaths().then((data) => {
+		return mediatorUser.getPaths().then((data) => {
 
 			strictEqual(typeof data, "object", "paths is not an object");
 			strictEqual(data instanceof Array, true, "paths is not an Array");
@@ -76,13 +75,12 @@ describe("Server / getPaths", () => {
 
 	it("should test with descriptor with null paths", () => {
 
-		const server = new LocalServer({
-			"descriptor": descriptor
-		});
+		const mediatorUser = new LocalMediatorUser();
 
-			server._Descriptor.paths = null;
+			mediatorUser._Descriptor = descriptor;
+			mediatorUser._Descriptor.paths = null;
 
-		return server.getPaths().then((data) => {
+		return mediatorUser.getPaths().then((data) => {
 
 			strictEqual(typeof data, "object", "paths is not an object");
 			strictEqual(data instanceof Array, true, "paths is not an Array");
@@ -94,13 +92,12 @@ describe("Server / getPaths", () => {
 
 	it("should test with descriptor with empty paths", () => {
 
-		const server = new LocalServer({
-			"descriptor": descriptor
-		});
+		const mediatorUser = new LocalMediatorUser();
 
-			server._Descriptor.paths = {};
+			mediatorUser._Descriptor = descriptor;
+			mediatorUser._Descriptor.paths = {};
 
-		return server.getPaths().then((data) => {
+		return mediatorUser.getPaths().then((data) => {
 
 			strictEqual(typeof data, "object", "paths is not an object");
 			strictEqual(data instanceof Array, true, "paths is not an Array");
@@ -112,11 +109,11 @@ describe("Server / getPaths", () => {
 
 	it("should test with valid descriptor", () => {
 
-		const server = new LocalServer({
-			"descriptor": descriptor
-		});
+		const mediatorUser = new LocalMediatorUser();
 
-		return server.getPaths().then((data) => {
+			mediatorUser._Descriptor = descriptor;
+
+		return mediatorUser.getPaths().then((data) => {
 
 			strictEqual(typeof data, "object", "paths is not an object");
 			strictEqual(data instanceof Array, true, "paths is not an Array");

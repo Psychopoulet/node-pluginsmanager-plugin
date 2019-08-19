@@ -59,6 +59,8 @@ declare module "node-pluginsmanager-plugin" {
 			public checkDescriptor(): Promise<void>;
 			public checkMediator(): Promise<void>;
 
+			public getPaths(): Promise<iPaths>;
+
 	}
 
 	export class Server extends MediatorUser {
@@ -69,7 +71,6 @@ declare module "node-pluginsmanager-plugin" {
 
 		// methods
 
-			public getPaths(): Promise<iPaths>;
 			public appMiddleware(req: Request, res: Response, next: Function): void;
 			public httpMiddleware(req: Request, res: Response): boolean;
 			public socketMiddleware(server: WebSocketServer): void;
