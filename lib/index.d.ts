@@ -15,6 +15,7 @@ declare module "node-pluginsmanager-plugin" {
 
 	interface iOrchestratorOptions {
 		"packageFile": string;
+		"descriptorFile": string;
 		"mediatorFile": string;
 		"serverFile": string;
 	}
@@ -93,7 +94,7 @@ declare module "node-pluginsmanager-plugin" {
 				protected _mediatorFile: string;
 				protected _serverFile: string;
 
-				protected _extended: boolean;
+				protected _extended: Array<string>;
 
 			// public
 
