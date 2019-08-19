@@ -9,6 +9,7 @@ declare module "node-pluginsmanager-plugin" {
 	// options
 
 	interface iServerOptions {
+		"descriptor": object;
 		"mediator": Mediator;
 	}
 
@@ -16,6 +17,11 @@ declare module "node-pluginsmanager-plugin" {
 		"packageFile": string;
 		"mediatorFile": string;
 		"serverFile": string;
+	}
+
+	interface iPaths {
+		"path": string;
+		"method": string;
 	}
 
 	// classes
@@ -44,10 +50,12 @@ declare module "node-pluginsmanager-plugin" {
 
 		// attributes
 
+			protected _Descriptor: object | null;
 			protected _Mediator: Mediator | null;
 
 		// methods
 
+			public checkDescriptor(): Promise<void>;
 			public checkMediator(): Promise<void>;
 
 	}
@@ -60,6 +68,7 @@ declare module "node-pluginsmanager-plugin" {
 
 		// methods
 
+			public getPaths(): Promise<iPaths>;
 			public appMiddleware(req: Request, res: Response, next: Function): void;
 			public httpMiddleware(req: Request, res: Response): boolean;
 			public socketMiddleware(server: WebSocketServer): void;
@@ -80,6 +89,7 @@ declare module "node-pluginsmanager-plugin" {
 
 				// params
 				protected _packageFile: string;
+				protected _descriptorFile: string;
 				protected _mediatorFile: string;
 				protected _serverFile: string;
 

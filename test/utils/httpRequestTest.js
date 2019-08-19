@@ -27,8 +27,8 @@ module.exports = function httpRequestTest (urlpath, returnCode, returnResponse) 
 				strictEqual(typeof res.headers, "object", "The headers are not an object");
 				strictEqual(
 					res.headers["content-type"].toLowerCase(),
-					"text/html; charset=utf-8",
-					"The content-type header are not html/utf8"
+					"text/plain; charset=utf-8",
+					"The content-type header are not text/utf8"
 				);
 
 				res.setEncoding("utf8");

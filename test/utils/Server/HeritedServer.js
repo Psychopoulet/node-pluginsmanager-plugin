@@ -22,46 +22,84 @@ module.exports = class HeritedServer extends LocalServer {
 
 	appMiddleware (req, res, next) {
 
-		switch (req.url) {
+		const { pathname } = parse(req.url);
+		const method = req.method.toLowerCase();
 
-			case REQUEST_PATHNAME:
+		this.getPaths().then((paths) => {
 
-				res.status(RESPONSE_CODE).send(RESPONSE_CONTENT);
+			let path = null;
 
-			break;
+				for (let i = 0; i < paths.length; ++i) {
 
-			case REQUEST_FULLSTACK_PATHNAME:
+					if (paths[i].path === pathname && paths[i].method === method) {
 
-				this.checkMediator().then(() => {
-					res.status(RESPONSE_CODE).send(RESPONSE_CONTENT);
-				}).catch((err) => {
-					res.status(500).send(err.message ? err.message : err);
+						path = {
+							"path": paths[i].path,
+							"method": paths[i].method
+						};
+
+						break;
+
+					}
+
+				}
+
+			return Promise.resolve(path);
+
+		}).then((path) => {
+
+			if (!path) {
+				return next();
+			}
+			else {
+
+				return Promise.resolve().then(() => {
+
+					return REQUEST_FULLSTACK_PATHNAME === path.path ? this.checkMediator().then(() => {
+						return this._Mediator.fullStack();
+					}) : Promise.resolve();
+
+				}).then(() => {
+
+					res.writeHead(RESPONSE_CODE, {
+						"Content-Type": "text/plain; charset=utf-8"
+					});
+
+					res.end(RESPONSE_CONTENT, "utf-8");
+
 				});
 
-			break;
+			}
 
-			default:
-				return next();
+		}).catch((err) => {
 
-		}
+			res.writeHead(RESPONSE_CODE, {
+				"Content-Type": "text/plain; charset=utf-8"
+			});
 
-		return null;
+			res.end(err.message ? err.message : err);
+
+		});
 
 	}
 
 	httpMiddleware (req, res) {
 
 		const { pathname } = parse(req.url);
+		const method = req.method.toLowerCase();
 
-		if (REQUEST_PATHNAME === pathname) {
+		if (REQUEST_PATHNAME === pathname && "get" === method) {
 
-			res.writeHead(RESPONSE_CODE, { "Content-Type": "text/html; charset=utf-8" });
+			res.writeHead(RESPONSE_CODE, {
+				"Content-Type": "text/plain; charset=utf-8"
+			});
+
 			res.end(RESPONSE_CONTENT, "utf-8");
 
 			return true;
 
 		}
-		else if (REQUEST_FULLSTACK_PATHNAME === pathname) {
+		else if (REQUEST_FULLSTACK_PATHNAME === pathname && "get" === method) {
 
 			this.checkMediator().then(() => {
 
@@ -69,14 +107,20 @@ module.exports = class HeritedServer extends LocalServer {
 
 			}).then(() => {
 
-				res.writeHead(RESPONSE_CODE, { "Content-Type": "text/html; charset=utf-8" });
+				res.writeHead(RESPONSE_CODE, {
+					"Content-Type": "text/plain; charset=utf-8"
+				});
+
 				res.end(RESPONSE_CONTENT, "utf-8");
 
 				return Promise.resolve();
 
 			}).catch((err) => {
 
-				res.writeHead(500, { "Content-Type": "text/html; charset=utf-8" });
+				res.writeHead(500, {
+					"Content-Type": "text/plain; charset=utf-8"
+				});
+
 				res.end(err.message ? err.message : err, "utf-8");
 
 			});

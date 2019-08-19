@@ -1,0 +1,63 @@
+{
+	"openapi": "3.0.2",
+	"info": {
+		"title": "node-pluginsmanager-plugin",
+		"version": "2.1.0",
+		"description": "An abstract parent plugin for node-pluginsmanager",
+		"contact": {
+			"name": "Sébastien VIDAL",
+			"url": "https://github.com/Psychopoulet/node-pluginsmanager-plugin/issues",
+			"email": "support@example.com"
+		},
+		"license": {
+			"name": "ISC",
+			"url": "https://en.wikipedia.org/wiki/ISC_license"
+		}
+	},
+	"paths": {
+		"/thisisatest": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"parameters": [],
+				"responses": {
+					"201": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/fullstack": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Orchestrator class",
+				"parameters": [],
+				"responses": {
+					"201": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "http://127.0.0.1:3000",
+			"description": "Test server for HTTP requests"
+		},
+		{
+			"url": "ws://127.0.0.1:3001",
+			"description": "Test server for sockets requests"
+		}
+	],
+	"externalDocs": {
+		"description": "Find out more about this API",
+		"url": "https://github.com/Psychopoulet/node-pluginsmanager-plugin#readme"
+	}
+}
