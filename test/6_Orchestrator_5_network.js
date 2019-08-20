@@ -27,6 +27,13 @@
 		"serverFile": join(__dirname, "utils", "Server", "LocalServer.js")
 	};
 
+	const HERITED_OPTIONS = {
+		"packageFile": join(__dirname, "..", "package.json"),
+		"descriptorFile": join(__dirname, "utils", "Descriptor.json"),
+		"mediatorFile": join(__dirname, "utils", "Mediator", "HeritedMediator.js"),
+		"serverFile": join(__dirname, "utils", "Server", "HeritedServer.js")
+	};
+
 	const PORT = 3000;
 	const PORT_SOCKET = PORT + 1;
 	const RESPONSE_CONTENT = "Hello World";
@@ -58,17 +65,16 @@ describe("Orchestrator / network", () => {
 
 		it("should test with full stack http", () => {
 
-			const opt = JSON.parse(JSON.stringify(GOOD_OPTIONS));
-
-				opt.descriptorFile = join(__dirname, "utils", "Descriptor.json");
-				opt.mediatorFile = join(__dirname, "utils", "Mediator", "HeritedMediator.js");
-				opt.serverFile = join(__dirname, "utils", "Server", "HeritedServer.js");
-
-			const orchestrator = new LocalOrchestrator(opt);
+			const orchestrator = new LocalOrchestrator(HERITED_OPTIONS);
 			let runningServer = null;
 
+			// start orchestrator
+			return orchestrator.load().then(() => {
+
+				return orchestrator.init();
+
 			// middleware
-			return orchestrator.init().then(() => {
+			}).then(() => {
 
 				return new Promise((resolve) => {
 
@@ -110,40 +116,43 @@ describe("Orchestrator / network", () => {
 
 				}) : Promise.resolve();
 
+			// end orchestrator
+			}).then(() => {
+
+				return orchestrator.release().then(() => {
+					return orchestrator.destroy();
+				});
+
 			});
 
 		});
 
 		it("should test with full stack app", () => {
 
-			const opt = JSON.parse(JSON.stringify(GOOD_OPTIONS));
-
-				opt.descriptorFile = join(__dirname, "utils", "Descriptor.json");
-				opt.mediatorFile = join(__dirname, "utils", "Mediator", "HeritedMediator.js");
-				opt.serverFile = join(__dirname, "utils", "Server", "HeritedServer.js");
-
-			const orchestrator = new LocalOrchestrator(opt);
+			const orchestrator = new LocalOrchestrator(HERITED_OPTIONS);
 			let runningServer = null;
 
+			// start orchestrator
+			return orchestrator.load().then(() => {
+
+				return orchestrator.init();
+
 			// middleware
-			return orchestrator.init().then(() => {
+			}).then(() => {
 
 				return new Promise((resolve) => {
 
-					runningServer = express()
-						.use((req, res, next) => {
-							orchestrator.appMiddleware(req, res, next);
-						})
-						.get("/", (req, res) => {
+					runningServer = express().use((req, res, next) => {
+						orchestrator.appMiddleware(req, res, next);
+					}).get("/", (req, res) => {
 
-							res.writeHead(200, {
-								"Content-Type": "text/plain; charset=utf-8"
-							});
+						res.writeHead(200, {
+							"Content-Type": "text/plain; charset=utf-8"
+						});
 
-							res.end(RESPONSE_CONTENT);
+						res.end(RESPONSE_CONTENT);
 
-						})
-						.listen(PORT, resolve);
+					}).listen(PORT, resolve);
 
 				});
 
@@ -169,19 +178,20 @@ describe("Orchestrator / network", () => {
 
 				}) : Promise.resolve();
 
+			// end orchestrator
+			}).then(() => {
+
+				return orchestrator.release().then(() => {
+					return orchestrator.destroy();
+				});
+
 			});
 
 		});
 
 		it("should test with full stack socket", () => {
 
-			const opt = JSON.parse(JSON.stringify(GOOD_OPTIONS));
-
-				opt.descriptorFile = join(__dirname, "utils", "Descriptor.json");
-				opt.mediatorFile = join(__dirname, "utils", "Mediator", "HeritedMediator.js");
-				opt.serverFile = join(__dirname, "utils", "Server", "HeritedServer.js");
-
-			const orchestrator = new LocalOrchestrator(opt);
+			const orchestrator = new LocalOrchestrator(HERITED_OPTIONS);
 
 			// DebugStep
 			let pinged = false;
@@ -194,8 +204,13 @@ describe("Orchestrator / network", () => {
 				"port": PORT_SOCKET
 			});
 
+			// start orchestrator
+			return orchestrator.load().then(() => {
+
+				return orchestrator.init();
+
 			// middleware
-			return orchestrator.init().then(() => {
+			}).then(() => {
 
 				orchestrator.socketMiddleware(runningServer);
 
@@ -222,6 +237,73 @@ describe("Orchestrator / network", () => {
 					});
 
 				}) : Promise.resolve();
+
+			// end orchestrator
+			}).then(() => {
+
+				return orchestrator.release().then(() => {
+					return orchestrator.destroy();
+				});
+
+			});
+
+		});
+
+		it("should test with released server", () => {
+
+			const orchestrator = new LocalOrchestrator(HERITED_OPTIONS);
+			let runningServer = null;
+
+			// start orchestrator
+			return orchestrator.load().then(() => {
+
+				return orchestrator.init();
+
+			// middleware
+			}).then(() => {
+
+				return new Promise((resolve) => {
+
+					runningServer = express().use((req, res, next) => {
+						orchestrator.appMiddleware(req, res, next);
+					}).use((req, res) => {
+
+						res.writeHead(404, {
+							"Content-Type": "text/plain; charset=utf-8"
+						});
+
+						res.end("Hello World", "utf-8");
+
+					}).listen(PORT, resolve);
+
+				});
+
+			// release
+			}).then(() => {
+
+				return orchestrator.release();
+
+			// request server
+			}).then(() => {
+
+				return httpRequestTest("/thisisatest", 404, "Not Found");
+
+			// close server
+			}).then(() => {
+
+				return runningServer ? new Promise((resolve) => {
+
+					runningServer.close(() => {
+						runningServer = null;
+						resolve();
+					});
+
+				}) : Promise.resolve();
+
+			// end orchestrator
+			}).then(() => {
+
+				return orchestrator.destroy();
 
 			});
 
