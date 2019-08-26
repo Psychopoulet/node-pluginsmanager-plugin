@@ -85,8 +85,7 @@ describe("Bootable", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
-				strictEqual(err instanceof ReferenceError, true, "Generated error is not a ReferenceError instance");
+				strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
 
 				done();
 
@@ -105,8 +104,7 @@ describe("Bootable", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
-				strictEqual(err instanceof ReferenceError, true, "Generated error is not a ReferenceError instance");
+				strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
 
 				done();
 
@@ -125,8 +123,138 @@ describe("Bootable", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
-				strictEqual(err instanceof TypeError, true, "Generated error is not a TypeError instance");
+				strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+
+				done();
+
+			});
+
+		});
+
+		it("should check without info", (done) => {
+
+			const bootable = new LocalBootable();
+
+				bootable._Descriptor = {};
+
+			bootable.checkDescriptor().then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+
+				done();
+
+			});
+
+		});
+
+		it("should check with wrong info", (done) => {
+
+			const bootable = new LocalBootable();
+
+				bootable._Descriptor = {
+					"info": false
+				};
+
+			bootable.checkDescriptor().then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+
+				done();
+
+			});
+
+		});
+
+		it("should check without title", (done) => {
+
+			const bootable = new LocalBootable();
+
+				bootable._Descriptor = {
+					"info": {}
+				};
+
+			bootable.checkDescriptor().then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+
+				done();
+
+			});
+
+		});
+
+		it("should check with wrong title", (done) => {
+
+			const bootable = new LocalBootable();
+
+				bootable._Descriptor = {
+					"info": {
+						"title": false
+					}
+				};
+
+			bootable.checkDescriptor().then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+
+				done();
+
+			});
+
+		});
+
+		it("should check without version", (done) => {
+
+			const bootable = new LocalBootable();
+
+				bootable._Descriptor = {
+					"info": {
+						"title": "test"
+					}
+				};
+
+			bootable.checkDescriptor().then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+
+				done();
+
+			});
+
+		});
+
+		it("should check with wrong version", (done) => {
+
+			const bootable = new LocalBootable();
+
+				bootable._Descriptor = {
+					"info": {
+						"title": "test",
+						"version": false
+					}
+				};
+
+			bootable.checkDescriptor().then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
 
 				done();
 
@@ -136,8 +264,13 @@ describe("Bootable", () => {
 
 		it("should check with multiple operationIds into descriptor", (done) => {
 
-			new LocalBootable().checkDescriptor({
-				"descriptor": {
+			const bootable = new LocalBootable();
+
+				bootable._Descriptor = {
+					"info": {
+						"title": "test",
+						"version": "1.0.0"
+					},
 					"paths": {
 						"/test": {
 							"get": {
@@ -150,8 +283,9 @@ describe("Bootable", () => {
 							}
 						}
 					}
-				}
-			}).then(() => {
+				};
+
+			bootable.checkDescriptor().then(() => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
@@ -167,7 +301,19 @@ describe("Bootable", () => {
 		it("should check with right descriptor", () => {
 
 			return new LocalBootable({
-				"descriptor": {}
+				"descriptor": {
+					"info": {
+						"title": "test",
+						"version": "1.0.0"
+					},
+					"paths": {
+						"/test": {
+							"get": {
+								"operationId": "test"
+							}
+						}
+					}
+				}
 			}).checkDescriptor();
 
 		});

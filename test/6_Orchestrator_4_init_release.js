@@ -78,7 +78,9 @@ describe("Orchestrator / init & release", () => {
 					.once("initialized", resolve)
 					.once("error", reject);
 
-				orchestrator.init().catch(reject);
+				orchestrator.load().then(() => {
+					return orchestrator.init();
+				}).catch(reject);
 
 			}).then(() => {
 
@@ -104,7 +106,9 @@ describe("Orchestrator / init & release", () => {
 			strictEqual(typeof orchestrator.enabled, "boolean", "Generated orchestrator enabled is not a boolean");
 			strictEqual(orchestrator.enabled, true, "Generated orchestrator enabled is not as expected");
 
-			return orchestrator.init().then(() => {
+			return orchestrator.load().then(() => {
+				return orchestrator.init();
+			}).then(() => {
 
 				strictEqual(typeof orchestrator.enabled, "boolean", "Generated orchestrator enabled is not a boolean");
 				strictEqual(orchestrator.enabled, false, "Generated orchestrator enabled is not as expected");
@@ -120,7 +124,11 @@ describe("Orchestrator / init & release", () => {
 
 		it("should test non-herited _initWorkSpace", () => {
 
-			return new Orchestrator(GOOD_OPTIONS).init();
+			const orchestrator = new Orchestrator(GOOD_OPTIONS);
+
+			return orchestrator.load().then(() => {
+				return orchestrator.init();
+			});
 
 		});
 
@@ -132,7 +140,9 @@ describe("Orchestrator / init & release", () => {
 
 			const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
 
-			return orchestrator.init().then(() => {
+			return orchestrator.load().then(() => {
+				return orchestrator.init();
+			}).then(() => {
 				return orchestrator.release("test release");
 			});
 

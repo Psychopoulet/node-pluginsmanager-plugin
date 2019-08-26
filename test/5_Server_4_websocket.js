@@ -17,7 +17,7 @@
 
 // tests
 
-describe("Server / network", () => {
+describe("Server / websockets", () => {
 
 	let runningServer = null;
 	const server = new HeritedServer();
