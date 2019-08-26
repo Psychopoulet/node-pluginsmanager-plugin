@@ -1,62 +1,81 @@
+/*
+	eslint max-params: 0
+*/
+
 "use strict";
 
 // deps
 
 	// natives
-	const { get } = require("http");
+	const { join } = require("path");
+	const { request } = require("http");
+	const { parse } = require("url");
 	const { strictEqual } = require("assert");
 
-// consts
-
-	const PORT = 3000;
-	const MAIN_URL = "http://127.0.0.1:" + PORT;
-	const RESPONSE_CONTENT = "Hello World";
+	// externals
+	const readJSONFile = require(join(__dirname, "..", "..", "lib", "utils", "readJSONFile.js"));
 
 // module
 
-module.exports = function httpRequestTest (urlpath, returnCode, returnResponse) {
+module.exports = function httpRequestTest (urlpath, method, returnCode, returnResponse, returnContent) {
 
-	return new Promise((resolve, reject) => {
+	return readJSONFile(join(__dirname, "Descriptor.json")).then((content) => {
 
-		get(MAIN_URL + urlpath, (res) => {
+		const url = parse(content.servers[0].url);
 
-			try {
+		return new Promise((resolve, reject) => {
 
-				strictEqual(res.statusCode, returnCode, "The statusCode is not " + returnCode);
-				strictEqual(res.statusMessage, returnResponse, "The statusMessage is not valid");
-				strictEqual(typeof res.headers, "object", "The headers are not an object");
-				strictEqual(
-					res.headers["content-type"].toLowerCase(),
-					"text/plain; charset=utf-8",
-					"The content-type header are not text/utf8"
-				);
+			const req = request(url.protocol + "//" + url.host + urlpath, {
+				"method": method.toUpperCase()
+			}, (res) => {
 
-				res.setEncoding("utf8");
+				try {
 
-				let rawData = "";
+					strictEqual(res.statusCode, returnCode, "The statusCode is not " + returnCode);
+					strictEqual(res.statusMessage, returnResponse, "The statusMessage is not valid");
+					strictEqual(typeof res.headers, "object", "The headers are not an object");
+					strictEqual(
+						res.headers["content-type"].toLowerCase(),
+						"application/json; charset=utf-8",
+						"The content-type header are not text/utf8"
+					);
 
-				res.on("data", (chunk) => {
-					rawData += chunk;
-				}).on("end", () => {
+					res.setEncoding("utf8");
 
-					try {
+					let rawData = "";
+					res.on("data", (chunk) => {
+						rawData += chunk;
+					}).on("end", () => {
 
-						strictEqual(typeof rawData, "string", "The returned content is not a text");
-						strictEqual(rawData, RESPONSE_CONTENT, "The returned content is not as expected");
+						try {
 
-						resolve();
+							strictEqual(typeof rawData, "string", "The returned content is not a text");
 
-					}
-					catch (_e) {
-						reject(_e.message ? _e.message : _e);
-					}
+							if ("undefined" !== typeof returnContent) {
+								strictEqual(rawData, JSON.stringify(returnContent), "The returned content is not as expected");
+							}
 
-				});
+							resolve();
 
-			}
-			catch (e) {
-				reject(e.message ? e.message : e);
-			}
+						}
+						catch (_e) {
+							reject(_e.message ? _e.message : _e);
+						}
+
+					});
+
+				}
+				catch (e) {
+					reject(e.message ? e.message : e);
+				}
+
+			});
+
+			req.on("error", reject);
+
+			// Write data to request body
+			// req.write(postData);
+			req.end();
 
 		});
 

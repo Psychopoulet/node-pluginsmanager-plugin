@@ -2,7 +2,7 @@
 	"openapi": "3.0.2",
 	"info": {
 		"title": "node-pluginsmanager-plugin",
-		"version": "2.1.0",
+		"version": "3.0.1",
 		"description": "An abstract parent plugin for node-pluginsmanager",
 		"contact": {
 			"name": "Sébastien VIDAL",
@@ -14,13 +14,13 @@
 		}
 	},
 	"paths": {
-		"/thisisatest": {
+		"/missingoperationid": {
 			"get": {
 				"description": "",
 				"summary": "Simple API test for Server class",
 				"parameters": [],
 				"responses": {
-					"201": {
+					"501": {
 						"description": "Everything is fine"
 					},
 					"500": {
@@ -29,10 +29,43 @@
 				}
 			}
 		},
-		"/fullstack": {
+		"/empty": {
 			"get": {
 				"description": "",
-				"summary": "Simple API test for Orchestrator class",
+				"summary": "Simple API test for Server class",
+				"operationId": "empty",
+				"parameters": [],
+				"responses": {
+					"204": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/valid": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "valid",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/create": {
+			"put": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "create",
 				"parameters": [],
 				"responses": {
 					"201": {

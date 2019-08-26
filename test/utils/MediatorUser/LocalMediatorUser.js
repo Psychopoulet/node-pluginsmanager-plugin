@@ -24,4 +24,18 @@ module.exports = class LocalMediatorUser extends MediatorUser {
 
 	}
 
+	init () {
+
+		return Promise.resolve();
+
+	}
+
+	release () {
+
+		this.removeAllListeners();
+
+		return Promise.resolve();
+
+	}
+
 };

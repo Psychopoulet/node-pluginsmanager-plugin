@@ -12,7 +12,15 @@
 
 module.exports = class HeritedMediator extends LocalMediator {
 
-	fullStack () {
+	empty () {
+		return Promise.resolve();
+	}
+
+	valid () {
+		return Promise.resolve([ "test" ]);
+	}
+
+	create () {
 		return Promise.resolve();
 	}
 

@@ -24,4 +24,18 @@ module.exports = class LocalBootable extends Bootable {
 
 	}
 
+	init () {
+
+		return Promise.resolve();
+
+	}
+
+	release () {
+
+		this.removeAllListeners();
+
+		return Promise.resolve();
+
+	}
+
 };
