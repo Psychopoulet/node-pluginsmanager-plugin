@@ -103,4 +103,10 @@ describe("Server / http", () => {
 
 	});
 
+	it("should test descriptor request", () => {
+
+		return httpRequestTest("/node-pluginsmanager-plugin/descriptor", "get", 200, "OK", server._Descriptor);
+
+	});
+
 });

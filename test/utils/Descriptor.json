@@ -76,6 +76,21 @@
 					}
 				}
 			}
+		},
+		"/node-pluginsmanager-plugin/descriptor": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
 		}
 	},
 	"servers": [
