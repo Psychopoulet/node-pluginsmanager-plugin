@@ -17,7 +17,7 @@
 
 // module
 
-module.exports = function httpRequestTest (urlpath, method, returnCode, returnResponse, returnContent) {
+module.exports = function httpRequestTest (urlpath, method, params, returnCode, returnResponse, returnContent) {
 
 	return readJSONFile(join(__dirname, "Descriptor.json")).then((content) => {
 
@@ -25,9 +25,17 @@ module.exports = function httpRequestTest (urlpath, method, returnCode, returnRe
 
 		return new Promise((resolve, reject) => {
 
-			const req = request(url.protocol + "//" + url.host + urlpath, {
-				"method": method.toUpperCase()
-			}, (res) => {
+			const bodyParams = params ? JSON.stringify(params) : "";
+
+			const opts = {
+				"method": method.toUpperCase(),
+				"headers": {
+					"Content-Type": "application/json",
+					"Content-Length": bodyParams.length
+				}
+			};
+
+			const req = request(url.protocol + "//" + url.host + urlpath, opts, (res) => {
 
 				try {
 
@@ -59,22 +67,21 @@ module.exports = function httpRequestTest (urlpath, method, returnCode, returnRe
 
 						}
 						catch (_e) {
-							reject(_e.message ? _e.message : _e);
+							reject(_e.message);
 						}
 
 					});
 
 				}
 				catch (e) {
-					reject(e.message ? e.message : e);
+					reject(e);
 				}
 
 			});
 
 			req.on("error", reject);
 
-			// Write data to request body
-			// req.write(postData);
+			req.write(bodyParams);
 			req.end();
 
 		});

@@ -100,7 +100,7 @@ describe("Orchestrator / http", () => {
 
 	it("should test app middleware with default root", () => {
 
-		return httpRequestTest("/", "get", 404, "Not Found", {
+		return httpRequestTest("/", "get", null, 404, "Not Found", {
 			"code": "404",
 			"message": "Unknown page"
 		});
@@ -109,34 +109,45 @@ describe("Orchestrator / http", () => {
 
 	it("should test app middleware with get request without operationId", () => {
 
-		return httpRequestTest("/missingoperationid", "get", 501, "Not Implemented", {
+		return httpRequestTest("/node-pluginsmanager-plugin/api/missingoperationid", "get", null, 501, "Not Implemented", {
 			"code": "NOT_IMPLEMENTED",
 			"message": "Missing \"operationId\" in the Descriptor for this request"
 		});
 
 	});
 
+	it("should test app middleware with get request with not implemented operationId", () => {
+
+		return httpRequestTest("/node-pluginsmanager-plugin/api/unknownoperationid", "get", null, 501, "Not Implemented", {
+			"code": "NOT_IMPLEMENTED",
+			"message": "Unknown Mediator's \"operationId\" method for this request"
+		});
+
+	});
+
 	it("should test app middleware with valid root without returned data", () => {
 
-		return httpRequestTest("/empty", "get", 204, "No Content");
+		return httpRequestTest("/node-pluginsmanager-plugin/api/empty", "get", null, 204, "No Content");
 
 	});
 
 	it("should test app middleware with valid root", () => {
 
-		return httpRequestTest("/valid", "get", 200, "OK", [ "test" ]);
+		return httpRequestTest("/node-pluginsmanager-plugin/api/valid", "get", null, 200, "OK", [ "test" ]);
 
 	});
 
 	it("should test app middleware with valid put request", () => {
 
-		return httpRequestTest("/create", "put", 201, "Created");
+		return httpRequestTest("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", {
+			"body-param": "test"
+		}, 201, "Created");
 
 	});
 
 	it("should test descriptor request", () => {
 
-		return httpRequestTest("/node-pluginsmanager-plugin/descriptor", "get", 200, "OK", orchestrator._Descriptor);
+		return httpRequestTest("/node-pluginsmanager-plugin/descriptor", "get", null, 200, "OK", orchestrator._Descriptor);
 
 	});
 

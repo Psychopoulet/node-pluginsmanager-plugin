@@ -14,7 +14,22 @@
 		}
 	},
 	"paths": {
-		"/missingoperationid": {
+		"/node-pluginsmanager-plugin/descriptor": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/missingoperationid": {
 			"get": {
 				"description": "",
 				"summary": "Simple API test for Server class",
@@ -29,7 +44,23 @@
 				}
 			}
 		},
-		"/empty": {
+		"/node-pluginsmanager-plugin/api/unknownoperationid": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "wrgnezmgnzmoifgnzmgz",
+				"parameters": [],
+				"responses": {
+					"501": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/empty": {
 			"get": {
 				"description": "",
 				"summary": "Simple API test for Server class",
@@ -45,7 +76,7 @@
 				}
 			}
 		},
-		"/valid": {
+		"/node-pluginsmanager-plugin/api/valid": {
 			"get": {
 				"description": "",
 				"summary": "Simple API test for Server class",
@@ -53,7 +84,17 @@
 				"parameters": [],
 				"responses": {
 					"200": {
-						"description": "Everything is fine"
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						}
 					},
 					"500": {
 						"description": "An error occured"
@@ -61,29 +102,40 @@
 				}
 			}
 		},
-		"/create": {
+		"/node-pluginsmanager-plugin/api/create": {
 			"put": {
 				"description": "",
 				"summary": "Simple API test for Server class",
 				"operationId": "create",
-				"parameters": [],
+				"parameters": [
+					{
+						"name": "url-param",
+						"in": "path",
+						"description": "Entity name",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "test name",
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"body-param": {
+										"type": "string"
+									}
+								}
+							},
+							"required": [ "body-param" ] 
+						}
+					}
+				},
 				"responses": {
 					"201": {
-						"description": "Everything is fine"
-					},
-					"500": {
-						"description": "An error occured"
-					}
-				}
-			}
-		},
-		"/node-pluginsmanager-plugin/descriptor": {
-			"get": {
-				"description": "",
-				"summary": "Simple API test for Server class",
-				"parameters": [],
-				"responses": {
-					"200": {
 						"description": "Everything is fine"
 					},
 					"500": {
