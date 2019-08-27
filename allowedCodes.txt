@@ -1,0 +1,42 @@
+--------
+GET
+--------
+
+"200" {
+	"OK"
+	"Standard response for successful HTTP requests. The actual response will depend on the request method used"
+}
+
+--------
+PUT
+--------
+
+"201" {
+	"Created"
+	"The request has been fulfilled, resulting in the creation of a new resource"
+}
+
+
+--------
+ALL
+--------
+
+"204" {
+	"No Content"
+	"The server successfully processed the request and is not returning any content."
+}
+
+"400" {
+	"Bad Request"
+	"The server cannot or will not process the request due to an apparent client error."
+}
+
+"500" {
+	"Internal Server Error"
+	"A generic error message, given when an unexpected condition was encountered and no more specific message is suitable."
+}
+
+"501" {
+	"Not Implemented"
+	"The server either does not recognize the request method, or it lacks the ability to fulfil the request."
+}
