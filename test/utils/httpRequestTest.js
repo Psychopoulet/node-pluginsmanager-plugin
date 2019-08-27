@@ -21,13 +21,18 @@ module.exports = function httpRequestTest (urlpath, method, params, returnCode, 
 
 	return readJSONFile(join(__dirname, "Descriptor.json")).then((content) => {
 
-		const url = parse(content.servers[0].url);
+		const url = parse(content.servers[0].url + urlpath);
 
 		return new Promise((resolve, reject) => {
 
 			const bodyParams = params ? JSON.stringify(params) : "";
 
 			const opts = {
+				"protocol": url.protocol,
+				"hostname": url.hostname,
+				"port": url.port,
+				"path": url.path,
+				"query": url.query,
 				"method": method.toUpperCase(),
 				"headers": {
 					"Content-Type": "application/json",
@@ -35,7 +40,7 @@ module.exports = function httpRequestTest (urlpath, method, params, returnCode, 
 				}
 			};
 
-			const req = request(url.protocol + "//" + url.host + urlpath, opts, (res) => {
+			const req = request(opts, (res) => {
 
 				try {
 
