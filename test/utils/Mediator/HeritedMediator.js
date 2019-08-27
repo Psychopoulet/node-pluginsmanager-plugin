@@ -22,7 +22,7 @@ module.exports = class HeritedMediator extends LocalMediator {
 
 	create (urlParams, bodyParams) {
 
-		if ("undefined" === typeof urlParams) {
+		if ("undefined" === typeof urlParams || null === urlParams) {
 			return Promise.reject(new ReferenceError("Missing url params"));
 		}
 			else if ("object" !== typeof urlParams) {
@@ -39,7 +39,7 @@ module.exports = class HeritedMediator extends LocalMediator {
 						return Promise.reject(new RangeError("url-param param is empty"));
 					}
 
-		else if ("undefined" === typeof bodyParams) {
+		else if ("undefined" === typeof bodyParams || null === bodyParams) {
 			return Promise.reject(new ReferenceError("Missing body params"));
 		}
 			else if ("object" !== typeof bodyParams) {
@@ -55,6 +55,10 @@ module.exports = class HeritedMediator extends LocalMediator {
 					else if ("" === bodyParams["body-param"].trim()) {
 						return Promise.reject(new RangeError("body-param param is empty"));
 					}
+
+		else if ("generate-fail" === bodyParams["body-param"]) {
+			return Promise.reject(new Error("Generate artificial error"));
+		}
 
 		else {
 			return Promise.resolve();

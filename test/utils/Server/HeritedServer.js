@@ -29,6 +29,8 @@ module.exports = class HeritedServer extends LocalServer {
 
 	socketMiddleware (server) {
 
+		super.socketMiddleware(server); // only here for eslint
+
 		server.on("connection", (socket) => {
 
 			socket.on("message", (payload) => {
