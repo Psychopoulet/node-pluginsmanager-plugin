@@ -262,6 +262,19 @@ describe("Bootable", () => {
 
 		});
 
+		it("should check without paths", () => {
+
+			return new LocalBootable({
+				"descriptor": {
+					"info": {
+						"title": "test",
+						"version": "1.0.0"
+					}
+				}
+			}).checkDescriptor();
+
+		});
+
 		it("should check with multiple operationIds into descriptor", (done) => {
 
 			const bootable = new LocalBootable();
@@ -278,6 +291,11 @@ describe("Bootable", () => {
 							}
 						},
 						"/test2": {
+							"get": {
+								"operationId": "test"
+							}
+						},
+						"/test3": {
 							"get": {
 								"operationId": "test"
 							}
