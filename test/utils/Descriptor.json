@@ -128,9 +128,9 @@
 									"body-param": {
 										"type": "string"
 									}
-								}
-							},
-							"required": [ "body-param" ] 
+								},
+								"required": [ "body-param" ] 
+							}
 						}
 					}
 				},
