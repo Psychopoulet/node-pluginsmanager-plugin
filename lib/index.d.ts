@@ -8,16 +8,16 @@ declare module "node-pluginsmanager-plugin" {
 
 	// options
 
-	interface iBootableOptions {
+	interface iDescriptorUserOptions {
 		"descriptor": object;
 		"externalRessourcesDirectory": string;
 	}
 
-		interface iServerOptions extends iBootableOptions {
+		interface iServerOptions extends iDescriptorUserOptions {
 			"mediator": Mediator;
 		}
 
-		interface iOrchestratorOptions extends iBootableOptions {
+		interface iOrchestratorOptions extends iDescriptorUserOptions {
 			"packageFile": string;
 			"descriptorFile": string;
 			"mediatorFile": string;
@@ -26,7 +26,7 @@ declare module "node-pluginsmanager-plugin" {
 
 	// classes
 
-	class Bootable extends Events {
+	class DescriptorUser extends Events {
 
 		// attributes
 
@@ -37,7 +37,7 @@ declare module "node-pluginsmanager-plugin" {
 
 		// constructor
 
-			constructor (options: iBootableOptions);
+			constructor (options: iDescriptorUserOptions);
 
 		// methods
 
@@ -54,7 +54,7 @@ declare module "node-pluginsmanager-plugin" {
 
 	}
 
-	export class Mediator extends Bootable {
+	export class Mediator extends DescriptorUser {
 
 		// attributes
 
@@ -62,7 +62,7 @@ declare module "node-pluginsmanager-plugin" {
 
 	}
 
-	class MediatorUser extends Bootable {
+	class MediatorUser extends DescriptorUser {
 
 		// attributes
 

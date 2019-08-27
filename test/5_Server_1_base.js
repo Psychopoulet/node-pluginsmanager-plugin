@@ -10,7 +10,7 @@
 	// locals
 
 		// plugin
-		const Bootable = require(join(__dirname, "..", "lib", "components", "Bootable.js"));
+		const DescriptorUser = require(join(__dirname, "..", "lib", "components", "DescriptorUser.js"));
 		const MediatorUser = require(join(__dirname, "..", "lib", "components", "MediatorUser.js"));
 		const { Mediator, Server } = require(join(__dirname, "..", "lib", "main.js"));
 		const readJSONFile = require(join(__dirname, "..", "lib", "utils", "readJSONFile.js"));
@@ -38,7 +38,7 @@ describe("Server", () => {
 
 		strictEqual(typeof server, "object", "Generated server is not an object");
 		strictEqual(server instanceof Events, true, "Generated server is not a Events instance");
-		strictEqual(server instanceof Bootable, true, "Generated server is not a Bootable instance");
+		strictEqual(server instanceof DescriptorUser, true, "Generated server is not a DescriptorUser instance");
 		strictEqual(server instanceof MediatorUser, true, "Generated server is not a MediatorUser instance");
 		strictEqual(server instanceof Server, true, "Generated server is not a Server instance");
 		strictEqual(server instanceof LocalServer, true, "Generated server is not a LocalServer instance");
@@ -102,7 +102,7 @@ describe("Server", () => {
 		strictEqual(server._Descriptor, null, "Generated server _Descriptor is not null");
 		strictEqual(typeof server._Mediator, "object", "Generated server _Mediator is not an object");
 		strictEqual(server._Mediator instanceof Events, true, "Generated server _Mediator is not a Events instance");
-		strictEqual(server._Mediator instanceof Bootable, true, "Generated server _Mediator is not a Bootable instance");
+		strictEqual(server._Mediator instanceof DescriptorUser, true, "Generated server _Mediator is not a DescriptorUser instance");
 		strictEqual(server._Mediator instanceof Mediator, true, "Generated server _Mediator is not a Mediator instance");
 
 		server.init("test init").then(() => {
@@ -130,7 +130,7 @@ describe("Server", () => {
 		deepStrictEqual(server._Descriptor, descriptor, "Generated server _Descriptor is not as expected");
 		strictEqual(typeof server._Mediator, "object", "Generated server _Mediator is not an object");
 		strictEqual(server._Mediator instanceof Events, true, "Generated server _Mediator is not a Events instance");
-		strictEqual(server._Mediator instanceof Bootable, true, "Generated server _Mediator is not a Bootable instance");
+		strictEqual(server._Mediator instanceof DescriptorUser, true, "Generated server _Mediator is not a DescriptorUser instance");
 		strictEqual(server._Mediator instanceof Mediator, true, "Generated server _Mediator is not a Mediator instance");
 
 		return server.init("test init");

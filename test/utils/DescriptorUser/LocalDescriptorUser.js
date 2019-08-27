@@ -6,11 +6,11 @@
 	const { join } = require("path");
 
 	// locals
-	const Bootable = require(join(__dirname, "..", "..", "..", "lib", "components", "Bootable.js"));
+	const DescriptorUser = require(join(__dirname, "..", "..", "..", "lib", "components", "DescriptorUser.js"));
 
 // module
 
-module.exports = class LocalBootable extends Bootable {
+module.exports = class LocalDescriptorUser extends DescriptorUser {
 
 	_initWorkSpace () {
 

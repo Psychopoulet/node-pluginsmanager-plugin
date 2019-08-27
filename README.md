@@ -76,7 +76,7 @@ interface iPath {
 * Descriptor : OpenAPI (v3) description for Server endpoints (this is NOT a js file, but a json OpenAPI file)
 * Orchestrator : plugin's data (extracted from plugin's package.json) and Descriptor, Mediator & Server initializer
 
-### Bootable (extends EventEmitter)
+### DescriptorUser (extends EventEmitter)
 
   -- Methods --
 
@@ -90,7 +90,7 @@ interface iPath {
   * ``` init(data?: any): Promise<void> ``` should NOT be re-writted. Each child has is own init logic.
   * ``` release(data?: any): Promise<void> ``` should NOT be re-writted. Each child has is own release logic.
 
-### Mediator (extends Bootable)
+### Mediator (extends DescriptorUser)
 
   -- Constructor --
 
@@ -107,7 +107,7 @@ interface iPath {
 
   * ``` externalRessourcesDirectory: string ``` used to write local data like sqlite database, json files, pictures, etc... (see iMediatorOptions)
 
-### MediatorUser (extends Bootable)
+### MediatorUser (extends DescriptorUser)
 
   -- Attributes --
 

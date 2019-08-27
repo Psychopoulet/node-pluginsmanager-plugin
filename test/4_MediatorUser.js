@@ -10,7 +10,7 @@
 	// locals
 
 		// plugin
-		const Bootable = require(join(__dirname, "..", "lib", "components", "Bootable.js"));
+		const DescriptorUser = require(join(__dirname, "..", "lib", "components", "DescriptorUser.js"));
 		const MediatorUser = require(join(__dirname, "..", "lib", "components", "MediatorUser.js"));
 		const { Mediator } = require(join(__dirname, "..", "lib", "main.js"));
 
@@ -28,7 +28,7 @@ describe("MediatorUser", () => {
 
 		strictEqual(typeof mediatorUser, "object", "Generated mediatorUser is not an object");
 		strictEqual(mediatorUser instanceof Events, true, "Generated mediatorUser is not a Events instance");
-		strictEqual(mediatorUser instanceof Bootable, true, "Generated mediatorUser is not a Bootable instance");
+		strictEqual(mediatorUser instanceof DescriptorUser, true, "Generated mediatorUser is not a DescriptorUser instance");
 		strictEqual(mediatorUser instanceof MediatorUser, true, "Generated mediatorUser is not a MediatorUser instance");
 		strictEqual(mediatorUser instanceof LocalMediatorUser, true, "Generated mediatorUser is not a LocalMediatorUser instance");
 
