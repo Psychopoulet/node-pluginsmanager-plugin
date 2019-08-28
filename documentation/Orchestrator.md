@@ -4,6 +4,8 @@
 
 * [Resume](#resume)
 * [Class](#class-extends-mediatoruser)
+* [Descriptor interaction](#descriptor-interaction)
+* [Sample](#sample)
 
 ## Resume
 
@@ -32,3 +34,10 @@ Check, initialize (and/or release) and execute the other main classes ([Mediator
 > Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic.
 
 ### Events
+
+## Descriptor interaction
+
+## Sample
+
+```javascript
+```

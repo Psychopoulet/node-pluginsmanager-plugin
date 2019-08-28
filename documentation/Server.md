@@ -4,6 +4,8 @@
 
 * [Resume](#resume)
 * [Class](#class-extends-mediatoruser)
+* [Descriptor interaction](#descriptor-interaction)
+* [Sample](#sample)
 
 ## Resume
 
@@ -34,3 +36,10 @@ Expose the [Mediator](./Mediator.md)'s methods with the [Descriptor](./Descripto
 > Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic.
 
 ### Events
+
+## Descriptor interaction
+
+## Sample
+
+```javascript
+```
