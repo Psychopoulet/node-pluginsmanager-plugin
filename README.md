@@ -24,14 +24,6 @@ $ npm install node-pluginsmanager-plugin
 
 ## Interfaces
 
-### iMediatorOptions
-
-```typescript
-interface iMediatorOptions {
-  "externalRessourcesDirectory": string; // used to write local data like sqlite database, json files, pictures, etc...
-}
-```
-
 ### iServerOptions
 
 ```typescript
