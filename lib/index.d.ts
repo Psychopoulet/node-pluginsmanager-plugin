@@ -65,6 +65,10 @@ declare module "node-pluginsmanager-plugin" {
 
 	class MediatorUser extends DescriptorUser {
 
+		// constructor
+
+			constructor (options: iMediatorUserOptions);
+
 		// attributes
 
 			protected _Mediator: Mediator | null;
@@ -76,10 +80,6 @@ declare module "node-pluginsmanager-plugin" {
 	}
 
 	export class Server extends MediatorUser {
-
-		// constructor
-
-			constructor (options: iMediatorUserOptions);
 
 		// methods
 

@@ -41,6 +41,8 @@ nothing
 
 #### public
 
+> Please note the fact that "init" and "release" methods should not be re-writted
+
 nothing
 
 ### Events

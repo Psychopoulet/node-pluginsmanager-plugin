@@ -29,4 +29,6 @@ Expose the [Mediator](./Mediator.md)'s methods with the [Descriptor](./Descripto
 
 #### public
 
+> Please note the fact that "init" and "release" methods should not be re-writted
+
 ### Events

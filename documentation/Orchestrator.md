@@ -27,4 +27,6 @@ Check, initialize (and/or release) and execute the other main classes ([Mediator
 
 #### public
 
+> Please note the fact that "init" and "release" methods should not be re-writted
+
 ### Events

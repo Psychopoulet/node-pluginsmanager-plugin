@@ -22,8 +22,6 @@ interface iDescriptorUserOptions {
 
 ## Class (extends [EventEmitter](https://nodejs.org/api/events.html#events_class_eventemitter))
 
-> Please note the fact that, in this version, init and release methods of each classes should not be re-writted anymore...
-
 ### Attributes
 
 #### protected
@@ -47,6 +45,8 @@ nothing
   * ``` protected _releaseWorkSpace(data?: any): Promise<void>; ``` MUST be re-writted (optional in Orchestrator childs). Used to avoid full release logic re-writting.
 
 #### public
+
+> Please note the fact that "init" and "release" methods of each child should not be re-writted
 
   * ``` public init(data?: any): Promise<void> ``` should NOT be re-writted. Each child has is own init logic.
   * ``` public release(data?: any): Promise<void> ``` should NOT be re-writted. Each child has is own release logic.
