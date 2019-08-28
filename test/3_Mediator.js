@@ -67,6 +67,25 @@ describe("Mediator", () => {
 
 	});
 
+	it("should test non-herited _releaseWorkSpace", (done) => {
+
+		const nonHerited = new Mediator();
+
+		nonHerited.release().then(() => {
+
+			done(new Error("There is no generated Error"));
+
+		}).catch((err) => {
+
+			strictEqual(typeof err, "object", "Generated Error is not as expected");
+			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+
+			done();
+
+		});
+
+	});
+
 	it("should test release", () => {
 
 		const mediator = new LocalMediator();
@@ -84,25 +103,6 @@ describe("Mediator", () => {
 			strictEqual(mediator.initialized, false, "Generated mediator is not as expected");
 
 			return Promise.resolve();
-
-		});
-
-	});
-
-	it("should test non-herited _releaseWorkSpace", (done) => {
-
-		const nonHerited = new Mediator();
-
-		nonHerited.release().then(() => {
-
-			done(new Error("There is no generated Error"));
-
-		}).catch((err) => {
-
-			strictEqual(typeof err, "object", "Generated Error is not as expected");
-			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
-
-			done();
 
 		});
 

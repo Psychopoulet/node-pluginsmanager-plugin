@@ -25,8 +25,10 @@ Check, initialize (and/or release) and execute the other main classes ([Mediator
 
 #### protected
 
+> Please note the fact that "_initWorkSpace" and "_releaseWorkSpace" method MUST be re-writted in Mediator class, and not in MediatorUser childs.
+
 #### public
 
-> Please note the fact that "init" and "release" methods should not be re-writted
+> Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic.
 
 ### Events

@@ -118,6 +118,10 @@ describe("Server", () => {
 
 	});
 
+	it("should test non-herited _initWorkSpace", () => {
+		return new Server()._initWorkSpace();
+	});
+
 	it("should init server with Descriptor and Mediator", () => {
 
 		const mediator = new Mediator();
@@ -137,42 +141,12 @@ describe("Server", () => {
 
 	});
 
-	it("should test non-herited _initWorkSpace", (done) => {
-
-		const nonHerited = new Server();
-
-		nonHerited.init().then(() => {
-			done(new Error("There is no generated Error"));
-		}).catch((err) => {
-
-			strictEqual(typeof err, "object", "Generated Error is not as expected");
-			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
-
-			done();
-
-		});
-
+	it("should test non-herited _releaseWorkSpace", () => {
+		return new Server()._releaseWorkSpace();
 	});
 
 	it("should release server", () => {
 		return new LocalServer().release("test release");
-	});
-
-	it("should test non-herited _releaseWorkSpace", (done) => {
-
-		const nonHerited = new Server();
-
-		nonHerited.release().then(() => {
-			done(new Error("There is no generated Error"));
-		}).catch((err) => {
-
-			strictEqual(typeof err, "object", "Generated Error is not as expected");
-			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
-
-			done();
-
-		});
-
 	});
 
 });

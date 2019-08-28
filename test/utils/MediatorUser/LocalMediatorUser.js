@@ -12,18 +12,6 @@
 
 module.exports = class LocalMediatorUser extends MediatorUser {
 
-	_initWorkSpace () {
-
-		return Promise.resolve();
-
-	}
-
-	_releaseWorkSpace () {
-
-		return Promise.resolve();
-
-	}
-
 	init () {
 
 		return Promise.resolve();

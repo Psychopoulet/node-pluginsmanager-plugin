@@ -12,16 +12,4 @@
 
 module.exports = class LocalServer extends Server {
 
-	_initWorkSpace () {
-
-		return Promise.resolve();
-
-	}
-
-	_releaseWorkSpace () {
-
-		return Promise.resolve();
-
-	}
-
 };

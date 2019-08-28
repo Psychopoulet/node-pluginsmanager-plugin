@@ -92,13 +92,7 @@ describe("Orchestrator / init & release", () => {
 		});
 
 		it("should test non-herited _initWorkSpace", () => {
-
-			const orchestrator = new Orchestrator(GOOD_OPTIONS);
-
-			return orchestrator.load().then(() => {
-				return orchestrator.init();
-			});
-
+			return new Orchestrator()._initWorkSpace();
 		});
 
 		it("should test package file loader with wrong Descriptor title", (done) => {
@@ -178,6 +172,10 @@ describe("Orchestrator / init & release", () => {
 
 	describe("release", () => {
 
+		it("should test non-herited _releaseWorkSpace", () => {
+			return new Orchestrator().release();
+		});
+
 		it("should release orchestrator", () => {
 
 			const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
@@ -187,12 +185,6 @@ describe("Orchestrator / init & release", () => {
 			}).then(() => {
 				return orchestrator.release("test release");
 			});
-
-		});
-
-		it("should test non-herited _releaseWorkSpace", () => {
-
-			return new Orchestrator().release();
 
 		});
 
