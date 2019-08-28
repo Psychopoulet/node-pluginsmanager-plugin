@@ -35,8 +35,8 @@ module.exports = function httpRequestTest (urlpath, method, params, returnCode, 
 				"query": url.query,
 				"method": method.toUpperCase(),
 				"headers": {
-					"Content-Type": "application/json",
-					"Content-Length": bodyParams.length
+					"Content-Type": "application/json; charset=utf-8",
+					"Content-Length": Buffer.byteLength(bodyParams)
 				}
 			};
 
@@ -46,11 +46,12 @@ module.exports = function httpRequestTest (urlpath, method, params, returnCode, 
 
 					strictEqual(res.statusCode, returnCode, "The statusCode is not " + returnCode);
 					strictEqual(res.statusMessage, returnResponse, "The statusMessage is not valid");
+
 					strictEqual(typeof res.headers, "object", "The headers are not an object");
 					strictEqual(
 						res.headers["content-type"].toLowerCase(),
 						"application/json; charset=utf-8",
-						"The content-type header are not text/utf8"
+						"The content-type header are not json/utf8"
 					);
 
 					res.setEncoding("utf8");
@@ -62,7 +63,17 @@ module.exports = function httpRequestTest (urlpath, method, params, returnCode, 
 
 						try {
 
-							strictEqual(typeof rawData, "string", "The returned content is not a text");
+							strictEqual(typeof rawData, "string", "The returned content is not a string");
+
+							if (res.headers["content-length"]) {
+
+								strictEqual(
+									parseInt(res.headers["content-length"], 10),
+									Buffer.byteLength(rawData),
+									"The content-length header are not as expected"
+								);
+
+							}
 
 							if ("undefined" !== typeof returnContent) {
 								strictEqual(rawData, JSON.stringify(returnContent), "The returned content is not as expected");
@@ -72,7 +83,7 @@ module.exports = function httpRequestTest (urlpath, method, params, returnCode, 
 
 						}
 						catch (_e) {
-							reject(_e.message);
+							reject(_e);
 						}
 
 					});
