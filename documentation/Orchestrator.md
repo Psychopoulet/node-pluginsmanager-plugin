@@ -7,6 +7,8 @@
 
 ## Resume
 
+Check, initialize (and/or release) and execute the other main classes ([Mediator](./Mediator.md) and [Server](./Server.md))
+
 ## Interfaces
 
 ## Class (extends [MediatorUser](./MediatorUser.md))

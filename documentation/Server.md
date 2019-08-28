@@ -7,6 +7,10 @@
 
 ## Resume
 
+Plugin's API.
+
+Expose the [Mediator](./Mediator.md)'s methods with the [Descriptor](./Descriptor.md) rules.
+
 ## Interfaces
 
 ## Class (extends [MediatorUser](./MediatorUser.md))

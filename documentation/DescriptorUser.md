@@ -15,7 +15,7 @@ More, the class add features like external ressources directory (to create files
 
 ```typescript
 interface iDescriptorUserOptions {
-  "descriptor": object;
+  "descriptor": object | null;
   "externalRessourcesDirectory": string; // used to write local data like sqlite database, json files, pictures, etc...
 }
 ```

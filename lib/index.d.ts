@@ -9,20 +9,21 @@ declare module "node-pluginsmanager-plugin" {
 	// options
 
 	interface iDescriptorUserOptions {
-		"descriptor": object;
+		"descriptor": object | null;
 		"externalRessourcesDirectory": string;
 	}
 
-		interface iServerOptions extends iDescriptorUserOptions {
-			"mediator": Mediator;
+		interface iMediatorUserOptions extends iDescriptorUserOptions {
+			"mediator": Mediator | null;
 		}
 
-		interface iOrchestratorOptions extends iDescriptorUserOptions {
-			"packageFile": string;
-			"descriptorFile": string;
-			"mediatorFile": string;
-			"serverFile": string;
-		}
+	interface iOrchestratorOptions {
+		"externalRessourcesDirectory": string;
+		"packageFile": string;
+		"descriptorFile": string;
+		"mediatorFile": string;
+		"serverFile": string;
+	}
 
 	// classes
 
@@ -78,7 +79,7 @@ declare module "node-pluginsmanager-plugin" {
 
 		// constructor
 
-			constructor (options: iServerOptions);
+			constructor (options: iMediatorUserOptions);
 
 		// methods
 
