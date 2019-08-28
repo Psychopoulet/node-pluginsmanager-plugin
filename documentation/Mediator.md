@@ -4,6 +4,7 @@
 
 * [Resume](#resume)
 * [Class](#class-extends-descriptoruser)
+* [Descriptor interaction](#descriptor-interaction)
 * [Sample](#sample)
 
 ## Resume
@@ -13,6 +14,8 @@
 You will have to add all the methods you need here to pilote the targeted use (API, device, etc...)
 
 ## Interfaces
+
+nothing
 
 ## Class (extends [DescriptorUser](./DescriptorUser.md))
 
@@ -44,6 +47,26 @@ nothing
 
   * ``` initialized ``` fired when mediator is initialized
   * ``` released ``` fired when mediator is released
+
+## Descriptor interaction
+
+> See [Descriptor sample](./Descriptor.json)
+
+  * Method called by the server
+
+![Descriptor interaction](./pictures/Mediator_DescriptorInteraction_1.jpg)
+
+  * First method parameter (url parameters)
+
+![Descriptor interaction](./pictures/Mediator_DescriptorInteraction_2.jpg)
+
+  * Second method parameter (body parameters)
+
+![Descriptor interaction](./pictures/Mediator_DescriptorInteraction_3.jpg)
+
+  * Method return
+
+![Descriptor interaction](./pictures/Mediator_DescriptorInteraction_4.jpg)
 
 ## Sample
 
@@ -99,6 +122,13 @@ class MyPluginMediator extends Mediator {
 
       });
 
+    }).then((content) => {
+
+      return Promise.resolve({
+        "search": search,
+        "content": content
+      });
+
     });
 
   }
@@ -109,6 +139,24 @@ class MyPluginMediator extends Mediator {
 
   page2 () {
     return this._query("page2");
+  }
+
+  test (urlParameters, bodyParameters) {
+
+    /*
+    urlParameters : {
+      "url-param": string
+    }
+    */
+
+    /*
+    bodyParameters : {
+      "body-param": string
+    }
+    */
+
+    return this._query(urlParameters["url-param"] + "_" + bodyParameters.["body-param"]);
+
   }
 
 }

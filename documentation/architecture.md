@@ -8,11 +8,11 @@
 
 ## Functional
 
-![Functional](./functional.jpg)
+![Functional](./pictures/functional.jpg)
 
 ## Inheritence
 
-![Inheritence](./extends.jpg)
+![Inheritence](./pictures/extends.jpg)
 
 ## Classes resume
 
