@@ -25,9 +25,15 @@ interface iMediatorUserOptions extends iDescriptorUserOptions {
 
 #### protected
 
+  * ``` protected _Mediator: Mediator | null; ``` provided by "mediator" option, sent by the [Orchestrator](./Orchestrator.md)
+
 #### public
 
+nothing
+
 ### Constructor
+
+  * ``` constructor(options: iMediatorUserOptions) ```
 
 ### Methods
 
@@ -35,4 +41,10 @@ interface iMediatorUserOptions extends iDescriptorUserOptions {
 
 #### public
 
+> Please note the fact that "init" and "release" methods should not be re-writted
+
+  * ``` public checkMediator(void): Promise<void> ``` check Descriptor (type and content)
+
 ### Events
+
+nothing
