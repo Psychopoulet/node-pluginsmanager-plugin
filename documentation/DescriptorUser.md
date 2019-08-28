@@ -2,6 +2,9 @@
 
 [<= Main menu](https://github.com/Psychopoulet/node-pluginsmanager-plugin//README.md)
 
+* [Resume](./DescriptorUser.md#resume)
+* [Class](./DescriptorUser.md#class)
+
 ## Resume
 
 All the childs classes can use the [Descriptor](./Descriptor.md) shared by the [Orchestrator](./Orchestrator.md), and check its validity with the "checkDescriptor" method
@@ -23,7 +26,7 @@ interface iDescriptorUserOptions {
 
 ### Attributes
 
-	protected
+#### protected
 
   * ``` protected _Descriptor: object | null ``` provided by "descriptor" option, sent by the [Orchestrator](./Orchestrator.md)
   * ``` protected _externalRessourcesDirectory: string ``` provided by "externalRessourcesDirectory" option, sent by the [Orchestrator](./Orchestrator.md)
@@ -34,12 +37,12 @@ interface iDescriptorUserOptions {
 
 ### Methods
 
-    protected
+#### protected
 
   * ``` protected _initWorkSpace(data?: any): Promise<void>; ``` MUST be re-writted (optional in Orchestrator childs). Used to avoid full init logic re-writting.
   * ``` protected _releaseWorkSpace(data?: any): Promise<void>; ``` MUST be re-writted (optional in Orchestrator childs). Used to avoid full release logic re-writting.
 
-    public
+#### public
 
   * ``` public init(data?: any): Promise<void> ``` should NOT be re-writted. Each child has is own init logic.
   * ``` public release(data?: any): Promise<void> ``` should NOT be re-writted. Each child has is own release logic.
