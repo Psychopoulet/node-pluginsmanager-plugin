@@ -63,8 +63,6 @@ interface iPath {
 
 ## Classes
 
-![Classes](./documentation/extends.jpg)
-
 > Please note the fact that, in this version, init & release methods of each classes should not be re-writted anymore...
 
 ### Resume
@@ -73,20 +71,6 @@ interface iPath {
 * Server : expose plugin's roots to external use (API)
 * Descriptor : OpenAPI (v3) description for Server endpoints (this is NOT a js file, but a json OpenAPI file)
 * Orchestrator : plugin's data (extracted from plugin's package.json) and Descriptor, Mediator & Server initializer
-
-### DescriptorUser (extends EventEmitter)
-
-  -- Methods --
-
-    --- protected ---
-
-  * ``` protected _initWorkSpace(data?: any): Promise<void>; ``` MUST be re-writted (except in Orchestrator childs). Used to avoid full init logic re-writting.
-  * ``` protected _releaseWorkSpace(data?: any): Promise<void>; ``` MUST be re-writted (except in Orchestrator childs). Used to avoid full release logic re-writting.
-
-    --- public ---
-
-  * ``` init(data?: any): Promise<void> ``` should NOT be re-writted. Each child has is own init logic.
-  * ``` release(data?: any): Promise<void> ``` should NOT be re-writted. Each child has is own release logic.
 
 ### Mediator (extends DescriptorUser)
 

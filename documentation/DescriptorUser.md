@@ -2,8 +2,8 @@
 
 [<= Main menu](https://github.com/Psychopoulet/node-pluginsmanager-plugin//README.md)
 
-* [Resume](./DescriptorUser.md#resume)
-* [Class](./DescriptorUser.md#class)
+* [Resume](#resume)
+* [Class](#class-extends-eventemitter)
 
 ## Resume
 
@@ -30,6 +30,10 @@ interface iDescriptorUserOptions {
 
   * ``` protected _Descriptor: object | null ``` provided by "descriptor" option, sent by the [Orchestrator](./Orchestrator.md)
   * ``` protected _externalRessourcesDirectory: string ``` provided by "externalRessourcesDirectory" option, sent by the [Orchestrator](./Orchestrator.md)
+
+#### public
+
+nothing
 
 ### Constructor
 
