@@ -11,7 +11,7 @@ All the childs classes can use the [Mediator](./Mediator.md)
 
 ## Interfaces
 
-> See [iDescriptorUserOptions](./DescriptorUser.json#interfaces)
+> See [iDescriptorUserOptions](./DescriptorUser.md#interfaces)
 
 ```typescript
 interface iMediatorUserOptions extends iDescriptorUserOptions {
