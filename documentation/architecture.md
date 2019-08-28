@@ -1,6 +1,6 @@
 # Architecture
 
-[<= Main menu](https://github.com/Psychopoulet/node-pluginsmanager-plugin/README.md)
+[<= Main menu](https://github.com/Psychopoulet/node-pluginsmanager-plugin)
 
 * [Functional](./architecture.md#functional)
 * [Inheritence](./architecture.md#inheritence)

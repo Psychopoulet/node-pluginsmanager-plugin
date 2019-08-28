@@ -1,3 +1,3 @@
 # Descriptor
 
-[<= Main menu](https://github.com/Psychopoulet/node-pluginsmanager-plugin/README.md)
+[<= Main menu](https://github.com/Psychopoulet/node-pluginsmanager-plugin)
