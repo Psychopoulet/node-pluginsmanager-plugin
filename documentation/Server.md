@@ -17,33 +17,9 @@ Expose the [Mediator](./Mediator.md)'s methods with the [Descriptor](./Descripto
 
 > If you use sockets, you can extends this class and re-write "socketMiddleware" method
 
-## Interfaces
-
-nothing
-
 ## Class (extends [MediatorUser](./MediatorUser.md))
 
-### Attributes
-
-#### protected
-
-nothing
-
-#### public
-
-nothing
-
-### Constructor
-
-nothing
-
 ### Methods
-
-#### protected
-
-> Please note the fact that "_initWorkSpace" and "_releaseWorkSpace" method MUST be re-writted in Mediator class, and not in MediatorUser childs.
-
-nothing
 
 #### public
 
@@ -51,10 +27,6 @@ nothing
 
   * ``` public appMiddleware(req: Request, res: Response, next: Function): void; ``` middleware for express (& others) to add routes
   * ``` public socketMiddleware(server: WebSocketServer): void; ``` middleware for socket to add bilateral push events, should be re-writted if used
-
-### Events
-
-nothing
 
 ## Descriptor interaction
 

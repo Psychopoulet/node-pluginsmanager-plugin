@@ -13,39 +13,13 @@
 
 You will have to add all the methods you need here to pilote the targeted use (API, device, etc...)
 
-## Interfaces
-
-nothing
-
 ## Class (extends [DescriptorUser](./DescriptorUser.md))
 
 ### Attributes
 
-#### protected
-
-nothing
-
 #### public
 
   * ``` public initialized: boolean; ``` mediator status
-
-### Constructor
-
-nothing
-
-### Methods
-
-#### protected
-
-> Please note the fact that "_initWorkSpace" and "_releaseWorkSpace" method MUST be re-writted in Mediator class.
-
-nothing
-
-#### public
-
-> Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic.
-
-nothing
 
 ### Events
 

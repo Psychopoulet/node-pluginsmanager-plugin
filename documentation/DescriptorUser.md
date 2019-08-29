@@ -29,10 +29,6 @@ interface iDescriptorUserOptions {
   * ``` protected _Descriptor: object | null; ``` provided by "descriptor" option, sent by the [Orchestrator](./Orchestrator.md)
   * ``` protected _externalRessourcesDirectory: string; ``` provided by "externalRessourcesDirectory" option, sent by the [Orchestrator](./Orchestrator.md)
 
-#### public
-
-nothing
-
 ### Constructor
 
   * ``` constructor(options: iDescriptorUserOptions); ```
@@ -53,7 +49,3 @@ nothing
   * ``` public init(data?: any): Promise<any>; ``` // returned data : defined by "_initWorkSpace" return
   * ``` public release(data?: any): Promise<any>; ``` // returned data : defined by "_releaseWorkSpace" return
   * ``` public checkDescriptor(void): Promise<void>; ``` check Descriptor (type and content)
-
-### Events
-
-nothing
