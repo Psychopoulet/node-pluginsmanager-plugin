@@ -26,8 +26,8 @@ interface iDescriptorUserOptions {
 
 #### protected
 
-  * ``` protected _Descriptor: object | null ``` provided by "descriptor" option, sent by the [Orchestrator](./Orchestrator.md)
-  * ``` protected _externalRessourcesDirectory: string ``` provided by "externalRessourcesDirectory" option, sent by the [Orchestrator](./Orchestrator.md)
+  * ``` protected _Descriptor: object | null; ``` provided by "descriptor" option, sent by the [Orchestrator](./Orchestrator.md)
+  * ``` protected _externalRessourcesDirectory: string; ``` provided by "externalRessourcesDirectory" option, sent by the [Orchestrator](./Orchestrator.md)
 
 #### public
 
@@ -35,7 +35,7 @@ nothing
 
 ### Constructor
 
-  * ``` constructor(options: iDescriptorUserOptions) ```
+  * ``` constructor(options: iDescriptorUserOptions); ```
 
 ### Methods
 
@@ -50,9 +50,9 @@ nothing
 
 > Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic.
 
-  * ``` public init(data?: any): Promise<void> ```
-  * ``` public release(data?: any): Promise<void> ```
-  * ``` public checkDescriptor(void): Promise<void> ``` check Descriptor (type and content)
+  * ``` public init(data?: any): Promise<void>; ```
+  * ``` public release(data?: any): Promise<void>; ```
+  * ``` public checkDescriptor(void): Promise<void>; ``` check Descriptor (type and content)
 
 ### Events
 

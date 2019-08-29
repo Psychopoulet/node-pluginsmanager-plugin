@@ -33,7 +33,7 @@ nothing
 
 ### Constructor
 
-  * ``` constructor(options: iMediatorUserOptions) ```
+  * ``` constructor(options: iMediatorUserOptions); ```
 
 ### Methods
 

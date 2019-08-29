@@ -27,7 +27,7 @@ nothing
 
 #### public
 
-  * ``` public initialized: boolean ``` mediator status
+  * ``` public initialized: boolean; ``` mediator status
 
 ### Constructor
 
