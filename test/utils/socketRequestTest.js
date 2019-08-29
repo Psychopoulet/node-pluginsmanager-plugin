@@ -22,6 +22,8 @@ module.exports = function socketRequestTest (requestName, returnName) {
 
 		client.on("open", () => {
 
+			(0, console).log("client", "socket", "open");
+
 			resolve();
 
 		});
@@ -32,6 +34,8 @@ module.exports = function socketRequestTest (requestName, returnName) {
 		return new Promise((resolve, reject) => {
 
 			client.on("message", (payload) => {
+
+				(0, console).log("client", "socket", "message", payload);
 
 				try {
 
@@ -60,6 +64,8 @@ module.exports = function socketRequestTest (requestName, returnName) {
 		return new Promise((resolve) => {
 
 			client.on("close", () => {
+
+				(0, console).log("client", "socket", "close");
 
 				resolve();
 

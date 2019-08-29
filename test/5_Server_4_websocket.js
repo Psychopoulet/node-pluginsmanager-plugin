@@ -69,8 +69,6 @@ describe("Server / websockets", () => {
 
 				strictEqual(pinged, true, "DebugStep is not as expected");
 
-				return Promise.resolve();
-
 			});
 
 		});
