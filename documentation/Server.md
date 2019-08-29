@@ -79,7 +79,6 @@ nothing
 ```javascript
 "use strict";
 
-const { get } = require('https');
 const { Server } = require('node-pluginsmanager-plugin');
 
 class MyPluginServer extends Server {
