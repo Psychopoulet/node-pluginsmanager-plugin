@@ -48,8 +48,8 @@ nothing
 
 > Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic.
 
-  * ``` public appMiddleware(req: Request, res: Response, next: Function): void; ```
-  * ``` public socketMiddleware(server: WebSocketServer): void; ```
+  * ``` public appMiddleware(req: Request, res: Response, next: Function): void; ``` middleware for express (& others) to add routes
+  * ``` public socketMiddleware(server: WebSocketServer): void; ``` middleware for socket to add bilateral push events, should be re-writted if used
 
 ### Events
 
