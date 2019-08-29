@@ -5,7 +5,7 @@
 * [Resume](#resume)
 * [Class](#class-extends-mediatoruser)
 * [Conventions](#conventions)
-* [Descriptor interactions](#descriptor-interaction)
+* [Descriptor interactions](#descriptor-interactions)
 * [Sample](#sample)
 
 ## Resume
