@@ -5,7 +5,7 @@
 * [Resume](#resume)
 * [Class](#class-extends-mediatoruser)
 * [Conventions](#conventions)
-* [Descriptor interaction](#descriptor-interaction)
+* [Descriptor interactions](#descriptor-interaction)
 * [Sample](#sample)
 
 ## Resume
@@ -52,9 +52,11 @@ Expose the [Mediator](./Mediator.md)'s methods with the [Descriptor](./Descripto
   * [500](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/500) (the [Mediator](./Mediator.md) generate an unknown error)
   * [501](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/501) (there is no "operationId" for this path in the [Descriptor](./Descriptor.md) or the [Mediator](./Mediator.md) does not have the "operationId" method given by the [Descriptor](./Descriptor.md))
 
-## Descriptor interaction
+## Descriptor interactions
 
 > See [Descriptor sample](./Descriptor.json)
+
+### Paths
 
 ![Descriptor interaction](./pictures/Server_DescriptorInteraction_1.jpg)
 

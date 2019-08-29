@@ -4,7 +4,7 @@
 
 * [Resume](#resume)
 * [Class](#class-extends-descriptoruser)
-* [Descriptor interaction](#descriptor-interaction)
+* [Descriptor interactions](#descriptor-interactions)
 * [Sample](#sample)
 
 ## Resume
@@ -26,7 +26,7 @@ You will have to add all the methods you need here to pilote the targeted use (A
   * ``` initialized ``` fired when mediator is initialized
   * ``` released ``` fired when mediator is released
 
-## Descriptor interaction
+## Descriptor interactions
 
 > See [Descriptor sample](./Descriptor.json)
 
