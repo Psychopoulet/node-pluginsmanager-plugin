@@ -1,6 +1,6 @@
 # Mediator
 
-[<= Main menu](https://github.com/Psychopoulet/node-pluginsmanager-plugin)
+[<= Architecture](./architecture.md)
 
 * [Resume](#resume)
 * [Class](#class-extends-descriptoruser)
