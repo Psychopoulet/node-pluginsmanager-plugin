@@ -4,6 +4,8 @@
 
 * [Resume](#resume)
 * [Descriptor interactions](#descriptor-interactions)
+  * [Server](#server)
+  * [Mediator](#mediator)
 
 ## Resume
 
