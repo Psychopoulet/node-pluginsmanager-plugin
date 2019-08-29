@@ -40,7 +40,7 @@ Expose the [Mediator](./Mediator.md)'s methods with the [Descriptor](./Descripto
 
 ### Callable urls
 
-  * "/[plugin-name]/descriptor" [GET] : return json [Descriptor](./Descriptor.md) (already and automaticly setted, no need for "operationId" data or [Mediator](./Mediator.md) interaction)
+  * "/[plugin-name]/descriptor" [GET] : return json [Descriptor](./Descriptor.md) (already and automaticly setted, no need for "operationId" data in the [Descriptor](./Descriptor.md) for this path)
   * "/[plugin-name]/api/[path]" : expose API path
 
 ### Used HTTP statusCode
