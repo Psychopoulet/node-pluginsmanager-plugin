@@ -33,7 +33,7 @@ interface iOrchestratorOptions {
 #### protected
 
   * ``` protected _Server: Server | null; ``` Server used by the class
-  * ``` protected _packageFile: string; ``` package file used by the plugin (absolute path) (see iOrchestratorOptions)
+  * ``` protected _packageFile: string; ``` package.json file used by the plugin (absolute path) (see iOrchestratorOptions)
   * ``` protected _descriptorFile: string; ``` Descriptor file used by the plugin (absolute path) (see iOrchestratorOptions)
   * ``` protected _mediatorFile: string; ``` Mediator file used by the plugin (absolute path) (see iOrchestratorOptions)
   * ``` protected _serverFile: string; ``` Server file used by the plugin (absolute path) (see iOrchestratorOptions)
@@ -96,6 +96,26 @@ interface iOrchestratorOptions {
   * ``` released [, data?: any ] ``` where "data" arguments is the same as in "release" method
 
 ## Sample
+
+### package.json
+
+```json
+{
+  "authors": [ "Sébastien VIDAL" ],
+  "dependencies": {
+    "simpletts": "~1.3.0"
+  },
+  "description": "A test for node-pluginsmanager-plugin",
+  "license": "ISC",
+  "main": "main.js",
+  "name": "MyPlugin",
+  "version": "0.0.2",
+  "core": false,
+  "linuxOnly": true
+}
+```
+
+### Orchestrator
 
 ```javascript
 "use strict";
