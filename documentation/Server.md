@@ -4,6 +4,7 @@
 
 * [Resume](#resume)
 * [Class](#class-extends-mediatoruser)
+* [Conventions](#conventions)
 * [Descriptor interaction](#descriptor-interaction)
 * [Sample](#sample)
 
@@ -28,23 +29,40 @@ Expose the [Mediator](./Mediator.md)'s methods with the [Descriptor](./Descripto
   * ``` public appMiddleware(req: Request, res: Response, next: Function): void; ``` middleware for express (& others) to add routes
   * ``` public socketMiddleware(server: WebSocketServer): void; ``` middleware for socket to add bilateral push events, should be re-writted if used
 
+## Conventions
+
+### REST
+
+  * GET => read data
+  * PUT => add data
+  * POST => edit data
+  * DELETE => remove data
+
+### Callable urls
+
+  * "/[plugin-name]/descriptor" [GET] : return json descriptor (already and automaticly setted, no need for "operationId" data or [Mediator](./Mediator.md) interaction)
+  * "/[plugin-name]/api/[path]" : expose API path
+
+### Used HTTP statusCode
+
+  * [200](https://http.cat/200) (everything is fine with a content)
+  * [201](https://http.cat/201) (everything is fine for PUT request, with and/or without content)
+  * [204](https://http.cat/204) (everything is fine without any content)
+  * [400](https://http.cat/400) (the request does not match with the [Descriptor](./Descriptor.md))
+  * [500](https://http.cat/500) (the [Mediator](./Mediator.md) generate an unknown error)
+  * [501](https://http.cat/501) (there is no "operationId" for this path in the [Descriptor](./Descriptor.md) or the [Mediator](./Mediator.md) does not have the "operationId" method given by the [Descriptor](./Descriptor.md))
+
 ## Descriptor interaction
 
 > See [Descriptor sample](./Descriptor.json)
 
-  * Callable urls
-
-> Convention : "/[plugin-name]/descriptor" : return descriptor
-
-> Convention : "/[plugin-name]/api/[path]" : expose API path
-
 ![Descriptor interaction](./pictures/Server_DescriptorInteraction_1.jpg)
 
-  * HTTP usable methods
+### HTTP usable methods
 
 ![Descriptor interaction](./pictures/Server_DescriptorInteraction_2.jpg)
 
-  * Mediator method called
+### Mediator method called
 
 ![Descriptor interaction](./pictures/Mediator_DescriptorInteraction_1.jpg)
 
