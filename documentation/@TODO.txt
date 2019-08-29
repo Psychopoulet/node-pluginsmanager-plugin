@@ -2,6 +2,7 @@
 - automaticly check request format (error 406 ?)
 - automaticly check params into mediator
 - automaticly check returned data & response format
+- add "_onConnection" attribute in Server & automaticly release it in "release" method
 
 @MAYBE :
 - add length check ? (error 411)

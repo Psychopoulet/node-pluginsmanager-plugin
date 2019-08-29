@@ -11,7 +11,7 @@
 
 > This is NOT a js file, but an [OpenAPI](https://swagger.io/specification/) json file.
 
-> It's the more critical stuff, which describe all the plugin's interactions and will be used by all your executives classes
+> It's the most critical stuff, which describe all the plugin's interactions and will be used by all your executives classes
 
 It's loaded and shared by the [Orchestrator](./Orchestrator.md) and used by
 * [Mediator](./Mediator.md) to check input data
