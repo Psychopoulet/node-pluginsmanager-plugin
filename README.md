@@ -20,7 +20,9 @@ $ npm install node-pluginsmanager-plugin
   * proper architecture for simple plugin creation
   * heritable classes for each usage
 
-## [Architecture](https://github.com/Psychopoulet/node-pluginsmanager-plugin/documentation/architecture.md)
+## Architecture
+
+[=> See doc](https://github.com/Psychopoulet/node-pluginsmanager-plugin/documentation/architecture.md)
 
 ### Resume
 
