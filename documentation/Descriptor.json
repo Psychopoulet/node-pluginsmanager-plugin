@@ -107,7 +107,7 @@
 			}
 		},
 		"/doc-sample/api/test": {
-			"post": {
+			"put": {
 				"description": "",
 				"summary": "First page path",
 				"operationId": "test",
@@ -139,7 +139,7 @@
 					}
 				},
 				"responses": {
-					"200": {
+					"201": {
 						"description": "Everything is fine",
 						"content": {
 							"application/json": {

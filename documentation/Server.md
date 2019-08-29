@@ -40,17 +40,17 @@ Expose the [Mediator](./Mediator.md)'s methods with the [Descriptor](./Descripto
 
 ### Callable urls
 
-  * "/[plugin-name]/descriptor" [GET] : return json descriptor (already and automaticly setted, no need for "operationId" data or [Mediator](./Mediator.md) interaction)
+  * "/[plugin-name]/descriptor" [GET] : return json [Descriptor](./Descriptor.md) (already and automaticly setted, no need for "operationId" data or [Mediator](./Mediator.md) interaction)
   * "/[plugin-name]/api/[path]" : expose API path
 
 ### Used HTTP statusCode
 
-  * [200](https://http.cat/200) (everything is fine with a content)
-  * [201](https://http.cat/201) (everything is fine for PUT request, with and/or without content)
-  * [204](https://http.cat/204) (everything is fine without any content)
-  * [400](https://http.cat/400) (the request does not match with the [Descriptor](./Descriptor.md))
-  * [500](https://http.cat/500) (the [Mediator](./Mediator.md) generate an unknown error)
-  * [501](https://http.cat/501) (there is no "operationId" for this path in the [Descriptor](./Descriptor.md) or the [Mediator](./Mediator.md) does not have the "operationId" method given by the [Descriptor](./Descriptor.md))
+  * [200](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/200) (everything is fine with a content)
+  * [201](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/201) (everything is fine for POST request, with and/or without content)
+  * [204](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/204) (everything is fine without any content)
+  * [400](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/400) (the request does not match with the [Descriptor](./Descriptor.md))
+  * [500](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/500) (the [Mediator](./Mediator.md) generate an unknown error)
+  * [501](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/501) (there is no "operationId" for this path in the [Descriptor](./Descriptor.md) or the [Mediator](./Mediator.md) does not have the "operationId" method given by the [Descriptor](./Descriptor.md))
 
 ## Descriptor interaction
 
