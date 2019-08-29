@@ -24,30 +24,10 @@ $ npm install node-pluginsmanager-plugin
 
 ### Resume
 
-* Descriptor : OpenAPI (v3) description for Server and Mediator endpoints (this is NOT a js file, but a json OpenAPI file)
-* Mediator : contains the plugin's logic (communication with targeted device/api/whatever)
-* Server : expose plugin's roots to external use (API)
-* Orchestrator : plugin's data (extracted from plugin's package.json) and Descriptor, Mediator & Server initializer
-
-## Examples
-
- * package.json sample
-
-```json
-{
-  "authors": [ "Sébastien VIDAL" ],
-  "dependencies": {
-    "simpletts": "^1.3.0"
-  },
-  "description": "A test for node-pluginsmanager-plugin",
-  "license": "ISC",
-  "main": "main.js",
-  "name": "MyPlugin",
-  "version": "0.0.2",
-  "core": false,
-  "linuxOnly": true
-}
-```
+* [Descriptor](https://github.com/Psychopoulet/node-pluginsmanager-plugin/documentation/Descriptor.md) : OpenAPI (v3) description for Server and Mediator endpoints (this is NOT a js file, but a json OpenAPI file)
+* [Mediator](https://github.com/Psychopoulet/node-pluginsmanager-plugin/documentation/Mediator.md) : contains the plugin's logic (communication with targeted device/api/whatever)
+* [Server](https://github.com/Psychopoulet/node-pluginsmanager-plugin/documentation/Server.md) : expose plugin's roots to external use (API)
+* [Orchestrator](https://github.com/Psychopoulet/node-pluginsmanager-plugin/documentation/Orchestrator.md) : plugin's data (extracted from plugin's package.json) and Descriptor, Mediator & Server initializer
 
 ## Tests
 
