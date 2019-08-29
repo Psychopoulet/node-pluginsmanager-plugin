@@ -14,6 +14,7 @@ Plugin's API.
 Expose the [Mediator](./Mediator.md)'s methods with the [Descriptor](./Descriptor.md) rules.
 
 > You doesn't need any developpement in this part if you does not use sockets, everything is automaticly provided by the [Descriptor](./Descriptor.md).
+
 > If you use sockets, you can extends this class and re-write "socketMiddleware" method
 
 ## Interfaces
@@ -62,6 +63,7 @@ nothing
   * Callable urls
 
 > Convention : "/[plugin-name]/descriptor" : return descriptor
+
 > Convention : "/[plugin-name]/api/[path]" : expose API path
 
 ![Descriptor interaction](./pictures/Server_DescriptorInteraction_1.jpg)

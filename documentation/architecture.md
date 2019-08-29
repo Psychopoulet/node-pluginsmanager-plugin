@@ -23,6 +23,7 @@
 [OpenAPI](https://swagger.io/specification/) json file.
 
 > It's the more critical stuff, which describe all the plugin's interactions and will be used by all your executives classes
+
 > This is NOT a js file, but a json OpenAPI file
 
 It's loaded and shared by the [Orchestrator](./Orchestrator.md) and used by
@@ -66,6 +67,7 @@ Plugin's API.
 Expose the [Mediator](./Mediator.md)'s methods with the [Descriptor](./Descriptor.md) rules.
 
 > You doesn't need any developpement in this part if you does not use sockets, everything is automaticly provided by the [Descriptor](./Descriptor.md).
+
 > If you use sockets, you can extends this class and re-write "socketMiddleware" method
 
 ### Orchestrator

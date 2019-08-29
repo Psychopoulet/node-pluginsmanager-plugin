@@ -4,7 +4,6 @@
 
 * [Resume](#resume)
 * [Class](#class-extends-mediatoruser)
-* [Descriptor interaction](#descriptor-interaction)
 * [Sample](#sample)
 
 ## Resume
@@ -12,6 +11,7 @@
 Check, initialize (and/or release) and execute the other main classes ([Mediator](./Mediator.md) and [Server](./Server.md))
 
 > "there is a major difference between "load" & "init" methods : "load" just load data from package file (and will always be executed), "init" create Mediator & Server instance and run the plugin (only if declared as enabled)
+
 > "there is a major difference between "release" & "destroy" methods : "release" stop the plugin and destroy the Mediator and the Server instances but keep package data, "destroy" release the data (used when uninstall, update, etc...)
 
 ## Interfaces
@@ -100,10 +100,6 @@ nothing
 
   * ``` initialized [, data?: any ] ``` where "data" arguments is the same as in "init" method
   * ``` released [, data?: any ] ``` where "data" arguments is the same as in "release" method
-
-## Descriptor interaction
-
-nothing
 
 ## Sample
 
