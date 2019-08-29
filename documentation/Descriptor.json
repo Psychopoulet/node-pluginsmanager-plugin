@@ -1,0 +1,214 @@
+{
+	"openapi": "3.0.2",
+	"info": {
+		"title": "doc-sample",
+		"version": "1.0.0",
+		"description": "A sample for node-pluginsmanager-plugin documentation",
+		"contact": {
+			"name": "Sébastien VIDAL",
+			"url": "https://github.com/Psychopoulet/node-pluginsmanager-plugin/issues"
+		},
+		"license": {
+			"name": "ISC",
+			"url": "https://en.wikipedia.org/wiki/ISC_license"
+		}
+	},
+	"paths": {
+		"/doc-sample/descriptor": {
+			"get": {
+				"description": "",
+				"summary": "Get plugin descriptor",
+				"parameters": [],
+				"requestBody": {},
+				"responses": {
+					"200": {
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occured",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/doc-sample/api/page1": {
+			"get": {
+				"description": "",
+				"summary": "First page path",
+				"operationId": "page1",
+				"parameters": [],
+				"requestBody": {},
+				"responses": {
+					"200": {
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Search"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occured",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/doc-sample/api/page2": {
+			"get": {
+				"description": "",
+				"summary": "First page path",
+				"operationId": "page2",
+				"parameters": [],
+				"requestBody": {},
+				"responses": {
+					"200": {
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Search"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occured",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/doc-sample/api/test": {
+			"put": {
+				"description": "",
+				"summary": "First page path",
+				"operationId": "test",
+				"parameters": [
+					{
+						"name": "url-param",
+						"in": "path",
+						"description": "Entity name",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "test name",
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"body-param": {
+										"type": "string"
+									}
+								},
+								"required": [ "body-param" ] 
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Search"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occured",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"Search": {
+				"type": "object",
+				"required": [
+					"search",
+					"content"
+				],
+				"properties": {
+					"search": {
+						"type": "string"
+					},
+					"content": {
+						"type": "string"
+					}
+				}
+			},
+			"Error": {
+				"type": "object",
+				"required": [
+					"code",
+					"message"
+				],
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					}
+				}
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "http://127.0.0.1:3000",
+			"description": "Test server for HTTP requests"
+		},
+		{
+			"url": "ws://127.0.0.1:3001",
+			"description": "Test server for sockets requests"
+		}
+	],
+	"externalDocs": {
+		"description": "Find out more about this API",
+		"url": "https://github.com/Psychopoulet/node-pluginsmanager-plugin#readme"
+	}
+}

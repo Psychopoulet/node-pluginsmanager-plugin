@@ -117,13 +117,16 @@ describe("Orchestrator / load & destroy", () => {
 
 			const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
 
-				orchestrator._packageFile = join(__dirname, "utils", "packageWithMultipleAuthors.json");
+				orchestrator._packageFile = join(__dirname, "utils", "Orchestrator", "package_authors_and_author.json");
 
 			return orchestrator.load().then(() => {
 
 				strictEqual(typeof orchestrator.authors, "object", "Generated orchestrator authors is not an object");
 				strictEqual(orchestrator.authors instanceof Array, true, "Generated orchestrator authors is not an Array");
-				deepStrictEqual(orchestrator.authors, [ "Sébastien VIDAL" ], "Generated orchestrator authors is not as expected");
+				deepStrictEqual(orchestrator.authors, [
+					"Sébastien VIDAL",
+					"Fabien VIDAL"
+				], "Generated orchestrator authors is not as expected");
 
 				return Promise.resolve();
 

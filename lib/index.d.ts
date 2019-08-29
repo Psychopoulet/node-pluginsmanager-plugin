@@ -8,93 +8,87 @@ declare module "node-pluginsmanager-plugin" {
 
 	// options
 
-	interface iMediatorOptions {
+	interface iDescriptorUserOptions {
+		"descriptor": object | null;
 		"externalRessourcesDirectory": string;
 	}
 
-	interface iServerOptions {
-		"descriptor": object;
-		"mediator": Mediator;
-	}
+		interface iMediatorUserOptions extends iDescriptorUserOptions {
+			"mediator": Mediator | null;
+		}
 
-	interface iOrchestratorOptions extends iMediatorOptions {
+	interface iOrchestratorOptions {
+		"externalRessourcesDirectory": string;
 		"packageFile": string;
 		"descriptorFile": string;
 		"mediatorFile": string;
 		"serverFile": string;
 	}
 
-	interface iPath {
-		"path": string;
-		"method": string;
-	}
-
 	// classes
 
-	class Bootable extends Events {
+	class DescriptorUser extends Events {
+
+		// attributes
+
+			// protected
+
+				protected _Descriptor: object | null;
+				protected _externalRessourcesDirectory: string;
+
+		// constructor
+
+			constructor (options: iDescriptorUserOptions);
 
 		// methods
 
 			// protected
 
-				protected _initWorkSpace(data?: any): Promise<void>;
-				protected _releaseWorkSpace(data?: any): Promise<void>;
+				protected _initWorkSpace(data?: any): Promise<any>;
+				protected _releaseWorkSpace(data?: any): Promise<any>;
 
 			// public
 
-				public init(data?: any): Promise<void>;
-				public release(data?: any): Promise<void>;
+				public checkDescriptor(): Promise<void>;
+				public init(data?: any): Promise<any>;
+				public release(data?: any): Promise<any>;
 
 	}
 
-	export class Mediator extends Bootable {
-
-		// constructor
-
-			constructor (options: iMediatorOptions);
+	export class Mediator extends DescriptorUser {
 
 		// attributes
 
 			public initialized: boolean;
-			public externalRessourcesDirectory: string;
 
 	}
 
-	class MediatorUser extends Bootable {
+	class MediatorUser extends DescriptorUser {
 
 		// attributes
 
-			protected _Descriptor: object | null;
 			protected _Mediator: Mediator | null;
+
+		// constructor
+
+			constructor (options: iMediatorUserOptions);
 
 		// methods
 
-			public checkDescriptor(): Promise<void>;
 			public checkMediator(): Promise<void>;
-
-			public getPaths(): Promise<Array<iPath>>;
 
 	}
 
 	export class Server extends MediatorUser {
 
-		// constructor
-
-			constructor (options: iServerOptions);
-
 		// methods
 
 			public appMiddleware(req: Request, res: Response, next: Function): void;
-			public httpMiddleware(req: Request, res: Response): boolean;
 			public socketMiddleware(server: WebSocketServer): void;
 
 	}
 
 	export class Orchestrator extends MediatorUser {
-
-		// constructor
-
-			constructor (options: iOrchestratorOptions);
 
 		// attributes
 
@@ -115,8 +109,6 @@ declare module "node-pluginsmanager-plugin" {
 				public enabled: boolean;
 				public initialized: boolean;
 
-				public externalRessourcesDirectory: string;
-
 				// native
 				public authors: Array<string> | null;
 				public description: string;
@@ -129,6 +121,10 @@ declare module "node-pluginsmanager-plugin" {
 				public scripts: object | null;
 				public version: string;
 
+		// constructor
+
+			constructor (options: iOrchestratorOptions);
+
 		// methods
 
 			// checkers
@@ -137,12 +133,10 @@ declare module "node-pluginsmanager-plugin" {
 			public isEnable(): Promise<void>;
 			public checkFiles(): Promise<void>;
 			public checkServer(): Promise<void>;
-			public checkServerSync(): boolean;
 
 			// middleware
 
-			public appMiddleware(req: Request, res: Response, next: Function): Promise<void>;
-			public httpMiddleware(req: Request, res: Response): Promise<void>;
+			public appMiddleware(req: Request, res: Response, next: Function): void;
 			public socketMiddleware(server: WebSocketServer): void;
 
 			// init / release

@@ -1,5 +1,5 @@
 /*
-	eslint-disable max-statements, no-sync
+	eslint-disable max-statements
 */
 
 "use strict";
@@ -14,7 +14,7 @@
 	// locals
 
 		// plugin
-		const Bootable = require(join(__dirname, "..", "lib", "components", "Bootable.js"));
+		const DescriptorUser = require(join(__dirname, "..", "lib", "components", "DescriptorUser.js"));
 		const MediatorUser = require(join(__dirname, "..", "lib", "components", "MediatorUser.js"));
 		const { Server, Orchestrator } = require(join(__dirname, "..", "lib", "main.js"));
 
@@ -49,7 +49,7 @@ describe("Orchestrator", () => {
 
 		strictEqual(typeof orchestrator, "object", "Generated orchestrator is not an object");
 		strictEqual(orchestrator instanceof Events, true, "Generated orchestrator is not a Events instance");
-		strictEqual(orchestrator instanceof Bootable, true, "Generated orchestrator is not a Bootable instance");
+		strictEqual(orchestrator instanceof DescriptorUser, true, "Generated orchestrator is not a DescriptorUser instance");
 		strictEqual(orchestrator instanceof MediatorUser, true, "Generated orchestrator is not a MediatorUser instance");
 		strictEqual(orchestrator instanceof Orchestrator, true, "Generated orchestrator is not a Orchestrator instance");
 		strictEqual(orchestrator instanceof LocalOrchestrator, true, "Generated orchestrator is not a LocalOrchestrator instance");
@@ -86,15 +86,6 @@ describe("Orchestrator", () => {
 
 			strictEqual(typeof orchestrator.initialized, "boolean", "Generated orchestrator initialized is not a boolean");
 			strictEqual(orchestrator.initialized, false, "Generated orchestrator initialized is not as expected");
-
-			strictEqual(
-				typeof orchestrator.externalRessourcesDirectory, "string",
-				"Generated orchestrator externalRessourcesDirectory is not a boolean"
-			);
-			strictEqual(
-				orchestrator.externalRessourcesDirectory, "test",
-				"Generated orchestrator externalRessourcesDirectory is not as expected"
-			);
 
 			// native
 
@@ -156,17 +147,6 @@ describe("Orchestrator", () => {
 			strictEqual(orchestrator._extended instanceof Array, true, "Generated orchestrator extended is not an Array");
 			deepStrictEqual(orchestrator._extended, [], "Generated orchestrator extended is not as expected");
 
-		// public
-
-			strictEqual(
-				typeof orchestrator.externalRessourcesDirectory, "string",
-				"Generated orchestrator externalRessourcesDirectory is not a boolean"
-			);
-			strictEqual(
-				orchestrator.externalRessourcesDirectory, "",
-				"Generated orchestrator externalRessourcesDirectory is not as expected"
-			);
-
 	});
 
 	describe("checkServer", () => {
@@ -183,8 +163,6 @@ describe("Orchestrator", () => {
 				strictEqual(typeof err, "object", "Generated error is not an object");
 				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
 				strictEqual(err instanceof ReferenceError, true, "Generated error is not a ReferenceError instance");
-
-				strictEqual(orchestrator.checkServerSync(), false, "Sync check is not as expected");
 
 				done();
 
@@ -205,8 +183,6 @@ describe("Orchestrator", () => {
 				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
 				strictEqual(err instanceof ReferenceError, true, "Generated error is not a ReferenceError instance");
 
-				strictEqual(orchestrator.checkServerSync(), false, "Sync check is not as expected");
-
 				done();
 
 			});
@@ -225,8 +201,6 @@ describe("Orchestrator", () => {
 				strictEqual(typeof err, "object", "Generated error is not an object");
 				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
 				strictEqual(err instanceof TypeError, true, "Generated error is not a TypeError instance");
-
-				strictEqual(orchestrator.checkServerSync(), false, "Sync check is not as expected");
 
 				done();
 
@@ -247,8 +221,6 @@ describe("Orchestrator", () => {
 				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
 				strictEqual(err instanceof TypeError, true, "Generated error is not a TypeError instance");
 
-				strictEqual(orchestrator.checkServerSync(), false, "Sync check is not as expected");
-
 				done();
 
 			});
@@ -260,13 +232,7 @@ describe("Orchestrator", () => {
 			const orchestrator = new LocalOrchestrator();
 			orchestrator._Server = new Server();
 
-			return orchestrator.checkServer().then(() => {
-
-				strictEqual(orchestrator.checkServerSync(), true, "Sync check is not as expected");
-
-				return Promise.resolve();
-
-			});
+			return orchestrator.checkServer();
 
 		});
 

@@ -68,6 +68,75 @@ describe("Orchestrator / init & release", () => {
 
 		});
 
+		it("should init non enabled orchestrator", () => {
+
+			const orchestrator = new NonEnabledOrchestrator(GOOD_OPTIONS);
+
+			strictEqual(typeof orchestrator.enabled, "boolean", "Generated orchestrator enabled is not a boolean");
+			strictEqual(orchestrator.enabled, true, "Generated orchestrator enabled is not as expected");
+
+			return orchestrator.load().then(() => {
+				return orchestrator.init();
+			}).then(() => {
+
+				strictEqual(typeof orchestrator.enabled, "boolean", "Generated orchestrator enabled is not a boolean");
+				strictEqual(orchestrator.enabled, false, "Generated orchestrator enabled is not as expected");
+
+				strictEqual(typeof orchestrator.initialized, "boolean", "Generated orchestrator initialized is not a boolean");
+				strictEqual(orchestrator.initialized, false, "Generated orchestrator initialized is not as expected");
+
+				return Promise.resolve();
+
+			});
+
+		});
+
+		it("should test non-herited _initWorkSpace", () => {
+			return new Orchestrator()._initWorkSpace();
+		});
+
+		it("should test package file loader with wrong Descriptor title", (done) => {
+
+			const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
+
+				orchestrator._packageFile = join(__dirname, "utils", "Orchestrator", "package_descriptor_title.json");
+
+			orchestrator.load().then(() => {
+				return orchestrator.init();
+			}).then(() => {
+				done(new Error("There is no generated Error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof Error, true, "Generated errors is not an Error");
+
+				done();
+
+			});
+
+		});
+
+		it("should test package file loader with wrong Descriptor version", (done) => {
+
+			const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
+
+				orchestrator._packageFile = join(__dirname, "utils", "Orchestrator", "package_descriptor_version.json");
+
+			orchestrator.load().then(() => {
+				return orchestrator.init();
+			}).then(() => {
+				done(new Error("There is no generated Error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof Error, true, "Generated errors is not an Error");
+
+				done();
+
+			});
+
+		});
+
 		it("should init orchestrator", () => {
 
 			const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
@@ -78,7 +147,9 @@ describe("Orchestrator / init & release", () => {
 					.once("initialized", resolve)
 					.once("error", reject);
 
-				orchestrator.init().catch(reject);
+				orchestrator.load().then(() => {
+					return orchestrator.init();
+				}).catch(reject);
 
 			}).then(() => {
 
@@ -97,50 +168,23 @@ describe("Orchestrator / init & release", () => {
 
 		});
 
-		it("should init non enabled orchestrator", () => {
-
-			const orchestrator = new NonEnabledOrchestrator(GOOD_OPTIONS);
-
-			strictEqual(typeof orchestrator.enabled, "boolean", "Generated orchestrator enabled is not a boolean");
-			strictEqual(orchestrator.enabled, true, "Generated orchestrator enabled is not as expected");
-
-			return orchestrator.init().then(() => {
-
-				strictEqual(typeof orchestrator.enabled, "boolean", "Generated orchestrator enabled is not a boolean");
-				strictEqual(orchestrator.enabled, false, "Generated orchestrator enabled is not as expected");
-
-				strictEqual(typeof orchestrator.initialized, "boolean", "Generated orchestrator initialized is not a boolean");
-				strictEqual(orchestrator.initialized, false, "Generated orchestrator initialized is not as expected");
-
-				return Promise.resolve();
-
-			});
-
-		});
-
-		it("should test non-herited _initWorkSpace", () => {
-
-			return new Orchestrator(GOOD_OPTIONS).init();
-
-		});
-
 	});
 
 	describe("release", () => {
+
+		it("should test non-herited _releaseWorkSpace", () => {
+			return new Orchestrator().release();
+		});
 
 		it("should release orchestrator", () => {
 
 			const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
 
-			return orchestrator.init().then(() => {
+			return orchestrator.load().then(() => {
+				return orchestrator.init();
+			}).then(() => {
 				return orchestrator.release("test release");
 			});
-
-		});
-
-		it("should test non-herited _releaseWorkSpace", () => {
-
-			return new Orchestrator().release();
 
 		});
 

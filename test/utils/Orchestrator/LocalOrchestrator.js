@@ -22,10 +22,4 @@ module.exports = class LocalOrchestrator extends Orchestrator {
 
 	}
 
-	_releaseWorkSpace () {
-
-		return Promise.resolve();
-
-	}
-
 };

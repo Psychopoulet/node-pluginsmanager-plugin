@@ -1,0 +1,12 @@
+{
+  "name": "authors_and_author",
+  "version": "1.0.0",
+  "description": "A simple test",
+  "main": "lib/main.js",
+  "typings": "lib/index.d.ts",
+  "authors": [ "Sébastien VIDAL" ],
+  "author": "Fabien VIDAL",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {}
+}

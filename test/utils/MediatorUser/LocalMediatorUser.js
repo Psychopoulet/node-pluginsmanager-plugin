@@ -12,13 +12,15 @@
 
 module.exports = class LocalMediatorUser extends MediatorUser {
 
-	_initWorkSpace () {
+	init () {
 
 		return Promise.resolve();
 
 	}
 
-	_releaseWorkSpace () {
+	release () {
+
+		this.removeAllListeners();
 
 		return Promise.resolve();
 

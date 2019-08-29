@@ -52,7 +52,9 @@ describe("Orchestrator / events", () => {
 				orchestrator
 					.once("initialized", resolve);
 
-				orchestrator.init().catch(reject);
+				orchestrator.load().then(() => {
+					return orchestrator.init();
+				}).catch(reject);
 
 			});
 
@@ -70,7 +72,9 @@ describe("Orchestrator / events", () => {
 					})
 					.once("released", resolve);
 
-				orchestrator.init().then(() => {
+				orchestrator.load().then(() => {
+					return orchestrator.init();
+				}).then(() => {
 					return orchestrator.release();
 				}).then(() => {
 

@@ -1,7 +1,3 @@
-/*
-	eslint-disable no-sync
-*/
-
 "use strict";
 
 // deps
@@ -14,7 +10,7 @@
 	// locals
 
 		// plugin
-		const Bootable = require(join(__dirname, "..", "lib", "components", "Bootable.js"));
+		const DescriptorUser = require(join(__dirname, "..", "lib", "components", "DescriptorUser.js"));
 		const MediatorUser = require(join(__dirname, "..", "lib", "components", "MediatorUser.js"));
 		const { Mediator } = require(join(__dirname, "..", "lib", "main.js"));
 
@@ -32,7 +28,7 @@ describe("MediatorUser", () => {
 
 		strictEqual(typeof mediatorUser, "object", "Generated mediatorUser is not an object");
 		strictEqual(mediatorUser instanceof Events, true, "Generated mediatorUser is not a Events instance");
-		strictEqual(mediatorUser instanceof Bootable, true, "Generated mediatorUser is not a Bootable instance");
+		strictEqual(mediatorUser instanceof DescriptorUser, true, "Generated mediatorUser is not a DescriptorUser instance");
 		strictEqual(mediatorUser instanceof MediatorUser, true, "Generated mediatorUser is not a MediatorUser instance");
 		strictEqual(mediatorUser instanceof LocalMediatorUser, true, "Generated mediatorUser is not a LocalMediatorUser instance");
 
@@ -49,21 +45,8 @@ describe("MediatorUser", () => {
 
 	});
 
-	it("should test non-herited _initWorkSpace", (done) => {
-
-		const nonHerited = new MediatorUser();
-
-		nonHerited.init().then(() => {
-			done(new Error("There is no generated Error"));
-		}).catch((err) => {
-
-			strictEqual(typeof err, "object", "Generated Error is not as expected");
-			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
-
-			done();
-
-		});
-
+	it("should test non-herited _initWorkSpace", () => {
+		return new MediatorUser()._initWorkSpace();
 	});
 
 	it("should release mediatorUser without mediator", () => {
@@ -72,102 +55,15 @@ describe("MediatorUser", () => {
 
 	});
 
+	it("should test non-herited _releaseWorkSpace", () => {
+		return new MediatorUser()._releaseWorkSpace();
+	});
+
 	it("should release mediatorUser with mediator", () => {
 
 		return new LocalMediatorUser({
 			"mediator": new Mediator()
 		}).release("test release");
-
-	});
-
-	it("should test non-herited _releaseWorkSpace", (done) => {
-
-		const nonHerited = new MediatorUser();
-
-		nonHerited.release().then(() => {
-			done(new Error("There is no generated Error"));
-		}).catch((err) => {
-
-			strictEqual(typeof err, "object", "Generated Error is not as expected");
-			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
-
-			done();
-
-		});
-
-	});
-
-	describe("checkDescriptor", () => {
-
-		it("should check without descriptor", (done) => {
-
-			const mediatorUser = new LocalMediatorUser();
-
-				delete mediatorUser._Descriptor;
-
-			mediatorUser.checkDescriptor().then(() => {
-				done(new Error("There is no generated error"));
-			}).catch((err) => {
-
-				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
-				strictEqual(err instanceof ReferenceError, true, "Generated error is not a ReferenceError instance");
-
-				done();
-
-			});
-
-		});
-
-		it("should check with null descriptor", (done) => {
-
-			const mediatorUser = new LocalMediatorUser();
-
-				mediatorUser._Descriptor = null;
-
-			mediatorUser.checkDescriptor().then(() => {
-				done(new Error("There is no generated error"));
-			}).catch((err) => {
-
-				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
-				strictEqual(err instanceof ReferenceError, true, "Generated error is not a ReferenceError instance");
-
-				done();
-
-			});
-
-		});
-
-		it("should check with wrong descriptor (string)", (done) => {
-
-			const mediatorUser = new LocalMediatorUser();
-
-				mediatorUser._Descriptor = "test";
-
-			mediatorUser.checkDescriptor().then(() => {
-				done(new Error("There is no generated error"));
-			}).catch((err) => {
-
-				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
-				strictEqual(err instanceof TypeError, true, "Generated error is not a TypeError instance");
-
-				done();
-
-			});
-
-		});
-
-		it("should check with right descriptor", () => {
-
-			const mediatorUser = new LocalMediatorUser();
-
-				mediatorUser._Descriptor = {};
-
-			return mediatorUser.checkDescriptor();
-
-		});
 
 	});
 
