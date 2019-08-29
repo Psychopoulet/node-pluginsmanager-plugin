@@ -2,9 +2,16 @@
 
 [<= Main menu](https://github.com/Psychopoulet/node-pluginsmanager-plugin)
 
-* [Functional](./architecture.md#functional)
-* [Inheritence](./architecture.md#inheritence)
-* [Classes resume](./architecture.md#classes-resume)
+* [Functional](#functional)
+* [Inheritence](#inheritence)
+* [Classes resume](#classes-resume)
+  * [Descriptor](#descriptor)
+  * [EventEmitter](#eventemitter)
+  * [DescriptorUser](#descriptoruser)
+  * [Mediator](#mediator)
+  * [MediatorUser](#mediatoruser)
+  * [Server](#server)
+  * [Orchestrator](#orchestrator)
 
 ## Functional
 

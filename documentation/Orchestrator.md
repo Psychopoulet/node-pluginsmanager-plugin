@@ -3,6 +3,7 @@
 [<= Main menu](https://github.com/Psychopoulet/node-pluginsmanager-plugin)
 
 * [Resume](#resume)
+* [Interfaces](#interfaces)
 * [Class](#class-extends-mediatoruser)
 * [Sample](#sample)
 
