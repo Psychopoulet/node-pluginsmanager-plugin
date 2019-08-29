@@ -22,14 +22,14 @@ $ npm install node-pluginsmanager-plugin
 
 ## Architecture
 
-[=> See doc](https://github.com/Psychopoulet/node-pluginsmanager-plugin/documentation/architecture.md)
+[=> See doc](https://github.com/Psychopoulet/node-pluginsmanager-plugin/tree/master/documentation/architecture.md)
 
 ### Resume
 
-* [Descriptor](https://github.com/Psychopoulet/node-pluginsmanager-plugin/documentation/Descriptor.md) : OpenAPI (v3) description for Server and Mediator endpoints (this is NOT a js file, but a json OpenAPI file)
-* [Mediator](https://github.com/Psychopoulet/node-pluginsmanager-plugin/documentation/Mediator.md) : contains the plugin's logic (communication with targeted device/api/whatever)
-* [Server](https://github.com/Psychopoulet/node-pluginsmanager-plugin/documentation/Server.md) : expose plugin's roots to external use (API)
-* [Orchestrator](https://github.com/Psychopoulet/node-pluginsmanager-plugin/documentation/Orchestrator.md) : plugin's data (extracted from plugin's package.json) and Descriptor, Mediator & Server initializer
+* [Descriptor](https://github.com/Psychopoulet/node-pluginsmanager-plugin/tree/master/documentation/Descriptor.md) : OpenAPI (v3) description for Server and Mediator endpoints (this is NOT a js file, but a json OpenAPI file)
+* [Mediator](https://github.com/Psychopoulet/node-pluginsmanager-plugin/tree/master/documentation/Mediator.md) : contains the plugin's logic (communication with targeted device/api/whatever)
+* [Server](https://github.com/Psychopoulet/node-pluginsmanager-plugin/tree/master/documentation/Server.md) : expose plugin's roots to external use (API)
+* [Orchestrator](https://github.com/Psychopoulet/node-pluginsmanager-plugin/tree/master/documentation/Orchestrator.md) : plugin's data (extracted from plugin's package.json) and Descriptor, Mediator & Server initializer
 
 ## Tests
 

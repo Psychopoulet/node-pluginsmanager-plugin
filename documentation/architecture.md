@@ -1,6 +1,6 @@
 # Architecture
 
-[<= Main menu](https://github.com/Psychopoulet/node-pluginsmanager-plugin)
+[<= README](https://github.com/Psychopoulet/node-pluginsmanager-plugin/)
 
 * [Functional](#functional)
 * [Inheritence](#inheritence)
