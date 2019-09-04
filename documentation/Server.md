@@ -40,8 +40,8 @@ Expose the [Mediator](./Mediator.md)'s methods with the [Descriptor](./Descripto
 
 ### Callable urls
 
-  * "/[plugin-name]/descriptor" [GET] : return json [Descriptor](./Descriptor.md) (already and automaticly setted, no need for "operationId" data in the [Descriptor](./Descriptor.md) for this path)
-  * "/[plugin-name]/api/[path]" : expose API path
+  * "/[descriptor.info.title]/descriptor" [GET] : return json [Descriptor](./Descriptor.md) (already and automaticly setted in parent Server, no need for "operationId" data in the [Descriptor](./Descriptor.md) for this path)
+  * "/[descriptor.info.title]/api/[path]" : expose API path
 
 ### Used HTTP statusCode
 
@@ -51,6 +51,17 @@ Expose the [Mediator](./Mediator.md)'s methods with the [Descriptor](./Descripto
   * [400](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/400) (the request does not match with the [Descriptor](./Descriptor.md))
   * [500](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/500) (the [Mediator](./Mediator.md) generate an unknown error)
   * [501](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/501) (there is no "operationId" for this path in the [Descriptor](./Descriptor.md) or the [Mediator](./Mediator.md) does not have the "operationId" method given by the [Descriptor](./Descriptor.md))
+
+### WebSockets
+
+To send a push message to clients, you should follow this formate :
+```json
+client.send(JSON.stringify({
+  "plugin": [descriptor.info.title],
+  "command": [executed command], // ex : "created"
+  "data": [data] // only if mandatory
+});
+```
 
 ## Descriptor interactions
 
