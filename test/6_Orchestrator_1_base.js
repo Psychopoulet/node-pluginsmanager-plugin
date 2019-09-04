@@ -276,12 +276,12 @@ describe("Orchestrator", () => {
 
 		});
 
-		describe("mediatorFile", () => {
+		describe("descriptorFile", () => {
 
 			it("should check without file", (done) => {
 
 				new LocalOrchestrator({
-					"packageFile": join(__dirname, "..", "package.json")
+					"packageFile": GOOD_OPTIONS.packageFile
 				}).checkFiles().then(() => {
 					done(new Error("There is no generated error"));
 				}).catch((err) => {
@@ -298,7 +298,48 @@ describe("Orchestrator", () => {
 			it("should check with inexistant file", (done) => {
 
 				new LocalOrchestrator({
-					"packageFile": join(__dirname, "..", "package.json"),
+					"packageFile": GOOD_OPTIONS.packageFile,
+					"descriptorFile": "ezsorfnzlmefnzmùe"
+				}).checkFiles().then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not an object");
+					strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+
+					done();
+
+				});
+
+			});
+
+		});
+
+		describe("mediatorFile", () => {
+
+			it("should check without file", (done) => {
+
+				new LocalOrchestrator({
+					"packageFile": GOOD_OPTIONS.packageFile,
+					"descriptorFile": GOOD_OPTIONS.descriptorFile
+				}).checkFiles().then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not an object");
+					strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+
+					done();
+
+				});
+
+			});
+
+			it("should check with inexistant file", (done) => {
+
+				new LocalOrchestrator({
+					"packageFile": GOOD_OPTIONS.packageFile,
+					"descriptorFile": GOOD_OPTIONS.descriptorFile,
 					"mediatorFile": "ezsorfnzlmefnzmùe"
 				}).checkFiles().then(() => {
 					done(new Error("There is no generated error"));
@@ -320,8 +361,9 @@ describe("Orchestrator", () => {
 			it("should check without file", (done) => {
 
 				new LocalOrchestrator({
-					"packageFile": join(__dirname, "..", "package.json"),
-					"mediatorFile": join(__dirname, "..", "lib", "components", "Mediator.json")
+					"packageFile": GOOD_OPTIONS.packageFile,
+					"descriptorFile": GOOD_OPTIONS.descriptorFile,
+					"mediatorFile": GOOD_OPTIONS.mediatorFile
 				}).checkFiles().then(() => {
 					done(new Error("There is no generated error"));
 				}).catch((err) => {
@@ -338,8 +380,9 @@ describe("Orchestrator", () => {
 			it("should check with inexistant file", (done) => {
 
 				new LocalOrchestrator({
-					"packageFile": join(__dirname, "..", "package.json"),
-					"mediatorFile": join(__dirname, "..", "lib", "components", "Mediator.json"),
+					"packageFile": GOOD_OPTIONS.packageFile,
+					"descriptorFile": GOOD_OPTIONS.descriptorFile,
+					"mediatorFile": GOOD_OPTIONS.mediatorFile,
 					"serverFile": "ezsorfnzlmefnzmùe"
 				}).checkFiles().then(() => {
 					done(new Error("There is no generated error"));
@@ -356,9 +399,13 @@ describe("Orchestrator", () => {
 
 		});
 
-		it("should check with existant files", () => {
+		describe("execute", () => {
 
-			return new LocalOrchestrator(GOOD_OPTIONS).checkFiles();
+			it("should check with existant files", () => {
+
+				return new LocalOrchestrator(GOOD_OPTIONS).checkFiles();
+
+			});
 
 		});
 
