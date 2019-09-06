@@ -22,6 +22,8 @@ $ npm install node-pluginsmanager-plugin
 
 ## Architecture
 
+![Functional](https://github.com/Psychopoulet/node-pluginsmanager-plugin/tree/master/documentation/pictures/functional.jpg)
+
 [=> See doc](https://github.com/Psychopoulet/node-pluginsmanager-plugin/tree/master/documentation/architecture.md)
 
 ### Resume
