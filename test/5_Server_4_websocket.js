@@ -14,6 +14,7 @@
 
 		// utils
 		const socketRequestTest = require(join(__dirname, "utils", "socketRequestTest.js"));
+		const socketWaitPush = require(join(__dirname, "utils", "socketWaitPush.js"));
 		const HeritedServer = require(join(__dirname, "utils", "Server", "HeritedServer.js"));
 
 // tests
@@ -58,20 +59,29 @@ describe("Server / websockets", () => {
 
 	it("should test socket server", () => {
 
-		return Promise.resolve().then(() => {
+		// DebugStep
+		let pinged = false;
+		server.on("ping", () => {
+			pinged = true;
+		});
 
-			// DebugStep
-			let pinged = false;
-			server.on("ping", () => {
-				pinged = true;
-			});
+		return socketRequestTest("ping", "pong").then(() => {
 
-			return socketRequestTest("ping", "pong").then(() => {
+			strictEqual(pinged, true, "DebugStep is not as expected");
 
-				strictEqual(pinged, true, "DebugStep is not as expected");
+		});
 
-			});
+	});
 
+	it("should test push", () => {
+
+		const COMMAND = "created";
+		const DATA = {
+			"name": "test"
+		};
+
+		return socketWaitPush(COMMAND, DATA, () => {
+			server.push(COMMAND, DATA);
 		});
 
 	});

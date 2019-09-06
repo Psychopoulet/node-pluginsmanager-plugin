@@ -12,8 +12,8 @@
 
 	// locals
 
-		const httpRequestTest = require(join(__dirname, "utils", "httpRequestTest.js"));
 		const LocalOrchestrator = require(join(__dirname, "utils", "Orchestrator", "LocalOrchestrator.js"));
+		const tests = require(join(__dirname, "utils", "Server", "tests.js"));
 
 // consts
 
@@ -98,57 +98,6 @@ describe("Orchestrator / http", () => {
 
 	});
 
-	it("should test app middleware with default root", () => {
-
-		return httpRequestTest("/", "get", null, 404, "Not Found", {
-			"code": "404",
-			"message": "Unknown page"
-		});
-
-	});
-
-	it("should test app middleware with get request without operationId", () => {
-
-		return httpRequestTest("/node-pluginsmanager-plugin/api/missingoperationid", "get", null, 501, "Not Implemented", {
-			"code": "NOT_IMPLEMENTED",
-			"message": "Missing \"operationId\" in the Descriptor for this request"
-		});
-
-	});
-
-	it("should test app middleware with get request with not implemented operationId", () => {
-
-		return httpRequestTest("/node-pluginsmanager-plugin/api/unknownoperationid", "get", null, 501, "Not Implemented", {
-			"code": "NOT_IMPLEMENTED",
-			"message": "Unknown Mediator's \"operationId\" method for this request"
-		});
-
-	});
-
-	it("should test app middleware with valid root without returned data", () => {
-
-		return httpRequestTest("/node-pluginsmanager-plugin/api/empty", "get", null, 204, "No Content");
-
-	});
-
-	it("should test app middleware with valid root", () => {
-
-		return httpRequestTest("/node-pluginsmanager-plugin/api/valid", "get", null, 200, "OK", [ "test" ]);
-
-	});
-
-	it("should test app middleware with valid put request", () => {
-
-		return httpRequestTest("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", {
-			"body-param": "test"
-		}, 201, "Created");
-
-	});
-
-	it("should test descriptor request", () => {
-
-		return httpRequestTest("/node-pluginsmanager-plugin/descriptor", "get", null, 200, "OK", orchestrator._Descriptor);
-
-	});
+	tests(orchestrator);
 
 });

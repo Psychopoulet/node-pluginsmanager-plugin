@@ -11,6 +11,8 @@
 
 	// locals
 
+		// utils
+		const socketWaitPush = require(join(__dirname, "utils", "socketWaitPush.js"));
 		const socketRequestTest = require(join(__dirname, "utils", "socketRequestTest.js"));
 		const LocalOrchestrator = require(join(__dirname, "utils", "Orchestrator", "LocalOrchestrator.js"));
 
@@ -27,11 +29,11 @@
 
 describe("Orchestrator / websockets", () => {
 
-	let runningServer = null;
-
 	let port = 80;
 
 	describe("init before server", () => {
+
+		let runningServer = null;
 
 		const orchestrator = new LocalOrchestrator(HERITED_OPTIONS);
 
@@ -84,6 +86,8 @@ describe("Orchestrator / websockets", () => {
 
 	describe("init after server", () => {
 
+		let runningServer = null;
+
 		const orchestrator = new LocalOrchestrator(HERITED_OPTIONS);
 
 		before(() => {
@@ -124,6 +128,19 @@ describe("Orchestrator / websockets", () => {
 		it("should test socket server", () => {
 
 			return socketRequestTest("ping", "pong");
+
+		});
+
+		it("should test push", () => {
+
+			const COMMAND = "created";
+			const DATA = {
+				"name": "test"
+			};
+
+			return socketWaitPush(COMMAND, DATA, () => {
+				orchestrator._Server.push(COMMAND, DATA);
+			});
 
 		});
 
