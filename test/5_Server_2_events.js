@@ -8,11 +8,8 @@
 	// locals
 
 		// plugin
-		const { Mediator } = require(join(__dirname, "..", "lib", "main.js"));
+		const { Mediator, Server } = require(join(__dirname, "..", "lib", "main.js"));
 		const readJSONFile = require(join(__dirname, "..", "lib", "utils", "readJSONFile.js"));
-
-		// utils
-		const LocalServer = require(join(__dirname, "utils", "Server", "LocalServer.js"));
 
 // tests
 
@@ -31,7 +28,7 @@ describe("Server / events", () => {
 
 	it("should test events before init", () => {
 
-		const server = new LocalServer({
+		const server = new Server({
 			"descriptor": descriptor,
 			"mediator": mediator
 		});
@@ -48,7 +45,7 @@ describe("Server / events", () => {
 
 	it("should test events after init", () => {
 
-		const server = new LocalServer({
+		const server = new Server({
 			"descriptor": descriptor,
 			"mediator": mediator
 		});
@@ -68,7 +65,7 @@ describe("Server / events", () => {
 
 	it("should test events after release", () => {
 
-		const server = new LocalServer({
+		const server = new Server({
 			"descriptor": descriptor,
 			"mediator": mediator
 		});

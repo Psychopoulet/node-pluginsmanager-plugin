@@ -81,10 +81,15 @@ declare module "node-pluginsmanager-plugin" {
 
 	export class Server extends MediatorUser {
 
+		// attributes
+
+			protected _socketServer: WebSocketServer | null;
+
 		// methods
 
 			public appMiddleware(req: Request, res: Response, next: Function): void;
 			public socketMiddleware(server: WebSocketServer): void;
+			public push(command: string, data?: any): this;
 
 	}
 

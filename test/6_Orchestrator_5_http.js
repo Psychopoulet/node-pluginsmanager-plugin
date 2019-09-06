@@ -21,7 +21,7 @@
 		"packageFile": join(__dirname, "..", "package.json"),
 		"descriptorFile": join(__dirname, "utils", "Descriptor.json"),
 		"mediatorFile": join(__dirname, "utils", "Mediator", "LocalMediator.js"),
-		"serverFile": join(__dirname, "utils", "Server", "LocalServer.js")
+		"serverFile": join(__dirname, "..", "lib", "components", "Server.js")
 	};
 
 	const HERITED_OPTIONS = {

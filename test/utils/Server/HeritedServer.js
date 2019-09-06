@@ -6,19 +6,22 @@
 	const { join } = require("path");
 
 	// locals
-	const readJSONFile = require(join(__dirname, "..", "..", "..", "lib", "utils", "readJSONFile.js"));
-	const HeritedMediator = require(join(__dirname, "..", "Mediator", "HeritedMediator.js"));
-	const LocalServer = require(join(__dirname, "LocalServer.js"));
+
+		// plugin
+		const { Server } = require(join(__dirname, "..", "..", "..", "lib", "main.js"));
+		const readJSONFile = require(join(__dirname, "..", "..", "..", "lib", "utils", "readJSONFile.js"));
+
+		// utils
+		const HeritedMediator = require(join(__dirname, "..", "Mediator", "HeritedMediator.js"));
 
 // module
 
-module.exports = class HeritedServer extends LocalServer {
+module.exports = class HeritedServer extends Server {
 
 	constructor (opt) {
 
 		super(opt);
 
-		this._socketServer = null;
 		this._onConnection = null;
 
 	}
@@ -47,17 +50,14 @@ module.exports = class HeritedServer extends LocalServer {
 
 			}
 
-			this._socketServer = null;
-
 		}) : Promise.resolve();
 
 	}
 
 	socketMiddleware (server) {
 
-		super.socketMiddleware(server); // only here for eslint
+		super.socketMiddleware(server);
 
-		this._socketServer = server;
 		this._onConnection = (socket) => {
 
 			(0, console).log("server", "socket", "connection");

@@ -20,6 +20,12 @@ Expose the [Mediator](./Mediator.md)'s methods with the [Descriptor](./Descripto
 
 ## Class (extends [MediatorUser](./MediatorUser.md))
 
+### Attributes
+
+#### protected
+
+  * ``` protected _socketServer: WebSocketServer | null; ``` middleware for [ws server](https://www.npmjs.com/package/ws)
+
 ### Methods
 
 #### public
@@ -28,6 +34,7 @@ Expose the [Mediator](./Mediator.md)'s methods with the [Descriptor](./Descripto
 
   * ``` public appMiddleware(req: Request, res: Response, next: Function): void; ``` middleware for express (& others) to add routes
   * ``` public socketMiddleware(server: WebSocketServer): void; ``` middleware for socket to add bilateral push events, should be re-writted if used
+  * ``` public push(command: string, data?: any): this; ``` if ws server setted, push data to all clients
 
 ## Conventions
 
@@ -46,7 +53,7 @@ Expose the [Mediator](./Mediator.md)'s methods with the [Descriptor](./Descripto
 ### Used HTTP statusCode
 
   * [200](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/200) (everything is fine with a content)
-  * [201](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/201) (everything is fine for POST request, with and/or without content)
+  * [201](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/201) (everything is fine for PUT request, with and/or without content)
   * [204](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/204) (everything is fine without any content)
   * [400](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/400) (the request does not match with the [Descriptor](./Descriptor.md))
   * [500](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/500) (the [Mediator](./Mediator.md) generate an unknown error)
@@ -61,6 +68,12 @@ client.send(JSON.stringify({
   "command": [executed command], // ex : "created"
   "data": [data] // only if mandatory
 });
+```
+
+Or the method "push"
+```json
+server.push([executed command]);
+server.push([executed command], [data]);
 ```
 
 ## Descriptor interactions
