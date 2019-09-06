@@ -28,15 +28,65 @@
 describe("Orchestrator / websockets", () => {
 
 	let runningServer = null;
-	const orchestrator = new LocalOrchestrator(HERITED_OPTIONS);
 
-	before(() => {
+	let port = 80;
 
-		return orchestrator.load().then(() => {
-			return orchestrator.init();
-		}).then(() => {
+	describe("init before server", () => {
 
-			const port = parseInt(parse(orchestrator._Descriptor.servers[1].url).port, 10);
+		const orchestrator = new LocalOrchestrator(HERITED_OPTIONS);
+
+		before(() => {
+
+			return orchestrator.load().then(() => {
+				return orchestrator.init();
+			}).then(() => {
+
+				port = parseInt(parse(orchestrator._Descriptor.servers[1].url).port, 10);
+
+				runningServer = new WebSocketServer({
+					"port": port
+				});
+
+				orchestrator.socketMiddleware(runningServer);
+
+			});
+
+		});
+
+		after(() => {
+
+			return Promise.resolve().then(() => {
+
+				return runningServer ? new Promise((resolve) => {
+
+					runningServer.close(() => {
+						runningServer = null;
+						resolve();
+					});
+
+				}) : Promise.resolve();
+
+			}).then(() => {
+				return orchestrator.release();
+			}).then(() => {
+				return orchestrator.destroy();
+			});
+
+		});
+
+		it("should test socket server", () => {
+
+			return socketRequestTest("ping", "pong");
+
+		});
+
+	});
+
+	describe("init after server", () => {
+
+		const orchestrator = new LocalOrchestrator(HERITED_OPTIONS);
+
+		before(() => {
 
 			runningServer = new WebSocketServer({
 				"port": port
@@ -44,32 +94,38 @@ describe("Orchestrator / websockets", () => {
 
 			orchestrator.socketMiddleware(runningServer);
 
-		});
-
-	});
-
-	after(() => {
-
-		return orchestrator.release().then(() => {
-			return orchestrator.destroy();
-		}).then(() => {
-
-			return runningServer ? new Promise((resolve) => {
-
-				runningServer.close(() => {
-					runningServer = null;
-					resolve();
-				});
-
-			}) : Promise.resolve();
+			return orchestrator.load().then(() => {
+				return orchestrator.init();
+			});
 
 		});
 
-	});
+		after(() => {
 
-	it("should test socket server", () => {
+			return Promise.resolve().then(() => {
 
-		return socketRequestTest("ping", "pong");
+				return runningServer ? new Promise((resolve) => {
+
+					runningServer.close(() => {
+						runningServer = null;
+						resolve();
+					});
+
+				}) : Promise.resolve();
+
+			}).then(() => {
+				return orchestrator.release();
+			}).then(() => {
+				return orchestrator.destroy();
+			});
+
+		});
+
+		it("should test socket server", () => {
+
+			return socketRequestTest("ping", "pong");
+
+		});
 
 	});
 
