@@ -4,7 +4,7 @@
 
 	// natives
 	const WebSocket = require("ws");
-	const { strictEqual } = require("assert");
+	const { deepStrictEqual, strictEqual } = require("assert");
 
 // consts
 
@@ -13,7 +13,7 @@
 
 // module
 
-module.exports = function socketRequestTest (requestName, returnName) {
+module.exports = function socketWaitPush (commandPush, dataPush, requester) {
 
 	const client = new WebSocket(MAIN_URL);
 
@@ -31,9 +31,18 @@ module.exports = function socketRequestTest (requestName, returnName) {
 
 				try {
 
-					const req = JSON.parse(message);
+					const { plugin, command } = JSON.parse(message);
 
-					strictEqual(req.name, returnName, "The name is not " + returnName);
+					strictEqual(plugin, "node-pluginsmanager-plugin", "The name is not node-pluginsmanager-plugin");
+					strictEqual(command, commandPush, "The command is not " + commandPush);
+
+					if (dataPush) {
+
+						const { data } = JSON.parse(message);
+
+						deepStrictEqual(data, dataPush, "The data is not " + JSON.stringify(dataPush));
+
+					}
 
 					resolve();
 
@@ -44,13 +53,11 @@ module.exports = function socketRequestTest (requestName, returnName) {
 
 			});
 
-			client.send(JSON.stringify({
-				"name": requestName
-			}));
+			requester();
 
 		});
 
-	// close
+	// send & wait for response
 	}).then(() => {
 
 		return new Promise((resolve) => {

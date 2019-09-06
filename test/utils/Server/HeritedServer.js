@@ -60,11 +60,7 @@ module.exports = class HeritedServer extends Server {
 
 		this._onConnection = (socket) => {
 
-			(0, console).log("server", "socket", "connection");
-
 			socket.on("message", (payload) => {
-
-				(0, console).log("server", "socket", "message", payload);
 
 				const req = JSON.parse(payload);
 
@@ -79,8 +75,6 @@ module.exports = class HeritedServer extends Server {
 
 				}
 
-			}).on("close", () => {
-				(0, console).log("server", "socket", "close");
 			});
 
 		};
