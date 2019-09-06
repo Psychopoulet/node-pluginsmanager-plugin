@@ -25,7 +25,7 @@ module.exports = function httpRequestTest (urlpath, method, params, returnCode, 
 
 		return new Promise((resolve, reject) => {
 
-			const bodyParams = params ? JSON.stringify(params) : "";
+			const bodyParams = "undefined" !== typeof params ? JSON.stringify(params) : "";
 
 			const opts = {
 				"protocol": url.protocol,

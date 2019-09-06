@@ -15,9 +15,6 @@
 		const { Mediator, Server } = require(join(__dirname, "..", "lib", "main.js"));
 		const readJSONFile = require(join(__dirname, "..", "lib", "utils", "readJSONFile.js"));
 
-		// utils
-		const LocalServer = require(join(__dirname, "utils", "Server", "LocalServer.js"));
-
 // tests
 
 describe("Server", () => {
@@ -34,20 +31,19 @@ describe("Server", () => {
 
 	it("should test constructor", () => {
 
-		const server = new LocalServer();
+		const server = new Server();
 
 		strictEqual(typeof server, "object", "Generated server is not an object");
 		strictEqual(server instanceof Events, true, "Generated server is not a Events instance");
 		strictEqual(server instanceof DescriptorUser, true, "Generated server is not a DescriptorUser instance");
 		strictEqual(server instanceof MediatorUser, true, "Generated server is not a MediatorUser instance");
 		strictEqual(server instanceof Server, true, "Generated server is not a Server instance");
-		strictEqual(server instanceof LocalServer, true, "Generated server is not a LocalServer instance");
 
 	});
 
 	it("should init server without Descriptor or Mediator", (done) => {
 
-		const server = new LocalServer();
+		const server = new Server();
 
 		strictEqual(typeof server._Descriptor, "object", "Generated server _Descriptor is not an object");
 		strictEqual(server._Descriptor, null, "Generated server _Descriptor is not null");
@@ -69,7 +65,7 @@ describe("Server", () => {
 
 	it("should init server without Mediator with Descriptor", (done) => {
 
-		const server = new LocalServer({
+		const server = new Server({
 			"descriptor": descriptor
 		});
 
@@ -94,7 +90,7 @@ describe("Server", () => {
 	it("should init server without Descriptor with Mediator", (done) => {
 
 		const mediator = new Mediator();
-		const server = new LocalServer({
+		const server = new Server({
 			"mediator": mediator
 		});
 
@@ -125,7 +121,7 @@ describe("Server", () => {
 	it("should init server with Descriptor and Mediator", () => {
 
 		const mediator = new Mediator();
-		const server = new LocalServer({
+		const server = new Server({
 			"descriptor": descriptor,
 			"mediator": mediator
 		});
@@ -146,7 +142,7 @@ describe("Server", () => {
 	});
 
 	it("should release server", () => {
-		return new LocalServer().release("test release");
+		return new Server().release("test release");
 	});
 
 });
