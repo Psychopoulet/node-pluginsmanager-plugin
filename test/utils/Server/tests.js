@@ -4,71 +4,15 @@
 
 	// natives
 	const { join } = require("path");
-	const { parse } = require("url");
-
-	// externals
-	const express = require("express");
 
 	// locals
 
 		// utils
-		const httpRequestTest = require(join(__dirname, "utils", "httpRequestTest.js"));
-		const HeritedServer = require(join(__dirname, "utils", "Server", "HeritedServer.js"));
+		const httpRequestTest = require(join(__dirname, "..", "..", "utils", "httpRequestTest.js"));
 
-// tests
+// module
 
-describe("Server / app", () => {
-
-	let runningServer = null;
-	const server = new HeritedServer();
-
-	before(() => {
-
-		return server.init().then(() => {
-
-			const port = parseInt(parse(server._Descriptor.servers[0].url).port, 10);
-
-			return new Promise((resolve) => {
-
-				runningServer = express().use(
-					"/node-pluginsmanager-plugin", express.static(join(__dirname, "utils", "public"))
-				).use((req, res, next) => {
-					server.appMiddleware(req, res, next);
-				}).use((req, res) => {
-
-					res.writeHead(404, {
-						"Content-Type": "application/json; charset=utf-8"
-					});
-
-					res.end(JSON.stringify({
-						"code": "404",
-						"message": "Unknown page"
-					}));
-
-				}).listen(port, resolve);
-
-			});
-
-		});
-
-	});
-
-	after(() => {
-
-		return server.release().then(() => {
-
-			return runningServer ? new Promise((resolve) => {
-
-				runningServer.close(() => {
-					runningServer = null;
-					resolve();
-				});
-
-			}) : Promise.resolve();
-
-		});
-
-	});
+module.exports = function test (server) {
 
 	describe("check wrong paths", () => {
 
@@ -164,17 +108,11 @@ describe("Server / app", () => {
 
 	describe("check valid requests", () => {
 
-		it("should test request with valid query request", () => {
+		it("should test request with valid request with query parameters", () => {
 
 			return httpRequestTest("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", {
 				"body-param": "test"
 			}, 201, "Created");
-
-		});
-
-		it("should test request with valid path request", () => {
-
-			return httpRequestTest("/node-pluginsmanager-plugin/api/url/ok", "get", 200, "OK");
 
 		});
 
@@ -192,4 +130,4 @@ describe("Server / app", () => {
 
 	});
 
-});
+};
