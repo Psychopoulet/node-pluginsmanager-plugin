@@ -255,6 +255,35 @@ describe("DescriptorUser / checkDescriptor", () => {
 
 			});
 
+			it("should check with path which contains space", (done) => {
+
+				new LocalDescriptorUser({
+					"descriptor": {
+						"info": {
+							"title": "test",
+							"version": "1.0.0"
+						},
+						"paths": {
+							"/acaozecnzoejcn/ test/s": {
+								"get": {
+									"operationId": "test"
+								}
+							}
+						}
+					}
+				}).checkDescriptor().then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not an object");
+					strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+
+					done();
+
+				});
+
+			});
+
 			it("should check with path which not begin with plugin name", (done) => {
 
 				new LocalDescriptorUser({
@@ -362,11 +391,46 @@ describe("DescriptorUser / checkDescriptor", () => {
 
 			});
 
+			it("should check inexistant defined path parameter", (done) => {
+
+				new LocalDescriptorUser({
+					"descriptor": {
+						"info": {
+							"title": "test",
+							"version": "1.0.0"
+						},
+						"paths": {
+							"/test": {
+								"get": {
+									"operationId": "test",
+									"parameters": [
+										{
+											"name": "test",
+											"type": "path"
+										}
+									]
+								}
+							}
+						}
+					}
+				}).checkDescriptor().then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not an object");
+					strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+
+					done();
+
+				});
+
+			});
+
 		});
 
 		describe("valid", () => {
 
-			it("should check with valid descriptor", () => {
+			it("should check with valid basic descriptor", () => {
 
 				return new LocalDescriptorUser({
 					"descriptor": {
@@ -378,6 +442,32 @@ describe("DescriptorUser / checkDescriptor", () => {
 							"/test": {
 								"get": {
 									"operationId": "test"
+								}
+							}
+						}
+					}
+				}).checkDescriptor();
+
+			});
+
+			it("should check with defined path parameter", () => {
+
+				return new LocalDescriptorUser({
+					"descriptor": {
+						"info": {
+							"title": "test",
+							"version": "1.0.0"
+						},
+						"paths": {
+							"/test/{test}": {
+								"get": {
+									"operationId": "test",
+									"parameters": [
+										{
+											"name": "test",
+											"type": "path"
+										}
+									]
 								}
 							}
 						}
