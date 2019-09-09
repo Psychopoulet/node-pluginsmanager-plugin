@@ -12,9 +12,8 @@
 
 // module
 
-module.exports = function test () {
+module.exports = function test (server) {
 
-	/*
 	describe("check wrong paths", () => {
 
 		it("should test request with default root", () => {
@@ -119,31 +118,20 @@ module.exports = function test () {
 		});
 
 	});
-	*/
 
 	describe("check path parameters", () => {
 
-		it("should test request with missing path parameter", () => {
+		it("should test request with empty path parameter", () => {
 
 			return httpRequestTest("/node-pluginsmanager-plugin/api/valid/url/", "get", null, 400, "Bad Request", {
-				"code": "MISSING_PARAMETER",
-				"message": "Missing body params"
-			});
-
-		});
-
-		it("should test request with wrong path parameter", () => {
-
-			return httpRequestTest("/node-pluginsmanager-plugin/api/valid/url/1", "get", null, 400, "Bad Request", {
-				"code": "WRONG_TYPE_PARAMETER",
-				"message": "body-param param is not a string"
+				"code": "RANGE_OR_EMPTY_PARAMETER",
+				"message": "url-param param is empty"
 			});
 
 		});
 
 	});
 
-	/*
 	describe("check valid requests", () => {
 
 		it("should test request with valid request with query parameters", () => {
@@ -167,6 +155,5 @@ module.exports = function test () {
 		});
 
 	});
-	*/
 
 };
