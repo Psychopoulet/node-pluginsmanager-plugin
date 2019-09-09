@@ -316,6 +316,47 @@ describe("DescriptorUser / checkDescriptor", () => {
 
 			});
 
+			it("should check with multiple parameters into descriptor", (done) => {
+
+				const bootable = new LocalDescriptorUser();
+
+					bootable._Descriptor = {
+						"info": {
+							"title": "test",
+							"version": "1.0.0"
+						},
+						"paths": {
+							"/test": {
+								"get": {
+									"operationId": "test",
+									"parameters": [
+										{
+											"name": "test",
+											"type": "path"
+										},
+										{
+											"name": "test",
+											"type": "url"
+										}
+									]
+								}
+							}
+						}
+					};
+
+				bootable.checkDescriptor().then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not an object");
+					strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+
+					done();
+
+				});
+
+			});
+
 		});
 
 		describe("valid", () => {

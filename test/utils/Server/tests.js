@@ -12,8 +12,9 @@
 
 // module
 
-module.exports = function test (server) {
+module.exports = function test () {
 
+	/*
 	describe("check wrong paths", () => {
 
 		it("should test request with default root", () => {
@@ -118,6 +119,7 @@ module.exports = function test (server) {
 		});
 
 	});
+	*/
 
 	describe("check path parameters", () => {
 
@@ -141,6 +143,7 @@ module.exports = function test (server) {
 
 	});
 
+	/*
 	describe("check valid requests", () => {
 
 		it("should test request with valid request with query parameters", () => {
@@ -164,5 +167,6 @@ module.exports = function test (server) {
 		});
 
 	});
+	*/
 
 };
