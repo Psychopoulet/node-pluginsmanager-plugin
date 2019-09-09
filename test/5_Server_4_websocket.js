@@ -57,6 +57,19 @@ describe("Server / websockets", () => {
 
 	});
 
+	it("should test socket server without server", (done) => {
+
+		new HeritedServer().on("error", (err) => {
+
+			strictEqual(typeof err, "object", "Generated Error is not as expected");
+			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+
+			done();
+
+		}).push("ping", "pong");
+
+	});
+
 	it("should test socket server", () => {
 
 		// DebugStep
