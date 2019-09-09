@@ -36,11 +36,9 @@ describe("DescriptorUser / checkDescriptor", () => {
 
 	it("should check with null descriptor", (done) => {
 
-		const bootable = new LocalDescriptorUser();
-
-			bootable._Descriptor = null;
-
-		bootable.checkDescriptor().then(() => {
+		new LocalDescriptorUser({
+			"descriptor": null
+		}).checkDescriptor().then(() => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
@@ -55,11 +53,9 @@ describe("DescriptorUser / checkDescriptor", () => {
 
 	it("should check with wrong descriptor (string)", (done) => {
 
-		const bootable = new LocalDescriptorUser();
-
-			bootable._Descriptor = "test";
-
-		bootable.checkDescriptor().then(() => {
+		new LocalDescriptorUser({
+			"descriptor": "test"
+		}).checkDescriptor().then(() => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
@@ -76,11 +72,9 @@ describe("DescriptorUser / checkDescriptor", () => {
 
 		it("should check without info", (done) => {
 
-			const bootable = new LocalDescriptorUser();
-
-				bootable._Descriptor = {};
-
-			bootable.checkDescriptor().then(() => {
+			new LocalDescriptorUser({
+				"descriptor": {}
+			}).checkDescriptor().then(() => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
@@ -95,13 +89,11 @@ describe("DescriptorUser / checkDescriptor", () => {
 
 		it("should check with wrong info", (done) => {
 
-			const bootable = new LocalDescriptorUser();
-
-				bootable._Descriptor = {
+			new LocalDescriptorUser({
+				"descriptor": {
 					"info": false
-				};
-
-			bootable.checkDescriptor().then(() => {
+				}
+			}).checkDescriptor().then(() => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
@@ -118,13 +110,11 @@ describe("DescriptorUser / checkDescriptor", () => {
 
 			it("should check without title", (done) => {
 
-				const bootable = new LocalDescriptorUser();
-
-					bootable._Descriptor = {
+				new LocalDescriptorUser({
+					"descriptor": {
 						"info": {}
-					};
-
-				bootable.checkDescriptor().then(() => {
+					}
+				}).checkDescriptor().then(() => {
 					done(new Error("There is no generated error"));
 				}).catch((err) => {
 
@@ -139,15 +129,13 @@ describe("DescriptorUser / checkDescriptor", () => {
 
 			it("should check with wrong title", (done) => {
 
-				const bootable = new LocalDescriptorUser();
-
-					bootable._Descriptor = {
+				new LocalDescriptorUser({
+					"descriptor": {
 						"info": {
 							"title": false
 						}
-					};
-
-				bootable.checkDescriptor().then(() => {
+					}
+				}).checkDescriptor().then(() => {
 					done(new Error("There is no generated error"));
 				}).catch((err) => {
 
@@ -162,15 +150,13 @@ describe("DescriptorUser / checkDescriptor", () => {
 
 			it("should check with empty title", (done) => {
 
-				const bootable = new LocalDescriptorUser();
-
-					bootable._Descriptor = {
+				new LocalDescriptorUser({
+					"descriptor": {
 						"info": {
 							"title": ""
 						}
-					};
-
-				bootable.checkDescriptor().then(() => {
+					}
+				}).checkDescriptor().then(() => {
 					done(new Error("There is no generated error"));
 				}).catch((err) => {
 
@@ -189,15 +175,13 @@ describe("DescriptorUser / checkDescriptor", () => {
 
 			it("should check without version", (done) => {
 
-				const bootable = new LocalDescriptorUser();
-
-					bootable._Descriptor = {
+				new LocalDescriptorUser({
+					"descriptor": {
 						"info": {
 							"title": "test"
 						}
-					};
-
-				bootable.checkDescriptor().then(() => {
+					}
+				}).checkDescriptor().then(() => {
 					done(new Error("There is no generated error"));
 				}).catch((err) => {
 
@@ -212,16 +196,14 @@ describe("DescriptorUser / checkDescriptor", () => {
 
 			it("should check with wrong version", (done) => {
 
-				const bootable = new LocalDescriptorUser();
-
-					bootable._Descriptor = {
+				new LocalDescriptorUser({
+					"descriptor": {
 						"info": {
 							"title": "test",
 							"version": false
 						}
-					};
-
-				bootable.checkDescriptor().then(() => {
+					}
+				}).checkDescriptor().then(() => {
 					done(new Error("There is no generated error"));
 				}).catch((err) => {
 
@@ -236,16 +218,14 @@ describe("DescriptorUser / checkDescriptor", () => {
 
 			it("should check with empty version", (done) => {
 
-				const bootable = new LocalDescriptorUser();
-
-					bootable._Descriptor = {
+				new LocalDescriptorUser({
+					"descriptor": {
 						"info": {
 							"title": "test",
 							"version": ""
 						}
-					};
-
-				bootable.checkDescriptor().then(() => {
+					}
+				}).checkDescriptor().then(() => {
 					done(new Error("There is no generated error"));
 				}).catch((err) => {
 
@@ -275,35 +255,62 @@ describe("DescriptorUser / checkDescriptor", () => {
 
 			});
 
-			it("should check with multiple operationIds into descriptor", (done) => {
+			it("should check with path which not begin with plugin name", (done) => {
 
-				const bootable = new LocalDescriptorUser();
-
-					bootable._Descriptor = {
+				new LocalDescriptorUser({
+					"descriptor": {
 						"info": {
 							"title": "test",
 							"version": "1.0.0"
 						},
 						"paths": {
-							"/test": {
-								"get": {
-									"operationId": "test"
-								}
-							},
-							"/test2": {
-								"get": {
-									"operationId": "test"
-								}
-							},
-							"/test3": {
+							"/acaozecnzoejcn": {
 								"get": {
 									"operationId": "test"
 								}
 							}
 						}
-					};
+					}
+				}).checkDescriptor().then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
 
-				bootable.checkDescriptor().then(() => {
+					strictEqual(typeof err, "object", "Generated error is not an object");
+					strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+
+					done();
+
+				});
+
+			});
+
+			it("should check with multiple operationIds into descriptor", (done) => {
+
+				new LocalDescriptorUser({
+					"descriptor": {
+						"info": {
+							"title": "test",
+							"version": "1.0.0"
+						},
+						"paths": {
+							"/test/test1": {
+								"get": {
+									"operationId": "test"
+								}
+							},
+							"/test/test2": {
+								"get": {
+									"operationId": "test"
+								}
+							},
+							"/test/test3": {
+								"get": {
+									"operationId": "test"
+								}
+							}
+						}
+					}
+				}).checkDescriptor().then(() => {
 					done(new Error("There is no generated error"));
 				}).catch((err) => {
 
@@ -318,9 +325,8 @@ describe("DescriptorUser / checkDescriptor", () => {
 
 			it("should check with multiple parameters into descriptor", (done) => {
 
-				const bootable = new LocalDescriptorUser();
-
-					bootable._Descriptor = {
+				new LocalDescriptorUser({
+					"descriptor": {
 						"info": {
 							"title": "test",
 							"version": "1.0.0"
@@ -342,9 +348,8 @@ describe("DescriptorUser / checkDescriptor", () => {
 								}
 							}
 						}
-					};
-
-				bootable.checkDescriptor().then(() => {
+					}
+				}).checkDescriptor().then(() => {
 					done(new Error("There is no generated error"));
 				}).catch((err) => {
 
