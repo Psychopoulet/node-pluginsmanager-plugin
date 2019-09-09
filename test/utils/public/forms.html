@@ -59,7 +59,24 @@
 					"body": JSON.stringify({
 						"body-param": jQuery("#body-param").val()
 					})
-				});
+				}).then((res) => {
+
+					if (201 !== res.status) {
+						return Promise.reject(new Error("The result status \"" + res.status + "\" is not 201"));
+					}
+					else {
+
+						return res.text().then((content) => {
+							return "" !== content.trim() ? res.json() : Promise.resolve();
+						});
+
+					}
+
+				}).then((data) => {
+
+					console.log(data);
+
+				}).catch(console.error);
 
 			});
 

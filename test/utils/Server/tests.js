@@ -62,9 +62,31 @@ module.exports = function test (server) {
 
 	});
 
-	describe("check parameters", () => {
+	describe("check url parameters", () => {
 
-		it("should test request with missing parameter", () => {
+		it("should test request with missing url parameter", () => {
+
+			return httpRequestTest("/node-pluginsmanager-plugin/api/create", "put", null, 400, "Bad Request", {
+				"code": "MISSING_PARAMETER",
+				"message": "Missing url-param param"
+			});
+
+		});
+
+		it("should test request with empty url parameter", () => {
+
+			return httpRequestTest("/node-pluginsmanager-plugin/api/create?url-param=", "put", null, 400, "Bad Request", {
+				"code": "RANGE_OR_EMPTY_PARAMETER",
+				"message": "url-param param is empty"
+			});
+
+		});
+
+	});
+
+	describe("check body parameters", () => {
+
+		it("should test request with missing body parameter", () => {
 
 			return httpRequestTest("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", null, 400, "Bad Request", {
 				"code": "MISSING_PARAMETER",
@@ -73,16 +95,7 @@ module.exports = function test (server) {
 
 		});
 
-		it("should test request with missing parameter", () => {
-
-			return httpRequestTest("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", null, 400, "Bad Request", {
-				"code": "MISSING_PARAMETER",
-				"message": "Missing body params"
-			});
-
-		});
-
-		it("should test request with wrong parameter", () => {
+		it("should test request with wrong body parameter", () => {
 
 			return httpRequestTest("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", {
 				"body-param": false
@@ -93,13 +106,35 @@ module.exports = function test (server) {
 
 		});
 
-		it("should test request with empty parameter", () => {
+		it("should test request with empty body parameter", () => {
 
 			return httpRequestTest("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", {
 				"body-param": ""
 			}, 400, "Bad Request", {
 				"code": "RANGE_OR_EMPTY_PARAMETER",
 				"message": "body-param param is empty"
+			});
+
+		});
+
+	});
+
+	describe("check path parameters", () => {
+
+		it("should test request with missing path parameter", () => {
+
+			return httpRequestTest("/node-pluginsmanager-plugin/api/valid/url/", "get", null, 400, "Bad Request", {
+				"code": "MISSING_PARAMETER",
+				"message": "Missing body params"
+			});
+
+		});
+
+		it("should test request with wrong path parameter", () => {
+
+			return httpRequestTest("/node-pluginsmanager-plugin/api/valid/url/1", "get", null, 400, "Bad Request", {
+				"code": "WRONG_TYPE_PARAMETER",
+				"message": "body-param param is not a string"
 			});
 
 		});
