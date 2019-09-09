@@ -23,6 +23,10 @@ It's loaded and shared by the [Orchestrator](./Orchestrator.md) and used by
 
 ### Server
 
+#### Conventions
+
+> See [Server conventions](./Server.md#conventions)
+
 #### Paths
 
 ![Descriptor interaction](./pictures/Server_DescriptorInteraction_1.jpg)

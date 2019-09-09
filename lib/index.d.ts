@@ -35,6 +35,7 @@ declare module "node-pluginsmanager-plugin" {
 
 				protected _Descriptor: object | null;
 				protected _externalRessourcesDirectory: string;
+				protected _descriptorValidated: boolean;
 
 		// constructor
 
