@@ -451,6 +451,105 @@ describe("DescriptorUser / checkDescriptor", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not an object");
+					strictEqual(err instanceof ReferenceError, true, "Generated error is not a Error instance");
+
+					done();
+
+				});
+
+			});
+
+			it("should check non-defined existant path parameter", (done) => {
+
+				new LocalDescriptorUser({
+					"descriptor": {
+						"info": {
+							"title": "test",
+							"version": "1.0.0"
+						},
+						"paths": {
+							"/test/{id}": {
+								"get": {
+									"operationId": "test"
+								}
+							}
+						}
+					}
+				}).checkDescriptor().then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not an object");
+					strictEqual(err instanceof ReferenceError, true, "Generated error is not a Error instance");
+
+					done();
+
+				});
+
+			});
+
+			it("should check non-defined existant path parameter 2", (done) => {
+
+				new LocalDescriptorUser({
+					"descriptor": {
+						"info": {
+							"title": "test",
+							"version": "1.0.0"
+						},
+						"paths": {
+							"/test/{id}": {
+								"get": {
+									"operationId": "test",
+									"parameters": [
+										{
+											"name": "test",
+											"type": "path"
+										}
+									]
+								}
+							}
+						}
+					}
+				}).checkDescriptor().then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not an object");
+					strictEqual(err instanceof ReferenceError, true, "Generated error is not a Error instance");
+
+					done();
+
+				});
+
+			});
+
+			it("should check wrong-formated path parameter", (done) => {
+
+				new LocalDescriptorUser({
+					"descriptor": {
+						"info": {
+							"title": "test",
+							"version": "1.0.0"
+						},
+						"paths": {
+							"/test/{id5}": {
+								"get": {
+									"operationId": "test",
+									"parameters": [
+										{
+											"name": "id5",
+											"type": "path"
+										}
+									]
+								}
+							}
+						}
+					}
+				}).checkDescriptor().then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not an object");
 					strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
 
 					done();

@@ -49,6 +49,7 @@ Expose the [Mediator](./Mediator.md)'s methods with the [Descriptor](./Descripto
 
   * Paths must start with plugin name (same as descriptor.info.title)
   * If a path contains path parameter (ex : /plugin/api/users/{user-id}), the parameter MUST be defined in the "parameters" section of this path, with the same name, and a "path" type
+  * Path parameters must only use this pattern : "[a-z-]" (ex : {user-id})
   * "/[descriptor.info.title]/descriptor" [GET] : return json [Descriptor](./Descriptor.md) (already and automaticly setted in parent Server, no need for "operationId" data in the [Descriptor](./Descriptor.md) for this path)
   * "/[descriptor.info.title]/api/[path]" : expose API path
   * "/[descriptor.info.title]/public/[path]" : expose plugins files (HTML, CSS, etc...)
