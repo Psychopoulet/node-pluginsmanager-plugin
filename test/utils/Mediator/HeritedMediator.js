@@ -12,7 +12,11 @@
 
 module.exports = class HeritedMediator extends LocalMediator {
 
-	empty () {
+	emptyGet () {
+		return Promise.resolve();
+	}
+
+	emptyPost () {
 		return Promise.resolve();
 	}
 

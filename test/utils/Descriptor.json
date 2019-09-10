@@ -65,7 +65,22 @@
 			"get": {
 				"description": "",
 				"summary": "Simple API test for Server class",
-				"operationId": "empty",
+				"operationId": "emptyGet",
+				"parameters": [],
+				"requestBody": {},
+				"responses": {
+					"404": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			},
+			"post": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "emptyPost",
 				"parameters": [],
 				"requestBody": {},
 				"responses": {
