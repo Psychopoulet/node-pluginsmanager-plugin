@@ -400,11 +400,11 @@ describe("DescriptorUser / checkDescriptor", () => {
 									"parameters": [
 										{
 											"name": "test",
-											"type": "path"
+											"in": "path"
 										},
 										{
 											"name": "test",
-											"type": "url"
+											"in": "url"
 										}
 									]
 								}
@@ -439,7 +439,7 @@ describe("DescriptorUser / checkDescriptor", () => {
 									"parameters": [
 										{
 											"name": "test",
-											"type": "path"
+											"in": "path"
 										}
 									]
 								}
@@ -503,7 +503,7 @@ describe("DescriptorUser / checkDescriptor", () => {
 									"parameters": [
 										{
 											"name": "test",
-											"type": "path"
+											"in": "path"
 										}
 									]
 								}
@@ -538,7 +538,7 @@ describe("DescriptorUser / checkDescriptor", () => {
 									"parameters": [
 										{
 											"name": "id5",
-											"type": "path"
+											"in": "path"
 										}
 									]
 								}
@@ -551,6 +551,41 @@ describe("DescriptorUser / checkDescriptor", () => {
 
 					strictEqual(typeof err, "object", "Generated error is not an object");
 					strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+
+					done();
+
+				});
+
+			});
+
+			it("should check with defined but non required path parameter", (done) => {
+
+				new LocalDescriptorUser({
+					"descriptor": {
+						"info": {
+							"title": "test",
+							"version": "1.0.0"
+						},
+						"paths": {
+							"/test/{test}": {
+								"get": {
+									"operationId": "test",
+									"parameters": [
+										{
+											"name": "test",
+											"in": "path"
+										}
+									]
+								}
+							}
+						}
+					}
+				}).checkDescriptor().then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not an object");
+					strictEqual(err instanceof ReferenceError, true, "Generated error is not a Error instance");
 
 					done();
 
@@ -597,7 +632,8 @@ describe("DescriptorUser / checkDescriptor", () => {
 									"parameters": [
 										{
 											"name": "test",
-											"type": "path"
+											"in": "path",
+											"required": true
 										}
 									]
 								}
