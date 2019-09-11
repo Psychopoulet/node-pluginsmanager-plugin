@@ -31,7 +31,9 @@ module.exports = class HeritedServer extends Server {
 		return readJSONFile(join(__dirname, "..", "Descriptor.json")).then((content) => {
 
 			this._Descriptor = content;
-			this._Mediator = new HeritedMediator();
+			this._Mediator = new HeritedMediator({
+				"descriptor": this._Descriptor
+			});
 
 			return super.init(...data);
 

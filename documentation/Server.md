@@ -63,6 +63,7 @@ Expose the [Mediator](./Mediator.md)'s methods with the [Descriptor](./Descripto
   * [201](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/201) (everything is fine for PUT request, with and/or without content)
   * [204](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/204) (everything is fine without any content)
   * [400](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/400) (the request does not match with the [Descriptor](./Descriptor.md))
+  * [411](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/411) (the request does not have "Content-length" header (only for body data)) 
   * [500](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/500) (the [Mediator](./Mediator.md) generate an unknown error)
   * [501](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/501) (there is no "operationId" for this path in the [Descriptor](./Descriptor.md) or the [Mediator](./Mediator.md) does not have the "operationId" method given by the [Descriptor](./Descriptor.md))
 
