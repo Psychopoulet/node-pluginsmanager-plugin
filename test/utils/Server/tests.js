@@ -16,7 +16,7 @@ module.exports = function test (server) {
 
 	describe("check wrong paths", () => {
 
-		it("should test request with default root", () => {
+		it("should test request with default path", () => {
 
 			return httpRequestTest("/", "get", null, 404, "Not Found", {
 				"code": "404",
@@ -43,9 +43,15 @@ module.exports = function test (server) {
 
 		});
 
-		it("should test request with valid root without returned data", () => {
+		it("should test request with valid get path without returned data", () => {
 
-			return httpRequestTest("/node-pluginsmanager-plugin/api/empty", "get", null, 204, "No Content");
+			return httpRequestTest("/node-pluginsmanager-plugin/api/empty", "get", null, 404, "Not Found");
+
+		});
+
+		it("should test request with valid delete path without returned data", () => {
+
+			return httpRequestTest("/node-pluginsmanager-plugin/api/empty", "post", null, 204, "No Content");
 
 		});
 
@@ -142,7 +148,7 @@ module.exports = function test (server) {
 
 		});
 
-		it("should test request with valid root", () => {
+		it("should test request with valid path", () => {
 
 			return httpRequestTest("/node-pluginsmanager-plugin/api/valid", "get", null, 200, "OK", [ "test" ]);
 
