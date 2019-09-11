@@ -33,18 +33,22 @@ module.exports = class HeritedMediator extends LocalMediator {
 				return Promise.reject(new TypeError("Url params is not an object"));
 			}
 
-				else if ("undefined" === typeof urlParams["url-param"]) {
-					return Promise.reject(new ReferenceError("Missing url-param param"));
+				else if ("undefined" === typeof urlParams["path-param"]) {
+					return Promise.reject(new ReferenceError("Missing path-param param"));
 				}
-					else if ("string" !== typeof urlParams["url-param"]) {
-						return Promise.reject(new TypeError("url-param param is not a string"));
+					else if ("string" !== typeof urlParams["path-param"]) {
+						return Promise.reject(new TypeError("path-param param is not a string"));
 					}
-					else if ("" === urlParams["url-param"].trim()) {
-						return Promise.reject(new RangeError("url-param param is empty"));
+					else if ("" === urlParams["path-param"].trim()) {
+						return Promise.reject(new RangeError("path-param param is empty"));
 					}
 
 		else {
-			return Promise.resolve();
+
+			return Promise.resolve({
+				"path-param": urlParams["path-param"]
+			});
+
 		}
 
 	}

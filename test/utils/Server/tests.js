@@ -4,11 +4,13 @@
 
 	// natives
 	const { join } = require("path");
+	const { strictEqual } = require("assert");
 
 	// locals
 
 		// utils
 		const httpRequestTest = require(join(__dirname, "..", "..", "utils", "httpRequestTest.js"));
+		const httpRequestWithWrongHeader = require(join(__dirname, "..", "..", "utils", "httpRequestWithWrongHeader.js"));
 
 // module
 
@@ -68,9 +70,46 @@ module.exports = function test (server) {
 
 	});
 
-	describe("check url parameters", () => {
+	describe("check valid paths", () => {
 
-		it("should test request with missing url parameter", () => {
+		it("should test descriptor request", () => {
+
+			return httpRequestTest("/node-pluginsmanager-plugin/descriptor", "get", null, 200, "OK", server._Descriptor);
+
+		});
+
+		it("should test request with valid path", () => {
+
+			return httpRequestTest("/node-pluginsmanager-plugin/api/valid", "get", null, 200, "OK", [ "test" ]);
+
+		});
+
+	});
+
+	describe("check path parameters", () => {
+
+		it("should test request with empty path parameter", () => {
+
+			return httpRequestTest("/node-pluginsmanager-plugin/api/valid/url/", "get", null, 400, "Bad Request", {
+				"code": "RANGE_OR_EMPTY_PARAMETER",
+				"message": "path-param param is empty"
+			});
+
+		});
+
+		it("should test request with valid request", () => {
+
+			return httpRequestTest("/node-pluginsmanager-plugin/api/valid/url/test", "get", null, 200, "OK", {
+				"path-param": "test"
+			});
+
+		});
+
+	});
+
+	describe("check query parameters", () => {
+
+		it("should test request with missing query parameter", () => {
 
 			return httpRequestTest("/node-pluginsmanager-plugin/api/create", "put", null, 400, "Bad Request", {
 				"code": "MISSING_PARAMETER",
@@ -79,12 +118,20 @@ module.exports = function test (server) {
 
 		});
 
-		it("should test request with empty url parameter", () => {
+		it("should test request with empty query parameter", () => {
 
 			return httpRequestTest("/node-pluginsmanager-plugin/api/create?url-param=", "put", null, 400, "Bad Request", {
 				"code": "RANGE_OR_EMPTY_PARAMETER",
 				"message": "url-param param is empty"
 			});
+
+		});
+
+		it("should test request with valid request", () => {
+
+			return httpRequestTest("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", {
+				"body-param": "test"
+			}, 201, "Created");
 
 		});
 
@@ -123,24 +170,7 @@ module.exports = function test (server) {
 
 		});
 
-	});
-
-	describe("check path parameters", () => {
-
-		it("should test request with empty path parameter", () => {
-
-			return httpRequestTest("/node-pluginsmanager-plugin/api/valid/url/", "get", null, 400, "Bad Request", {
-				"code": "RANGE_OR_EMPTY_PARAMETER",
-				"message": "url-param param is empty"
-			});
-
-		});
-
-	});
-
-	describe("check valid requests", () => {
-
-		it("should test request with valid request with query parameters", () => {
+		it("should test request with valid request", () => {
 
 			return httpRequestTest("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", {
 				"body-param": "test"
@@ -148,15 +178,80 @@ module.exports = function test (server) {
 
 		});
 
-		it("should test request with valid path", () => {
+		describe("content-length", () => {
 
-			return httpRequestTest("/node-pluginsmanager-plugin/api/valid", "get", null, 200, "OK", [ "test" ]);
+			it("should test request with missing data", () => {
 
-		});
+				return httpRequestWithWrongHeader("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", {
+					"body-param": "test"
+				}, null, 411, "Length Required", {
+					"code": "MISSING_PARAMETER",
+					"message": "No \"Content-Length\" header found"
+				});
 
-		it("should test descriptor request", () => {
+			});
 
-			return httpRequestTest("/node-pluginsmanager-plugin/descriptor", "get", null, 200, "OK", server._Descriptor);
+			it("should test request with wrong data", () => {
+
+				return httpRequestWithWrongHeader("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", {
+					"body-param": "test"
+				}, "test", 411, "Length Required", {
+					"code": "MISSING_PARAMETER",
+					"message": "No \"Content-Length\" header found"
+				});
+
+			});
+
+			it("should test request with missing content-length", () => {
+
+				return httpRequestWithWrongHeader("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", {
+					"body-param": "test"
+				}, {}, 411, "Length Required", {
+					"code": "MISSING_PARAMETER",
+					"message": "No \"Content-Length\" header found"
+				});
+
+			});
+
+			// must crash request body parsing
+			it("should test request with wrong content-length", (done) => {
+
+				httpRequestWithWrongHeader("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", {
+					"body-param": "test"
+				}, {
+					"Content-Length": "test"
+				}).then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "generated error is not as expected");
+					strictEqual(err instanceof Error, true, "generated error is not as expected");
+
+					done();
+
+				});
+
+			});
+
+			// must interrupt request body parsing before the end and generate a socket error
+			it("should test request with inexact content-length", (done) => {
+
+				httpRequestWithWrongHeader("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", {
+					"body-param": "test"
+				}, {
+					"Content-Length": 2
+				}).then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "generated error is not as expected");
+					strictEqual(err instanceof Error, true, "generated error is not as expected");
+
+					done();
+
+				});
+
+			});
 
 		});
 
