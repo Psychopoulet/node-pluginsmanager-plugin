@@ -62,6 +62,10 @@ declare module "node-pluginsmanager-plugin" {
 
 			public initialized: boolean;
 
+		// methods
+
+			public checkParameters(operationId: string, urlParams: object, bodyParams: object): Promise<void>;
+
 	}
 
 	class MediatorUser extends DescriptorUser {
@@ -85,8 +89,12 @@ declare module "node-pluginsmanager-plugin" {
 		// attributes
 
 			protected _socketServer: WebSocketServer | null;
+			protected _checkParameters: boolean;
 
 		// methods
+
+			public disableCheckParameters(): this;
+			public enableCheckParameters(): this;
 
 			public appMiddleware(req: Request, res: Response, next: Function): void;
 			public socketMiddleware(server: WebSocketServer): void;
@@ -101,6 +109,8 @@ declare module "node-pluginsmanager-plugin" {
 			// protected
 
 				protected _Server: Server | null;
+				protected _socketServer: WebSocketServer | null;
+				protected _checkParameters: boolean;
 
 				// params
 				protected _packageFile: string;
@@ -141,6 +151,9 @@ declare module "node-pluginsmanager-plugin" {
 			public checkServer(): Promise<void>;
 
 			// middleware
+
+			public disableCheckParameters(): this;
+			public enableCheckParameters(): this;
 
 			public appMiddleware(req: Request, res: Response, next: Function): void;
 			public socketMiddleware(server: WebSocketServer): void;

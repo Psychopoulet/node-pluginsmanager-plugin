@@ -25,7 +25,7 @@ describe("Server / requests / app", () => {
 
 	before(() => {
 
-		return server.init().then(() => {
+		return server.enableCheckParameters().disableCheckParameters().init().then(() => {
 
 			const port = parseInt(parse(server._Descriptor.servers[0].url).port, 10);
 

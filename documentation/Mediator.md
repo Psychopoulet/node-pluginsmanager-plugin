@@ -21,6 +21,10 @@ You will have to add all the methods you need here to pilote the targeted use (A
 
   * ``` public initialized: boolean; ``` mediator status
 
+### Methods
+
+  * ``` public checkParameters(operationId: string, urlParams: object, bodyParams: object): Promise<void>; ``` Check sended parameters by method name (used by the [Server](./Server.md))
+
 ### Events
 
   * ``` initialized ``` fired when mediator is initialized
@@ -30,7 +34,7 @@ You will have to add all the methods you need here to pilote the targeted use (A
 
 > See [Descriptor sample](./Descriptor.json)
 
-  * Method called by the server
+  * Method called by the Server
 
 ![Descriptor interaction](./pictures/Mediator_DescriptorInteraction_1.jpg)
 

@@ -40,9 +40,11 @@ describe("Orchestrator / http", () => {
 
 	before(() => {
 
-		return orchestrator.load().then(() => {
+		return orchestrator.disableCheckParameters().enableCheckParameters().load().then(() => {
 			return orchestrator.init();
 		}).then(() => {
+
+			orchestrator.disableCheckParameters().enableCheckParameters();
 
 			const port = parseInt(parse(orchestrator._Descriptor.servers[0].url).port, 10);
 

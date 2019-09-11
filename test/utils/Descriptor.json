@@ -2,7 +2,7 @@
 	"openapi": "3.0.2",
 	"info": {
 		"title": "node-pluginsmanager-plugin",
-		"version": "3.0.4",
+		"version": "3.1.0",
 		"description": "An abstract parent plugin for node-pluginsmanager",
 		"contact": {
 			"name": "Sébastien VIDAL",
@@ -120,14 +120,14 @@
 				}
 			}
 		},
-		"/node-pluginsmanager-plugin/api/valid/url/{url-param}": {
+		"/node-pluginsmanager-plugin/api/valid/url/{path-param}": {
 			"get": {
 				"description": "",
 				"summary": "Simple API test for Server class",
 				"operationId": "urlParam",
 				"parameters": [
 					{
-						"name": "url-param",
+						"name": "path-param",
 						"in": "path",
 						"description": "Entity name",
 						"required": true,
