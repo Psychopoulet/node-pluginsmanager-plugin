@@ -64,7 +64,7 @@ declare module "node-pluginsmanager-plugin" {
 
 		// methods
 
-			public checkParameters(operationId: string, urlParams: object, bodyParams: object): Promise<void>;
+			public checkParameters(operationId: string, urlParams: object, bodyParams: object, contentType: string): Promise<void>;
 
 	}
 

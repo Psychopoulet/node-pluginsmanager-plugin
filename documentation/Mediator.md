@@ -23,7 +23,7 @@ You will have to add all the methods you need here to pilote the targeted use (A
 
 ### Methods
 
-  * ``` public checkParameters(operationId: string, urlParams: object, bodyParams: object): Promise<void>; ``` Check sended parameters by method name (used by the [Server](./Server.md))
+  * ``` public checkParameters(operationId: string, urlParams: object, bodyParams: object, contentType: string): Promise<void>; ``` Check sended parameters by method name (used by the [Server](./Server.md))
 
 ### Events
 
