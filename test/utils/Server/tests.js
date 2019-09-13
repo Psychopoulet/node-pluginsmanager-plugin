@@ -92,7 +92,7 @@ module.exports = function test (server) {
 
 			return httpRequestTest("/node-pluginsmanager-plugin/api/valid/url/", "get", null, 400, "Bad Request", {
 				"code": "RANGE_OR_EMPTY_PARAMETER",
-				"message": "path-param param is empty"
+				"message": "\"path-param\" url path parameter is empty"
 			});
 
 		});
@@ -111,18 +111,22 @@ module.exports = function test (server) {
 
 		it("should test request with missing query parameter", () => {
 
-			return httpRequestTest("/node-pluginsmanager-plugin/api/create", "put", null, 400, "Bad Request", {
+			return httpRequestTest("/node-pluginsmanager-plugin/api/create", "put", {
+				"body-param": "test"
+			}, 400, "Bad Request", {
 				"code": "MISSING_PARAMETER",
-				"message": "Missing url-param param"
+				"message": "Missing url parameters (path or query) : [ \"url-param\" ]"
 			});
 
 		});
 
 		it("should test request with empty query parameter", () => {
 
-			return httpRequestTest("/node-pluginsmanager-plugin/api/create?url-param=", "put", null, 400, "Bad Request", {
+			return httpRequestTest("/node-pluginsmanager-plugin/api/create?url-param=", "put", {
+				"body-param": "test"
+			}, 400, "Bad Request", {
 				"code": "RANGE_OR_EMPTY_PARAMETER",
-				"message": "url-param param is empty"
+				"message": "\"url-param\" url path parameter is empty"
 			});
 
 		});
@@ -143,7 +147,7 @@ module.exports = function test (server) {
 
 			return httpRequestTest("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", null, 400, "Bad Request", {
 				"code": "MISSING_PARAMETER",
-				"message": "Missing body params"
+				"message": "Missing body parameters : [ \"body-param\" ]"
 			});
 
 		});
@@ -154,7 +158,7 @@ module.exports = function test (server) {
 				"body-param": false
 			}, 400, "Bad Request", {
 				"code": "WRONG_TYPE_PARAMETER",
-				"message": "body-param param is not a string"
+				"message": "\"body-param\" body parameter is not a string"
 			});
 
 		});
@@ -165,7 +169,7 @@ module.exports = function test (server) {
 				"body-param": ""
 			}, 400, "Bad Request", {
 				"code": "RANGE_OR_EMPTY_PARAMETER",
-				"message": "body-param param is empty"
+				"message": "\"body-param\" body parameter is empty"
 			});
 
 		});
