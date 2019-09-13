@@ -178,15 +178,15 @@ module.exports = function test (server) {
 
 		});
 
-		describe("content-length", () => {
+		describe("content-type", () => {
 
 			it("should test request with missing data", () => {
 
 				return httpRequestWithWrongHeader("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", {
 					"body-param": "test"
-				}, null, 411, "Length Required", {
-					"code": "MISSING_PARAMETER",
-					"message": "No \"Content-Length\" header found"
+				}, null, 400, "Bad Request", {
+					"code": "MISSING_HEADER",
+					"message": "No \"Content-Type\" header found"
 				});
 
 			});
@@ -195,9 +195,9 @@ module.exports = function test (server) {
 
 				return httpRequestWithWrongHeader("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", {
 					"body-param": "test"
-				}, "test", 411, "Length Required", {
-					"code": "MISSING_PARAMETER",
-					"message": "No \"Content-Length\" header found"
+				}, "test", 400, "Bad Request", {
+					"code": "MISSING_HEADER",
+					"message": "No \"Content-Type\" header found"
 				});
 
 			});
@@ -206,8 +206,25 @@ module.exports = function test (server) {
 
 				return httpRequestWithWrongHeader("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", {
 					"body-param": "test"
-				}, {}, 411, "Length Required", {
-					"code": "MISSING_PARAMETER",
+				}, {}, 400, "Bad Request", {
+					"code": "MISSING_HEADER",
+					"message": "No \"Content-Type\" header found"
+				});
+
+			});
+
+		});
+
+		describe("content-length", () => {
+
+			it("should test request with missing data", () => {
+
+				return httpRequestWithWrongHeader("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", {
+					"body-param": "test"
+				}, {
+					"Content-Type": "application/json"
+				}, 411, "Length Required", {
+					"code": "MISSING_HEADER",
 					"message": "No \"Content-Length\" header found"
 				});
 
@@ -219,8 +236,9 @@ module.exports = function test (server) {
 				httpRequestWithWrongHeader("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", {
 					"body-param": "test"
 				}, {
+					"Content-Type": "application/json",
 					"Content-Length": "test"
-				}).then(() => {
+				}, 411, "Length Required").then(() => {
 					done(new Error("There is no generated error"));
 				}).catch((err) => {
 
@@ -239,8 +257,9 @@ module.exports = function test (server) {
 				httpRequestWithWrongHeader("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", {
 					"body-param": "test"
 				}, {
+					"Content-Type": "application/json",
 					"Content-Length": 2
-				}).then(() => {
+				}, 411, "Length Required").then(() => {
 					done(new Error("There is no generated error"));
 				}).catch((err) => {
 
@@ -250,6 +269,19 @@ module.exports = function test (server) {
 					done();
 
 				});
+
+			});
+
+			it("should test valid request", () => {
+
+				const params = {
+					"body-param": "test"
+				};
+
+				return httpRequestWithWrongHeader("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", params, {
+					"Content-Type": "application/json",
+					"Content-Length": Buffer.byteLength(JSON.stringify(params))
+				}, 201, "Created");
 
 			});
 
