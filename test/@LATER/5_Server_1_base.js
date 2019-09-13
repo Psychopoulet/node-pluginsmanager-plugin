@@ -23,7 +23,7 @@ describe("Server", () => {
 
 	before(() => {
 
-		return readJSONFile(join(__dirname, "utils", "Descriptor.json")).then((data) => {
+		return readJSONFile(join(__dirname, "utils", "DescriptorUser", "Descriptor.json")).then((data) => {
 			descriptor = data;
 		});
 

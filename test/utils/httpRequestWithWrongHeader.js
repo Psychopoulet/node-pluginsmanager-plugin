@@ -19,7 +19,7 @@
 
 module.exports = function httpRequestWithWrongHeader (urlpath, method, params, headers, returnCode, returnResponse, returnContent) {
 
-	return readJSONFile(join(__dirname, "Descriptor.json")).then((content) => {
+	return readJSONFile(join(__dirname, "DescriptorUser", "Descriptor.json")).then((content) => {
 
 		const url = parse(content.servers[0].url + urlpath);
 
