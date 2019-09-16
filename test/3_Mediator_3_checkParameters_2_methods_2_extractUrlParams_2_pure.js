@@ -28,7 +28,8 @@ describe("Mediator / checkParameters / extractUrlParams / pure description", () 
 		deepStrictEqual(parameters[0], {
 			"name": "null",
 			"required": false,
-			"type": "unknown"
+			"type": "unknown",
+			"in": "unknown"
 		}, "Generated first parameters is not as expected");
 
 	});
@@ -44,7 +45,8 @@ describe("Mediator / checkParameters / extractUrlParams / pure description", () 
 		deepStrictEqual(parameters[0], {
 			"name": "url-param",
 			"required": false,
-			"type": "unknown"
+			"type": "unknown",
+			"in": "unknown"
 		}, "Generated first parameters is not as expected");
 
 	});
@@ -67,7 +69,8 @@ describe("Mediator / checkParameters / extractUrlParams / pure description", () 
 		deepStrictEqual(parameters[0], {
 			"name": "unknown",
 			"required": true,
-			"type": "string"
+			"type": "string",
+			"in": "unknown"
 		}, "Generated first parameters is not as expected");
 
 	});
@@ -90,7 +93,8 @@ describe("Mediator / checkParameters / extractUrlParams / pure description", () 
 		deepStrictEqual(parameters[0], {
 			"name": "url-param",
 			"required": false,
-			"type": "string"
+			"type": "string",
+			"in": "unknown"
 		}, "Generated first parameters is not as expected");
 
 	});
@@ -111,7 +115,8 @@ describe("Mediator / checkParameters / extractUrlParams / pure description", () 
 		deepStrictEqual(parameters[0], {
 			"name": "url-param",
 			"required": false,
-			"type": "unknown"
+			"type": "unknown",
+			"in": "unknown"
 		}, "Generated first parameters is not as expected");
 
 	});
@@ -133,7 +138,8 @@ describe("Mediator / checkParameters / extractUrlParams / pure description", () 
 		deepStrictEqual(parameters[0], {
 			"name": "url-param",
 			"required": false,
-			"type": "unknown"
+			"type": "unknown",
+			"in": "unknown"
 		}, "Generated first parameters is not as expected");
 
 	});
@@ -155,7 +161,8 @@ describe("Mediator / checkParameters / extractUrlParams / pure description", () 
 		deepStrictEqual(parameters[0], {
 			"name": "url-param",
 			"required": false,
-			"type": "unknown"
+			"type": "unknown",
+			"in": "unknown"
 		}, "Generated first parameters is not as expected");
 
 	});
@@ -179,7 +186,8 @@ describe("Mediator / checkParameters / extractUrlParams / pure description", () 
 		deepStrictEqual(parameters[0], {
 			"name": "url-param",
 			"required": true,
-			"type": "string"
+			"type": "string",
+			"in": "unknown"
 		}, "Generated first parameters is not as expected");
 
 	});
