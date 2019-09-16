@@ -72,71 +72,36 @@ describe("DescriptorUser / checkDescriptor", () => {
 
 	});
 
-	describe("paths", () => {
+	it("should check without paths", () => {
 
-		it("should check without paths", () => {
-
-			return new LocalDescriptorUser({
-				"descriptor": {
-					"info": {
-						"title": "test",
-						"version": "1.0.0"
-					}
+		return new LocalDescriptorUser({
+			"descriptor": {
+				"info": {
+					"title": "test",
+					"version": "1.0.0"
 				}
-			}).checkDescriptor();
-
-		});
+			}
+		}).checkDescriptor();
 
 	});
 
-	describe("valid", () => {
+	it("should check with valid basic descriptor", () => {
 
-		it("should check with valid basic descriptor", () => {
-
-			return new LocalDescriptorUser({
-				"descriptor": {
-					"info": {
-						"title": "test",
-						"version": "1.0.0"
-					},
-					"paths": {
-						"/test": {
-							"get": {
-								"operationId": "test"
-							}
+		return new LocalDescriptorUser({
+			"descriptor": {
+				"info": {
+					"title": "test",
+					"version": "1.0.0"
+				},
+				"paths": {
+					"/test": {
+						"get": {
+							"operationId": "test"
 						}
 					}
 				}
-			}).checkDescriptor();
-
-		});
-
-		it("should check with defined path parameter", () => {
-
-			return new LocalDescriptorUser({
-				"descriptor": {
-					"info": {
-						"title": "test",
-						"version": "1.0.0"
-					},
-					"paths": {
-						"/test/{test}": {
-							"get": {
-								"operationId": "test",
-								"parameters": [
-									{
-										"name": "test",
-										"in": "path",
-										"required": true
-									}
-								]
-							}
-						}
-					}
-				}
-			}).checkDescriptor();
-
-		});
+			}
+		}).checkDescriptor();
 
 	});
 
