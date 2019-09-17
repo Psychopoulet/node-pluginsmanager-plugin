@@ -9,18 +9,18 @@
 	// locals
 
 		// plugin
-		const pathDescriptionWithoutParam = require(join(
+		const descriptionWithoutParameter = require(join(
 			__dirname, "..", "lib", "utils", "checkDescriptor",
-			"parameters", "parameterDescription", "pathDescriptionWithoutParam.js"
+			"parameters", "parameterDescription", "descriptionWithoutParameter.js"
 		));
 
 // tests
 
-describe("DescriptorUser / checkDescriptor / parameters / parameterDescription / pathDescriptionWithoutParam", () => {
+describe("DescriptorUser / checkDescriptor / parameters / parameterDescription / descriptionWithoutParameter", () => {
 
 	it("should check inexistant defined path parameter", () => {
 
-		const err = pathDescriptionWithoutParam("/test", "get", {
+		const err = descriptionWithoutParameter("/test", "get", {
 			"name": "path-test",
 			"in": "path"
 		});
@@ -32,7 +32,7 @@ describe("DescriptorUser / checkDescriptor / parameters / parameterDescription /
 
 	it("should check valid data", () => {
 
-		const err = pathDescriptionWithoutParam("/test/{path-test}", "get", {
+		const err = descriptionWithoutParameter("/test/{path-test}", "get", {
 			"name": "path-test",
 			"in": "path",
 			"required": true

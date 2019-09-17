@@ -9,184 +9,92 @@
 	// locals
 
 		// plugin
-		const parametersWithoutDescription = require(join(
+		const parameterWithoutDescription = require(join(
 			__dirname, "..", "lib", "utils", "checkDescriptor",
-			"parameters", "parametersWithoutDescription.js"
+			"parameters", "parameterWithoutDescription.js"
 		));
-
-// consts
-
-	const DESCRIPTOR_BASIC = require(join(
-		__dirname, "utils", "DescriptorUser", "DescriptorBasic.js"
-	));
 
 // tests
 
-describe("DescriptorUser / checkDescriptor / parameters / parametersWithoutDescription", () => {
+describe("DescriptorUser / checkDescriptor / parameters / parameterWithoutDescription", () => {
 
-	it("should check non-defined existant path parameter", (done) => {
+	it("should check non-defined existant path parameter", () => {
 
-		parametersWithoutDescription({
-			...DESCRIPTOR_BASIC,
-			"paths": {
-				"/test/{path-test}": {
-					"get": {
-						"operationId": "test"
-					}
-				}
-			}
-		}).then(() => {
-			done(new Error("There is no generated error"));
-		}).catch((err) => {
+		const err = parameterWithoutDescription("/test/{id}", "get");
 
-			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
-
-			done();
-
-		});
+		strictEqual(typeof err, "object", "Generated error is not an object");
+		strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
 
 	});
 
-	it("should check non-defined existant path parameter 2", (done) => {
+	it("should check non-defined existant path parameter 2", () => {
 
-		parametersWithoutDescription({
-			...DESCRIPTOR_BASIC,
-			"paths": {
-				"/test/{id}": {
-					"get": {
-						"operationId": "test",
-						"parameters": [
-							{
-								"name": "path-test",
-								"in": "path"
-							}
-						]
-					}
-				}
+		const err = parameterWithoutDescription("/test/{id}", "get", [
+			{
+				"name": "path-test",
+				"in": "path"
 			}
-		}).then(() => {
-			done(new Error("There is no generated error"));
-		}).catch((err) => {
+		]);
 
-			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
-
-			done();
-
-		});
+		strictEqual(typeof err, "object", "Generated error is not an object");
+		strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
 
 	});
 
-	it("should check with no required data", (done) => {
+	it("should check with no required data", () => {
 
-		parametersWithoutDescription({
-			...DESCRIPTOR_BASIC,
-			"paths": {
-				"/test/{path-test}": {
-					"get": {
-						"operationId": "test",
-						"parameters": [
-							{
-								"name": "path-test",
-								"in": "path"
-							}
-						]
-					}
-				}
+		const err = parameterWithoutDescription("/test/{path-test}", "get", [
+			{
+				"name": "path-test",
+				"in": "path"
 			}
-		}).then(() => {
-			done(new Error("There is no generated error"));
-		}).catch((err) => {
+		]);
 
-			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
-
-			done();
-
-		});
+		strictEqual(typeof err, "object", "Generated error is not an object");
+		strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
 
 	});
 
-	it("should check wrong-formated path parameter (with number)", (done) => {
+	it("should check wrong-formated path parameter (with number)", () => {
 
-		parametersWithoutDescription({
-			...DESCRIPTOR_BASIC,
-			"paths": {
-				"/test/{id5}": {
-					"get": {
-						"operationId": "test",
-						"parameters": [
-							{
-								"name": "id5",
-								"in": "path"
-							}
-						]
-					}
-				}
+		const err = parameterWithoutDescription("/test/{id5}", "get", [
+			{
+				"name": "id5",
+				"in": "path"
 			}
-		}).then(() => {
-			done(new Error("There is no generated error"));
-		}).catch((err) => {
+		]);
 
-			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err instanceof Error, true, "Generated error is not as expected");
-
-			done();
-
-		});
+		strictEqual(typeof err, "object", "Generated error is not an object");
+		strictEqual(err instanceof Error, true, "Generated error is not as expected");
 
 	});
 
-	it("should check wrong-formated path parameter (without \"}\")", (done) => {
+	it("should check wrong-formated path parameter (without \"}\")", () => {
 
-		parametersWithoutDescription({
-			...DESCRIPTOR_BASIC,
-			"paths": {
-				"/test/{path-test": {
-					"get": {
-						"operationId": "test",
-						"parameters": [
-							{
-								"name": "path-test",
-								"in": "path"
-							}
-						]
-					}
-				}
+		const err = parameterWithoutDescription("/test/{path-test", "get", [
+			{
+				"name": "path-test",
+				"in": "path"
 			}
-		}).then(() => {
-			done(new Error("There is no generated error"));
-		}).catch((err) => {
+		]);
 
-			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err instanceof Error, true, "Generated error is not as expected");
-
-			done();
-
-		});
+		strictEqual(typeof err, "object", "Generated error is not an object");
+		strictEqual(err instanceof Error, true, "Generated error is not as expected");
 
 	});
 
 	it("should check valid data", () => {
 
-		return parametersWithoutDescription({
-			...DESCRIPTOR_BASIC,
-			"paths": {
-				"/test/{path-test}": {
-					"get": {
-						"operationId": "test",
-						"parameters": [
-							{
-								"name": "path-test",
-								"in": "path",
-								"required": true
-							}
-						]
-					}
-				}
+		const err = parameterWithoutDescription("/test/{path-test}", "get", [
+			{
+				"name": "path-test",
+				"in": "path",
+				"required": true
 			}
-		});
+		]);
+
+		strictEqual(typeof err, "object", "Generated error is not an object");
+		strictEqual(err, null, "Generated error is not null");
 
 	});
 

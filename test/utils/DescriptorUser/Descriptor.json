@@ -18,7 +18,6 @@
 			"get": {
 				"description": "",
 				"summary": "Simple API test for Server class",
-				"parameters": [],
 				"responses": {
 					"200": {
 						"description": "Everything is fine"
@@ -33,7 +32,6 @@
 			"get": {
 				"description": "",
 				"summary": "Simple API test for Server class",
-				"parameters": [],
 				"responses": {
 					"501": {
 						"description": "Everything is fine"
@@ -49,7 +47,6 @@
 				"description": "",
 				"summary": "Simple API test for Server class",
 				"operationId": "wrgnezmgnzmoifgnzmgz",
-				"parameters": [],
 				"responses": {
 					"501": {
 						"description": "Everything is fine"
@@ -65,7 +62,6 @@
 				"description": "",
 				"summary": "Simple API test for Server class",
 				"operationId": "emptyGet",
-				"parameters": [],
 				"responses": {
 					"404": {
 						"description": "Everything is fine"
@@ -79,7 +75,6 @@
 				"description": "",
 				"summary": "Simple API test for Server class",
 				"operationId": "emptyPost",
-				"parameters": [],
 				"responses": {
 					"204": {
 						"description": "Everything is fine"
@@ -95,7 +90,6 @@
 				"description": "",
 				"summary": "Simple API test for Server class",
 				"operationId": "valid",
-				"parameters": [],
 				"responses": {
 					"200": {
 						"description": "Everything is fine",
