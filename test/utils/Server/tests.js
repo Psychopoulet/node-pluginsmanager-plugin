@@ -90,17 +90,17 @@ module.exports = function test (server) {
 
 		it("should test request with empty path parameter", () => {
 
-			return httpRequestTest("/node-pluginsmanager-plugin/api/valid/url/", "get", null, 400, "Bad Request", {
+			return httpRequestTest("/node-pluginsmanager-plugin/api/valid/url/string/", "get", null, 400, "Bad Request", {
 				"code": "RANGE_OR_EMPTY_PARAMETER",
-				"message": "\"path-param\" url path parameter is empty"
+				"message": "\"path-param-string\" url path parameter is empty"
 			});
 
 		});
 
-		it("should test request with valid request", () => {
+		it("should test request with valid string param request", () => {
 
-			return httpRequestTest("/node-pluginsmanager-plugin/api/valid/url/test", "get", null, 200, "OK", {
-				"path-param": "test"
+			return httpRequestTest("/node-pluginsmanager-plugin/api/valid/url/string/test", "get", null, 200, "OK", {
+				"path-param-string": "test"
 			});
 
 		});

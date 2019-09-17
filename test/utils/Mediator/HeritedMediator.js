@@ -28,17 +28,55 @@ module.exports = class HeritedMediator extends LocalMediator {
 
 		return this.checkParameters("urlParam", urlParams, bodyParams, contentType).then(() => {
 
-			if ("string" !== typeof urlParams["path-param"]) {
-				return Promise.reject(new TypeError("\"path-param\" url path parameter is not a string"));
+			if ("string" !== typeof urlParams["path-param-string"]) {
+				return Promise.reject(new TypeError("\"path-param-string\" url path parameter is not a string"));
 			}
-				else if ("" === urlParams["path-param"].trim()) {
-					return Promise.reject(new RangeError("\"path-param\" url path parameter is empty"));
+				else if ("" === urlParams["path-param-string"].trim()) {
+					return Promise.reject(new RangeError("\"path-param-string\" url path parameter is empty"));
 				}
 
 			else {
 
 				return Promise.resolve({
-					"path-param": urlParams["path-param"]
+					"path-param-string": urlParams["path-param-string"]
+				});
+
+			}
+
+		});
+
+	}
+
+	urlParamNumber (urlParams, bodyParams, contentType) {
+
+		return this.checkParameters("urlParamNumber", urlParams, bodyParams, contentType).then(() => {
+
+			if ("string" !== typeof urlParams["path-param-number"]) {
+				return Promise.reject(new TypeError("\"path-param-number\" url path parameter is not a number"));
+			}
+			else {
+
+				return Promise.resolve({
+					"path-param-number": urlParams["path-param-number"]
+				});
+
+			}
+
+		});
+
+	}
+
+	urlParamBoolean (urlParams, bodyParams, contentType) {
+
+		return this.checkParameters("urlParamBoolean", urlParams, bodyParams, contentType).then(() => {
+
+			if ("string" !== typeof urlParams["path-param-boolean"]) {
+				return Promise.reject(new TypeError("\"path-param-boolean\" url path parameter is not a boolean"));
+			}
+			else {
+
+				return Promise.resolve({
+					"path-param-boolean": urlParams["path-param-boolean"]
 				});
 
 			}

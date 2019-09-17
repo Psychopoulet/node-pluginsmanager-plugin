@@ -110,19 +110,71 @@
 				}
 			}
 		},
-		"/node-pluginsmanager-plugin/api/valid/url/{path-param}": {
+		"/node-pluginsmanager-plugin/api/valid/url/string/{path-param-string}": {
 			"get": {
 				"description": "",
 				"summary": "Simple API test for Server class",
 				"operationId": "urlParam",
 				"parameters": [
 					{
-						"name": "path-param",
+						"name": "path-param-string",
 						"in": "path",
 						"description": "Entity name",
 						"required": true,
 						"schema": {
 							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/valid/url/number/{path-param-number}": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "urlParamNumber",
+				"parameters": [
+					{
+						"name": "path-param-number",
+						"in": "path",
+						"description": "Entity name",
+						"required": true,
+						"schema": {
+							"type": "number"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/valid/url/boolean/{path-param-boolean}": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "urlParamBoolean",
+				"parameters": [
+					{
+						"name": "path-param-boolean",
+						"in": "path",
+						"description": "Entity name",
+						"required": true,
+						"schema": {
+							"type": "boolean"
 						}
 					}
 				],
@@ -178,6 +230,9 @@
 				}
 			}
 		}
+	},
+	"components": {
+		"parameters": {}
 	},
 	"servers": [
 		{
