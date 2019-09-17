@@ -23,6 +23,30 @@
 
 describe("DescriptorUser / checkDescriptor / parameters", () => {
 
+	it("should check wrong parameters", (done) => {
+
+		parameters({
+			...DESCRIPTOR_BASIC,
+			"paths": {
+				"/test": {
+					"get": {
+						"parameters": "test"
+					}
+				}
+			}
+		}).then(() => {
+			done(new Error("There is no generated error"));
+		}).catch((err) => {
+
+			strictEqual(typeof err, "object", "Generated error is not an object");
+			strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+
+			done();
+
+		});
+
+	});
+
 	it("should check inexistant defined path parameter", (done) => {
 
 		parameters({

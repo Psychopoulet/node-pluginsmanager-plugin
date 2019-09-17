@@ -41,6 +41,18 @@ describe("DescriptorUser / checkDescriptor / parameters / parameterDescription /
 
 	});
 
+	it("should check empty \"in\" parameter", () => {
+
+		const err = inProperty("/test", "get", {
+			"name": "path-test",
+			"in": ""
+		});
+
+		strictEqual(typeof err, "object", "Generated error is not an object");
+		strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
+
+	});
+
 	it("should check invalid \"in\" parameter", () => {
 
 		const err = inProperty("/test", "get", {
