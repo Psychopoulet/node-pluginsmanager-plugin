@@ -67,8 +67,6 @@ describe("DescriptorUser / checkDescriptor / pathsParameters / parametersDescrip
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
-			console.log(err);
-
 			strictEqual(typeof err, "object", "Generated error is not an object");
 			strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
 

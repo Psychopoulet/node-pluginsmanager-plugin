@@ -14,12 +14,6 @@
 			"pathsParameters", "parametersDescription", "pathDescriptionWithoutParam.js"
 		));
 
-// consts
-
-	const DESCRIPTOR_BASIC = require(join(
-		__dirname, "utils", "DescriptorUser", "DescriptorBasic.js"
-	));
-
 // tests
 
 describe("DescriptorUser / checkDescriptor / pathsParameters / parametersDescription / pathDescriptionWithoutParam", () => {
