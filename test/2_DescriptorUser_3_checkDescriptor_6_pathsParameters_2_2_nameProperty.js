@@ -18,7 +18,7 @@
 
 describe("DescriptorUser / checkDescriptor / pathsParameters / parametersDescription / nameProperty", () => {
 
-	it("should check missing \"in\" property for parameter", () => {
+	it("should check missing \"name\" property for parameter", () => {
 
 		const err = nameProperty("/test", "get", {});
 
@@ -27,7 +27,7 @@ describe("DescriptorUser / checkDescriptor / pathsParameters / parametersDescrip
 
 	});
 
-	it("should check wrong \"in\" parameter", () => {
+	it("should check wrong \"name\" parameter", () => {
 
 		const err = nameProperty("/test", "get", {
 			"name": false
@@ -38,7 +38,7 @@ describe("DescriptorUser / checkDescriptor / pathsParameters / parametersDescrip
 
 	});
 
-	it("should check empty \"in\" parameter", () => {
+	it("should check empty \"name\" parameter", () => {
 
 		const err = nameProperty("/test", "get", {
 			"name": ""

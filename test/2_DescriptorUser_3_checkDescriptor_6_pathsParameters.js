@@ -209,7 +209,10 @@ describe("DescriptorUser / checkDescriptor / pathsParameters", () => {
 							{
 								"name": "path-test",
 								"in": "path",
-								"required": true
+								"required": true,
+								"schema": {
+									"type": "string"
+								}
 							}
 						]
 					}
