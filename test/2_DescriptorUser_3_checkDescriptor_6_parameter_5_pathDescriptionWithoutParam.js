@@ -11,12 +11,12 @@
 		// plugin
 		const pathDescriptionWithoutParam = require(join(
 			__dirname, "..", "lib", "utils", "checkDescriptor",
-			"pathsParameters", "parametersDescription", "pathDescriptionWithoutParam.js"
+			"parameters", "parameterDescription", "pathDescriptionWithoutParam.js"
 		));
 
 // tests
 
-describe("DescriptorUser / checkDescriptor / pathsParameters / parametersDescription / pathDescriptionWithoutParam", () => {
+describe("DescriptorUser / checkDescriptor / parameters / parameterDescription / pathDescriptionWithoutParam", () => {
 
 	it("should check inexistant defined path parameter", () => {
 

@@ -11,12 +11,12 @@
 		// plugin
 		const typeProperty = require(join(
 			__dirname, "..", "lib", "utils", "checkDescriptor",
-			"pathsParameters", "parametersDescription", "typeProperty.js"
+			"parameters", "parameterDescription", "typeProperty.js"
 		));
 
 // tests
 
-describe("DescriptorUser / checkDescriptor / pathsParameters / parametersDescription / typeProperty", () => {
+describe("DescriptorUser / checkDescriptor / parameters / parameterDescription / typeProperty", () => {
 
 	it("should check missing \"schema\" parameter", () => {
 

@@ -11,7 +11,7 @@
 		// plugin
 		const parametersDescription = require(join(
 			__dirname, "..", "lib", "utils", "checkDescriptor",
-			"pathsParameters", "parametersDescription.js"
+			"parameters", "parametersDescription.js"
 		));
 
 // consts
@@ -22,7 +22,7 @@
 
 // tests
 
-describe("DescriptorUser / checkDescriptor / pathsParameters / parametersDescription", () => {
+describe("DescriptorUser / checkDescriptor / parameters / parametersDescription", () => {
 
 	it("should check wrong parameters", (done) => {
 

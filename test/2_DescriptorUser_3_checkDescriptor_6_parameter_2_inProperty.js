@@ -11,12 +11,12 @@
 		// plugin
 		const inProperty = require(join(
 			__dirname, "..", "lib", "utils", "checkDescriptor",
-			"pathsParameters", "parametersDescription", "inProperty.js"
+			"parameters", "parameterDescription", "inProperty.js"
 		));
 
 // tests
 
-describe("DescriptorUser / checkDescriptor / pathsParameters / parametersDescription / inProperty", () => {
+describe("DescriptorUser / checkDescriptor / parameters / parameterDescription / inProperty", () => {
 
 	it("should check missing \"in\" property for parameter", () => {
 

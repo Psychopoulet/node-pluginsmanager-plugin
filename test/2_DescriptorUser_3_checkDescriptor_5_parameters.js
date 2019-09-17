@@ -9,8 +9,8 @@
 	// locals
 
 		// plugin
-		const paramWithoutDescription = require(join(
-			__dirname, "..", "lib", "utils", "checkDescriptor", "pathsParameters", "paramWithoutDescription.js"
+		const parameters = require(join(
+			__dirname, "..", "lib", "utils", "checkDescriptor", "parameters.js"
 		));
 
 // consts
@@ -21,11 +21,41 @@
 
 // tests
 
-describe("DescriptorUser / checkDescriptor / pathsParameters / paramWithoutDescription", () => {
+describe("DescriptorUser / checkDescriptor / parameters", () => {
+
+	it("should check inexistant defined path parameter", (done) => {
+
+		parameters({
+			...DESCRIPTOR_BASIC,
+			"paths": {
+				"/test": {
+					"get": {
+						"operationId": "test",
+						"parameters": [
+							{
+								"name": "path-test",
+								"in": "path"
+							}
+						]
+					}
+				}
+			}
+		}).then(() => {
+			done(new Error("There is no generated error"));
+		}).catch((err) => {
+
+			strictEqual(typeof err, "object", "Generated error is not an object");
+			strictEqual(err instanceof ReferenceError, true, "Generated error is not a Error instance");
+
+			done();
+
+		});
+
+	});
 
 	it("should check non-defined existant path parameter", (done) => {
 
-		paramWithoutDescription({
+		parameters({
 			...DESCRIPTOR_BASIC,
 			"paths": {
 				"/test/{path-test}": {
@@ -39,7 +69,7 @@ describe("DescriptorUser / checkDescriptor / pathsParameters / paramWithoutDescr
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+			strictEqual(err instanceof ReferenceError, true, "Generated error is not a Error instance");
 
 			done();
 
@@ -49,7 +79,7 @@ describe("DescriptorUser / checkDescriptor / pathsParameters / paramWithoutDescr
 
 	it("should check non-defined existant path parameter 2", (done) => {
 
-		paramWithoutDescription({
+		parameters({
 			...DESCRIPTOR_BASIC,
 			"paths": {
 				"/test/{id}": {
@@ -69,7 +99,7 @@ describe("DescriptorUser / checkDescriptor / pathsParameters / paramWithoutDescr
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+			strictEqual(err instanceof ReferenceError, true, "Generated error is not a Error instance");
 
 			done();
 
@@ -79,7 +109,7 @@ describe("DescriptorUser / checkDescriptor / pathsParameters / paramWithoutDescr
 
 	it("should check with no required data", (done) => {
 
-		paramWithoutDescription({
+		parameters({
 			...DESCRIPTOR_BASIC,
 			"paths": {
 				"/test/{path-test}": {
@@ -99,7 +129,7 @@ describe("DescriptorUser / checkDescriptor / pathsParameters / paramWithoutDescr
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+			strictEqual(err instanceof ReferenceError, true, "Generated error is not a Error instance");
 
 			done();
 
@@ -109,7 +139,7 @@ describe("DescriptorUser / checkDescriptor / pathsParameters / paramWithoutDescr
 
 	it("should check wrong-formated path parameter (with number)", (done) => {
 
-		paramWithoutDescription({
+		parameters({
 			...DESCRIPTOR_BASIC,
 			"paths": {
 				"/test/{id5}": {
@@ -129,7 +159,7 @@ describe("DescriptorUser / checkDescriptor / pathsParameters / paramWithoutDescr
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err instanceof Error, true, "Generated error is not as expected");
+			strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
 
 			done();
 
@@ -139,7 +169,7 @@ describe("DescriptorUser / checkDescriptor / pathsParameters / paramWithoutDescr
 
 	it("should check wrong-formated path parameter (without \"}\")", (done) => {
 
-		paramWithoutDescription({
+		parameters({
 			...DESCRIPTOR_BASIC,
 			"paths": {
 				"/test/{path-test": {
@@ -159,7 +189,7 @@ describe("DescriptorUser / checkDescriptor / pathsParameters / paramWithoutDescr
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err instanceof Error, true, "Generated error is not as expected");
+			strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
 
 			done();
 
@@ -169,7 +199,7 @@ describe("DescriptorUser / checkDescriptor / pathsParameters / paramWithoutDescr
 
 	it("should check valid data", () => {
 
-		return paramWithoutDescription({
+		return parameters({
 			...DESCRIPTOR_BASIC,
 			"paths": {
 				"/test/{path-test}": {
@@ -179,7 +209,10 @@ describe("DescriptorUser / checkDescriptor / pathsParameters / paramWithoutDescr
 							{
 								"name": "path-test",
 								"in": "path",
-								"required": true
+								"required": true,
+								"schema": {
+									"type": "string"
+								}
 							}
 						]
 					}

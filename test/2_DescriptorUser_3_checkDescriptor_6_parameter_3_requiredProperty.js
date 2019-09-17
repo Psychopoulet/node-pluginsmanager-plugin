@@ -9,28 +9,33 @@
 	// locals
 
 		// plugin
-		const nameProperty = require(join(
+		const requiredProperty = require(join(
 			__dirname, "..", "lib", "utils", "checkDescriptor",
-			"pathsParameters", "parametersDescription", "nameProperty.js"
+			"parameters", "parameterDescription", "requiredProperty.js"
 		));
 
 // tests
 
-describe("DescriptorUser / checkDescriptor / pathsParameters / parametersDescription / nameProperty", () => {
+describe("DescriptorUser / checkDescriptor / parameters / parameterDescription / requiredProperty", () => {
 
-	it("should check missing \"name\" property for parameter", () => {
+	it("should check missing \"required\" parameter", () => {
 
-		const err = nameProperty("/test", "get", {});
+		const err = requiredProperty("/test/{path-test}", "get", {
+			"name": "path-test",
+			"in": "path"
+		});
 
 		strictEqual(typeof err, "object", "Generated error is not an object");
 		strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
 
 	});
 
-	it("should check wrong \"name\" parameter", () => {
+	it("should check wrong \"required\" parameter", () => {
 
-		const err = nameProperty("/test", "get", {
-			"name": false
+		const err = requiredProperty("/test/{path-test}", "get", {
+			"name": "path-test",
+			"in": "path",
+			"required": "test"
 		});
 
 		strictEqual(typeof err, "object", "Generated error is not an object");
@@ -38,20 +43,22 @@ describe("DescriptorUser / checkDescriptor / pathsParameters / parametersDescrip
 
 	});
 
-	it("should check empty \"name\" parameter", () => {
+	it("should check invalid \"required\" parameter", () => {
 
-		const err = nameProperty("/test", "get", {
-			"name": ""
+		const err = requiredProperty("/test/{path-test}", "get", {
+			"name": "path-test",
+			"in": "path",
+			"required": false
 		});
 
 		strictEqual(typeof err, "object", "Generated error is not an object");
-		strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
+		strictEqual(err instanceof Error, true, "Generated error is not as expected");
 
 	});
 
 	it("should check valid data", () => {
 
-		const err = nameProperty("/test/{path-test}", "get", {
+		const err = requiredProperty("/test/{path-test}", "get", {
 			"name": "path-test",
 			"in": "path",
 			"required": true
