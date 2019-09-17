@@ -9,53 +9,49 @@
 	// locals
 
 		// plugin
-		const inProperty = require(join(
+		const nameProperty = require(join(
 			__dirname, "..", "lib", "utils", "checkDescriptor",
-			"pathsParameters", "parametersDescription", "inProperty.js"
+			"pathsParameters", "parametersDescription", "nameProperty.js"
 		));
 
 // tests
 
-describe("DescriptorUser / checkDescriptor / pathsParameters / parametersDescription / inProperty", () => {
+describe("DescriptorUser / checkDescriptor / pathsParameters / parametersDescription / nameProperty", () => {
 
 	it("should check missing \"in\" property for parameter", () => {
 
-		const err = inProperty("/test", "get", {
-			"name": "path-test"
-		});
+		const err = nameProperty("/test", "get", {});
 
 		strictEqual(typeof err, "object", "Generated error is not an object");
-		strictEqual(err instanceof ReferenceError, true, "Generated error is not a Error instance");
+		strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
 
 	});
 
 	it("should check wrong \"in\" parameter", () => {
 
-		const err = inProperty("/test", "get", {
-			"name": "path-test",
-			"in": false
+		const err = nameProperty("/test", "get", {
+			"name": false
 		});
 
 		strictEqual(typeof err, "object", "Generated error is not an object");
-		strictEqual(err instanceof TypeError, true, "Generated error is not a Error instance");
+		strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
 
 	});
 
-	it("should check invalid \"in\" parameter", () => {
+	it("should check empty \"in\" parameter", () => {
 
-		const err = inProperty("/test", "get", {
-			"name": "path-test",
-			"in": "test"
+		const err = nameProperty("/test", "get", {
+			"name": ""
 		});
 
 		strictEqual(typeof err, "object", "Generated error is not an object");
-		strictEqual(err instanceof RangeError, true, "Generated error is not a Error instance");
+		strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
 
 	});
 
 	it("should check valid data", () => {
 
-		const err = inProperty("/test/{path-test}", "get", {
+		const err = nameProperty("/test/{path-test}", "get", {
 			"name": "path-test",
 			"in": "path",
 			"required": true

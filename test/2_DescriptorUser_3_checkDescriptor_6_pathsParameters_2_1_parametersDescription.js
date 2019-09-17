@@ -40,7 +40,37 @@ describe("DescriptorUser / checkDescriptor / pathsParameters / parametersDescrip
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err instanceof TypeError, true, "Generated error is not a Error instance");
+			strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+
+			done();
+
+		});
+
+	});
+
+	it("should check wrong nameProperty", (done) => {
+
+		parametersDescription({
+			...DESCRIPTOR_BASIC,
+			"paths": {
+				"/test": {
+					"get": {
+						"parameters": [
+							{
+								"name": false
+							}
+						]
+					}
+				}
+			}
+		}).then(() => {
+			done(new Error("There is no generated error"));
+		}).catch((err) => {
+
+			console.log(err);
+
+			strictEqual(typeof err, "object", "Generated error is not an object");
+			strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
 
 			done();
 
@@ -57,6 +87,7 @@ describe("DescriptorUser / checkDescriptor / pathsParameters / parametersDescrip
 					"get": {
 						"parameters": [
 							{
+								"name": "test",
 								"in": false
 							}
 						]
@@ -68,7 +99,7 @@ describe("DescriptorUser / checkDescriptor / pathsParameters / parametersDescrip
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err instanceof TypeError, true, "Generated error is not a Error instance");
+			strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
 
 			done();
 
@@ -97,7 +128,7 @@ describe("DescriptorUser / checkDescriptor / pathsParameters / parametersDescrip
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+			strictEqual(err instanceof Error, true, "Generated error is not as expected");
 
 			done();
 

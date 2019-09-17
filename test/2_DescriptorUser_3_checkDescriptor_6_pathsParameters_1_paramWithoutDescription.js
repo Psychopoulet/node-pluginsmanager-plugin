@@ -39,7 +39,7 @@ describe("DescriptorUser / checkDescriptor / pathsParameters / paramWithoutDescr
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err instanceof ReferenceError, true, "Generated error is not a Error instance");
+			strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
 
 			done();
 
@@ -69,7 +69,7 @@ describe("DescriptorUser / checkDescriptor / pathsParameters / paramWithoutDescr
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err instanceof ReferenceError, true, "Generated error is not a Error instance");
+			strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
 
 			done();
 
@@ -99,7 +99,7 @@ describe("DescriptorUser / checkDescriptor / pathsParameters / paramWithoutDescr
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err instanceof ReferenceError, true, "Generated error is not a Error instance");
+			strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
 
 			done();
 
@@ -129,7 +129,7 @@ describe("DescriptorUser / checkDescriptor / pathsParameters / paramWithoutDescr
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+			strictEqual(err instanceof Error, true, "Generated error is not as expected");
 
 			done();
 
@@ -159,7 +159,7 @@ describe("DescriptorUser / checkDescriptor / pathsParameters / paramWithoutDescr
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+			strictEqual(err instanceof Error, true, "Generated error is not as expected");
 
 			done();
 
