@@ -56,7 +56,7 @@ describe("Mediator / checkParameters / url parameters content", () => {
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "Generated error is not as expected");
-			strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
+			strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
 
 			done();
 
@@ -72,23 +72,18 @@ describe("Mediator / checkParameters / url parameters content", () => {
 
 	});
 
-	/*
-	it("should test formate", (done) => {
+	it("should test formate", () => {
 
-		mediator.checkParameters("get", {
+		return mediator.checkParameters("get", {
 			"path-param-number": "1"
-		}, {}, "application/json").then(() => {
-			done(new Error("There is no generated error"));
-		}).catch((err) => {
+		}, {}, "application/json").then((parsedUrlData) => {
 
-			strictEqual(typeof err, "object", "Generated error is not as expected");
-			strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
-
-			done();
+			strictEqual(typeof parsedUrlData, "object", "Parsed data is not an object");
+			strictEqual(typeof parsedUrlData["path-param-number"], "number", "Sended param is not a numberpath-param-number");
+			strictEqual(parsedUrlData["path-param-number"], 1, "Sended param is not as expected");
 
 		});
 
 	});
-	*/
 
 });

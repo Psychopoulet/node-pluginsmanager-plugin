@@ -114,7 +114,7 @@
 			"get": {
 				"description": "",
 				"summary": "Simple API test for Server class",
-				"operationId": "urlParam",
+				"operationId": "urlParamString",
 				"parameters": [
 					{
 						"$ref": "#/components/parameters/path-param-string"
@@ -169,6 +169,32 @@
 						"required": true,
 						"schema": {
 							"type": "boolean"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/valid/url/facultative": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "urlParamFacultative",
+				"parameters": [
+					{
+						"name": "path-param-facultative",
+						"in": "query",
+						"description": "Entity name",
+						"required": false,
+						"schema": {
+							"type": "string"
 						}
 					}
 				],

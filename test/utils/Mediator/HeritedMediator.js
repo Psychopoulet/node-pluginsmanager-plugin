@@ -24,21 +24,18 @@ module.exports = class HeritedMediator extends LocalMediator {
 		return Promise.resolve([ "test" ]);
 	}
 
-	urlParam (urlParams, bodyParams, contentType) {
+	urlParamString (urlParams, bodyParams, contentType) {
 
-		return this.checkParameters("urlParam", urlParams, bodyParams, contentType).then(() => {
+		return this.checkParameters("urlParamString", urlParams, bodyParams, contentType).then((parsedUrlParams) => {
 
-			if ("string" !== typeof urlParams["path-param-string"]) {
-				return Promise.reject(new TypeError("\"path-param-string\" url path parameter is not a string"));
+			if ("" === parsedUrlParams["path-param-string"].trim()) {
+				return Promise.reject(new RangeError("\"path-param-string\" url path parameter is empty"));
 			}
-				else if ("" === urlParams["path-param-string"].trim()) {
-					return Promise.reject(new RangeError("\"path-param-string\" url path parameter is empty"));
-				}
 
 			else {
 
 				return Promise.resolve({
-					"path-param-string": urlParams["path-param-string"]
+					"path-param-string": parsedUrlParams["path-param-string"]
 				});
 
 			}
@@ -49,18 +46,11 @@ module.exports = class HeritedMediator extends LocalMediator {
 
 	urlParamNumber (urlParams, bodyParams, contentType) {
 
-		return this.checkParameters("urlParamNumber", urlParams, bodyParams, contentType).then(() => {
+		return this.checkParameters("urlParamNumber", urlParams, bodyParams, contentType).then((parsedUrlParams) => {
 
-			if ("string" !== typeof urlParams["path-param-number"]) {
-				return Promise.reject(new TypeError("\"path-param-number\" url path parameter is not a number"));
-			}
-			else {
-
-				return Promise.resolve({
-					"path-param-number": urlParams["path-param-number"]
-				});
-
-			}
+			return Promise.resolve({
+				"path-param-number": parsedUrlParams["path-param-number"]
+			});
 
 		});
 
@@ -68,20 +58,19 @@ module.exports = class HeritedMediator extends LocalMediator {
 
 	urlParamBoolean (urlParams, bodyParams, contentType) {
 
-		return this.checkParameters("urlParamBoolean", urlParams, bodyParams, contentType).then(() => {
+		return this.checkParameters("urlParamBoolean", urlParams, bodyParams, contentType).then((parsedUrlParams) => {
 
-			if ("string" !== typeof urlParams["path-param-boolean"]) {
-				return Promise.reject(new TypeError("\"path-param-boolean\" url path parameter is not a boolean"));
-			}
-			else {
-
-				return Promise.resolve({
-					"path-param-boolean": urlParams["path-param-boolean"]
-				});
-
-			}
+			return Promise.resolve({
+				"path-param-boolean": parsedUrlParams["path-param-boolean"]
+			});
 
 		});
+
+	}
+
+	urlParamFacultative (urlParams, bodyParams, contentType) {
+
+		return this.checkParameters("urlParamFacultative", urlParams, bodyParams, contentType);
 
 	}
 

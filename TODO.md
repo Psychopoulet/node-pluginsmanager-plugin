@@ -2,11 +2,9 @@
 
 * 3.1.0
 - checkDescriptor : forbid empty "requestBody" or "parameters"
-- checkDescriptor : limit "in" attribute of "parameter" to [ "query", "header", "path", "cookie" ]
 - checkDescriptor : force "schema" of "requestBody" to be an object
-- checkParameters/extractUrlParams : check types
 - checkParameters/extractBodyParams : check types
-- checkParameters/extractBodyParams : extract by reference
+- checkParameters/extractBodyParams : extract components
 - checkParameters/extractBodyParams : extract recursively
 
 * 3.2.0

@@ -12,6 +12,10 @@
 		const httpRequestTest = require(join(__dirname, "..", "..", "utils", "httpRequestTest.js"));
 		const httpRequestWithWrongHeader = require(join(__dirname, "..", "..", "utils", "httpRequestWithWrongHeader.js"));
 
+// consts
+
+	const URL_API = "/node-pluginsmanager-plugin/api";
+
 // module
 
 module.exports = function test (server) {
@@ -29,7 +33,7 @@ module.exports = function test (server) {
 
 		it("should test request with get request without operationId", () => {
 
-			return httpRequestTest("/node-pluginsmanager-plugin/api/missingoperationid", "get", null, 501, "Not Implemented", {
+			return httpRequestTest(URL_API + "/missingoperationid", "get", null, 501, "Not Implemented", {
 				"code": "NOT_IMPLEMENTED",
 				"message": "Missing \"operationId\" in the Descriptor for this request"
 			});
@@ -38,7 +42,7 @@ module.exports = function test (server) {
 
 		it("should test request with get request with not implemented operationId", () => {
 
-			return httpRequestTest("/node-pluginsmanager-plugin/api/unknownoperationid", "get", null, 501, "Not Implemented", {
+			return httpRequestTest(URL_API + "/unknownoperationid", "get", null, 501, "Not Implemented", {
 				"code": "NOT_IMPLEMENTED",
 				"message": "Unknown Mediator's \"operationId\" method for this request"
 			});
@@ -47,19 +51,19 @@ module.exports = function test (server) {
 
 		it("should test request with valid get path without returned data", () => {
 
-			return httpRequestTest("/node-pluginsmanager-plugin/api/empty", "get", null, 404, "Not Found");
+			return httpRequestTest(URL_API + "/empty", "get", null, 404, "Not Found");
 
 		});
 
 		it("should test request with valid delete path without returned data", () => {
 
-			return httpRequestTest("/node-pluginsmanager-plugin/api/empty", "post", null, 204, "No Content");
+			return httpRequestTest(URL_API + "/empty", "post", null, 204, "No Content");
 
 		});
 
 		it("should test request with artificial error", () => {
 
-			return httpRequestTest("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", {
+			return httpRequestTest(URL_API + "/create?url-param=ok", "put", {
 				"body-param": "generate-fail"
 			}, 500, "Internal Server Error", {
 				"code": "INTERNAL_SERVER_ERROR",
@@ -80,7 +84,7 @@ module.exports = function test (server) {
 
 		it("should test request with valid path", () => {
 
-			return httpRequestTest("/node-pluginsmanager-plugin/api/valid", "get", null, 200, "OK", [ "test" ]);
+			return httpRequestTest(URL_API + "/valid", "get", null, 200, "OK", [ "test" ]);
 
 		});
 
@@ -90,7 +94,7 @@ module.exports = function test (server) {
 
 		it("should test request with empty path parameter", () => {
 
-			return httpRequestTest("/node-pluginsmanager-plugin/api/valid/url/string/", "get", null, 400, "Bad Request", {
+			return httpRequestTest(URL_API + "/valid/url/string/", "get", null, 400, "Bad Request", {
 				"code": "RANGE_OR_EMPTY_PARAMETER",
 				"message": "\"path-param-string\" url path parameter is empty"
 			});
@@ -99,7 +103,7 @@ module.exports = function test (server) {
 
 		it("should test request with valid string param request", () => {
 
-			return httpRequestTest("/node-pluginsmanager-plugin/api/valid/url/string/test", "get", null, 200, "OK", {
+			return httpRequestTest(URL_API + "/valid/url/string/test", "get", null, 200, "OK", {
 				"path-param-string": "test"
 			});
 
@@ -111,18 +115,18 @@ module.exports = function test (server) {
 
 		it("should test request with missing query parameter", () => {
 
-			return httpRequestTest("/node-pluginsmanager-plugin/api/create", "put", {
+			return httpRequestTest(URL_API + "/create", "put", {
 				"body-param": "test"
 			}, 400, "Bad Request", {
 				"code": "MISSING_PARAMETER",
-				"message": "Missing url parameters (path or query) : [ \"url-param\" ]"
+				"message": "Missing url parameters : [ \"url-param\" ]"
 			});
 
 		});
 
 		it("should test request with empty query parameter", () => {
 
-			return httpRequestTest("/node-pluginsmanager-plugin/api/create?url-param=", "put", {
+			return httpRequestTest(URL_API + "/create?url-param=", "put", {
 				"body-param": "test"
 			}, 400, "Bad Request", {
 				"code": "RANGE_OR_EMPTY_PARAMETER",
@@ -133,9 +137,37 @@ module.exports = function test (server) {
 
 		it("should test request with valid request", () => {
 
-			return httpRequestTest("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", {
+			return httpRequestTest(URL_API + "/create?url-param=ok", "put", {
 				"body-param": "test"
 			}, 201, "Created");
+
+		});
+
+		it("should test request with component", () => {
+
+			return httpRequestTest(URL_API + "/valid/url/string/test", "get", null, 200, "OK");
+
+		});
+
+		it("should test request with number formate", () => {
+
+			return httpRequestTest(URL_API + "/valid/url/number/1", "get", null, 200, "OK", {
+				"path-param-number": 1
+			});
+
+		});
+
+		it("should test request with boolean formate", () => {
+
+			return httpRequestTest(URL_API + "/valid/url/boolean/false", "get", null, 200, "OK", {
+				"path-param-boolean": false
+			});
+
+		});
+
+		it("should test request with facultative parameter", () => {
+
+			return httpRequestTest(URL_API + "/valid/url/facultative", "get", null, 200, "OK");
 
 		});
 
@@ -145,7 +177,7 @@ module.exports = function test (server) {
 
 		it("should test request with missing body parameter", () => {
 
-			return httpRequestTest("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", null, 400, "Bad Request", {
+			return httpRequestTest(URL_API + "/create?url-param=ok", "put", null, 400, "Bad Request", {
 				"code": "MISSING_PARAMETER",
 				"message": "Missing body parameters : [ \"body-param\" ]"
 			});
@@ -154,7 +186,7 @@ module.exports = function test (server) {
 
 		it("should test request with wrong body parameter", () => {
 
-			return httpRequestTest("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", {
+			return httpRequestTest(URL_API + "/create?url-param=ok", "put", {
 				"body-param": false
 			}, 400, "Bad Request", {
 				"code": "WRONG_TYPE_PARAMETER",
@@ -165,7 +197,7 @@ module.exports = function test (server) {
 
 		it("should test request with empty body parameter", () => {
 
-			return httpRequestTest("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", {
+			return httpRequestTest(URL_API + "/create?url-param=ok", "put", {
 				"body-param": ""
 			}, 400, "Bad Request", {
 				"code": "RANGE_OR_EMPTY_PARAMETER",
@@ -176,7 +208,7 @@ module.exports = function test (server) {
 
 		it("should test request with valid request", () => {
 
-			return httpRequestTest("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", {
+			return httpRequestTest(URL_API + "/create?url-param=ok", "put", {
 				"body-param": "test"
 			}, 201, "Created");
 
@@ -186,7 +218,7 @@ module.exports = function test (server) {
 
 			it("should test request with missing data", () => {
 
-				return httpRequestWithWrongHeader("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", {
+				return httpRequestWithWrongHeader(URL_API + "/create?url-param=ok", "put", {
 					"body-param": "test"
 				}, null, 400, "Bad Request", {
 					"code": "MISSING_HEADER",
@@ -197,7 +229,7 @@ module.exports = function test (server) {
 
 			it("should test request with wrong data", () => {
 
-				return httpRequestWithWrongHeader("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", {
+				return httpRequestWithWrongHeader(URL_API + "/create?url-param=ok", "put", {
 					"body-param": "test"
 				}, "test", 400, "Bad Request", {
 					"code": "MISSING_HEADER",
@@ -208,7 +240,7 @@ module.exports = function test (server) {
 
 			it("should test request with missing content-length", () => {
 
-				return httpRequestWithWrongHeader("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", {
+				return httpRequestWithWrongHeader(URL_API + "/create?url-param=ok", "put", {
 					"body-param": "test"
 				}, {}, 400, "Bad Request", {
 					"code": "MISSING_HEADER",
@@ -223,7 +255,7 @@ module.exports = function test (server) {
 
 			it("should test request with missing data", () => {
 
-				return httpRequestWithWrongHeader("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", {
+				return httpRequestWithWrongHeader(URL_API + "/create?url-param=ok", "put", {
 					"body-param": "test"
 				}, {
 					"Content-Type": "application/json"
@@ -237,7 +269,7 @@ module.exports = function test (server) {
 			// must crash request body parsing
 			it("should test request with wrong content-length", (done) => {
 
-				httpRequestWithWrongHeader("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", {
+				httpRequestWithWrongHeader(URL_API + "/create?url-param=ok", "put", {
 					"body-param": "test"
 				}, {
 					"Content-Type": "application/json",
@@ -258,7 +290,7 @@ module.exports = function test (server) {
 			// must interrupt request body parsing before the end and generate a socket error
 			it("should test request with inexact content-length", (done) => {
 
-				httpRequestWithWrongHeader("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", {
+				httpRequestWithWrongHeader(URL_API + "/create?url-param=ok", "put", {
 					"body-param": "test"
 				}, {
 					"Content-Type": "application/json",
@@ -282,7 +314,7 @@ module.exports = function test (server) {
 					"body-param": "test"
 				};
 
-				return httpRequestWithWrongHeader("/node-pluginsmanager-plugin/api/create?url-param=ok", "put", params, {
+				return httpRequestWithWrongHeader(URL_API + "/create?url-param=ok", "put", params, {
 					"Content-Type": "application/json",
 					"Content-Length": Buffer.byteLength(JSON.stringify(params))
 				}, 201, "Created");

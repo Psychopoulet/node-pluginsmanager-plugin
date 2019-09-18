@@ -44,8 +44,8 @@ module.exports = function httpRequestTest (urlpath, method, params, returnCode, 
 
 				try {
 
-					// strictEqual(res.statusCode, returnCode, "The statusCode is not " + returnCode);
-					// strictEqual(res.statusMessage, returnResponse, "The statusMessage is not valid");
+					strictEqual(res.statusCode, returnCode, "The statusCode is not " + returnCode);
+					strictEqual(res.statusMessage, returnResponse, "The statusMessage is not valid");
 
 					strictEqual(typeof res.headers, "object", "The headers are not an object");
 					strictEqual(
