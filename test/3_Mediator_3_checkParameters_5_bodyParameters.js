@@ -31,16 +31,38 @@ describe("Mediator / checkParameters / body parameters content", () => {
 		return mediator.release();
 	});
 
-	it("should test missing body parameter", (done) => {
+	describe("length", () => {
 
-		mediator.checkParameters("create", {}, {}, "application/json").then(() => {
-			done(new Error("There is no generated error"));
-		}).catch((err) => {
+		it("should test missing body parameter", (done) => {
 
-			strictEqual(typeof err, "object", "Generated error is not as expected");
-			strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+			mediator.checkParameters("create", {}, {}, "application/json").then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
 
-			done();
+				strictEqual(typeof err, "object", "Generated error is not as expected");
+				strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+
+				done();
+
+			});
+
+		});
+
+		it("should test too much url parameter", (done) => {
+
+			mediator.checkParameters("create", {}, {
+				"body-param": "test",
+				"test": "test"
+			}, "application/json").then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated error is not as expected");
+				strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+
+				done();
+
+			});
 
 		});
 

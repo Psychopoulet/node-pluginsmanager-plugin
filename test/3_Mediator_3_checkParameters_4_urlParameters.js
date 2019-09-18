@@ -31,56 +31,238 @@ describe("Mediator / checkParameters / url parameters content", () => {
 		return mediator.release();
 	});
 
-	it("should test missing url parameter", (done) => {
+	describe("length", () => {
 
-		mediator.checkParameters("create", {}, {}, "application/json").then(() => {
-			done(new Error("There is no generated error"));
-		}).catch((err) => {
+		it("should test missing url parameter", (done) => {
 
-			strictEqual(typeof err, "object", "Generated error is not as expected");
-			strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+			mediator.checkParameters("create", {}, {}, "application/json").then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
 
-			done();
+				strictEqual(typeof err, "object", "Generated error is not as expected");
+				strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+
+				done();
+
+			});
+
+		});
+
+		it("should test too much url parameter", (done) => {
+
+			mediator.checkParameters("create", {
+				"path-param": "test",
+				"test": "test"
+			}, {}, "application/json").then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated error is not as expected");
+				strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+
+				done();
+
+			});
 
 		});
 
 	});
 
-	it("should test too much url parameter", (done) => {
+	describe("types", () => {
 
-		mediator.checkParameters("create", {
-			"path-param": "test",
-			"test": "test"
-		}, {}, "application/json").then(() => {
-			done(new Error("There is no generated error"));
-		}).catch((err) => {
+		describe("boolean", () => {
 
-			strictEqual(typeof err, "object", "Generated error is not as expected");
-			strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+			it("should test wrong data", (done) => {
 
-			done();
+				mediator.checkParameters("testBoolean", {
+					"path-param-boolean": 1
+				}, {}, "application/json").then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not as expected");
+					strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+
+					done();
+
+				});
+
+			});
+
+			it("should test string data", () => {
+
+				return mediator.checkParameters("testBoolean", {
+					"path-param-boolean": "true"
+				}, {}, "application/json").then((parsedData) => {
+
+					strictEqual(typeof parsedData, "object", "Parsed data is not as expected");
+					strictEqual(typeof parsedData["path-param-boolean"], "boolean", "Sended data is not as expected");
+					strictEqual(parsedData["path-param-boolean"], true, "Sended data is not as expected");
+
+				});
+
+			});
+
+			it("should test boolean data", () => {
+
+				return mediator.checkParameters("testBoolean", {
+					"path-param-boolean": true
+				}, {}, "application/json").then((parsedData) => {
+
+					strictEqual(typeof parsedData, "object", "Parsed data is not as expected");
+					strictEqual(typeof parsedData["path-param-boolean"], "boolean", "Sended data is not as expected");
+					strictEqual(parsedData["path-param-boolean"], true, "Sended data is not as expected");
+
+				});
+
+			});
 
 		});
 
-	});
+		describe("integer", () => {
 
-	it("should test component", () => {
+			it("should test wrong data", (done) => {
 
-		return mediator.checkParameters("get", {
-			"path-param-number": 1
-		}, {}, "application/json");
+				mediator.checkParameters("testInteger", {
+					"path-param-integer": false
+				}, {}, "application/json").then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
 
-	});
+					strictEqual(typeof err, "object", "Generated error is not as expected");
+					strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
 
-	it("should test formate", () => {
+					done();
 
-		return mediator.checkParameters("get", {
-			"path-param-number": "1"
-		}, {}, "application/json").then((parsedUrlData) => {
+				});
 
-			strictEqual(typeof parsedUrlData, "object", "Parsed data is not an object");
-			strictEqual(typeof parsedUrlData["path-param-number"], "number", "Sended param is not a numberpath-param-number");
-			strictEqual(parsedUrlData["path-param-number"], 1, "Sended param is not as expected");
+			});
+
+			it("should test string data", () => {
+
+				return mediator.checkParameters("testInteger", {
+					"path-param-integer": "1"
+				}, {}, "application/json").then((parsedData) => {
+
+					strictEqual(typeof parsedData, "object", "Parsed data is not as expected");
+					strictEqual(typeof parsedData["path-param-integer"], "number", "Sended data is not as expected");
+					strictEqual(parsedData["path-param-integer"], 1, "Sended data is not as expected");
+
+				});
+
+			});
+
+			it("should test integer data", () => {
+
+				return mediator.checkParameters("testInteger", {
+					"path-param-integer": 1
+				}, {}, "application/json").then((parsedData) => {
+
+					strictEqual(typeof parsedData, "object", "Parsed data is not as expected");
+					strictEqual(typeof parsedData["path-param-integer"], "number", "Sended data is not as expected");
+					strictEqual(parsedData["path-param-integer"], 1, "Sended data is not as expected");
+
+				});
+
+			});
+
+		});
+
+		describe("number", () => {
+
+			it("should test wrong data", (done) => {
+
+				mediator.checkParameters("testNumber", {
+					"path-param-number": false
+				}, {}, "application/json").then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not as expected");
+					strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+
+					done();
+
+				});
+
+			});
+
+			it("should test string data", () => {
+
+				return mediator.checkParameters("testNumber", {
+					"path-param-number": "1.1"
+				}, {}, "application/json").then((parsedData) => {
+
+					strictEqual(typeof parsedData, "object", "Parsed data is not as expected");
+					strictEqual(typeof parsedData["path-param-number"], "number", "Sended data is not as expected");
+					strictEqual(parsedData["path-param-number"], 1.1, "Sended data is not as expected");
+
+				});
+
+			});
+
+			it("should test number data", () => {
+
+				return mediator.checkParameters("testNumber", {
+					"path-param-number": 1.1
+				}, {}, "application/json").then((parsedData) => {
+
+					strictEqual(typeof parsedData, "object", "Parsed data is not as expected");
+					strictEqual(typeof parsedData["path-param-number"], "number", "Sended data is not as expected");
+					strictEqual(parsedData["path-param-number"], 1.1, "Sended data is not as expected");
+
+				});
+
+			});
+
+		});
+
+		describe("float", () => {
+
+			it("should test wrong data", (done) => {
+
+				mediator.checkParameters("testFloat", {
+					"path-param-float": false
+				}, {}, "application/json").then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not as expected");
+					strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+
+					done();
+
+				});
+
+			});
+
+			it("should test string data", () => {
+
+				return mediator.checkParameters("testFloat", {
+					"path-param-float": "1.1"
+				}, {}, "application/json").then((parsedData) => {
+
+					strictEqual(typeof parsedData, "object", "Parsed data is not as expected");
+					strictEqual(typeof parsedData["path-param-float"], "number", "Sended data is not as expected");
+					strictEqual(parsedData["path-param-float"], 1.1, "Sended data is not as expected");
+
+				});
+
+			});
+
+			it("should test float data", () => {
+
+				return mediator.checkParameters("testFloat", {
+					"path-param-float": 1.1
+				}, {}, "application/json").then((parsedData) => {
+
+					strictEqual(typeof parsedData, "object", "Parsed data is not as expected");
+					strictEqual(typeof parsedData["path-param-float"], "number", "Sended data is not as expected");
+					strictEqual(parsedData["path-param-float"], 1.1, "Sended data is not as expected");
+
+				});
+
+			});
 
 		});
 
