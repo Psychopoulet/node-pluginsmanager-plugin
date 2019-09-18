@@ -46,4 +46,49 @@ describe("Mediator / checkParameters / url parameters content", () => {
 
 	});
 
+	it("should test too much url parameter", (done) => {
+
+		mediator.checkParameters("create", {
+			"path-param": "test",
+			"test": "test"
+		}, {}, "application/json").then(() => {
+			done(new Error("There is no generated error"));
+		}).catch((err) => {
+
+			strictEqual(typeof err, "object", "Generated error is not as expected");
+			strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
+
+			done();
+
+		});
+
+	});
+
+	it("should test component", () => {
+
+		return mediator.checkParameters("get", {
+			"path-param-number": 1
+		}, {}, "application/json");
+
+	});
+
+	/*
+	it("should test formate", (done) => {
+
+		mediator.checkParameters("get", {
+			"path-param-number": "1"
+		}, {}, "application/json").then(() => {
+			done(new Error("There is no generated error"));
+		}).catch((err) => {
+
+			strictEqual(typeof err, "object", "Generated error is not as expected");
+			strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+
+			done();
+
+		});
+
+	});
+	*/
+
 });

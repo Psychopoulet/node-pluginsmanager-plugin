@@ -117,13 +117,7 @@
 				"operationId": "urlParam",
 				"parameters": [
 					{
-						"name": "path-param-string",
-						"in": "path",
-						"description": "Entity name",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
+						"$ref": "#/components/parameters/path-param-string"
 					}
 				],
 				"responses": {
@@ -232,7 +226,17 @@
 		}
 	},
 	"components": {
-		"parameters": {}
+		"parameters": {
+			"path-param-string": {
+				"name": "path-param-string",
+				"in": "path",
+				"description": "Entity name",
+				"required": true,
+				"schema": {
+					"type": "string"
+				}
+			}
+		}
 	},
 	"servers": [
 		{

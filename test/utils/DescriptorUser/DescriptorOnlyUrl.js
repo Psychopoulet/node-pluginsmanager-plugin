@@ -29,6 +29,28 @@ module.exports = {
 						}
 					]
 				}
+			},
+			"/test": {
+				"get": {
+					"operationId": "get",
+					"parameters": [
+						{
+							"$ref": "#/components/parameters/path-param-number"
+						}
+					]
+				}
+			}
+		},
+		"components": {
+			"parameters": {
+				"path-param-number": {
+					"name": "path-param-number",
+					"in": "query",
+					"required": true,
+					"schema": {
+						"type": "number"
+					}
+				}
 			}
 		}
 	}
