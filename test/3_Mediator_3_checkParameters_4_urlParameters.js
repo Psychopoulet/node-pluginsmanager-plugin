@@ -217,55 +217,6 @@ describe("Mediator / checkParameters / url parameters content", () => {
 
 		});
 
-		describe("float", () => {
-
-			it("should test wrong data", (done) => {
-
-				mediator.checkParameters("testFloat", {
-					"path-param-float": false
-				}, {}, "application/json").then(() => {
-					done(new Error("There is no generated error"));
-				}).catch((err) => {
-
-					strictEqual(typeof err, "object", "Generated error is not as expected");
-					strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
-
-					done();
-
-				});
-
-			});
-
-			it("should test string data", () => {
-
-				return mediator.checkParameters("testFloat", {
-					"path-param-float": "1.1"
-				}, {}, "application/json").then((parsedData) => {
-
-					strictEqual(typeof parsedData, "object", "Parsed data is not as expected");
-					strictEqual(typeof parsedData["path-param-float"], "number", "Sended data is not as expected");
-					strictEqual(parsedData["path-param-float"], 1.1, "Sended data is not as expected");
-
-				});
-
-			});
-
-			it("should test float data", () => {
-
-				return mediator.checkParameters("testFloat", {
-					"path-param-float": 1.1
-				}, {}, "application/json").then((parsedData) => {
-
-					strictEqual(typeof parsedData, "object", "Parsed data is not as expected");
-					strictEqual(typeof parsedData["path-param-float"], "number", "Sended data is not as expected");
-					strictEqual(parsedData["path-param-float"], 1.1, "Sended data is not as expected");
-
-				});
-
-			});
-
-		});
-
 	});
 
 });

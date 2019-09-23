@@ -85,21 +85,6 @@ module.exports = {
 					]
 				}
 			},
-			"/test/{path-param-float}": {
-				"get": {
-					"operationId": "testFloat",
-					"parameters": [
-						{
-							"name": "path-param-float",
-							"in": "path",
-							"required": true,
-							"schema": {
-								"type": "float"
-							}
-						}
-					]
-				}
-			},
 			"/test/{path-param-boolean}": {
 				"get": {
 					"operationId": "testBoolean",

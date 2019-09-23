@@ -21,7 +21,7 @@
 		...DESCRIPTOR_BASIC,
 		"components": {
 			"parameters": {
-				"test": {
+				"path-param": {
 					"name": "path-param",
 					"in": "path",
 					"description": "Entity name",
@@ -42,7 +42,7 @@ describe("DescriptorUser / checkDescriptor / parameters / parameterDescription /
 
 		new LocalDescriptorUser({
 			"descriptor": {
-				...DESCRIPTOR_WITH_PARAMS,
+				...DESCRIPTOR_BASIC,
 				"paths": {
 					"/test/{path-param}": {
 						"get": {
@@ -73,7 +73,7 @@ describe("DescriptorUser / checkDescriptor / parameters / parameterDescription /
 
 		new LocalDescriptorUser({
 			"descriptor": {
-				...DESCRIPTOR_WITH_PARAMS,
+				...DESCRIPTOR_BASIC,
 				"paths": {
 					"/test/{path-param}": {
 						"get": {
@@ -104,7 +104,7 @@ describe("DescriptorUser / checkDescriptor / parameters / parameterDescription /
 
 		new LocalDescriptorUser({
 			"descriptor": {
-				...DESCRIPTOR_WITH_PARAMS,
+				...DESCRIPTOR_BASIC,
 				"paths": {
 					"/test/{path-param}": {
 						"get": {
@@ -136,7 +136,7 @@ describe("DescriptorUser / checkDescriptor / parameters / parameterDescription /
 
 		new LocalDescriptorUser({
 			"descriptor": {
-				...DESCRIPTOR_WITH_PARAMS,
+				...DESCRIPTOR_BASIC,
 				"paths": {
 					"/test/{path-param}": {
 						"get": {
@@ -149,6 +149,69 @@ describe("DescriptorUser / checkDescriptor / parameters / parameterDescription /
 						}
 					}
 				}
+			}
+		}).checkDescriptor().then(() => {
+			done(new Error("There is no generated error"));
+		}).catch((err) => {
+
+			strictEqual(typeof err, "object", "Generated error is not an object");
+			strictEqual(err instanceof Error, true, "Generated error is not as expected");
+
+			done();
+
+		});
+
+	});
+
+	it("should test valid path reference without components", (done) => {
+
+		new LocalDescriptorUser({
+			"descriptor": {
+				...DESCRIPTOR_BASIC,
+				"paths": {
+					"/test/{path-param}": {
+						"get": {
+							"operationId": "test",
+							"parameters": [
+								{
+									"$ref": "#/components/parameters/path-param"
+								}
+							]
+						}
+					}
+				}
+			}
+		}).checkDescriptor().then(() => {
+			done(new Error("There is no generated error"));
+		}).catch((err) => {
+
+			strictEqual(typeof err, "object", "Generated error is not an object");
+			strictEqual(err instanceof Error, true, "Generated error is not as expected");
+
+			done();
+
+		});
+
+	});
+
+	it("should test valid path reference without parameters components", (done) => {
+
+		new LocalDescriptorUser({
+			"descriptor": {
+				...DESCRIPTOR_BASIC,
+				"paths": {
+					"/test/{path-param}": {
+						"get": {
+							"operationId": "test",
+							"parameters": [
+								{
+									"$ref": "#/components/parameters/path-param"
+								}
+							]
+						}
+					}
+				},
+				"components": {}
 			}
 		}).checkDescriptor().then(() => {
 			done(new Error("There is no generated error"));
@@ -205,7 +268,7 @@ describe("DescriptorUser / checkDescriptor / parameters / parameterDescription /
 							"operationId": "test",
 							"parameters": [
 								{
-									"$ref": "#/components/parameters/test"
+									"$ref": "#/components/parameters/path-param"
 								}
 							]
 						}
