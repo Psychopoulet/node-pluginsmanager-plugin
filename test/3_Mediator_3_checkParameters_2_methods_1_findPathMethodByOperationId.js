@@ -41,7 +41,7 @@ describe("Mediator / checkParameters / findPathMethodByOperationId", () => {
 
 	it("should test missing paths", () => {
 
-		const pathMethod = findPathMethodByOperationId("create");
+		const pathMethod = findPathMethodByOperationId("testString");
 
 		strictEqual(typeof pathMethod, "object", "Generated pathMethod is not as expected");
 		strictEqual(pathMethod, null, "Generated pathMethod is not as expected");
@@ -50,7 +50,7 @@ describe("Mediator / checkParameters / findPathMethodByOperationId", () => {
 
 	it("should test empty paths", () => {
 
-		const pathMethod = findPathMethodByOperationId("create", {});
+		const pathMethod = findPathMethodByOperationId("testString", {});
 
 		strictEqual(typeof pathMethod, "object", "Generated pathMethod is not as expected");
 		strictEqual(pathMethod, null, "Generated pathMethod is not as expected");
@@ -68,11 +68,11 @@ describe("Mediator / checkParameters / findPathMethodByOperationId", () => {
 
 	it("should test valid operationId", () => {
 
-		const pathMethod = findPathMethodByOperationId("create", DESCRIPTOR_ONLY_URL.paths);
+		const pathMethod = findPathMethodByOperationId("testString", DESCRIPTOR_ONLY_URL.paths);
 
 		strictEqual(typeof pathMethod, "object", "Generated pathMethod is not as expected");
 		strictEqual(typeof pathMethod.operationId, "string", "Generated pathMethod operationId is not as expected");
-		strictEqual(pathMethod.operationId, "create", "Generated pathMethod operationId is not as expected");
+		strictEqual(pathMethod.operationId, "testString", "Generated pathMethod operationId is not as expected");
 
 	});
 

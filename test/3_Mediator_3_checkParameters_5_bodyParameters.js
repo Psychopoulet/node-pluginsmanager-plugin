@@ -35,7 +35,7 @@ describe("Mediator / checkParameters / body parameters content", () => {
 
 		it("should test missing body parameter", (done) => {
 
-			mediator.checkParameters("create", {}, {}, "application/json").then(() => {
+			mediator.checkParameters("testString", {}, {}, "application/json").then(() => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
@@ -50,8 +50,8 @@ describe("Mediator / checkParameters / body parameters content", () => {
 
 		it("should test too much url parameter", (done) => {
 
-			mediator.checkParameters("create", {}, {
-				"body-param": "test",
+			mediator.checkParameters("testString", {}, {
+				"body-param-string": "test",
 				"test": "test"
 			}, "application/json").then(() => {
 				done(new Error("There is no generated error"));

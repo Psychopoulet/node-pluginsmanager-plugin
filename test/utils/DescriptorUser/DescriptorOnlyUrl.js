@@ -15,21 +15,6 @@ module.exports = {
 	...DESCRIPTOR_BASIC,
 	...{
 		"paths": {
-			"/test/{path-param}": {
-				"post": {
-					"operationId": "create",
-					"parameters": [
-						{
-							"name": "path-param",
-							"in": "path",
-							"required": true,
-							"schema": {
-								"type": "string"
-							}
-						}
-					]
-				}
-			},
 			"/test/component": {
 				"get": {
 					"operationId": "testComponents",
@@ -95,6 +80,21 @@ module.exports = {
 							"required": true,
 							"schema": {
 								"type": "boolean"
+							}
+						}
+					]
+				}
+			},
+			"/test/facultative": {
+				"get": {
+					"operationId": "testNonRequired",
+					"parameters": [
+						{
+							"name": "path-param-facultative",
+							"in": "query",
+							"required": false,
+							"schema": {
+								"type": "string"
 							}
 						}
 					]

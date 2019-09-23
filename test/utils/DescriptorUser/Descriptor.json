@@ -208,6 +208,126 @@
 				}
 			}
 		},
+		"/node-pluginsmanager-plugin/api/valid/body/string": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "bodyParamString",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"body-param-string": {
+										"type": "string"
+									}
+								},
+								"required": [ "body-param-string" ]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/valid/body/number": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "bodyParamNumber",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"body-param-number": {
+										"type": "number"
+									}
+								},
+								"required": [ "body-param-number" ]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/valid/body/boolean": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "bodyParamBoolean",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"body-param-boolean": {
+										"type": "boolean"
+									}
+								},
+								"required": [ "body-param-boolean" ]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/valid/body/facultative": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "bodyParamFacultative",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"body-param-facultative": {
+										"type": "string"
+									}
+								},
+								"required": [ "body-param-facultative" ]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
 		"/node-pluginsmanager-plugin/api/create": {
 			"put": {
 				"description": "",
@@ -261,6 +381,17 @@
 				"schema": {
 					"type": "string"
 				}
+			}
+		},
+		"schemas": {
+			"body-param-string": {
+				"type": "object",
+				"properties": {
+					"body-param-string": {
+						"type": "string"
+					}
+				},
+				"required": [ "body-param-string" ]
 			}
 		}
 	},
