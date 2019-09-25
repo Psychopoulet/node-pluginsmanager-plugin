@@ -181,7 +181,7 @@ describe("Orchestrator", () => {
 
 				strictEqual(typeof err, "object", "Generated error is not an object");
 				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
-				strictEqual(err instanceof ReferenceError, true, "Generated error is not a ReferenceError instance");
+				strictEqual(err instanceof TypeError, true, "Generated error is not a ReferenceError instance");
 
 				done();
 

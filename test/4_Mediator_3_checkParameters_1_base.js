@@ -17,7 +17,7 @@
 
 // tests
 
-describe("Mediator / checkParameters / base", () => {
+describe("Mediator / checkParameters", () => {
 
 	const mediator = new LocalMediator({
 		"descriptor": DESCRIPTOR_ONLY_URL
@@ -78,12 +78,14 @@ describe("Mediator / checkParameters / base", () => {
 
 		});
 
-		it("should test missing url parameter", (done) => {
+		it("should test unknown operationId", (done) => {
 
 			const descriptor = JSON.parse(JSON.stringify(DESCRIPTOR_ONLY_URL));
 			delete descriptor.paths["/test/{path-param-string}"].get.operationId;
 
-			new LocalMediator(descriptor).checkParameters("testString", {}, {}, "application/json").then(() => {
+			new LocalMediator({
+				"descriptor": descriptor
+			}).checkParameters("testString", {}, {}, "application/json").then(() => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 

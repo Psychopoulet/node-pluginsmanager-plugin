@@ -47,7 +47,7 @@ describe("DescriptorUser / checkDescriptor", () => {
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+			strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
 
 			done();
 
