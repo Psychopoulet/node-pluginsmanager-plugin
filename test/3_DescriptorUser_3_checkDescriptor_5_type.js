@@ -18,48 +18,72 @@
 
 describe("DescriptorUser / checkDescriptor / checkType", () => {
 
-	it("should check missing data", () => {
+	describe("async", () => {
 
-		const err = checkType("/test/{path-test}", "get", "path-test");
+		it("should check wrong data type", (done) => {
 
-		strictEqual(typeof err, "object", "Generated error is not an object");
-		strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+			checkType("[get]/test/{path-test}--test", false).then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+
+				done();
+
+			});
+
+		});
+
+		it("should check invalid data", (done) => {
+
+			checkType("[get]/test/{path-test}--test", "test").then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
+
+				done();
+
+			});
+
+		});
+
+		it("should check valid data", () => {
+			return checkType("[get]/test/{path-test}--test", "string");
+		});
 
 	});
 
-	it("should check wrong data type", () => {
+	describe("sync", () => {
 
-		const err = checkType("/test/{path-test}", "get", "path-test", false);
+		it("should check wrong data type", () => {
 
-		strictEqual(typeof err, "object", "Generated error is not an object");
-		strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+			const err = checkType("[get]/test/{path-test}--test", false, false);
 
-	});
+			strictEqual(typeof err, "object", "Generated error is not an object");
+			strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
 
-	it("should check empty data", () => {
+		});
 
-		const err = checkType("/test/{path-test}", "get", "path-test", "");
+		it("should check invalid data", () => {
 
-		strictEqual(typeof err, "object", "Generated error is not an object");
-		strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
+			const err = checkType("[get]/test/{path-test}--test", "test", false);
 
-	});
+			strictEqual(typeof err, "object", "Generated error is not an object");
+			strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
 
-	it("should check invalid data", () => {
+		});
 
-		const err = checkType("/test/{path-test}", "get", "path-test", "test");
+		it("should check valid data", () => {
 
-		strictEqual(typeof err, "object", "Generated error is not an object");
-		strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
+			const err = checkType("[get]/test/{path-test}--test", "string", false);
 
-	});
+			strictEqual(typeof err, "object", "Generated error is not an object");
+			strictEqual(err, null, "Generated error is not null");
 
-	it("should check valid data", () => {
-
-		const err = checkType("/test/{path-test}", "get", "path-test", "string");
-
-		strictEqual(typeof err, "object", "Generated error is not an object");
-		strictEqual(err, null, "Generated error is not null");
+		});
 
 	});
 

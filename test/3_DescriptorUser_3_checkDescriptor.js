@@ -101,7 +101,10 @@ describe("DescriptorUser / checkDescriptor", () => {
 					}
 				}
 			}
-		}).checkDescriptor();
+		}).checkDescriptor().catch((err) => {
+			console.log(err);
+			process.exit();
+		});
 
 	});
 

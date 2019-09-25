@@ -18,57 +18,85 @@
 
 describe("DescriptorUser / checkDescriptor / checkRef", () => {
 
-	it("should check missing data", () => {
+	describe("async", () => {
 
-		const err = checkRef("/test/{path-test}", "get");
+		it("should check wrong data type", (done) => {
 
-		strictEqual(typeof err, "object", "Generated error is not an object");
-		strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+			checkRef("[get]/test/{path-test}--test", false).then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
 
-	});
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
 
-	it("should check wrong data type", () => {
+				done();
 
-		const err = checkRef("/test/{path-test}", "get", false);
+			});
 
-		strictEqual(typeof err, "object", "Generated error is not an object");
-		strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+		});
 
-	});
+		it("should check invalid data", (done) => {
 
-	it("should check empty data", () => {
+			checkRef("[get]/test/{path-test}--test", "test").then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
 
-		const err = checkRef("/test/{path-test}", "get", "");
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof Error, true, "Generated error is not as expected");
 
-		strictEqual(typeof err, "object", "Generated error is not an object");
-		strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
+				done();
 
-	});
+			});
 
-	it("should check invalid data", () => {
+		});
 
-		const err = checkRef("/test/{path-test}", "get", "test");
+		it("should check valid schemas data", () => {
+			return checkRef("[get]/test/{path-test}--test", "#/components/schemas/test");
+		});
 
-		strictEqual(typeof err, "object", "Generated error is not an object");
-		strictEqual(err instanceof Error, true, "Generated error is not as expected");
-
-	});
-
-	it("should check valid schemas data", () => {
-
-		const err = checkRef("/test/{path-test}", "get", "#/components/schemas/test");
-
-		strictEqual(typeof err, "object", "Generated error is not an object");
-		strictEqual(err, null, "Generated error is not null");
+		it("should check valid parameters data", () => {
+			return checkRef("[get]/test/{path-test}--test", "#/components/parameters/test");
+		});
 
 	});
 
-	it("should check valid parameters data", () => {
+	describe("sync", () => {
 
-		const err = checkRef("/test/{path-test}", "get", "#/components/parameters/test");
+		it("should check wrong data type", () => {
 
-		strictEqual(typeof err, "object", "Generated error is not an object");
-		strictEqual(err, null, "Generated error is not null");
+			const err = checkRef("[get]/test/{path-test}--test", false, false);
+
+			strictEqual(typeof err, "object", "Generated error is not an object");
+			strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+
+		});
+
+		it("should check invalid data", () => {
+
+			const err = checkRef("[get]/test/{path-test}--test", "test", false);
+
+			strictEqual(typeof err, "object", "Generated error is not an object");
+			strictEqual(err instanceof Error, true, "Generated error is not as expected");
+
+		});
+
+		it("should check valid schemas data", () => {
+
+			const err = checkRef("[get]/test/{path-test}--test", "#/components/schemas/test", false);
+
+			strictEqual(typeof err, "object", "Generated error is not an object");
+			strictEqual(err, null, "Generated error is not null");
+
+		});
+
+		it("should check valid parameters data", () => {
+
+			const err = checkRef("[get]/test/{path-test}--test", "#/components/parameters/test", false);
+
+			strictEqual(typeof err, "object", "Generated error is not an object");
+			strictEqual(err, null, "Generated error is not null");
+
+		});
 
 	});
 
