@@ -221,6 +221,43 @@ describe("DescriptorUser / checkDescriptor / parameters", () => {
 
 	});
 
+	it("should check with wrong type", (done) => {
+
+		parameters({
+			...DESCRIPTOR_BASIC,
+			"paths": {
+				"/test/{path-test}": {
+					"get": {
+						"operationId": "test",
+						"parameters": [
+							{
+								"name": "path-test",
+								"in": "path",
+								"required": true,
+								"schema": {
+									"type": "object",
+									"properties": {
+										"test": "test"
+									}
+								}
+							}
+						]
+					}
+				}
+			}
+		}).then(() => {
+			done(new Error("There is no generated error"));
+		}).catch((err) => {
+
+			strictEqual(typeof err, "object", "Generated error is not an object");
+			strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+
+			done();
+
+		});
+
+	});
+
 	it("should check valid data", () => {
 
 		return parameters({
