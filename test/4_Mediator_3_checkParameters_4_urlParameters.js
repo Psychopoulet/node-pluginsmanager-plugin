@@ -35,7 +35,7 @@ describe("Mediator / checkParameters / url parameters content", () => {
 
 		it("should test missing url parameter", (done) => {
 
-			mediator.checkParameters("create", {}, {}, "application/json").then(() => {
+			mediator.checkParameters("testString", {}, {}, "application/json").then(() => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
@@ -50,8 +50,8 @@ describe("Mediator / checkParameters / url parameters content", () => {
 
 		it("should test too much url parameter", (done) => {
 
-			mediator.checkParameters("create", {
-				"path-param": "test",
+			mediator.checkParameters("testString", {
+				"path-param-string": "test",
 				"test": "test"
 			}, {}, "application/json").then(() => {
 				done(new Error("There is no generated error"));
