@@ -41,7 +41,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema", () => {
 		const err = checkSchema("/test/{path-test}", "get", "path-test", {});
 
 		strictEqual(typeof err, "object", "Generated error is not an object");
-		strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+		strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
 
 	});
 
