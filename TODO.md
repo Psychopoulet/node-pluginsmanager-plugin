@@ -6,6 +6,7 @@
 - checkParameters/extractBodyParams : check types
 - checkParameters/extractBodyParams : extract components
 - checkParameters/extractBodyParams : extract recursively
+- checkParameters : minimum / maximum / maxLength / minLength
 
 * 3.2.0
 - automaticly check request format (error 406 ?)
