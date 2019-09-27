@@ -3,6 +3,7 @@
 * 3.1.0
 - checkDescriptor : forbid empty "requestBody" or "parameters"
 - checkDescriptor : force "schema" of "requestBody" to be an object
+- checkDescriptor/schema : check Array recursivity
 - checkParameters/extractBodyParams : check types
 - checkParameters/extractBodyParams : extract components
 - checkParameters/extractBodyParams : extract recursively
