@@ -237,7 +237,9 @@ describe("DescriptorUser / checkDescriptor / parameters", () => {
 								"schema": {
 									"type": "object",
 									"properties": {
-										"test": "test"
+										"test": {
+											"type": "string"
+										}
 									}
 								}
 							}
