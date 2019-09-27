@@ -9,21 +9,21 @@
 	// locals
 
 		// plugin
-		const checkRequired = require(join(
+		const checkIn = require(join(
 			__dirname, "..", "lib", "utils", "checkDescriptor",
-			"parameters", "checkRequired.js"
+			"url-parameters", "checkIn.js"
 		));
 
 // tests
 
-describe("DescriptorUser / checkDescriptor / parameters / checkRequired", () => {
+describe("DescriptorUser / checkDescriptor / url-parameters / checkIn", () => {
 
 	describe("async", () => {
 
-		it("should check missing data", (done) => {
+		it("should check wrong data", (done) => {
 
-			checkRequired("[get]/test", "path", "test").then(() => {
-				done(new Error("There is no error generated"));
+			checkIn("[get]/test", false).then(() => {
+				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not an object");
@@ -37,12 +37,12 @@ describe("DescriptorUser / checkDescriptor / parameters / checkRequired", () => 
 
 		it("should check invalid data", (done) => {
 
-			checkRequired("[get]/test", "path", false).then(() => {
-				done(new Error("There is no error generated"));
+			checkIn("[get]/test", "test").then(() => {
+				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof Error, true, "Generated error is not as expected");
+				strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
 
 				done();
 
@@ -50,9 +50,9 @@ describe("DescriptorUser / checkDescriptor / parameters / checkRequired", () => 
 
 		});
 
-		it("should check invalid data", () => {
+		it("should check valid data", () => {
 
-			return checkRequired("[get]/test", "path", true);
+			return checkIn("[get]/test", "path");
 
 		});
 
@@ -60,9 +60,9 @@ describe("DescriptorUser / checkDescriptor / parameters / checkRequired", () => 
 
 	describe("sync", () => {
 
-		it("should check missing data", () => {
+		it("should check wrong data", () => {
 
-			const err = checkRequired("[get]/test", "path", "test", false);
+			const err = checkIn("[get]/test", false, false);
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
 			strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
@@ -71,16 +71,16 @@ describe("DescriptorUser / checkDescriptor / parameters / checkRequired", () => 
 
 		it("should check invalid data", () => {
 
-			const err = checkRequired("[get]/test", "path", false, false);
+			const err = checkIn("[get]/test", "test", false);
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err instanceof Error, true, "Generated error is not as expected");
+			strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
 
 		});
 
 		it("should check valid data", () => {
 
-			const err = checkRequired("[get]/test", "path", true, false);
+			const err = checkIn("[get]/test", "path", false);
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
 			strictEqual(err, null, "Generated error is not null");

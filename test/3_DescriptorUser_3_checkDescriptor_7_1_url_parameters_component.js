@@ -36,7 +36,7 @@
 
 // tests
 
-describe("DescriptorUser / checkDescriptor / parameters / components", () => {
+describe("DescriptorUser / checkDescriptor / url-parameters / components", () => {
 
 	it("should check wrong reference", (done) => {
 

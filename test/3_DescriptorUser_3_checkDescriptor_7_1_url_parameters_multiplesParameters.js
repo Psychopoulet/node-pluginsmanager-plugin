@@ -11,12 +11,12 @@
 		// plugin
 		const multiplesParameters = require(join(
 			__dirname, "..", "lib", "utils", "checkDescriptor",
-			"parameters", "multiplesParameters.js"
+			"url-parameters", "multiplesParameters.js"
 		));
 
 // tests
 
-describe("DescriptorUser / checkDescriptor / parameters / multiplesParameters", () => {
+describe("DescriptorUser / checkDescriptor / url-parameters / multiplesParameters", () => {
 
 	it("should check with multiple parameters into descriptor", () => {
 
