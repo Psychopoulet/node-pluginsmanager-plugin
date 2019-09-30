@@ -23,68 +23,64 @@
 
 describe("Orchestrator / events", () => {
 
-	describe("events", () => {
+	it("should test events before init", () => {
 
-		it("should test events before init", () => {
+		const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
 
-			const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
+		return Promise.resolve().then(() => {
 
-			return Promise.resolve().then(() => {
+			return new Promise((resolve) => {
 
-				return new Promise((resolve) => {
-
-					orchestrator
-						.once("test", resolve)
-						.emit("test");
-
-				});
+				orchestrator
+					.once("test", resolve)
+					.emit("test");
 
 			});
 
 		});
 
-		it("should test events after init", () => {
+	});
 
-			const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
+	it("should test events after init", () => {
 
-			return new Promise((resolve, reject) => {
+		const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
 
-				orchestrator
-					.once("initialized", resolve);
+		return new Promise((resolve, reject) => {
 
-				orchestrator.load().then(() => {
-					return orchestrator.init();
-				}).catch(reject);
+			orchestrator
+				.once("initialized", resolve);
 
-			});
+			orchestrator.load().then(() => {
+				return orchestrator.init();
+			}).catch(reject);
 
 		});
 
-		it("should test events after release", () => {
+	});
 
-			const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
+	it("should test events after release", () => {
 
-			return new Promise((resolve, reject) => {
+		const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
 
-				orchestrator
-					.once("test", () => {
-						reject(new Error("Should not fire this event"));
-					})
-					.once("released", resolve);
+		return new Promise((resolve, reject) => {
 
-				orchestrator.load().then(() => {
-					return orchestrator.init();
-				}).then(() => {
-					return orchestrator.release();
-				}).then(() => {
+			orchestrator
+				.once("test", () => {
+					reject(new Error("Should not fire this event"));
+				})
+				.once("released", resolve);
 
-					orchestrator.emit("test");
+			orchestrator.load().then(() => {
+				return orchestrator.init();
+			}).then(() => {
+				return orchestrator.release();
+			}).then(() => {
 
-					return Promise.resolve();
+				orchestrator.emit("test");
 
-				}).catch(reject);
+				return Promise.resolve();
 
-			});
+			}).catch(reject);
 
 		});
 
