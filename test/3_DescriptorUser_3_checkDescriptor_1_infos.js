@@ -112,6 +112,25 @@ describe("DescriptorUser / checkDescriptor / infos", () => {
 
 		});
 
+		it("should check with lower case title", (done) => {
+
+			infos({
+				"info": {
+					"title": "Test"
+				}
+			}).then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof Error, true, "Generated error is not as expected");
+
+				done();
+
+			});
+
+		});
+
 	});
 
 	describe("version", () => {
