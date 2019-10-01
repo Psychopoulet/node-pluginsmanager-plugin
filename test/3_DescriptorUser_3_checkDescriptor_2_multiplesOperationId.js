@@ -9,8 +9,8 @@
 	// locals
 
 		// plugin
-		const multiplesOperationId = require(join(
-			__dirname, "..", "lib", "utils", "checkDescriptor", "multiplesOperationId.js"
+		const parameters = require(join(
+			__dirname, "..", "lib", "utils", "checkDescriptor", "parameters.js"
 		));
 
 // consts
@@ -21,11 +21,11 @@
 
 // tests
 
-describe("DescriptorUser / checkDescriptor / multiplesOperationId", () => {
+describe("DescriptorUser / checkDescriptor / multiples operation ids", () => {
 
 	it("should check with multiple operationIds into descriptor", (done) => {
 
-		multiplesOperationId({
+		parameters({
 			...DESCRIPTOR_BASIC,
 			"paths": {
 				"/test/test1": {
@@ -59,7 +59,7 @@ describe("DescriptorUser / checkDescriptor / multiplesOperationId", () => {
 
 	it("should check valid data", () => {
 
-		return multiplesOperationId({
+		return parameters({
 			...DESCRIPTOR_BASIC,
 			"paths": {
 				"/test/test1": {
