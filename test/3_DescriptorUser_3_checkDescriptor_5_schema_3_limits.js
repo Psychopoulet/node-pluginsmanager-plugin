@@ -24,7 +24,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / limits", () => {
 
 			it("should check wrong data type", () => {
 
-				const err = checkSchema("/test/{path-test}", "get", "path-test", {
+				const err = checkSchema("/test/{path-test}", "get", "parameters", "path-test", {
 					"type": "integer",
 					"minimum": false
 				});
@@ -36,7 +36,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / limits", () => {
 
 			it("should check valid data", () => {
 
-				const err = checkSchema("/test/{path-test}", "get", "path-test", {
+				const err = checkSchema("/test/{path-test}", "get", "parameters", "path-test", {
 					"type": "integer",
 					"minimum": 0
 				});
@@ -52,7 +52,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / limits", () => {
 
 			it("should check wrong data type", () => {
 
-				const err = checkSchema("/test/{path-test}", "get", "path-test", {
+				const err = checkSchema("/test/{path-test}", "get", "parameters", "path-test", {
 					"type": "integer",
 					"maximum": false
 				});
@@ -64,7 +64,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / limits", () => {
 
 			it("should check valid data", () => {
 
-				const err = checkSchema("/test/{path-test}", "get", "path-test", {
+				const err = checkSchema("/test/{path-test}", "get", "parameters", "path-test", {
 					"type": "integer",
 					"maximum": 10
 				});
@@ -84,7 +84,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / limits", () => {
 
 			it("should check wrong data type", () => {
 
-				const err = checkSchema("/test/{path-test}", "get", "path-test", {
+				const err = checkSchema("/test/{path-test}", "get", "parameters", "path-test", {
 					"type": "number",
 					"minimum": false
 				});
@@ -96,7 +96,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / limits", () => {
 
 			it("should check valid data", () => {
 
-				const err = checkSchema("/test/{path-test}", "get", "path-test", {
+				const err = checkSchema("/test/{path-test}", "get", "parameters", "path-test", {
 					"type": "number",
 					"minimum": 0
 				});
@@ -112,7 +112,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / limits", () => {
 
 			it("should check wrong data type", () => {
 
-				const err = checkSchema("/test/{path-test}", "get", "path-test", {
+				const err = checkSchema("/test/{path-test}", "get", "parameters", "path-test", {
 					"type": "number",
 					"maximum": false
 				});
@@ -124,7 +124,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / limits", () => {
 
 			it("should check valid data", () => {
 
-				const err = checkSchema("/test/{path-test}", "get", "path-test", {
+				const err = checkSchema("/test/{path-test}", "get", "parameters", "path-test", {
 					"type": "number",
 					"maximum": 10
 				});
@@ -144,7 +144,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / limits", () => {
 
 			it("should check wrong data type", () => {
 
-				const err = checkSchema("/test/{path-test}", "get", "path-test", {
+				const err = checkSchema("/test/{path-test}", "get", "parameters", "path-test", {
 					"type": "string",
 					"minLength": false
 				});
@@ -156,7 +156,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / limits", () => {
 
 			it("should check valid data", () => {
 
-				const err = checkSchema("/test/{path-test}", "get", "path-test", {
+				const err = checkSchema("/test/{path-test}", "get", "parameters", "path-test", {
 					"type": "string",
 					"minLength": 0
 				});
@@ -172,7 +172,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / limits", () => {
 
 			it("should check wrong data type", () => {
 
-				const err = checkSchema("/test/{path-test}", "get", "path-test", {
+				const err = checkSchema("/test/{path-test}", "get", "parameters", "path-test", {
 					"type": "string",
 					"maxLength": false
 				});
@@ -184,7 +184,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / limits", () => {
 
 			it("should check valid data", () => {
 
-				const err = checkSchema("/test/{path-test}", "get", "path-test", {
+				const err = checkSchema("/test/{path-test}", "get", "parameters", "path-test", {
 					"type": "string",
 					"maxLength": 10
 				});

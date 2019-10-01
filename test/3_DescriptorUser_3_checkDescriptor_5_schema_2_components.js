@@ -20,7 +20,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / components", () => {
 
 	it("should test wrong formated ref", () => {
 
-		const err = checkSchema("/test/{url-param}", "get", "url-param", {
+		const err = checkSchema("/test/{url-param}", "get", "parameters", "url-param", {
 			"$ref": "ezfvsqervsdrv"
 		});
 
@@ -31,7 +31,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / components", () => {
 
 	it("should test empty components", () => {
 
-		const err = checkSchema("/test/{url-param}", "get", "url-param", {
+		const err = checkSchema("/test/{url-param}", "get", "parameters", "url-param", {
 			"$ref": "#/components/parameters/url-param"
 		});
 
@@ -42,7 +42,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / components", () => {
 
 	it("should test missing ref", () => {
 
-		const err = checkSchema("/test/{url-param}", "get", "url-param", {
+		const err = checkSchema("/test/{url-param}", "get", "parameters", "url-param", {
 			"$ref": "#/components/parameters/url-param-string"
 		}, {
 			"url-param": {
@@ -59,7 +59,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / components", () => {
 
 	it("should check not only parameter", () => {
 
-		const err = checkSchema("/test/{url-param}", "get", "url-param", {
+		const err = checkSchema("/test/{url-param}", "get", "parameters", "url-param", {
 			"$ref": "#/components/parameters/url-param-string",
 			"test": "string"
 		});
@@ -71,7 +71,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / components", () => {
 
 	it("should test param full valid", () => {
 
-		const err = checkSchema("/test/{url-param}", "get", "url-param", {
+		const err = checkSchema("/test/{url-param}", "get", "parameters", "url-param", {
 			"$ref": "#/components/parameters/url-param"
 		}, {
 			"schemas": {

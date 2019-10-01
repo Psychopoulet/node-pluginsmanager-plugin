@@ -20,7 +20,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema", () => {
 
 	it("should check missing data", () => {
 
-		const err = checkSchema("/test/{path-test}", "get", "path-test");
+		const err = checkSchema("/test/{path-test}", "get", "parameters", "path-test");
 
 		strictEqual(typeof err, "object", "Generated error is not an object");
 		strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
@@ -29,7 +29,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema", () => {
 
 	it("should check wrong data type", () => {
 
-		const err = checkSchema("/test/{path-test}", "get", "path-test", false);
+		const err = checkSchema("/test/{path-test}", "get", "parameters", "path-test", false);
 
 		strictEqual(typeof err, "object", "Generated error is not an object");
 		strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
@@ -38,7 +38,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema", () => {
 
 	it("should check empty data", () => {
 
-		const err = checkSchema("/test/{path-test}", "get", "path-test", {});
+		const err = checkSchema("/test/{path-test}", "get", "parameters", "path-test", {});
 
 		strictEqual(typeof err, "object", "Generated error is not an object");
 		strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
@@ -47,7 +47,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema", () => {
 
 	it("should check valid data", () => {
 
-		const err = checkSchema("/test/{path-test}", "get", "path-test", {
+		const err = checkSchema("/test/{path-test}", "get", "parameters", "path-test", {
 			"type": "string"
 		});
 

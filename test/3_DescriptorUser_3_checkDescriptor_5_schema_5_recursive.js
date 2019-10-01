@@ -22,7 +22,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / recursive", () => {
 
 		it("should test missing properties", () => {
 
-			const err = checkSchema("/test", "get", "body-param", {
+			const err = checkSchema("/test", "get", "parameters", "body-param", {
 				"body-param": {
 					"schema": {
 						"type": "object"
@@ -37,7 +37,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / recursive", () => {
 
 		it("should test wrong type properties", () => {
 
-			const err = checkSchema("/test", "get", "body-param", {
+			const err = checkSchema("/test", "get", "parameters", "body-param", {
 				"type": "object",
 				"properties": false
 			});
@@ -49,7 +49,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / recursive", () => {
 
 		it("should test empty properties", () => {
 
-			const err = checkSchema("/test", "get", "body-param", {
+			const err = checkSchema("/test", "get", "parameters", "body-param", {
 				"type": "object",
 				"properties": {}
 			});
@@ -61,7 +61,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / recursive", () => {
 
 		it("should test wrong type recursive data", () => {
 
-			const err = checkSchema("/test", "get", "body-param", {
+			const err = checkSchema("/test", "get", "parameters", "body-param", {
 				"type": "object",
 				"properties": {
 					"test": false
@@ -75,7 +75,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / recursive", () => {
 
 		it("should test empty recursive data", () => {
 
-			const err = checkSchema("/test", "get", "body-param", {
+			const err = checkSchema("/test", "get", "parameters", "body-param", {
 				"type": "object",
 				"properties": {
 					"test": {}
@@ -89,7 +89,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / recursive", () => {
 
 		it("should test wrong type recursive data", () => {
 
-			const err = checkSchema("/test", "get", "body-param", {
+			const err = checkSchema("/test", "get", "parameters", "body-param", {
 				"type": "object",
 				"properties": {
 					"test": {
@@ -105,7 +105,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / recursive", () => {
 
 		it("should test param full valid object recursive data", () => {
 
-			const err = checkSchema("/test", "get", "body-param.test", {
+			const err = checkSchema("/test", "get", "parameters", "body-param.test", {
 				"type": "object",
 				"properties": {
 					"test": {
@@ -125,7 +125,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / recursive", () => {
 
 		it("should test missing properties", () => {
 
-			const err = checkSchema("/test", "get", "body-param", {
+			const err = checkSchema("/test", "get", "parameters", "body-param", {
 				"body-param": {
 					"schema": {
 						"type": "array"
@@ -140,7 +140,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / recursive", () => {
 
 		it("should test wrong type items", () => {
 
-			const err = checkSchema("/test", "get", "body-param", {
+			const err = checkSchema("/test", "get", "parameters", "body-param", {
 				"type": "array",
 				"items": false
 			});
@@ -152,7 +152,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / recursive", () => {
 
 		it("should test empty items", () => {
 
-			const err = checkSchema("/test", "get", "body-param", {
+			const err = checkSchema("/test", "get", "parameters", "body-param", {
 				"type": "array",
 				"items": {}
 			});
@@ -164,7 +164,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / recursive", () => {
 
 		it("should test wrong type recursive data", () => {
 
-			const err = checkSchema("/test", "get", "body-param", {
+			const err = checkSchema("/test", "get", "parameters", "body-param", {
 				"type": "array",
 				"items": {
 					"type": false
@@ -178,7 +178,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / recursive", () => {
 
 		it("should test empty recursive data", () => {
 
-			const err = checkSchema("/test", "get", "body-param", {
+			const err = checkSchema("/test", "get", "parameters", "body-param", {
 				"type": "array",
 				"items": {
 					"type": ""
@@ -196,7 +196,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / recursive", () => {
 
 		it("should test param full valid recursive data", () => {
 
-			const err = checkSchema("/test", "get", "body-param.test", {
+			const err = checkSchema("/test", "get", "parameters", "body-param.test", {
 				"type": "object",
 				"properties": {
 					"test": {
@@ -212,7 +212,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / recursive", () => {
 
 		it("should test param full valid recursive data with components", () => {
 
-			const err = checkSchema("/test", "get", "body-param.test", {
+			const err = checkSchema("/test", "get", "parameters", "body-param.test", {
 				"type": "object",
 				"properties": {
 					"test": {
@@ -246,7 +246,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / recursive", () => {
 
 		it("should test param full valid recursive data", () => {
 
-			const err = checkSchema("/test", "get", "body-param.test", {
+			const err = checkSchema("/test", "get", "parameters", "body-param.test", {
 				"type": "array",
 				"items": {
 					"type": "string"
@@ -260,7 +260,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / recursive", () => {
 
 		it("should test param full valid recursive data with components", () => {
 
-			const err = checkSchema("/test", "get", "body-param.test", {
+			const err = checkSchema("/test", "get", "parameters", "body-param.test", {
 				"type": "array",
 				"items": {
 					"$ref": "#/components/schemas/test"

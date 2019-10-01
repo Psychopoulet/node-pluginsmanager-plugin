@@ -21,7 +21,7 @@
 
 // tests
 
-describe("DescriptorUser / checkDescriptor / parameters", () => {
+describe("DescriptorUser / checkDescriptor / url-parameters", () => {
 
 	it("should check wrong parameters", (done) => {
 
