@@ -10,7 +10,7 @@
 
 		// plugin
 		const extractUrlParams = require(join(
-			__dirname, "..", "lib", "utils", "extractFromDescriptor", "extractUrlParams.js"
+			__dirname, "..", "lib", "utils", "checkParameters", "extractFromDescriptor", "extractUrlParams.js"
 		));
 
 // tests

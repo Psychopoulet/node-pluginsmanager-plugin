@@ -10,7 +10,7 @@
 
 		// plugin
 		const extractUrlParams = require(join(
-			__dirname, "..", "lib", "utils", "extractFromDescriptor", "extractUrlParams.js"
+			__dirname, "..", "lib", "utils", "checkParameters", "extractFromDescriptor", "extractUrlParams.js"
 		));
 
 // tests
@@ -24,12 +24,14 @@ describe("Mediator / checkParameters / extractUrlParams / with components", () =
 				"$ref": "#/components/parameters/url-param"
 			}
 		], {
-			"url-param": {
-				"name": "url-param",
-				"in": "path",
-				"required": true,
-				"schema": {
-					"type": "string"
+			"parameters": {
+				"url-param": {
+					"name": "url-param",
+					"in": "path",
+					"required": true,
+					"schema": {
+						"type": "string"
+					}
 				}
 			}
 		});

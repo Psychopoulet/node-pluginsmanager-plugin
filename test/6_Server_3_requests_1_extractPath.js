@@ -9,7 +9,7 @@
 	// locals
 
 		// utils
-		const extractPath = require(join(__dirname, "..", "lib", "utils", "extractFromDescriptor", "extractPath.js"));
+		const extractPath = require(join(__dirname, "..", "lib", "utils", "checkParameters", "extractFromDescriptor", "extractPath.js"));
 
 // consts
 

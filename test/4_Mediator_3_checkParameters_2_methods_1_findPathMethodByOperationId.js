@@ -10,7 +10,7 @@
 
 		// plugin
 		const findPathMethodByOperationId = require(join(
-			__dirname, "..", "lib", "utils", "extractFromDescriptor", "findPathMethodByOperationId.js"
+			__dirname, "..", "lib", "utils", "findPathMethodByOperationId.js"
 		));
 
 // consts

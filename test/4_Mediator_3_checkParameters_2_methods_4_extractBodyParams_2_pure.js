@@ -10,7 +10,7 @@
 
 		// plugin
 		const extractBodyParams = require(join(
-			__dirname, "..", "lib", "utils", "extractFromDescriptor", "extractBodyParams.js"
+			__dirname, "..", "lib", "utils", "checkParameters", "extractFromDescriptor", "extractBodyParams.js"
 		));
 
 // tests
