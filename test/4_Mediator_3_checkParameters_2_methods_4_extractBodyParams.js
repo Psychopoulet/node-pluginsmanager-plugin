@@ -4,7 +4,7 @@
 
 	// natives
 	const { join } = require("path");
-	const { strictEqual } = require("assert");
+	const { deepStrictEqual, strictEqual } = require("assert");
 
 	// locals
 
@@ -32,16 +32,6 @@ describe("Mediator / checkParameters / extractBodyParams / parameters", () => {
 		it("should test wrong param", () => {
 
 			const parameters = extractBodyParams("test");
-
-			strictEqual(typeof parameters, "object", "Generated parameters is not as expected");
-			strictEqual(parameters instanceof Array, true, "Generated parameters is not as expected");
-			strictEqual(parameters.length, 0, "Generated parameters length is not as expected");
-
-		});
-
-		it("should test null param", () => {
-
-			const parameters = extractBodyParams(null);
 
 			strictEqual(typeof parameters, "object", "Generated parameters is not as expected");
 			strictEqual(parameters instanceof Array, true, "Generated parameters is not as expected");
@@ -115,20 +105,6 @@ describe("Mediator / checkParameters / extractBodyParams / parameters", () => {
 
 		});
 
-		it("should test null param", () => {
-
-			const parameters = extractBodyParams({
-				"content": {
-					"application/json": null
-				}
-			});
-
-			strictEqual(typeof parameters, "object", "Generated parameters is not as expected");
-			strictEqual(parameters instanceof Array, true, "Generated parameters is not as expected");
-			strictEqual(parameters.length, 0, "Generated parameters length is not as expected");
-
-		});
-
 		it("should test wrong param", () => {
 
 			const parameters = extractBodyParams({
@@ -173,20 +149,6 @@ describe("Mediator / checkParameters / extractBodyParams / parameters", () => {
 
 		});
 
-		it("should test null param", () => {
-
-			const parameters = extractBodyParams({
-				"content": {
-					"application/json": null
-				}
-			}, "application/json");
-
-			strictEqual(typeof parameters, "object", "Generated parameters is not as expected");
-			strictEqual(parameters instanceof Array, true, "Generated parameters is not as expected");
-			strictEqual(parameters.length, 0, "Generated parameters length is not as expected");
-
-		});
-
 		it("should test wrong param", () => {
 
 			const parameters = extractBodyParams({
@@ -203,167 +165,101 @@ describe("Mediator / checkParameters / extractBodyParams / parameters", () => {
 
 	});
 
-	describe("requestBody.content[contentType].schema", () => {
+	describe("valid", () => {
 
-		it("should test missing param", () => {
-
-			const parameters = extractBodyParams({
-				"content": {
-					"application/json": {}
-				}
-			}, "application/json");
-
-			strictEqual(typeof parameters, "object", "Generated parameters is not as expected");
-			strictEqual(parameters instanceof Array, true, "Generated parameters is not as expected");
-			strictEqual(parameters.length, 0, "Generated parameters length is not as expected");
-
-		});
-
-		it("should test null param", () => {
-
-			const parameters = extractBodyParams({
-				"content": {
-					"application/json": {
-						"schema": null
-					}
-				}
-			}, "application/json");
-
-			strictEqual(typeof parameters, "object", "Generated parameters is not as expected");
-			strictEqual(parameters instanceof Array, true, "Generated parameters is not as expected");
-			strictEqual(parameters.length, 0, "Generated parameters length is not as expected");
-
-		});
-
-		it("should test wrong param", () => {
-
-			const parameters = extractBodyParams({
-				"content": {
-					"application/json": {
-						"schema": "test"
-					}
-				}
-			}, "application/json");
-
-			strictEqual(typeof parameters, "object", "Generated parameters is not as expected");
-			strictEqual(parameters instanceof Array, true, "Generated parameters is not as expected");
-			strictEqual(parameters.length, 0, "Generated parameters length is not as expected");
-
-		});
-
-	});
-
-	describe("requestBody.content[contentType].schema.type", () => {
-
-		it("should test missing param", () => {
-
-			const parameters = extractBodyParams({
-				"content": {
-					"application/json": {
-						"schema": {}
-					}
-				}
-			}, "application/json");
-
-			strictEqual(typeof parameters, "object", "Generated parameters is not as expected");
-			strictEqual(parameters instanceof Array, true, "Generated parameters is not as expected");
-			strictEqual(parameters.length, 0, "Generated parameters length is not as expected");
-
-		});
-
-		it("should test wrong param", () => {
-
-			const parameters = extractBodyParams({
-				"content": {
-					"application/json": {
-						"schema": {
-							"type": 1234
-						}
-					}
-				}
-			}, "application/json");
-
-			strictEqual(typeof parameters, "object", "Generated parameters is not as expected");
-			strictEqual(parameters instanceof Array, true, "Generated parameters is not as expected");
-			strictEqual(parameters.length, 0, "Generated parameters length is not as expected");
-
-		});
-
-		it("should test inexact param", () => {
-
-			const parameters = extractBodyParams({
-				"content": {
-					"application/json": {
-						"schema": {
-							"type": "string"
-						}
-					}
-				}
-			}, "application/json");
-
-			strictEqual(typeof parameters, "object", "Generated parameters is not as expected");
-			strictEqual(parameters instanceof Array, true, "Generated parameters is not as expected");
-			strictEqual(parameters.length, 0, "Generated parameters length is not as expected");
-
-		});
-
-	});
-
-	describe("requestBody.content[contentType].schema.properties", () => {
-
-		it("should test missing param", () => {
-
-			const parameters = extractBodyParams({
-				"content": {
-					"application/json": {
-						"schema": {
-							"type": "object"
-						}
-					}
-				}
-			}, "application/json");
-
-			strictEqual(typeof parameters, "object", "Generated parameters is not as expected");
-			strictEqual(parameters instanceof Array, true, "Generated parameters is not as expected");
-			strictEqual(parameters.length, 0, "Generated parameters length is not as expected");
-
-		});
-
-		it("should test null param", () => {
+		it("should test valid parameters", () => {
 
 			const parameters = extractBodyParams({
 				"content": {
 					"application/json": {
 						"schema": {
 							"type": "object",
-							"properties": null
+							"properties": {
+								"body-param": {
+									"type": "string"
+								}
+							}
 						}
 					}
 				}
-			}, "application/json");
+			}, "application/json", {});
 
 			strictEqual(typeof parameters, "object", "Generated parameters is not as expected");
 			strictEqual(parameters instanceof Array, true, "Generated parameters is not as expected");
-			strictEqual(parameters.length, 0, "Generated parameters length is not as expected");
+			strictEqual(parameters.length, 1, "Generated parameters length is not as expected");
+
+			strictEqual(typeof parameters[0], "object", "Generated parameters is not as expected");
+			deepStrictEqual(parameters[0], {
+				"name": "body-param",
+				"type": "string",
+				"required": false
+			}, "Generated parameters is not as expected");
 
 		});
 
-		it("should test wrong param", () => {
+		it("should test param full valid required parameters", () => {
 
 			const parameters = extractBodyParams({
 				"content": {
 					"application/json": {
 						"schema": {
 							"type": "object",
-							"properties": false
+							"properties": {
+								"body-param": {
+									"type": "string"
+								}
+							},
+							"required": [ "body-param" ]
 						}
 					}
 				}
-			}, "application/json");
+			}, "application/json", {});
 
 			strictEqual(typeof parameters, "object", "Generated parameters is not as expected");
 			strictEqual(parameters instanceof Array, true, "Generated parameters is not as expected");
-			strictEqual(parameters.length, 0, "Generated parameters length is not as expected");
+			strictEqual(parameters.length, 1, "Generated parameters length is not as expected");
+
+			deepStrictEqual(parameters[0], {
+				"name": "body-param",
+				"required": true,
+				"type": "string"
+			}, "Generated first parameters is not as expected");
+
+		});
+
+		it("should test param with components", () => {
+
+			const parameters = extractBodyParams({
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/test"
+						}
+					}
+				}
+			}, "application/json", {
+				"schemas": {
+					"test": {
+						"type": "object",
+						"properties": {
+							"body-param": {
+								"type": "string"
+							}
+						},
+						"required": [ "body-param" ]
+					}
+				}
+			});
+
+			strictEqual(typeof parameters, "object", "Generated parameters is not as expected");
+			strictEqual(parameters instanceof Array, true, "Generated parameters is not as expected");
+			strictEqual(parameters.length, 1, "Generated parameters length is not as expected");
+
+			deepStrictEqual(parameters[0], {
+				"name": "body-param",
+				"required": true,
+				"type": "string"
+			}, "Generated first parameters is not as expected");
 
 		});
 

@@ -116,13 +116,15 @@ describe("DescriptorUser / checkDescriptor / body-parameters", () => {
 
 	});
 
-	describe("requestBody / content / contentType", () => {
+	describe("requestBody / content / contentType / application/json", () => {
 
 		it("should check wrong type data", () => {
 
 			const err = checkBodyParameters("/test", "get", {
 				"content": {
-					"application/json": false
+					"application/json": {
+						"schema": null
+					}
 				}
 			});
 
@@ -135,7 +137,9 @@ describe("DescriptorUser / checkDescriptor / body-parameters", () => {
 
 			const err = checkBodyParameters("/test", "get", {
 				"content": {
-					"application/json": {}
+					"application/json": {
+						"schema": {}
+					}
 				}
 			});
 
