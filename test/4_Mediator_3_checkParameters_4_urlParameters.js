@@ -10,6 +10,7 @@
 
 		// plugin
 		const LocalMediator = require(join(__dirname, "utils", "Mediator", "LocalMediator.js"));
+		const checkUrlParameters = require(join(__dirname, "..", "lib", "utils", "checkParameters", "checkUrlParameters.js"));
 
 // consts
 
@@ -35,7 +36,10 @@ describe("Mediator / checkParameters / url parameters content", () => {
 
 		it("should test missing url parameter", (done) => {
 
-			mediator.checkParameters("testString", {}, {}, "application/json").then(() => {
+			checkUrlParameters({},
+				mediator._Descriptor.paths["/test/{path-param-string}"].get.parameters,
+				mediator._Descriptor.components
+			).then(() => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
@@ -50,10 +54,13 @@ describe("Mediator / checkParameters / url parameters content", () => {
 
 		it("should test too much url parameter", (done) => {
 
-			mediator.checkParameters("testString", {
+			checkUrlParameters({
 				"path-param-string": "test",
 				"test": "test"
-			}, {}, "application/json").then(() => {
+			},
+				mediator._Descriptor.paths["/test/{path-param-string}"].get.parameters,
+				mediator._Descriptor.components
+			).then(() => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
@@ -74,9 +81,12 @@ describe("Mediator / checkParameters / url parameters content", () => {
 
 			it("should test wrong data", (done) => {
 
-				mediator.checkParameters("testBoolean", {
+				checkUrlParameters({
 					"path-param-boolean": 1
-				}, {}, "application/json").then(() => {
+				},
+					mediator._Descriptor.paths["/test/{path-param-boolean}"].get.parameters,
+					mediator._Descriptor.components
+				).then(() => {
 					done(new Error("There is no generated error"));
 				}).catch((err) => {
 
@@ -91,9 +101,12 @@ describe("Mediator / checkParameters / url parameters content", () => {
 
 			it("should test string data", () => {
 
-				return mediator.checkParameters("testBoolean", {
+				return checkUrlParameters({
 					"path-param-boolean": "true"
-				}, {}, "application/json").then((parsedData) => {
+				},
+					mediator._Descriptor.paths["/test/{path-param-boolean}"].get.parameters,
+					mediator._Descriptor.components
+				).then((parsedData) => {
 
 					strictEqual(typeof parsedData, "object", "Parsed data is not as expected");
 					strictEqual(typeof parsedData["path-param-boolean"], "boolean", "Sended data is not as expected");
@@ -105,9 +118,12 @@ describe("Mediator / checkParameters / url parameters content", () => {
 
 			it("should test boolean data", () => {
 
-				return mediator.checkParameters("testBoolean", {
+				return checkUrlParameters({
 					"path-param-boolean": true
-				}, {}, "application/json").then((parsedData) => {
+				},
+					mediator._Descriptor.paths["/test/{path-param-boolean}"].get.parameters,
+					mediator._Descriptor.components
+				).then((parsedData) => {
 
 					strictEqual(typeof parsedData, "object", "Parsed data is not as expected");
 					strictEqual(typeof parsedData["path-param-boolean"], "boolean", "Sended data is not as expected");
@@ -123,9 +139,12 @@ describe("Mediator / checkParameters / url parameters content", () => {
 
 			it("should test wrong data", (done) => {
 
-				mediator.checkParameters("testInteger", {
+				checkUrlParameters({
 					"path-param-integer": false
-				}, {}, "application/json").then(() => {
+				},
+					mediator._Descriptor.paths["/test/{path-param-integer}"].get.parameters,
+					mediator._Descriptor.components
+				).then(() => {
 					done(new Error("There is no generated error"));
 				}).catch((err) => {
 
@@ -140,9 +159,12 @@ describe("Mediator / checkParameters / url parameters content", () => {
 
 			it("should test string data", () => {
 
-				return mediator.checkParameters("testInteger", {
+				return checkUrlParameters({
 					"path-param-integer": "1"
-				}, {}, "application/json").then((parsedData) => {
+				},
+					mediator._Descriptor.paths["/test/{path-param-integer}"].get.parameters,
+					mediator._Descriptor.components
+				).then((parsedData) => {
 
 					strictEqual(typeof parsedData, "object", "Parsed data is not as expected");
 					strictEqual(typeof parsedData["path-param-integer"], "number", "Sended data is not as expected");
@@ -154,9 +176,12 @@ describe("Mediator / checkParameters / url parameters content", () => {
 
 			it("should test integer data", () => {
 
-				return mediator.checkParameters("testInteger", {
+				return checkUrlParameters({
 					"path-param-integer": 1
-				}, {}, "application/json").then((parsedData) => {
+				},
+					mediator._Descriptor.paths["/test/{path-param-integer}"].get.parameters,
+					mediator._Descriptor.components
+				).then((parsedData) => {
 
 					strictEqual(typeof parsedData, "object", "Parsed data is not as expected");
 					strictEqual(typeof parsedData["path-param-integer"], "number", "Sended data is not as expected");
@@ -172,9 +197,12 @@ describe("Mediator / checkParameters / url parameters content", () => {
 
 			it("should test wrong data", (done) => {
 
-				mediator.checkParameters("testNumber", {
+				checkUrlParameters({
 					"path-param-number": false
-				}, {}, "application/json").then(() => {
+				},
+					mediator._Descriptor.paths["/test/{path-param-number}"].get.parameters,
+					mediator._Descriptor.components
+				).then(() => {
 					done(new Error("There is no generated error"));
 				}).catch((err) => {
 
@@ -189,9 +217,12 @@ describe("Mediator / checkParameters / url parameters content", () => {
 
 			it("should test string data", () => {
 
-				return mediator.checkParameters("testNumber", {
+				return checkUrlParameters({
 					"path-param-number": "1.1"
-				}, {}, "application/json").then((parsedData) => {
+				},
+					mediator._Descriptor.paths["/test/{path-param-number}"].get.parameters,
+					mediator._Descriptor.components
+				).then((parsedData) => {
 
 					strictEqual(typeof parsedData, "object", "Parsed data is not as expected");
 					strictEqual(typeof parsedData["path-param-number"], "number", "Sended data is not as expected");
@@ -203,9 +234,12 @@ describe("Mediator / checkParameters / url parameters content", () => {
 
 			it("should test number data", () => {
 
-				return mediator.checkParameters("testNumber", {
+				return checkUrlParameters({
 					"path-param-number": 1.1
-				}, {}, "application/json").then((parsedData) => {
+				},
+					mediator._Descriptor.paths["/test/{path-param-number}"].get.parameters,
+					mediator._Descriptor.components
+				).then((parsedData) => {
 
 					strictEqual(typeof parsedData, "object", "Parsed data is not as expected");
 					strictEqual(typeof parsedData["path-param-number"], "number", "Sended data is not as expected");
