@@ -128,6 +128,30 @@ module.exports = {
 						}
 					}
 				}
+			},
+			"/test/object": {
+				"post": {
+					"operationId": "testObject",
+					"requestBody": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"body-param-object": {
+											"type": "object",
+											"properties": {
+												"test": "string"
+											},
+											"required": [ "test" ]
+										}
+									},
+									"required": [ "body-param-object" ]
+								}
+							}
+						}
+					}
+				}
 			}
 		},
 		"components": {

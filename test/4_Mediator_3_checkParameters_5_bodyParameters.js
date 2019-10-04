@@ -252,6 +252,72 @@ describe("Mediator / checkParameters / body parameters content", () => {
 
 		});
 
+		describe("object", () => {
+
+			it("should test wrong data", (done) => {
+
+				checkBodyParameters({
+					"body-param-object": false
+				}, mediator._Descriptor.paths["/test/object"].post.requestBody,
+					"application/json",
+					mediator._Descriptor.components
+				).then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not as expected");
+					strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+
+					done();
+
+				});
+
+			});
+
+			// @TODO create recurive tests (empty = required)
+
+		});
+
+		describe("array", () => {
+			// @TODO create Array tests
+		});
+
 	});
+
+	/*
+	describe("limits", () => {
+
+		describe("integer", () => {
+
+			it("should test lower data", (done) => {
+
+				checkBodyParameters({
+					"body-param-object": false
+				}, mediator._Descriptor.paths["/test/object"].post.requestBody,
+					"application/json",
+					mediator._Descriptor.components
+				).then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not as expected");
+					strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+
+					done();
+
+				});
+
+			});
+
+		});
+
+		describe("number", () => {
+		});
+
+		describe("object", () => {
+		});
+
+	});
+	*/
 
 });
