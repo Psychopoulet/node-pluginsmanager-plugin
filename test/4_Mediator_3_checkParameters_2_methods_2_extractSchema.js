@@ -71,14 +71,20 @@ describe("Mediator / checkParameters / extractSchema", () => {
 		const schema = extractSchema({
 			"type": "array",
 			"minLength": 0,
-			"maxLength": 5
+			"maxLength": 5,
+			"items": {
+				"type": "string"
+			}
 		});
 
 		strictEqual(typeof schema, "object", "Generated schema is not as expected");
 		deepStrictEqual(schema, {
 			"type": "array",
 			"min": 0,
-			"max": 5
+			"max": 5,
+			"items": {
+				"type": "string"
+			}
 		}, "Generated schema is not as expected");
 
 	});
