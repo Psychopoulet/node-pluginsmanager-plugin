@@ -551,6 +551,46 @@ module.exports = function test (server) {
 
 			});
 
+			describe("object", () => {
+
+				it("should test request with wrong data", () => {
+
+					return httpRequestTest(URL_API + "/valid/body/object", "get", {
+						"body-param-object": false
+					}, 400, "Bad Request", {
+						"code": "WRONG_TYPE_PARAMETER",
+						"message": "\"body-param-object\" body parameter is not an object"
+					});
+
+				});
+
+				it("should test request with missing property", () => {
+
+					return httpRequestTest(URL_API + "/valid/body/object", "get", {
+						"body-param-object": {}
+					}, 400, "Bad Request", {
+						"code": "MISSING_PARAMETER",
+						"message": "Missing body parameters : [ \"body-param-string\" ]"
+					});
+
+				});
+
+				it("should test request with valid object", () => {
+
+					return httpRequestTest(URL_API + "/valid/body/object", "get", {
+						"body-param-object": {
+							"body-param-string": "test"
+						}
+					}, 200, "OK", {
+						"body-param-object": {
+							"body-param-string": "test"
+						}
+					});
+
+				});
+
+			});
+
 		});
 
 	});
