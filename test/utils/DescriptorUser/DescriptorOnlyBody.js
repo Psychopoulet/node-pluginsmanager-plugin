@@ -125,7 +125,7 @@ module.exports = {
 									"type": "object",
 									"properties": {
 										"body-param-facultative": {
-											"type": "string"
+											"$ref": "#/components/schemas/Test"
 										}
 									},
 									"required": [ "body-param-facultative" ]
@@ -148,7 +148,7 @@ module.exports = {
 											"type": "object",
 											"properties": {
 												"test": {
-													"type": "string"
+													"$ref": "#/components/schemas/Test"
 												}
 											},
 											"required": [ "test" ]
@@ -173,7 +173,7 @@ module.exports = {
 										"body-param-array": {
 											"type": "array",
 											"items": {
-												"type": "string"
+												"$ref": "#/components/schemas/Test"
 											},
 											"minLength": 1,
 											"maxLength": 5
@@ -197,6 +197,9 @@ module.exports = {
 						}
 					},
 					"required": [ "body-param-component" ]
+				},
+				"Test": {
+					"type": "string"
 				}
 			}
 		}

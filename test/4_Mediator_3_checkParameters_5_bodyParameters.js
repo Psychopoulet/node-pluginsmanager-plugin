@@ -365,7 +365,6 @@ describe("Mediator / checkParameters / body parameters content", () => {
 
 			});
 
-			/*
 			it("should test missing data", (done) => {
 
 				checkBodyParameters({
@@ -389,27 +388,20 @@ describe("Mediator / checkParameters / body parameters content", () => {
 			it("should test object data", () => {
 
 				return checkBodyParameters({
-					"body-param-array": {
-						"test": "test"
-					}
+					"body-param-array": [ "test" ]
 				}, mediator._Descriptor.paths["/test/array"].post.requestBody,
 					"application/json",
 					mediator._Descriptor.components
 				).then((parsedData) => {
 
-					strictEqual(typeof parsedData, "array", "Parsed data is not as expected");
+					strictEqual(typeof parsedData, "object", "Parsed data is not as expected");
 					strictEqual(typeof parsedData["body-param-array"], "object", "Sended data is not as expected");
 					strictEqual(parsedData["body-param-array"] instanceof Array, true, "Sended data is not as expected");
-					deepStrictEqual(parsedData["body-param-array"], [
-						{
-							"test": "test"
-						}
-					], "Sended data is not as expected");
+					deepStrictEqual(parsedData["body-param-array"], [ "test" ], "Sended data is not as expected");
 
 				});
 
 			});
-			*/
 
 		});
 
