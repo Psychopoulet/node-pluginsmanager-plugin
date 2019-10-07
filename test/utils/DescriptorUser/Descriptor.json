@@ -354,6 +354,66 @@
 				}
 			}
 		},
+		"/node-pluginsmanager-plugin/api/valid/body/object": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "bodyParamObject",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"body-param-object": {
+										"$ref": "#/components/schemas/TestObject"
+									}
+								},
+								"required": [ "body-param-object" ]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/valid/body/array": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "bodyParamArray",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"body-param-string": {
+										"$ref": "#/components/schemas/TestString"
+									}
+								},
+								"required": [ "body-param-string" ]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
 		"/node-pluginsmanager-plugin/api/valid/body/facultative": {
 			"get": {
 				"description": "",
@@ -440,15 +500,6 @@
 			}
 		},
 		"schemas": {
-			"body-param-string": {
-				"type": "object",
-				"properties": {
-					"body-param-string": {
-						"$ref": "#/components/schemas/TestString"
-					}
-				},
-				"required": [ "body-param-string" ]
-			},
 			"TestInteger": {
 				"type": "integer",
 				"maximum": 5
@@ -460,6 +511,15 @@
 			"TestString": {
 				"type": "string",
 				"maxLength": 5
+			},
+			"TestObject": {
+				"type": "object",
+				"properties": {
+					"body-param-string": {
+						"$ref": "#/components/schemas/TestString"
+					}
+				},
+				"required": [ "body-param-string" ]
 			}
 		}
 	},

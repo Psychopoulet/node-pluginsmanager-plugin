@@ -420,7 +420,7 @@ module.exports = function test (server) {
 
 				});
 
-				it("should test request with valid boolean param request", () => {
+				it("should test request with valid boolean", () => {
 
 					return httpRequestTest(URL_API + "/valid/body/boolean", "get", {
 						"body-param-boolean": "false"
@@ -445,7 +445,7 @@ module.exports = function test (server) {
 
 				});
 
-				it("should test request with invalid integer param request", () => {
+				it("should test request with invalid integer", () => {
 
 					return httpRequestTest(URL_API + "/valid/body/integer", "get", {
 						"body-param-integer": 6
@@ -456,7 +456,7 @@ module.exports = function test (server) {
 
 				});
 
-				it("should test request with valid integer param request", () => {
+				it("should test request with valid integer", () => {
 
 					return httpRequestTest(URL_API + "/valid/body/integer", "get", {
 						"body-param-integer": "1"
@@ -481,7 +481,7 @@ module.exports = function test (server) {
 
 				});
 
-				it("should test request with invalid number param request", () => {
+				it("should test request with invalid number", () => {
 
 					return httpRequestTest(URL_API + "/valid/body/number", "get", {
 						"body-param-number": 0.6
@@ -492,7 +492,7 @@ module.exports = function test (server) {
 
 				});
 
-				it("should test request with valid number param request", () => {
+				it("should test request with valid number", () => {
 
 					return httpRequestTest(URL_API + "/valid/body/number", "get", {
 						"body-param-number": "0.1"
@@ -506,28 +506,45 @@ module.exports = function test (server) {
 
 			describe("string", () => {
 
-				it("should test request with empty path parameter", () => {
+				it("should test request with wrong data", () => {
 
-					return httpRequestTest(URL_API + "/valid/url/string/", "get", null, 400, "Bad Request", {
-						"code": "RANGE_OR_EMPTY_PARAMETER",
-						"message": "\"path-param-string\" url path parameter is empty"
+					return httpRequestTest(URL_API + "/valid/body/string", "get", {
+						"body-param-string": false
+					}, 400, "Bad Request", {
+						"code": "WRONG_TYPE_PARAMETER",
+						"message": "\"body-param-string\" body parameter is not a string"
 					});
 
 				});
 
-				it("should test request with invalid string length param request", () => {
+				it("should test request with empty data", () => {
 
-					return httpRequestTest(URL_API + "/valid/url/string/thisisatest", "get", null, 400, "Bad Request", {
+					return httpRequestTest(URL_API + "/valid/body/string", "get", {
+						"body-param-string": ""
+					}, 400, "Bad Request", {
 						"code": "RANGE_OR_EMPTY_PARAMETER",
-						"message": "\"path-param-string\" url parameter length must be lower or equals to 5"
+						"message": "\"body-param-string\" body parameter is empty"
 					});
 
 				});
 
-				it("should test request with valid string param request", () => {
+				it("should test request with invalid string length", () => {
 
-					return httpRequestTest(URL_API + "/valid/url/string/test", "get", null, 200, "OK", {
-						"path-param-string": "test"
+					return httpRequestTest(URL_API + "/valid/body/string", "get", {
+						"body-param-string": "thisisatest"
+					}, 400, "Bad Request", {
+						"code": "RANGE_OR_EMPTY_PARAMETER",
+						"message": "\"body-param-string\" body parameter length must be lower or equals to 5"
+					});
+
+				});
+
+				it("should test request with valid string", () => {
+
+					return httpRequestTest(URL_API + "/valid/body/string", "get", {
+						"body-param-string": "test"
+					}, 200, "OK", {
+						"body-param-string": "test"
 					});
 
 				});

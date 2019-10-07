@@ -24,17 +24,11 @@ module.exports = class HeritedMediator extends LocalMediator {
 		return Promise.resolve([ "test" ]);
 	}
 
-	urlParamString (urlParams, bodyParams, contentType) {
+	urlParamBoolean (urlParams, bodyParams, contentType) {
 
-		return this.checkParameters("urlParamString", urlParams, bodyParams, contentType).then((parsed) => {
+		return this.checkParameters("urlParamBoolean", urlParams, bodyParams, contentType).then((parsed) => {
 
-			if ("" === parsed.url["path-param-string"].trim()) {
-				return Promise.reject(new RangeError("\"path-param-string\" url path parameter is empty"));
-			}
-
-			else {
-				return Promise.resolve(parsed.url);
-			}
+			return Promise.resolve(parsed.url);
 
 		});
 
@@ -60,11 +54,17 @@ module.exports = class HeritedMediator extends LocalMediator {
 
 	}
 
-	urlParamBoolean (urlParams, bodyParams, contentType) {
+	urlParamString (urlParams, bodyParams, contentType) {
 
-		return this.checkParameters("urlParamBoolean", urlParams, bodyParams, contentType).then((parsed) => {
+		return this.checkParameters("urlParamString", urlParams, bodyParams, contentType).then((parsed) => {
 
-			return Promise.resolve(parsed.url);
+			if ("" === parsed.url["path-param-string"].trim()) {
+				return Promise.reject(new RangeError("\"path-param-string\" url path parameter is empty"));
+			}
+
+			else {
+				return Promise.resolve(parsed.url);
+			}
 
 		});
 
@@ -76,17 +76,11 @@ module.exports = class HeritedMediator extends LocalMediator {
 
 	}
 
-	bodyParamString (urlParams, bodyParams, contentType) {
+	bodyParamBoolean (urlParams, bodyParams, contentType) {
 
-		return this.checkParameters("bodyParamString", urlParams, bodyParams, contentType).then((parsed) => {
+		return this.checkParameters("bodyParamBoolean", urlParams, bodyParams, contentType).then((parsed) => {
 
-			if ("" === parsed.url["body-param-string"].trim()) {
-				return Promise.reject(new RangeError("\"body-param-string\" url path parameter is empty"));
-			}
-
-			else {
-				return Promise.resolve(parsed.body);
-			}
+			return Promise.resolve(parsed.body);
 
 		});
 
@@ -112,12 +106,34 @@ module.exports = class HeritedMediator extends LocalMediator {
 
 	}
 
-	bodyParamBoolean (urlParams, bodyParams, contentType) {
+	bodyParamString (urlParams, bodyParams, contentType) {
 
-		return this.checkParameters("bodyParamBoolean", urlParams, bodyParams, contentType).then((parsed) => {
+		return this.checkParameters("bodyParamString", urlParams, bodyParams, contentType).then((parsed) => {
 
+			if ("" === parsed.body["body-param-string"].trim()) {
+				return Promise.reject(new RangeError("\"body-param-string\" body parameter is empty"));
+			}
+
+			else {
+				return Promise.resolve(parsed.body);
+			}
+
+		});
+
+	}
+
+	bodyParamObject (urlParams, bodyParams, contentType) {
+
+		return this.checkParameters("bodyParamObject", urlParams, bodyParams, contentType).then((parsed) => {
 			return Promise.resolve(parsed.body);
+		});
 
+	}
+
+	bodyParamArray (urlParams, bodyParams, contentType) {
+
+		return this.checkParameters("bodyParamArray", urlParams, bodyParams, contentType).then((parsed) => {
+			return Promise.resolve(parsed.body);
 		});
 
 	}
