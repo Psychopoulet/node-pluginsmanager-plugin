@@ -379,7 +379,7 @@
 				"description": "Entity name",
 				"required": true,
 				"schema": {
-					"type": "string"
+					"$ref": "#/components/schemas/TestString"
 				}
 			}
 		},
@@ -388,10 +388,14 @@
 				"type": "object",
 				"properties": {
 					"body-param-string": {
-						"type": "string"
+						"$ref": "#/components/schemas/TestString"
 					}
 				},
 				"required": [ "body-param-string" ]
+			},
+			"TestString": {
+				"type": "string",
+				"maxLength": 5
 			}
 		}
 	},

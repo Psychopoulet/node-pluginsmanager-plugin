@@ -92,19 +92,57 @@ module.exports = function test (server) {
 
 	describe("check path parameters", () => {
 
-		it("should test request with empty path parameter", () => {
+		describe("types", () => {
 
-			return httpRequestTest(URL_API + "/valid/url/string/", "get", null, 400, "Bad Request", {
-				"code": "RANGE_OR_EMPTY_PARAMETER",
-				"message": "\"path-param-string\" url path parameter is empty"
+			describe("boolean", () => {
+
+				it("should test request with wrong data", () => {
+
+					return httpRequestTest(URL_API + "/valid/url/boolean/1", "get", null, 400, "Bad Request", {
+						"code": "WRONG_TYPE_PARAMETER",
+						"message": "\"path-param-boolean\" url parameter is not a boolean"
+					});
+
+				});
+
+				it("should test request with valid boolean param request", () => {
+
+					return httpRequestTest(URL_API + "/valid/url/boolean/false", "get", null, 200, "OK", {
+						"path-param-boolean": false
+					});
+
+				});
+
 			});
 
-		});
+			describe("string", () => {
 
-		it("should test request with valid string param request", () => {
+				it("should test request with empty path parameter", () => {
 
-			return httpRequestTest(URL_API + "/valid/url/string/test", "get", null, 200, "OK", {
-				"path-param-string": "test"
+					return httpRequestTest(URL_API + "/valid/url/string/", "get", null, 400, "Bad Request", {
+						"code": "RANGE_OR_EMPTY_PARAMETER",
+						"message": "\"path-param-string\" url path parameter is empty"
+					});
+
+				});
+
+				it("should test request with invalid string length param request", () => {
+
+					return httpRequestTest(URL_API + "/valid/url/string/thisisatest", "get", null, 400, "Bad Request", {
+						"code": "RANGE_OR_EMPTY_PARAMETER",
+						"message": "\"path-param-string\" url parameter length must be lower or equals to 5"
+					});
+
+				});
+
+				it("should test request with valid string param request", () => {
+
+					return httpRequestTest(URL_API + "/valid/url/string/test", "get", null, 200, "OK", {
+						"path-param-string": "test"
+					});
+
+				});
+
 			});
 
 		});

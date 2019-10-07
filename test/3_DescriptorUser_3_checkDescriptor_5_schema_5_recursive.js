@@ -22,12 +22,8 @@ describe("DescriptorUser / checkDescriptor / checkSchema / recursive", () => {
 
 		it("should test missing properties", () => {
 
-			const err = checkSchema("/test", "get", "parameters", "body-param", {
-				"body-param": {
-					"schema": {
-						"type": "object"
-					}
-				}
+			const err = checkSchema("/test", "get", "parameters", "body-param.test", {
+				"type": "object"
 			});
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
@@ -37,7 +33,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / recursive", () => {
 
 		it("should test wrong type properties", () => {
 
-			const err = checkSchema("/test", "get", "parameters", "body-param", {
+			const err = checkSchema("/test", "get", "parameters", "body-param.test", {
 				"type": "object",
 				"properties": false
 			});
@@ -49,7 +45,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / recursive", () => {
 
 		it("should test empty properties", () => {
 
-			const err = checkSchema("/test", "get", "parameters", "body-param", {
+			const err = checkSchema("/test", "get", "parameters", "body-param.test", {
 				"type": "object",
 				"properties": {}
 			});
@@ -59,9 +55,9 @@ describe("DescriptorUser / checkDescriptor / checkSchema / recursive", () => {
 
 		});
 
-		it("should test wrong type recursive data", () => {
+		it("should test wrong type data", () => {
 
-			const err = checkSchema("/test", "get", "parameters", "body-param", {
+			const err = checkSchema("/test", "get", "parameters", "body-param.test", {
 				"type": "object",
 				"properties": {
 					"test": false
@@ -73,9 +69,9 @@ describe("DescriptorUser / checkDescriptor / checkSchema / recursive", () => {
 
 		});
 
-		it("should test empty recursive data", () => {
+		it("should test empty data", () => {
 
-			const err = checkSchema("/test", "get", "parameters", "body-param", {
+			const err = checkSchema("/test", "get", "parameters", "body-param.test", {
 				"type": "object",
 				"properties": {
 					"test": {}
@@ -87,9 +83,9 @@ describe("DescriptorUser / checkDescriptor / checkSchema / recursive", () => {
 
 		});
 
-		it("should test wrong type recursive data", () => {
+		it("should test wrong type data", () => {
 
-			const err = checkSchema("/test", "get", "parameters", "body-param", {
+			const err = checkSchema("/test", "get", "parameters", "body-param.test", {
 				"type": "object",
 				"properties": {
 					"test": {
@@ -103,7 +99,7 @@ describe("DescriptorUser / checkDescriptor / checkSchema / recursive", () => {
 
 		});
 
-		it("should test param full valid object recursive data", () => {
+		it("should test param full valid object data", () => {
 
 			const err = checkSchema("/test", "get", "parameters", "body-param.test", {
 				"type": "object",
@@ -116,6 +112,140 @@ describe("DescriptorUser / checkDescriptor / checkSchema / recursive", () => {
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
 			strictEqual(err, null, "Generated error is not as expected");
+
+		});
+
+		describe("recursivity lvl2", () => {
+
+			it("should test missing properties", () => {
+
+				const err = checkSchema("/test", "get", "parameters", "body-param.lvl1.lvl2", {
+					"type": "object",
+					"properties": {
+						"lvl1": {
+							"type": "object"
+						}
+					}
+				});
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+
+			});
+
+			it("should test wrong type properties", () => {
+
+				const err = checkSchema("/test", "get", "parameters", "body-param.lvl1.lvl2", {
+					"type": "object",
+					"properties": {
+						"lvl1": {
+							"type": "object",
+							"properties": false
+						}
+					}
+				});
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+
+			});
+
+			it("should test empty properties", () => {
+
+				const err = checkSchema("/test", "get", "parameters", "body-param.lvl1.lvl2", {
+					"type": "object",
+					"properties": {
+						"lvl1": {
+							"type": "object",
+							"properties": {}
+						}
+					}
+				});
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
+
+			});
+
+			it("should test wrong type data", () => {
+
+				const err = checkSchema("/test", "get", "parameters", "body-param.lvl1.lvl2", {
+					"type": "object",
+					"properties": {
+						"lvl1": {
+							"type": "object",
+							"properties": {
+								"lvl2": false
+							}
+						}
+					}
+				});
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+
+			});
+
+			it("should test empty data", () => {
+
+				const err = checkSchema("/test", "get", "parameters", "body-param.lvl1.lvl2", {
+					"type": "object",
+					"properties": {
+						"lvl1": {
+							"type": "object",
+							"properties": {
+								"lvl2": {}
+							}
+						}
+					}
+				});
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
+
+			});
+
+			it("should test wrong type data", () => {
+
+				const err = checkSchema("/test", "get", "parameters", "body-param.lvl1.lvl2", {
+					"type": "object",
+					"properties": {
+						"lvl1": {
+							"type": "object",
+							"properties": {
+								"lvl2": {
+									"type": false
+								}
+							}
+						}
+					}
+				});
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+
+			});
+
+			it("should test param full valid object data", () => {
+
+				const err = checkSchema("/test", "get", "parameters", "body-param.lvl1.lvl2", {
+					"type": "object",
+					"properties": {
+						"lvl1": {
+							"type": "object",
+							"properties": {
+								"lvl2": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				});
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err, null, "Generated error is not as expected");
+
+			});
 
 		});
 
