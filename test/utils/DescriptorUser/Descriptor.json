@@ -395,11 +395,16 @@
 							"schema": {
 								"type": "object",
 								"properties": {
-									"body-param-string": {
-										"$ref": "#/components/schemas/TestString"
+									"body-param-array": {
+										"type": "array",
+										"items": {
+											"$ref": "#/components/schemas/TestString"
+										},
+										"minLength": 1,
+										"maxLength": 5
 									}
 								},
-								"required": [ "body-param-string" ]
+								"required": [ "body-param-array" ]
 							}
 						}
 					}

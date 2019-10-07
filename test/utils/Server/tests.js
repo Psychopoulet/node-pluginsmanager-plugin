@@ -591,6 +591,70 @@ module.exports = function test (server) {
 
 			});
 
+			describe("array", () => {
+
+				it("should test request with wrong data", () => {
+
+					return httpRequestTest(URL_API + "/valid/body/array", "get", {
+						"body-param-array": false
+					}, 400, "Bad Request", {
+						"code": "WRONG_TYPE_PARAMETER",
+						"message": "\"body-param-array\" body parameter is not an Array"
+					});
+
+				});
+
+				it("should test request with missing data", () => {
+
+					return httpRequestTest(URL_API + "/valid/body/array", "get", {
+						"body-param-array": []
+					}, 400, "Bad Request", {
+						"code": "RANGE_OR_EMPTY_PARAMETER",
+						"message": "\"body-param-array\" body parameter length must be higher or equals to 1"
+					});
+
+				});
+
+				it("should test request with too much data", () => {
+
+					return httpRequestTest(URL_API + "/valid/body/array", "get", {
+						"body-param-array": [ "test", "test", "test", "test", "test", "test" ]
+					}, 400, "Bad Request", {
+						"code": "RANGE_OR_EMPTY_PARAMETER",
+						"message": "\"body-param-array\" body parameter length must be lower or equals to 5"
+					});
+
+				});
+
+				/*
+				it("should test request with one incorrect data", () => {
+
+					return httpRequestTest(URL_API + "/valid/body/array", "get", {
+						"body-param-array": [ "test", "thisisatest", "test" ]
+					}, 400, "Bad Request", {
+						"code": "WRONG_TYPE_PARAMETER",
+						"message": "\"body-param-array[1]\" body parameter is not a string"
+					});
+
+				});
+				*/
+
+				it("should test request with valid object", () => {
+
+					return httpRequestTest(URL_API + "/valid/body/object", "get", {
+						"body-param-object": {
+							"body-param-string": "test"
+						}
+					}, 200, "OK", {
+						"body-param-object": {
+							"body-param-string": "test"
+						}
+					});
+
+				});
+
+			});
+
 		});
 
 	});
