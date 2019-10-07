@@ -39,7 +39,9 @@ module.exports = {
 									"type": "object",
 									"properties": {
 										"body-param-string": {
-											"type": "string"
+											"type": "string",
+											"minLength": 1,
+											"maxLength": 5
 										}
 									},
 									"required": [ "body-param-string" ]
@@ -59,7 +61,9 @@ module.exports = {
 									"type": "object",
 									"properties": {
 										"body-param-integer": {
-											"type": "integer"
+											"type": "integer",
+											"minimum": 1,
+											"maximum": 5
 										}
 									},
 									"required": [ "body-param-integer" ]
@@ -79,7 +83,9 @@ module.exports = {
 									"type": "object",
 									"properties": {
 										"body-param-number": {
-											"type": "number"
+											"type": "number",
+											"minimum": 0.1,
+											"maximum": 0.5
 										}
 									},
 									"required": [ "body-param-number" ]
@@ -141,12 +147,39 @@ module.exports = {
 										"body-param-object": {
 											"type": "object",
 											"properties": {
-												"test": "string"
+												"test": {
+													"type": "string"
+												}
 											},
 											"required": [ "test" ]
 										}
 									},
 									"required": [ "body-param-object" ]
+								}
+							}
+						}
+					}
+				}
+			},
+			"/test/array": {
+				"post": {
+					"operationId": "testArray",
+					"requestBody": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"body-param-array": {
+											"type": "array",
+											"items": {
+												"type": "string"
+											},
+											"minLength": 1,
+											"maxLength": 5
+										}
+									},
+									"required": [ "body-param-array" ]
 								}
 							}
 						}
