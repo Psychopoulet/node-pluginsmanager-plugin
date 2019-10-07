@@ -1,3 +1,7 @@
+/*
+	eslint max-lines: 0
+*/
+
 "use strict";
 
 // deps
@@ -92,55 +96,111 @@ module.exports = function test (server) {
 
 	describe("check path parameters", () => {
 
-		describe("types", () => {
+		describe("boolean", () => {
 
-			describe("boolean", () => {
+			it("should test request with wrong data", () => {
 
-				it("should test request with wrong data", () => {
-
-					return httpRequestTest(URL_API + "/valid/url/boolean/1", "get", null, 400, "Bad Request", {
-						"code": "WRONG_TYPE_PARAMETER",
-						"message": "\"path-param-boolean\" url parameter is not a boolean"
-					});
-
-				});
-
-				it("should test request with valid boolean param request", () => {
-
-					return httpRequestTest(URL_API + "/valid/url/boolean/false", "get", null, 200, "OK", {
-						"path-param-boolean": false
-					});
-
+				return httpRequestTest(URL_API + "/valid/url/boolean/1", "get", null, 400, "Bad Request", {
+					"code": "WRONG_TYPE_PARAMETER",
+					"message": "\"path-param-boolean\" url parameter is not a boolean"
 				});
 
 			});
 
-			describe("string", () => {
+			it("should test request with valid boolean param request", () => {
 
-				it("should test request with empty path parameter", () => {
-
-					return httpRequestTest(URL_API + "/valid/url/string/", "get", null, 400, "Bad Request", {
-						"code": "RANGE_OR_EMPTY_PARAMETER",
-						"message": "\"path-param-string\" url path parameter is empty"
-					});
-
+				return httpRequestTest(URL_API + "/valid/url/boolean/false", "get", null, 200, "OK", {
+					"path-param-boolean": false
 				});
 
-				it("should test request with invalid string length param request", () => {
+			});
 
-					return httpRequestTest(URL_API + "/valid/url/string/thisisatest", "get", null, 400, "Bad Request", {
-						"code": "RANGE_OR_EMPTY_PARAMETER",
-						"message": "\"path-param-string\" url parameter length must be lower or equals to 5"
-					});
+		});
 
+		describe("integer", () => {
+
+			it("should test request with wrong data", () => {
+
+				return httpRequestTest(URL_API + "/valid/url/integer/test", "get", null, 400, "Bad Request", {
+					"code": "WRONG_TYPE_PARAMETER",
+					"message": "\"path-param-integer\" url parameter is not an integer"
 				});
 
-				it("should test request with valid string param request", () => {
+			});
 
-					return httpRequestTest(URL_API + "/valid/url/string/test", "get", null, 200, "OK", {
-						"path-param-string": "test"
-					});
+			it("should test request with invalid integer param request", () => {
 
+				return httpRequestTest(URL_API + "/valid/url/integer/6", "get", null, 400, "Bad Request", {
+					"code": "RANGE_OR_EMPTY_PARAMETER",
+					"message": "\"path-param-integer\" url parameter must be lower or equals to 5"
+				});
+
+			});
+
+			it("should test request with valid integer param request", () => {
+
+				return httpRequestTest(URL_API + "/valid/url/integer/1", "get", null, 200, "OK", {
+					"path-param-integer": 1
+				});
+
+			});
+
+		});
+
+		describe("number", () => {
+
+			it("should test request with wrong data", () => {
+
+				return httpRequestTest(URL_API + "/valid/url/number/test", "get", null, 400, "Bad Request", {
+					"code": "WRONG_TYPE_PARAMETER",
+					"message": "\"path-param-number\" url parameter is not a number"
+				});
+
+			});
+
+			it("should test request with invalid number param request", () => {
+
+				return httpRequestTest(URL_API + "/valid/url/number/0.6", "get", null, 400, "Bad Request", {
+					"code": "RANGE_OR_EMPTY_PARAMETER",
+					"message": "\"path-param-number\" url parameter must be lower or equals to 0.5"
+				});
+
+			});
+
+			it("should test request with valid number param request", () => {
+
+				return httpRequestTest(URL_API + "/valid/url/number/0.1", "get", null, 200, "OK", {
+					"path-param-number": 0.1
+				});
+
+			});
+
+		});
+
+		describe("string", () => {
+
+			it("should test request with empty path parameter", () => {
+
+				return httpRequestTest(URL_API + "/valid/url/string/", "get", null, 400, "Bad Request", {
+					"code": "RANGE_OR_EMPTY_PARAMETER",
+					"message": "\"path-param-string\" url path parameter is empty"
+				});
+
+			});
+
+			it("should test request with invalid string length param request", () => {
+
+				return httpRequestTest(URL_API + "/valid/url/string/thisisatest", "get", null, 400, "Bad Request", {
+					"code": "RANGE_OR_EMPTY_PARAMETER",
+					"message": "\"path-param-string\" url parameter length must be lower or equals to 5"
+				});
+
+			});
+
+			it("should test request with valid string param request", () => {
+
+				return httpRequestTest(URL_API + "/valid/url/string/test", "get", null, 200, "OK", {
+					"path-param-string": "test"
 				});
 
 			});
@@ -184,22 +244,6 @@ module.exports = function test (server) {
 		it("should test request with component", () => {
 
 			return httpRequestTest(URL_API + "/valid/url/string/test", "get", null, 200, "OK");
-
-		});
-
-		it("should test request with number formate", () => {
-
-			return httpRequestTest(URL_API + "/valid/url/number/1", "get", null, 200, "OK", {
-				"path-param-number": 1
-			});
-
-		});
-
-		it("should test request with boolean formate", () => {
-
-			return httpRequestTest(URL_API + "/valid/url/boolean/false", "get", null, 200, "OK", {
-				"path-param-boolean": false
-			});
 
 		});
 
@@ -356,6 +400,137 @@ module.exports = function test (server) {
 					"Content-Type": "application/json",
 					"Content-Length": Buffer.byteLength(JSON.stringify(params))
 				}, 201, "Created");
+
+			});
+
+		});
+
+		describe("check path parameters", () => {
+
+			describe("boolean", () => {
+
+				it("should test request with wrong data", () => {
+
+					return httpRequestTest(URL_API + "/valid/body/boolean", "get", {
+						"body-param-boolean": "test"
+					}, 400, "Bad Request", {
+						"code": "WRONG_TYPE_PARAMETER",
+						"message": "\"body-param-boolean\" body parameter is not a boolean"
+					});
+
+				});
+
+				it("should test request with valid boolean param request", () => {
+
+					return httpRequestTest(URL_API + "/valid/body/boolean", "get", {
+						"body-param-boolean": "false"
+					}, 200, "OK", {
+						"body-param-boolean": false
+					});
+
+				});
+
+			});
+
+			describe("integer", () => {
+
+				it("should test request with wrong data", () => {
+
+					return httpRequestTest(URL_API + "/valid/body/integer", "get", {
+						"body-param-integer": "test"
+					}, 400, "Bad Request", {
+						"code": "WRONG_TYPE_PARAMETER",
+						"message": "\"body-param-integer\" body parameter is not an integer"
+					});
+
+				});
+
+				it("should test request with invalid integer param request", () => {
+
+					return httpRequestTest(URL_API + "/valid/body/integer", "get", {
+						"body-param-integer": 6
+					}, 400, "Bad Request", {
+						"code": "RANGE_OR_EMPTY_PARAMETER",
+						"message": "\"body-param-integer\" body parameter must be lower or equals to 5"
+					});
+
+				});
+
+				it("should test request with valid integer param request", () => {
+
+					return httpRequestTest(URL_API + "/valid/body/integer", "get", {
+						"body-param-integer": "1"
+					}, 200, "OK", {
+						"body-param-integer": 1
+					});
+
+				});
+
+			});
+
+			describe("number", () => {
+
+				it("should test request with wrong data", () => {
+
+					return httpRequestTest(URL_API + "/valid/body/number", "get", {
+						"body-param-number": "test"
+					}, 400, "Bad Request", {
+						"code": "WRONG_TYPE_PARAMETER",
+						"message": "\"body-param-number\" body parameter is not a number"
+					});
+
+				});
+
+				it("should test request with invalid number param request", () => {
+
+					return httpRequestTest(URL_API + "/valid/body/number", "get", {
+						"body-param-number": 0.6
+					}, 400, "Bad Request", {
+						"code": "RANGE_OR_EMPTY_PARAMETER",
+						"message": "\"body-param-number\" body parameter must be lower or equals to 0.5"
+					});
+
+				});
+
+				it("should test request with valid number param request", () => {
+
+					return httpRequestTest(URL_API + "/valid/body/number", "get", {
+						"body-param-number": "0.1"
+					}, 200, "OK", {
+						"body-param-number": 0.1
+					});
+
+				});
+
+			});
+
+			describe("string", () => {
+
+				it("should test request with empty path parameter", () => {
+
+					return httpRequestTest(URL_API + "/valid/url/string/", "get", null, 400, "Bad Request", {
+						"code": "RANGE_OR_EMPTY_PARAMETER",
+						"message": "\"path-param-string\" url path parameter is empty"
+					});
+
+				});
+
+				it("should test request with invalid string length param request", () => {
+
+					return httpRequestTest(URL_API + "/valid/url/string/thisisatest", "get", null, 400, "Bad Request", {
+						"code": "RANGE_OR_EMPTY_PARAMETER",
+						"message": "\"path-param-string\" url parameter length must be lower or equals to 5"
+					});
+
+				});
+
+				it("should test request with valid string param request", () => {
+
+					return httpRequestTest(URL_API + "/valid/url/string/test", "get", null, 200, "OK", {
+						"path-param-string": "test"
+					});
+
+				});
 
 			});
 

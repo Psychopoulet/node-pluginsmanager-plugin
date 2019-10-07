@@ -110,14 +110,46 @@
 				}
 			}
 		},
-		"/node-pluginsmanager-plugin/api/valid/url/string/{path-param-string}": {
+		"/node-pluginsmanager-plugin/api/valid/url/boolean/{path-param-boolean}": {
 			"get": {
 				"description": "",
 				"summary": "Simple API test for Server class",
-				"operationId": "urlParamString",
+				"operationId": "urlParamBoolean",
 				"parameters": [
 					{
-						"$ref": "#/components/parameters/path-param-string"
+						"name": "path-param-boolean",
+						"in": "path",
+						"description": "Entity name",
+						"required": true,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/valid/url/integer/{path-param-integer}": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "urlParamInteger",
+				"parameters": [
+					{
+						"name": "path-param-integer",
+						"in": "path",
+						"description": "Entity name",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/TestInteger"
+						}
 					}
 				],
 				"responses": {
@@ -142,7 +174,7 @@
 						"description": "Entity name",
 						"required": true,
 						"schema": {
-							"type": "number"
+							"$ref": "#/components/schemas/TestNumber"
 						}
 					}
 				],
@@ -156,20 +188,14 @@
 				}
 			}
 		},
-		"/node-pluginsmanager-plugin/api/valid/url/boolean/{path-param-boolean}": {
+		"/node-pluginsmanager-plugin/api/valid/url/string/{path-param-string}": {
 			"get": {
 				"description": "",
 				"summary": "Simple API test for Server class",
-				"operationId": "urlParamBoolean",
+				"operationId": "urlParamString",
 				"parameters": [
 					{
-						"name": "path-param-boolean",
-						"in": "path",
-						"description": "Entity name",
-						"required": true,
-						"schema": {
-							"type": "boolean"
-						}
+						"$ref": "#/components/parameters/path-param-string"
 					}
 				],
 				"responses": {
@@ -208,22 +234,52 @@
 				}
 			}
 		},
-		"/node-pluginsmanager-plugin/api/valid/body/string": {
+		"/node-pluginsmanager-plugin/api/valid/body/boolean": {
 			"get": {
 				"description": "",
 				"summary": "Simple API test for Server class",
-				"operationId": "bodyParamString",
+				"operationId": "bodyParamBoolean",
 				"requestBody": {
 					"content": {
 						"application/json": {
 							"schema": {
 								"type": "object",
 								"properties": {
-									"body-param-string": {
-										"type": "string"
+									"body-param-boolean": {
+										"type": "boolean"
 									}
 								},
-								"required": [ "body-param-string" ]
+								"required": [ "body-param-boolean" ]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/valid/body/integer": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "bodyParamInteger",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"body-param-integer": {
+										"$ref": "#/components/schemas/TestInteger"
+									}
+								},
+								"required": [ "body-param-integer" ]
 							}
 						}
 					}
@@ -250,7 +306,7 @@
 								"type": "object",
 								"properties": {
 									"body-param-number": {
-										"type": "number"
+										"$ref": "#/components/schemas/TestNumber"
 									}
 								},
 								"required": [ "body-param-number" ]
@@ -268,22 +324,22 @@
 				}
 			}
 		},
-		"/node-pluginsmanager-plugin/api/valid/body/boolean": {
+		"/node-pluginsmanager-plugin/api/valid/body/string": {
 			"get": {
 				"description": "",
 				"summary": "Simple API test for Server class",
-				"operationId": "bodyParamBoolean",
+				"operationId": "bodyParamString",
 				"requestBody": {
 					"content": {
 						"application/json": {
 							"schema": {
 								"type": "object",
 								"properties": {
-									"body-param-boolean": {
-										"type": "boolean"
+									"body-param-string": {
+										"$ref": "#/components/schemas/TestString"
 									}
 								},
-								"required": [ "body-param-boolean" ]
+								"required": [ "body-param-string" ]
 							}
 						}
 					}
@@ -392,6 +448,14 @@
 					}
 				},
 				"required": [ "body-param-string" ]
+			},
+			"TestInteger": {
+				"type": "integer",
+				"maximum": 5
+			},
+			"TestNumber": {
+				"type": "number",
+				"maximum": 0.5
 			},
 			"TestString": {
 				"type": "string",
