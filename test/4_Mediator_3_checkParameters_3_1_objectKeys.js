@@ -7,7 +7,9 @@
 	const { strictEqual } = require("assert");
 
 	// locals
-	const checkParamsKeys = require(join(__dirname, "..", "lib", "utils", "checkParameters", "checkParamsKeys.js"));
+	const checkObjectKeys = require(join(
+		__dirname, "..", "lib", "utils", "checkParameters", "checkExtractedParameter", "checkObjectKeys.js"
+	));
 
 // tests
 
@@ -15,7 +17,7 @@ describe("Mediator / checkParameters / keys", () => {
 
 	it("should test missing params", () => {
 
-		const res = checkParamsKeys({}, [
+		const res = checkObjectKeys({}, [
 			{
 				"name": "test",
 				"type": "string",
@@ -30,7 +32,7 @@ describe("Mediator / checkParameters / keys", () => {
 
 	it("should test too much params", () => {
 
-		const res = checkParamsKeys({
+		const res = checkObjectKeys({
 			"test": "test"
 		}, [
 			{
@@ -47,7 +49,7 @@ describe("Mediator / checkParameters / keys", () => {
 
 	it("should test no params", () => {
 
-		const res = checkParamsKeys({}, [], "body");
+		const res = checkObjectKeys({}, [], "body");
 
 		strictEqual(typeof res, "object", "Generated result is not as expected");
 		strictEqual(res, null, "Generated result is not as expected");
@@ -56,7 +58,7 @@ describe("Mediator / checkParameters / keys", () => {
 
 	it("should test valid number of params", () => {
 
-		const res = checkParamsKeys({
+		const res = checkObjectKeys({
 			"test": "test"
 		}, [
 			{

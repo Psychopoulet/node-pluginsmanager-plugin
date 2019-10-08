@@ -102,7 +102,7 @@ module.exports = function test (server) {
 
 				return httpRequestTest(URL_API + "/valid/url/boolean/1", "get", null, 400, "Bad Request", {
 					"code": "WRONG_TYPE_PARAMETER",
-					"message": "\"path-param-boolean\" url parameter is not a boolean"
+					"message": "\"parameters[path-param-boolean]\" url parameter is not a boolean"
 				});
 
 			});
@@ -123,7 +123,7 @@ module.exports = function test (server) {
 
 				return httpRequestTest(URL_API + "/valid/url/integer/test", "get", null, 400, "Bad Request", {
 					"code": "WRONG_TYPE_PARAMETER",
-					"message": "\"path-param-integer\" url parameter is not an integer"
+					"message": "\"parameters[path-param-integer]\" url parameter is not an integer"
 				});
 
 			});
@@ -132,7 +132,7 @@ module.exports = function test (server) {
 
 				return httpRequestTest(URL_API + "/valid/url/integer/6", "get", null, 400, "Bad Request", {
 					"code": "RANGE_OR_EMPTY_PARAMETER",
-					"message": "\"path-param-integer\" url parameter must be lower or equals to 5"
+					"message": "\"parameters[path-param-integer]\" url parameter must be lower or equals to 5"
 				});
 
 			});
@@ -153,7 +153,7 @@ module.exports = function test (server) {
 
 				return httpRequestTest(URL_API + "/valid/url/number/test", "get", null, 400, "Bad Request", {
 					"code": "WRONG_TYPE_PARAMETER",
-					"message": "\"path-param-number\" url parameter is not a number"
+					"message": "\"parameters[path-param-number]\" url parameter is not a number"
 				});
 
 			});
@@ -162,7 +162,7 @@ module.exports = function test (server) {
 
 				return httpRequestTest(URL_API + "/valid/url/number/0.6", "get", null, 400, "Bad Request", {
 					"code": "RANGE_OR_EMPTY_PARAMETER",
-					"message": "\"path-param-number\" url parameter must be lower or equals to 0.5"
+					"message": "\"parameters[path-param-number]\" url parameter must be lower or equals to 0.5"
 				});
 
 			});
@@ -183,7 +183,7 @@ module.exports = function test (server) {
 
 				return httpRequestTest(URL_API + "/valid/url/string/", "get", null, 400, "Bad Request", {
 					"code": "RANGE_OR_EMPTY_PARAMETER",
-					"message": "\"path-param-string\" url path parameter is empty"
+					"message": "\"parameters[path-param-string]\" url path parameter is empty"
 				});
 
 			});
@@ -192,7 +192,7 @@ module.exports = function test (server) {
 
 				return httpRequestTest(URL_API + "/valid/url/string/thisisatest", "get", null, 400, "Bad Request", {
 					"code": "RANGE_OR_EMPTY_PARAMETER",
-					"message": "\"path-param-string\" url parameter length must be lower or equals to 5"
+					"message": "\"parameters[path-param-string]\" url parameter length must be lower or equals to 5"
 				});
 
 			});
@@ -272,7 +272,7 @@ module.exports = function test (server) {
 				"body-param": false
 			}, 400, "Bad Request", {
 				"code": "WRONG_TYPE_PARAMETER",
-				"message": "\"body-param\" body parameter is not a string"
+				"message": "\"requestBody[body-param]\" body parameter is not a string"
 			});
 
 		});
@@ -415,7 +415,7 @@ module.exports = function test (server) {
 						"body-param-boolean": "test"
 					}, 400, "Bad Request", {
 						"code": "WRONG_TYPE_PARAMETER",
-						"message": "\"body-param-boolean\" body parameter is not a boolean"
+						"message": "\"requestBody[body-param-boolean]\" body parameter is not a boolean"
 					});
 
 				});
@@ -440,7 +440,7 @@ module.exports = function test (server) {
 						"body-param-integer": "test"
 					}, 400, "Bad Request", {
 						"code": "WRONG_TYPE_PARAMETER",
-						"message": "\"body-param-integer\" body parameter is not an integer"
+						"message": "\"requestBody[body-param-integer]\" body parameter is not an integer"
 					});
 
 				});
@@ -451,7 +451,7 @@ module.exports = function test (server) {
 						"body-param-integer": 6
 					}, 400, "Bad Request", {
 						"code": "RANGE_OR_EMPTY_PARAMETER",
-						"message": "\"body-param-integer\" body parameter must be lower or equals to 5"
+						"message": "\"requestBody[body-param-integer]\" body parameter must be lower or equals to 5"
 					});
 
 				});
@@ -476,7 +476,7 @@ module.exports = function test (server) {
 						"body-param-number": "test"
 					}, 400, "Bad Request", {
 						"code": "WRONG_TYPE_PARAMETER",
-						"message": "\"body-param-number\" body parameter is not a number"
+						"message": "\"requestBody[body-param-number]\" body parameter is not a number"
 					});
 
 				});
@@ -487,7 +487,7 @@ module.exports = function test (server) {
 						"body-param-number": 0.6
 					}, 400, "Bad Request", {
 						"code": "RANGE_OR_EMPTY_PARAMETER",
-						"message": "\"body-param-number\" body parameter must be lower or equals to 0.5"
+						"message": "\"requestBody[body-param-number]\" body parameter must be lower or equals to 0.5"
 					});
 
 				});
@@ -512,7 +512,7 @@ module.exports = function test (server) {
 						"body-param-string": false
 					}, 400, "Bad Request", {
 						"code": "WRONG_TYPE_PARAMETER",
-						"message": "\"body-param-string\" body parameter is not a string"
+						"message": "\"requestBody[body-param-string]\" body parameter is not a string"
 					});
 
 				});
@@ -523,7 +523,7 @@ module.exports = function test (server) {
 						"body-param-string": ""
 					}, 400, "Bad Request", {
 						"code": "RANGE_OR_EMPTY_PARAMETER",
-						"message": "\"body-param-string\" body parameter is empty"
+						"message": "\"requestBody[body-param-string]\" body parameter is empty"
 					});
 
 				});
@@ -534,7 +534,7 @@ module.exports = function test (server) {
 						"body-param-string": "thisisatest"
 					}, 400, "Bad Request", {
 						"code": "RANGE_OR_EMPTY_PARAMETER",
-						"message": "\"body-param-string\" body parameter length must be lower or equals to 5"
+						"message": "\"requestBody[body-param-string]\" body parameter length must be lower or equals to 5"
 					});
 
 				});
@@ -559,7 +559,7 @@ module.exports = function test (server) {
 						"body-param-object": false
 					}, 400, "Bad Request", {
 						"code": "WRONG_TYPE_PARAMETER",
-						"message": "\"body-param-object\" body parameter is not an object"
+						"message": "\"requestBody[body-param-object]\" body parameter is not an object"
 					});
 
 				});
@@ -599,7 +599,7 @@ module.exports = function test (server) {
 						"body-param-array": false
 					}, 400, "Bad Request", {
 						"code": "WRONG_TYPE_PARAMETER",
-						"message": "\"body-param-array\" body parameter is not an Array"
+						"message": "\"requestBody[body-param-array]\" body parameter is not an Array"
 					});
 
 				});
@@ -610,7 +610,7 @@ module.exports = function test (server) {
 						"body-param-array": []
 					}, 400, "Bad Request", {
 						"code": "RANGE_OR_EMPTY_PARAMETER",
-						"message": "\"body-param-array\" body parameter length must be higher or equals to 1"
+						"message": "\"requestBody[body-param-array]\" body parameter length must be higher or equals to 1"
 					});
 
 				});
@@ -621,23 +621,32 @@ module.exports = function test (server) {
 						"body-param-array": [ "test", "test", "test", "test", "test", "test" ]
 					}, 400, "Bad Request", {
 						"code": "RANGE_OR_EMPTY_PARAMETER",
-						"message": "\"body-param-array\" body parameter length must be lower or equals to 5"
+						"message": "\"requestBody[body-param-array]\" body parameter length must be lower or equals to 5"
 					});
 
 				});
 
-				/*
 				it("should test request with one incorrect data", () => {
 
 					return httpRequestTest(URL_API + "/valid/body/array", "get", {
 						"body-param-array": [ "test", "thisisatest", "test" ]
 					}, 400, "Bad Request", {
-						"code": "WRONG_TYPE_PARAMETER",
-						"message": "\"body-param-array[1]\" body parameter is not a string"
+						"code": "RANGE_OR_EMPTY_PARAMETER",
+						"message": "\"requestBody[body-param-array][1]\" body parameter length must be lower or equals to 5"
 					});
 
 				});
-				*/
+
+				it("should test request with one incorrect data", () => {
+
+					return httpRequestTest(URL_API + "/valid/body/array", "get", {
+						"body-param-array": [ "test", 5, "test" ]
+					}, 400, "Bad Request", {
+						"code": "WRONG_TYPE_PARAMETER",
+						"message": "\"requestBody[body-param-array][1]\" body parameter is not a string"
+					});
+
+				});
 
 				it("should test request with valid object", () => {
 

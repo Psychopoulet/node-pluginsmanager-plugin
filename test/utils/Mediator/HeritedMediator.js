@@ -59,7 +59,7 @@ module.exports = class HeritedMediator extends LocalMediator {
 		return this.checkParameters("urlParamString", urlParams, bodyParams, contentType).then((parsed) => {
 
 			if ("" === parsed.url["path-param-string"].trim()) {
-				return Promise.reject(new RangeError("\"path-param-string\" url path parameter is empty"));
+				return Promise.reject(new RangeError("\"parameters[path-param-string]\" url path parameter is empty"));
 			}
 
 			else {
@@ -111,7 +111,7 @@ module.exports = class HeritedMediator extends LocalMediator {
 		return this.checkParameters("bodyParamString", urlParams, bodyParams, contentType).then((parsed) => {
 
 			if ("" === parsed.body["body-param-string"].trim()) {
-				return Promise.reject(new RangeError("\"body-param-string\" body parameter is empty"));
+				return Promise.reject(new RangeError("\"requestBody[body-param-string]\" body parameter is empty"));
 			}
 
 			else {
