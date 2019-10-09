@@ -29,19 +29,19 @@ It's loaded and shared by the [Orchestrator](./Orchestrator.md) and used by
 
   * You only need this section if you want to create an API for your plugin
 
+### parameters
+
+  * Supported types for "parameters" are [ "string", "number", "integer", "boolean" ]
+
+### schemas
+
+  * Supported types for "schema" are [ "string", "number", "integer", "boolean", "object", "array" ]
+  * You can add limits ("minLength" & "maxLength") for "string" & "array" types
+  * You can add limits ("minimum" & "maximum") for "number" & "integer" types
+
 ### components
 
   * Only "schemas" and "parameters" are supported.
-
-#### parameters
-
-  * Supported types for parameters are [ "string", "number", "integer", "boolean" ]
-
-#### schemas
-
-  * Supported types for schemas are [ "string", "number", "integer", "boolean", "object", "array" ]
-  * You can add limits ("minLength" & "maxLength") for "string" & "array" types
-  * You can add limits ("minimum" & "maximum") for "number" & "integer" types
 
 ## Descriptor interactions
 
@@ -61,4 +61,4 @@ It's loaded and shared by the [Orchestrator](./Orchestrator.md) and used by
 
 #### Interactions
 
-> See [Server conventions](./Mediator.md#descriptor-interactions)
+> See [Server interactions](./Mediator.md#descriptor-interactions)
