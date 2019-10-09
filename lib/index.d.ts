@@ -1,10 +1,12 @@
 /// <reference types="node" />
 /// <reference types="ws" />
+/// <reference types="socket.io" />
 
 declare module "node-pluginsmanager-plugin" {
 
 	import * as Events from "events";
 	import { Server as WebSocketServer } from "ws";
+	import { Server as SocketIOServer } from "socket.io";
 
 	// options
 
@@ -16,6 +18,11 @@ declare module "node-pluginsmanager-plugin" {
 		interface iMediatorUserOptions extends iDescriptorUserOptions {
 			"mediator": Mediator | null;
 		}
+
+	interface iMediatorCheckParametersResult {
+		"url": object;
+		"body": object;
+	}
 
 	interface iOrchestratorOptions {
 		"externalRessourcesDirectory": string;
@@ -45,14 +52,14 @@ declare module "node-pluginsmanager-plugin" {
 
 			// protected
 
-				protected _initWorkSpace(data?: any): Promise<any>;
-				protected _releaseWorkSpace(data?: any): Promise<any>;
+				protected _initWorkSpace(data?: any): Promise<void>;
+				protected _releaseWorkSpace(data?: any): Promise<void>;
 
 			// public
 
 				public checkDescriptor(): Promise<void>;
-				public init(data?: any): Promise<any>;
-				public release(data?: any): Promise<any>;
+				public init(data?: any): Promise<void>;
+				public release(data?: any): Promise<void>;
 
 	}
 
@@ -64,7 +71,7 @@ declare module "node-pluginsmanager-plugin" {
 
 		// methods
 
-			public checkParameters(operationId: string, urlParams: object, bodyParams: object, contentType: string): Promise<void>;
+			public checkParameters(operationId: string, urlParams: object, bodyParams: object, contentType: string): Promise<iMediatorCheckParametersResult>;
 
 	}
 
@@ -88,7 +95,7 @@ declare module "node-pluginsmanager-plugin" {
 
 		// attributes
 
-			protected _socketServer: WebSocketServer | null;
+			protected _socketServer: WebSocketServer | SocketIOServer | null;
 			protected _checkParameters: boolean;
 
 		// methods
@@ -97,7 +104,7 @@ declare module "node-pluginsmanager-plugin" {
 			public enableCheckParameters(): this;
 
 			public appMiddleware(req: Request, res: Response, next: Function): void;
-			public socketMiddleware(server: WebSocketServer): void;
+			public socketMiddleware(server: WebSocketServer | SocketIOServer): void;
 			public push(command: string, data?: any): this;
 
 	}
@@ -109,7 +116,7 @@ declare module "node-pluginsmanager-plugin" {
 			// protected
 
 				protected _Server: Server | null;
-				protected _socketServer: WebSocketServer | null;
+				protected _socketServer: WebSocketServer | SocketIOServer | null;
 				protected _checkParameters: boolean;
 
 				// params
@@ -156,7 +163,7 @@ declare module "node-pluginsmanager-plugin" {
 			public enableCheckParameters(): this;
 
 			public appMiddleware(req: Request, res: Response, next: Function): void;
-			public socketMiddleware(server: WebSocketServer): void;
+			public socketMiddleware(server: WebSocketServer | SocketIOServer): void;
 
 			// init / release
 
