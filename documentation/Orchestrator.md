@@ -33,6 +33,8 @@ interface iOrchestratorOptions {
 
 #### protected
 
+  * ``` protected _socketServer: boolean; ``` to delay socketMiddleware when Orchestrator is not initialized
+  * ``` protected _checkParameters: boolean; ``` to delay checkParameters when Orchestrator is not initialized
   * ``` protected _Server: Server | null; ``` Server used by the class
   * ``` protected _packageFile: string; ``` package.json file used by the plugin (absolute path) (see iOrchestratorOptions)
   * ``` protected _descriptorFile: string; ``` Descriptor file used by the plugin (absolute path) (see iOrchestratorOptions)
@@ -77,8 +79,10 @@ interface iOrchestratorOptions {
 
     --- middlewares ---
 
-  * ``` appMiddleware(req: Request, res: Response, next: function): void; ``` transfert to [Server](./Server.md) middleware
-  * ``` socketMiddleware(server: WebSocketServer): void; ``` transfert to [Server](./Server.md) middleware
+  * ``` disableCheckParameters(): this; ``` execute [Server](./Server.md) disableCheckParameters
+  * ``` enableCheckParameters(): this; ``` execute [Server](./Server.md) enableCheckParameters
+  * ``` appMiddleware(req: Request, res: Response, next: function): void; ``` transfert request to [Server](./Server.md) middleware
+  * ``` socketMiddleware(server: WebSocketServer | SocketIOServer): void; ``` transfert to [Server](./Server.md) middleware
 
     --- load / destroy ---
 

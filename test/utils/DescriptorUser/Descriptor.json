@@ -1,0 +1,545 @@
+{
+	"openapi": "3.0.2",
+	"info": {
+		"title": "node-pluginsmanager-plugin",
+		"version": "3.1.0",
+		"description": "An abstract parent plugin for node-pluginsmanager",
+		"contact": {
+			"name": "Sébastien VIDAL",
+			"url": "https://github.com/Psychopoulet/node-pluginsmanager-plugin/issues"
+		},
+		"license": {
+			"name": "ISC",
+			"url": "https://en.wikipedia.org/wiki/ISC_license"
+		}
+	},
+	"paths": {
+		"/node-pluginsmanager-plugin/descriptor": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/missingoperationid": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"responses": {
+					"501": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/unknownoperationid": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "wrgnezmgnzmoifgnzmgz",
+				"responses": {
+					"501": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/empty": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "emptyGet",
+				"responses": {
+					"404": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			},
+			"post": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "emptyPost",
+				"responses": {
+					"204": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/valid": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "valid",
+				"responses": {
+					"200": {
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/valid/url/boolean/{path-param-boolean}": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "urlParamBoolean",
+				"parameters": [
+					{
+						"name": "path-param-boolean",
+						"in": "path",
+						"description": "Entity name",
+						"required": true,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/valid/url/integer/{path-param-integer}": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "urlParamInteger",
+				"parameters": [
+					{
+						"name": "path-param-integer",
+						"in": "path",
+						"description": "Entity name",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/TestInteger"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/valid/url/number/{path-param-number}": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "urlParamNumber",
+				"parameters": [
+					{
+						"name": "path-param-number",
+						"in": "path",
+						"description": "Entity name",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/TestNumber"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/valid/url/string/{path-param-string}": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "urlParamString",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/path-param-string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/valid/url/facultative": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "urlParamFacultative",
+				"parameters": [
+					{
+						"name": "path-param-facultative",
+						"in": "query",
+						"description": "Entity name",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/valid/body/boolean": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "bodyParamBoolean",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"body-param-boolean": {
+										"type": "boolean"
+									}
+								},
+								"required": [ "body-param-boolean" ]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/valid/body/integer": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "bodyParamInteger",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"body-param-integer": {
+										"$ref": "#/components/schemas/TestInteger"
+									}
+								},
+								"required": [ "body-param-integer" ]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/valid/body/number": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "bodyParamNumber",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"body-param-number": {
+										"$ref": "#/components/schemas/TestNumber"
+									}
+								},
+								"required": [ "body-param-number" ]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/valid/body/string": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "bodyParamString",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"body-param-string": {
+										"$ref": "#/components/schemas/TestString"
+									}
+								},
+								"required": [ "body-param-string" ]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/valid/body/object": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "bodyParamObject",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"body-param-object": {
+										"$ref": "#/components/schemas/TestObject"
+									}
+								},
+								"required": [ "body-param-object" ]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/valid/body/array": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "bodyParamArray",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"body-param-array": {
+										"type": "array",
+										"items": {
+											"$ref": "#/components/schemas/TestString"
+										},
+										"minLength": 1,
+										"maxLength": 5
+									}
+								},
+								"required": [ "body-param-array" ]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/valid/body/facultative": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "bodyParamFacultative",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"body-param-facultative": {
+										"type": "string"
+									}
+								},
+								"required": [ "body-param-facultative" ]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/create": {
+			"put": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "create",
+				"parameters": [
+					{
+						"name": "url-param",
+						"in": "query",
+						"description": "Entity name",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "test name",
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"body-param": {
+										"type": "string"
+									}
+								},
+								"required": [ "body-param" ] 
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"path-param-string": {
+				"name": "path-param-string",
+				"in": "path",
+				"description": "Entity name",
+				"required": true,
+				"schema": {
+					"$ref": "#/components/schemas/TestString"
+				}
+			}
+		},
+		"schemas": {
+			"TestInteger": {
+				"type": "integer",
+				"maximum": 5
+			},
+			"TestNumber": {
+				"type": "number",
+				"maximum": 0.5
+			},
+			"TestString": {
+				"type": "string",
+				"maxLength": 5
+			},
+			"TestObject": {
+				"type": "object",
+				"properties": {
+					"body-param-string": {
+						"$ref": "#/components/schemas/TestString"
+					}
+				},
+				"required": [ "body-param-string" ]
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "http://127.0.0.1:3000",
+			"description": "Test server for HTTP requests"
+		},
+		{
+			"url": "ws://127.0.0.1:3001",
+			"description": "Test server for sockets requests"
+		}
+	],
+	"externalDocs": {
+		"description": "Find out more about this API",
+		"url": "https://github.com/Psychopoulet/node-pluginsmanager-plugin#readme"
+	}
+}
