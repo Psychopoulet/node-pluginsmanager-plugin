@@ -14,9 +14,9 @@ Plugin's API.
 
 Expose the [Mediator](./Mediator.md)'s methods with the [Descriptor](./Descriptor.md) rules.
 
-> You doesn't need any developpement in this part if you does not use sockets, everything is automaticly provided by the [Descriptor](./Descriptor.md).
+> You doesn't need any developpement in this part if you does not need "push" data from clients, everything is automaticly provided by the [Descriptor](./Descriptor.md).
 
-> If you use sockets, you can extends this class and re-write "socketMiddleware" method
+> If you does not need "push" data from clients, you can extends this class and re-write "socketMiddleware" method
 
 ## Class (extends [MediatorUser](./MediatorUser.md))
 
@@ -24,7 +24,7 @@ Expose the [Mediator](./Mediator.md)'s methods with the [Descriptor](./Descripto
 
 #### protected
 
-  * ``` protected _socketServer: WebSocketServer | null; ``` middleware for [ws server](https://www.npmjs.com/package/ws)
+  * ``` protected _socketServer: WebSocketServer | SocketIOServer | null; ``` middleware for [WebSocket server](https://www.npmjs.com/package/ws) or [SocketIO server](https://www.npmjs.com/package/socket.io)
   * ``` protected _checkParameters: boolean; ``` default true, if true always automaticly check parameters sended with Descriptor
 
 ### Methods
@@ -36,8 +36,8 @@ Expose the [Mediator](./Mediator.md)'s methods with the [Descriptor](./Descripto
   * ``` disableCheckParameters(): this; ``` disable automatic sended parameters checking with Descriptor
   * ``` enableCheckParameters(): this; ``` enable automatic sended parameters checking with Descriptor
   * ``` public appMiddleware(req: Request, res: Response, next: Function): void; ``` middleware for express (& others) to add routes
-  * ``` public socketMiddleware(server: WebSocketServer): void; ``` middleware for socket to add bilateral push events, should be re-writted if used
-  * ``` public push(command: string, data?: any): this; ``` if ws server setted, push data to all clients
+  * ``` public socketMiddleware(server: WebSocketServer | SocketIOServer): void; ``` middleware for socket to add bilateral push events, should be re-writted if used
+  * ``` public push(command: string, data?: any): this; ``` if socket server setted, push data to all clients
 
 ## Conventions
 
@@ -60,9 +60,10 @@ Expose the [Mediator](./Mediator.md)'s methods with the [Descriptor](./Descripto
 ### Used HTTP statusCode
 
   * [200](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/200) (everything is fine with a content)
-  * [201](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/201) (everything is fine for PUT request, with and/or without content)
-  * [204](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/204) (everything is fine without any content)
+  * [201](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/201) (everything is fine for PUT request, with or without content)
+  * [204](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/204) (everything is fine without content)
   * [400](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/400) (the request does not match with the [Descriptor](./Descriptor.md))
+  * [404](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/404) (everything is fine for GET request, without content)
   * [411](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/411) (the request does not have "Content-length" header)
   * [500](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/500) (the [Mediator](./Mediator.md) generate an unknown error)
   * [501](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/501) (there is no "operationId" for this path in the [Descriptor](./Descriptor.md) or the [Mediator](./Mediator.md) does not have the "operationId" method given by the [Descriptor](./Descriptor.md))

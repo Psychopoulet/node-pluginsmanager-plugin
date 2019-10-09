@@ -82,7 +82,7 @@ interface iOrchestratorOptions {
   * ``` disableCheckParameters(): this; ``` execute [Server](./Server.md) disableCheckParameters
   * ``` enableCheckParameters(): this; ``` execute [Server](./Server.md) enableCheckParameters
   * ``` appMiddleware(req: Request, res: Response, next: function): void; ``` transfert request to [Server](./Server.md) middleware
-  * ``` socketMiddleware(server: WebSocketServer): void; ``` transfert to [Server](./Server.md) middleware
+  * ``` socketMiddleware(server: WebSocketServer | SocketIOServer): void; ``` transfert to [Server](./Server.md) middleware
 
     --- load / destroy ---
 

@@ -18,8 +18,6 @@
 			"get": {
 				"description": "",
 				"summary": "Get plugin descriptor",
-				"parameters": [],
-				"requestBody": {},
 				"responses": {
 					"200": {
 						"description": "Everything is fine",
@@ -49,8 +47,6 @@
 				"description": "",
 				"summary": "First page path",
 				"operationId": "page1",
-				"parameters": [],
-				"requestBody": {},
 				"responses": {
 					"200": {
 						"description": "Everything is fine",
@@ -80,8 +76,6 @@
 				"description": "",
 				"summary": "First page path",
 				"operationId": "page2",
-				"parameters": [],
-				"requestBody": {},
 				"responses": {
 					"200": {
 						"description": "Everything is fine",
@@ -113,13 +107,7 @@
 				"operationId": "test",
 				"parameters": [
 					{
-						"name": "url-param",
-						"in": "path",
-						"description": "Entity name",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
+						"$ref": "#/components/parameters/UrlParam"
 					}
 				],
 				"requestBody": {
@@ -164,6 +152,17 @@
 		}
 	},
 	"components": {
+		"parameters": {
+			"UrlParam": {
+				"name": "url-param",
+				"in": "path",
+				"description": "Entity name",
+				"required": true,
+				"schema": {
+					"type": "string"
+				}
+			}
+		},
 		"schemas": {
 			"Search": {
 				"type": "object",

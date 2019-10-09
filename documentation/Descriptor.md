@@ -17,6 +17,32 @@ It's loaded and shared by the [Orchestrator](./Orchestrator.md) and used by
 * [Mediator](./Mediator.md) to check input data
 * [Server](./Server.md) to manage plugin's API paths and find the rigth Mediator's method to call
 
+## Conventions
+
+### info
+
+  * There MUST have an "info" section
+  * The "info.title" must be equal to the plugin's name
+  * The "info.version" must be equal to the plugin's version
+
+### paths
+
+  * You only need this section if you want to create an API for your plugin
+
+### components
+
+  * Only "schemas" and "parameters" are supported.
+
+#### parameters
+
+  * Supported types for parameters are [ "string", "number", "integer", "boolean" ]
+
+#### schemas
+
+  * Supported types for schemas are [ "string", "number", "integer", "boolean", "object", "array" ]
+  * You can add limits ("minLength" & "maxLength") for "string" & "array" types
+  * You can add limits ("minimum" & "maximum") for "number" & "integer" types
+
 ## Descriptor interactions
 
 > See [Descriptor sample](./Descriptor.json)
@@ -27,32 +53,12 @@ It's loaded and shared by the [Orchestrator](./Orchestrator.md) and used by
 
 > See [Server conventions](./Server.md#conventions)
 
-#### Paths
+#### Interactions
 
-![Descriptor interaction](./pictures/Server_DescriptorInteraction_1.jpg)
-
-#### HTTP usable methods
-
-![Descriptor interaction](./pictures/Server_DescriptorInteraction_2.jpg)
-
-#### Mediator method called
-
-![Descriptor interaction](./pictures/Mediator_DescriptorInteraction_1.jpg)
+> See [Server conventions](./Server.md#descriptor-interactions)
 
 ### Mediator
 
-#### Method called by the server
+#### Interactions
 
-![Descriptor interaction](./pictures/Mediator_DescriptorInteraction_1.jpg)
-
-#### First method parameter (url parameters)
-
-![Descriptor interaction](./pictures/Mediator_DescriptorInteraction_2.jpg)
-
-#### Second method parameter (body parameters)
-
-![Descriptor interaction](./pictures/Mediator_DescriptorInteraction_3.jpg)
-
-#### Method return
-
-![Descriptor interaction](./pictures/Mediator_DescriptorInteraction_4.jpg)
+> See [Server conventions](./Mediator.md#descriptor-interactions)

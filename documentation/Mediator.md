@@ -13,6 +13,15 @@
 
 You will have to add all the methods you need here to pilote the targeted use (API, device, etc...)
 
+## Interfaces
+
+```typescript
+interface iMediatorCheckParametersResult {
+  "url": object;
+  "body": object;
+}
+```
+
 ## Class (extends [DescriptorUser](./DescriptorUser.md))
 
 ### Attributes
@@ -23,7 +32,7 @@ You will have to add all the methods you need here to pilote the targeted use (A
 
 ### Methods
 
-  * ``` public checkParameters(operationId: string, urlParams: object, bodyParams: object, contentType: string): Promise<void>; ``` Check sended parameters by method name (used by the [Server](./Server.md))
+  * ``` public checkParameters(operationId: string, urlParams: object, bodyParams: object, contentType: string): Promise<iMediatorCheckParametersResult>; ``` Check sended parameters by method name and formate it if necessary ("true" => true, "1.1" => 1.1, etc...) (used by the [Server](./Server.md))
 
 ### Events
 
@@ -123,7 +132,15 @@ class MyPluginMediator extends Mediator {
     return this._query("page2");
   }
 
-  test (urlParameters, bodyParameters) {
+
+  /**
+  * Execute "test" search
+  * @param {object} urlParameters: parameters sended with url (path, query)
+  * @param {object} bodyParameters: parameters sended in the query body
+  * @param {string} contentType: type of content type detected by the Server and setted in the Descriptor (probably "application/json")
+  * @return {Promise} operation result
+  */
+  test (urlParameters, bodyParameters, contentType) {
 
     /*
     urlParameters : {
