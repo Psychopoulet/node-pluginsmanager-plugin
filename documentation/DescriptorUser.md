@@ -41,13 +41,13 @@ interface iDescriptorUserOptions {
 
 > Please note the fact that "_initWorkSpace" and "_releaseWorkSpace" method MUST be re-writted in Mediator class, and not in MediatorUser childs.
 
-  * ``` protected _initWorkSpace(data?: any): Promise<any>; ``` Used to avoid full init logic re-writting.
-  * ``` protected _releaseWorkSpace(data?: any): Promise<any>; ``` Used to avoid full release logic re-writting.
+  * ``` protected _initWorkSpace(data?: any): Promise<void>; ``` Used to avoid full init logic re-writting.
+  * ``` protected _releaseWorkSpace(data?: any): Promise<void>; ``` Used to avoid full release logic re-writting.
 
 #### public
 
 > Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic.
 
-  * ``` public init(data?: any): Promise<any>; ``` // returned data : defined by "_initWorkSpace" return
-  * ``` public release(data?: any): Promise<any>; ``` // returned data : defined by "_releaseWorkSpace" return
+  * ``` public init(data?: any): Promise<void>; ``` // returned data : defined by "_initWorkSpace" return
+  * ``` public release(data?: any): Promise<void>; ``` // returned data : defined by "_releaseWorkSpace" return
   * ``` public checkDescriptor(void): Promise<void>; ``` check Descriptor (type and content)
