@@ -1,26 +1,30 @@
+/*
+	eslint max-params: 0
+*/
+
 "use strict";
 
 // deps
 
 	// natives
-	const WebSocket = require("ws");
 	const { deepStrictEqual, strictEqual } = require("assert");
 
-// consts
-
-	const PORT = 3001;
-	const MAIN_URL = "ws://127.0.0.1:" + PORT;
+	// externals
+	const WebSocket = require("ws");
+	const socketIOClient = require("socket.io-client");
 
 // module
 
-module.exports = function socketWaitPush (commandPush, dataPush, requester) {
+module.exports = function socketWaitPush (port, commandPush, dataPush, requester, socketIO = false) {
 
-	const client = new WebSocket(MAIN_URL);
+	const client = socketIO ?
+		socketIOClient("http://127.0.0.1:" + port) :
+		new WebSocket("ws://127.0.0.1:" + port);
 
 	// connection
 	return new Promise((resolve) => {
 
-		client.on("open", resolve);
+		client.on(socketIO ? "connect" : "open", resolve);
 
 	// send & wait for response
 	}).then(() => {
@@ -33,7 +37,7 @@ module.exports = function socketWaitPush (commandPush, dataPush, requester) {
 
 					const { plugin, command } = JSON.parse(message);
 
-					strictEqual(plugin, "node-pluginsmanager-plugin", "The name is not node-pluginsmanager-plugin");
+					strictEqual(plugin, "node-pluginsmanager-plugin", "The plugin is not node-pluginsmanager-plugin");
 					strictEqual(command, commandPush, "The command is not " + commandPush);
 
 					if (dataPush) {
@@ -61,7 +65,7 @@ module.exports = function socketWaitPush (commandPush, dataPush, requester) {
 	}).then(() => {
 
 		return new Promise((resolve) => {
-			client.on("close", resolve).close();
+			client.on(socketIO ? "disconnect" : "close", resolve).close();
 		});
 
 	});

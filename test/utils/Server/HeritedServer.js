@@ -66,14 +66,16 @@ module.exports = class HeritedServer extends Server {
 
 				const req = JSON.parse(payload);
 
-				if (req.name && "ping" === req.name) {
+				// check plugin
+				if ("string" === typeof req.plugin && this._Descriptor.info.title === req.plugin) {
 
-					this.emit("ping");
+					// check command (switch ?)
+					if ("string" === typeof req.command && "ping" === req.command) {
 
-					socket.send(JSON.stringify({
-						"name": "pong",
-						"params": [ "test" ]
-					}));
+						this.emit("ping");
+						this.push("pong", "test");
+
+					}
 
 				}
 
