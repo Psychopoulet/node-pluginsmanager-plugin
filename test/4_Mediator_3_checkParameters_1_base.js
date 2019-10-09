@@ -13,6 +13,7 @@
 
 // consts
 
+	const DESCRIPTOR_BASIC = require(join(__dirname, "utils", "DescriptorUser", "DescriptorBasic.js"));
 	const DESCRIPTOR_ONLY_URL = require(join(__dirname, "utils", "DescriptorUser", "DescriptorOnlyUrl.js"));
 
 // tests
@@ -242,6 +243,27 @@ describe("Mediator / checkParameters", () => {
 				done();
 
 			});
+
+		});
+
+	});
+
+	describe("without components", () => {
+
+		it("should test without components", () => {
+
+			return new LocalMediator({
+				"descriptor": {
+					...DESCRIPTOR_BASIC,
+					"paths": {
+						"/test": {
+							"get": {
+								"operationId": "get"
+							}
+						}
+					}
+				}
+			}).checkParameters("get", {}, {}, "application/json");
 
 		});
 
