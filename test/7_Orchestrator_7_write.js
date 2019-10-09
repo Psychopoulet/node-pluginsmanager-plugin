@@ -6,24 +6,43 @@
 	const { join } = require("path");
 
 	// locals
-
-		// utils
-		const LocalOrchestrator = require(join(__dirname, "utils", "Orchestrator", "LocalOrchestrator.js"));
+	const Orchestrator = require(join(__dirname, "..", "lib", "components", "Orchestrator.js"));
+	const LocalOrchestrator = require(join(__dirname, "utils", "Orchestrator", "LocalOrchestrator.js"));
 
 // tests
 
 describe("Orchestrator / write", () => {
 
-	it("should test install", () => {
-		return new LocalOrchestrator().install();
+	describe("native", () => {
+
+		it("should test install", () => {
+			return new Orchestrator().install();
+		});
+
+		it("should test update", () => {
+			return new Orchestrator().update();
+		});
+
+		it("should test uninstall", () => {
+			return new Orchestrator().uninstall();
+		});
+
 	});
 
-	it("should test update", () => {
-		return new LocalOrchestrator().update();
-	});
+	describe("inherited", () => {
 
-	it("should test uninstall", () => {
-		return new LocalOrchestrator().uninstall();
+		it("should test install", () => {
+			return new LocalOrchestrator().install();
+		});
+
+		it("should test update", () => {
+			return new LocalOrchestrator().update();
+		});
+
+		it("should test uninstall", () => {
+			return new LocalOrchestrator().uninstall();
+		});
+
 	});
 
 });
