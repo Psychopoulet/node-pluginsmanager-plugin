@@ -53,7 +53,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/Search"
+									"$ref": "#/components/schemas/SearchResult"
 								}
 							}
 						}
@@ -82,7 +82,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/Search"
+									"$ref": "#/components/schemas/SearchResult"
 								}
 							}
 						}
@@ -118,7 +118,7 @@
 								"type": "object",
 								"properties": {
 									"body-param": {
-										"type": "string"
+										"$ref": "#/components/schemas/SearchParameter"
 									}
 								},
 								"required": [ "body-param" ] 
@@ -132,7 +132,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/Search"
+									"$ref": "#/components/schemas/SearchResult"
 								}
 							}
 						}
@@ -155,16 +155,21 @@
 		"parameters": {
 			"UrlParam": {
 				"name": "url-param",
-				"in": "path",
+				"in": "query",
 				"description": "Entity name",
 				"required": true,
 				"schema": {
-					"type": "string"
+					"$ref": "#/components/schemas/SearchParameter"
 				}
 			}
 		},
 		"schemas": {
-			"Search": {
+			"SearchParameter": {
+				"type": "string",
+				"minLength": 3,
+				"maxLength": 50
+			},
+			"SearchResult": {
 				"type": "object",
 				"required": [
 					"search",
