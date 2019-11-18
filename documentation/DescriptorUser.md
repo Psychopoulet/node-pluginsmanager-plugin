@@ -15,6 +15,8 @@ More, the class add features like external ressources directory (to create files
 ## Interfaces
 
 ```typescript
+type tLogType = "log" | "info" | "warning" | "error";
+
 interface iDescriptorUserOptions {
   "descriptor": object | null;
   "externalRessourcesDirectory": string; // used to write local data like sqlite database, json files, pictures, etc...
@@ -27,9 +29,10 @@ interface iDescriptorUserOptions {
 
 #### protected
 
-  * ``` protected _Descriptor: object | null; ``` provided by "descriptor" option, sent by the [Orchestrator](./Orchestrator.md)
   * ``` protected _externalRessourcesDirectory: string; ``` provided by "externalRessourcesDirectory" option, sent by the [Orchestrator](./Orchestrator.md)
   * ``` protected _descriptorValidated: boolean; ``` if checkDescriptor is already successfuly executed, do not execute it again (for performances)
+  * ``` protected _Descriptor: object | null; ``` provided by "descriptor" option, sent by the [Orchestrator](./Orchestrator.md)
+  * ``` protected _Logger: Function | null; ``` provided by "logger" option, sent by the [Orchestrator](./Orchestrator.md)
 
 ### Constructor
 
@@ -43,6 +46,7 @@ interface iDescriptorUserOptions {
 
   * ``` protected _initWorkSpace(data?: any): Promise<void>; ``` Used to avoid full init logic re-writting.
   * ``` protected _releaseWorkSpace(data?: any): Promise<void>; ``` Used to avoid full release logic re-writting.
+  * ``` protected _log(type: tLogType, message: string, bold?: boolean): this; ``` Use "logger" function if provided, do nothing if not
 
 #### public
 

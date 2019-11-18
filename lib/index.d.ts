@@ -10,6 +10,8 @@ declare module "node-pluginsmanager-plugin" {
 
 	// options
 
+	type tLogType = "log" | "info" | "warning" | "error";
+
 	interface iDescriptorUserOptions {
 		"descriptor": object | null;
 		"externalRessourcesDirectory": string;
@@ -40,9 +42,12 @@ declare module "node-pluginsmanager-plugin" {
 
 			// protected
 
-				protected _Descriptor: object | null;
-				protected _externalRessourcesDirectory: string;
 				protected _descriptorValidated: boolean;
+
+				protected _externalRessourcesDirectory: string;
+
+				protected _Descriptor: object | null;
+				protected _Logger: Function | null;
 
 		// constructor
 
@@ -54,6 +59,7 @@ declare module "node-pluginsmanager-plugin" {
 
 				protected _initWorkSpace(data?: any): Promise<void>;
 				protected _releaseWorkSpace(data?: any): Promise<void>;
+				protected _log(type: tLogType, message: string, bold?: boolean): this;
 
 			// public
 
