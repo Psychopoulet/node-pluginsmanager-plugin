@@ -13,6 +13,7 @@
 
 	// externals
 	const WebSocketServer = require("ws").Server;
+	const colors = require("colors");
 
 	// locals
 	const socketWaitPush = require(join(__dirname, "utils", "socketWaitPush.js"));
@@ -21,11 +22,40 @@
 
 // consts
 
+	const MAX_LENGTH_LOGS = 250;
+
 	const HERITED_OPTIONS = {
 		"packageFile": join(__dirname, "..", "package.json"),
 		"descriptorFile": join(__dirname, "utils", "DescriptorUser", "Descriptor.json"),
 		"mediatorFile": join(__dirname, "utils", "Mediator", "HeritedMediator.js"),
-		"serverFile": join(__dirname, "utils", "Server", "HeritedServer.js")
+		"serverFile": join(__dirname, "utils", "Server", "HeritedServer.js"),
+		"logger": (type, log, bold) => {
+
+			let message = MAX_LENGTH_LOGS < log.length ? log.substr(0, MAX_LENGTH_LOGS) + "..." : log;
+
+			switch (type) {
+
+				case "info":
+					message = colors.cyan(message);
+				break;
+
+				case "success":
+					message = colors.green(message);
+				break;
+
+				case "warning":
+					message = colors.yellow(message);
+				break;
+
+				case "error":
+					message = colors.red(message);
+				break;
+
+			}
+
+			(0, console).log(message);
+
+		}
 	};
 
 // tests
