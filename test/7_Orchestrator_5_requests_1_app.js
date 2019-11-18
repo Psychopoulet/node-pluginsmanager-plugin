@@ -32,7 +32,7 @@
 		"descriptorFile": join(__dirname, "utils", "DescriptorUser", "Descriptor.json"),
 		"mediatorFile": join(__dirname, "utils", "Mediator", "HeritedMediator.js"),
 		"serverFile": join(__dirname, "utils", "Server", "HeritedServer.js"),
-		"logger": (type, log, bold) => {
+		"logger": (type, log) => {
 
 			let message = MAX_LENGTH_LOGS < log.length ? log.substr(0, MAX_LENGTH_LOGS) + "..." : log;
 
@@ -52,6 +52,10 @@
 
 				case "error":
 					message = colors.red(message);
+				break;
+
+				default:
+					// nothing to do here
 				break;
 
 			}
