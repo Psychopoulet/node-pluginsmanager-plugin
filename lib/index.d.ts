@@ -15,6 +15,7 @@ declare module "node-pluginsmanager-plugin" {
 	interface iDescriptorUserOptions {
 		"descriptor": object | null;
 		"externalRessourcesDirectory": string;
+		"logger": Function | null;
 	}
 
 		interface iMediatorUserOptions extends iDescriptorUserOptions {

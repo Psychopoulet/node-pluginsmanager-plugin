@@ -20,6 +20,7 @@ type tLogType = "log" | "info" | "warning" | "error";
 interface iDescriptorUserOptions {
   "descriptor": object | null;
   "externalRessourcesDirectory": string; // used to write local data like sqlite database, json files, pictures, etc...
+  "logger": Function | null;
 }
 ```
 
