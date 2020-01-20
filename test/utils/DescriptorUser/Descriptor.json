@@ -235,7 +235,7 @@
 			}
 		},
 		"/node-pluginsmanager-plugin/api/valid/body/boolean": {
-			"get": {
+			"post": {
 				"description": "",
 				"summary": "Simple API test for Server class",
 				"operationId": "bodyParamBoolean",
@@ -265,7 +265,7 @@
 			}
 		},
 		"/node-pluginsmanager-plugin/api/valid/body/integer": {
-			"get": {
+			"post": {
 				"description": "",
 				"summary": "Simple API test for Server class",
 				"operationId": "bodyParamInteger",
@@ -295,7 +295,7 @@
 			}
 		},
 		"/node-pluginsmanager-plugin/api/valid/body/number": {
-			"get": {
+			"post": {
 				"description": "",
 				"summary": "Simple API test for Server class",
 				"operationId": "bodyParamNumber",
@@ -325,7 +325,7 @@
 			}
 		},
 		"/node-pluginsmanager-plugin/api/valid/body/string": {
-			"get": {
+			"post": {
 				"description": "",
 				"summary": "Simple API test for Server class",
 				"operationId": "bodyParamString",
@@ -355,7 +355,7 @@
 			}
 		},
 		"/node-pluginsmanager-plugin/api/valid/body/object": {
-			"get": {
+			"post": {
 				"description": "",
 				"summary": "Simple API test for Server class",
 				"operationId": "bodyParamObject",
@@ -385,7 +385,7 @@
 			}
 		},
 		"/node-pluginsmanager-plugin/api/valid/body/array": {
-			"get": {
+			"post": {
 				"description": "",
 				"summary": "Simple API test for Server class",
 				"operationId": "bodyParamArray",
@@ -420,7 +420,7 @@
 			}
 		},
 		"/node-pluginsmanager-plugin/api/valid/body/facultative": {
-			"get": {
+			"post": {
 				"description": "",
 				"summary": "Simple API test for Server class",
 				"operationId": "bodyParamFacultative",
@@ -525,22 +525,6 @@
 					}
 				},
 				"required": [ "body-param-string" ]
-			},
-			"TestInheritage": {
-				"allOf": [
-					{
-						"$ref": "#/components/schemas/TestObject"
-					},
-					{
-						"type": "object",
-						"properties": {
-							"body-param-number": {
-								"$ref": "#/components/schemas/TestNumber"
-							}
-						},
-						"required": [ "body-param-number" ]
-					}
-				]
 			}
 		}
 	},

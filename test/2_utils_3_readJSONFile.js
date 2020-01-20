@@ -73,7 +73,7 @@ describe("readJSONFile", () => {
 
 	});
 
-	it("should test with write file", () => {
+	it("should test with rigth file", () => {
 
 		return readJSONFile(join(__dirname, "..", "package.json")).then((data) => {
 
