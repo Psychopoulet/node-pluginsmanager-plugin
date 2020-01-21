@@ -23,7 +23,7 @@
 
 // tests
 
-describe("Orchestrator / checkDescriptor / url / required", () => {
+describe("Orchestrator / checkDescriptor / url", () => {
 
 	let descriptor = null;
 
@@ -124,6 +124,166 @@ describe("Orchestrator / checkDescriptor / url / required", () => {
 								{
 									"name": "path-test",
 									"in": "path",
+									"schema": {
+										"type": "string"
+									},
+									"required": true
+								}
+							],
+							"responses": {
+								"200": {
+									"description": "Everything is fine"
+								}
+							}
+						}
+					}
+				};
+
+			writeFile(TMP_DESCRIPTOR, JSON.stringify(d), "utf8", (err) => {
+				return err ? reject(err) : resolve();
+			});
+
+		}).then(() => {
+			return orchestrator.load();
+		}).then(() => {
+
+			return new Promise((resolve, reject) => {
+
+				orchestrator.init().then(() => {
+					reject(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not an object");
+					strictEqual(err instanceof Error, true, "Generated error is not as expected");
+
+					resolve();
+
+				});
+
+			});
+
+		});
+
+	});
+
+	it("should check non-defined existant path parameter", () => {
+
+		return new Promise((resolve, reject) => {
+
+			const d = JSON.parse(JSON.stringify(descriptor));
+
+				d.paths = {
+					"/test/{path-test}": {
+						"get": {
+							"operationId": "test",
+							"responses": {
+								"200": {
+									"description": "Everything is fine"
+								}
+							}
+						}
+					}
+				};
+
+			writeFile(TMP_DESCRIPTOR, JSON.stringify(d), "utf8", (err) => {
+				return err ? reject(err) : resolve();
+			});
+
+		}).then(() => {
+			return orchestrator.load();
+		}).then(() => {
+
+			return new Promise((resolve, reject) => {
+
+				orchestrator.init().then(() => {
+					reject(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not an object");
+					strictEqual(err instanceof Error, true, "Generated error is not as expected");
+
+					resolve();
+
+				});
+
+			});
+
+		});
+
+	});
+
+	it("should check with no required data", () => {
+
+		return new Promise((resolve, reject) => {
+
+			const d = JSON.parse(JSON.stringify(descriptor));
+
+				d.paths = {
+					"/test/{path-test}": {
+						"get": {
+							"operationId": "test",
+							"parameters": [
+								{
+									"name": "path-test",
+									"in": "path",
+									"schema": {
+										"type": "string"
+									}
+								}
+							],
+							"responses": {
+								"200": {
+									"description": "Everything is fine"
+								}
+							}
+						}
+					}
+				};
+
+			writeFile(TMP_DESCRIPTOR, JSON.stringify(d), "utf8", (err) => {
+				return err ? reject(err) : resolve();
+			});
+
+		}).then(() => {
+			return orchestrator.load();
+		}).then(() => {
+
+			return new Promise((resolve, reject) => {
+
+				orchestrator.init().then(() => {
+					reject(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not an object");
+					strictEqual(err instanceof Error, true, "Generated error is not as expected");
+
+					resolve();
+
+				});
+
+			});
+
+		});
+
+	});
+
+	it("should check with wrong \"in\"", () => {
+
+		return new Promise((resolve, reject) => {
+
+			const d = JSON.parse(JSON.stringify(descriptor));
+
+				d.paths = {
+					"/test": {
+						"get": {
+							"operationId": "test",
+							"parameters": [
+								{
+									"name": "path-test",
+									"in": "test",
+									"schema": {
+										"type": "string"
+									},
 									"required": true
 								}
 							],
