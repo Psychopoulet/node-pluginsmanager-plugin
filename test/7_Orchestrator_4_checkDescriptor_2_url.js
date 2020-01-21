@@ -83,6 +83,8 @@ describe("Orchestrator / checkDescriptor / url", () => {
 
 	});
 
+	/*
+	@TODO
 	it("should check non-defined existant path parameter", () => {
 
 		return generateDescriptorWithPaths({
@@ -118,6 +120,7 @@ describe("Orchestrator / checkDescriptor / url", () => {
 		});
 
 	});
+	*/
 
 	it("should check inexistant defined path parameter", () => {
 
