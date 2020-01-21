@@ -323,4 +323,60 @@ describe("Orchestrator / checkDescriptor / url", () => {
 
 	});
 
+	it("should test wrong path reference", () => {
+
+		return new Promise((resolve, reject) => {
+
+			const d = JSON.parse(JSON.stringify(descriptor));
+
+				d.paths = {
+					"/test/{path-param}": {
+						"get": {
+							"operationId": "test",
+							"parameters": [
+								{
+									"name": "path-param",
+									"in": "path",
+									"schema": {
+										"$ref": "#/components/parameters/fczeczec"
+									},
+									"required": true
+								}
+							],
+							"responses": {
+								"200": {
+									"description": "Everything is fine"
+								}
+							}
+						}
+					}
+				};
+
+			writeFile(TMP_DESCRIPTOR, JSON.stringify(d), "utf8", (err) => {
+				return err ? reject(err) : resolve();
+			});
+
+		}).then(() => {
+			return orchestrator.load();
+		}).then(() => {
+
+			return new Promise((resolve, reject) => {
+
+				orchestrator.init().then(() => {
+					reject(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not an object");
+					strictEqual(err instanceof Error, true, "Generated error is not as expected");
+
+					resolve();
+
+				});
+
+			});
+
+		});
+
+	});
+
 });
