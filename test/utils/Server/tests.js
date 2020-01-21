@@ -411,7 +411,7 @@ module.exports = function test (server) {
 
 				it("should test request with wrong data", () => {
 
-					return httpRequestTest(URL_API + "/valid/body/boolean", "get", {
+					return httpRequestTest(URL_API + "/valid/body/boolean", "post", {
 						"body-param-boolean": "test"
 					}, 400, "Bad Request", {
 						"code": "WRONG_TYPE_PARAMETER",
@@ -422,8 +422,8 @@ module.exports = function test (server) {
 
 				it("should test request with valid boolean", () => {
 
-					return httpRequestTest(URL_API + "/valid/body/boolean", "get", {
-						"body-param-boolean": "false"
+					return httpRequestTest(URL_API + "/valid/body/boolean", "post", {
+						"body-param-boolean": false
 					}, 200, "OK", {
 						"body-param-boolean": false
 					});
@@ -436,7 +436,7 @@ module.exports = function test (server) {
 
 				it("should test request with wrong data", () => {
 
-					return httpRequestTest(URL_API + "/valid/body/integer", "get", {
+					return httpRequestTest(URL_API + "/valid/body/integer", "post", {
 						"body-param-integer": "test"
 					}, 400, "Bad Request", {
 						"code": "WRONG_TYPE_PARAMETER",
@@ -447,7 +447,7 @@ module.exports = function test (server) {
 
 				it("should test request with invalid integer", () => {
 
-					return httpRequestTest(URL_API + "/valid/body/integer", "get", {
+					return httpRequestTest(URL_API + "/valid/body/integer", "post", {
 						"body-param-integer": 6
 					}, 400, "Bad Request", {
 						"code": "RANGE_OR_EMPTY_PARAMETER",
@@ -458,7 +458,7 @@ module.exports = function test (server) {
 
 				it("should test request with valid integer", () => {
 
-					return httpRequestTest(URL_API + "/valid/body/integer", "get", {
+					return httpRequestTest(URL_API + "/valid/body/integer", "post", {
 						"body-param-integer": "1"
 					}, 200, "OK", {
 						"body-param-integer": 1
@@ -472,7 +472,7 @@ module.exports = function test (server) {
 
 				it("should test request with wrong data", () => {
 
-					return httpRequestTest(URL_API + "/valid/body/number", "get", {
+					return httpRequestTest(URL_API + "/valid/body/number", "post", {
 						"body-param-number": "test"
 					}, 400, "Bad Request", {
 						"code": "WRONG_TYPE_PARAMETER",
@@ -483,7 +483,7 @@ module.exports = function test (server) {
 
 				it("should test request with invalid number", () => {
 
-					return httpRequestTest(URL_API + "/valid/body/number", "get", {
+					return httpRequestTest(URL_API + "/valid/body/number", "post", {
 						"body-param-number": 0.6
 					}, 400, "Bad Request", {
 						"code": "RANGE_OR_EMPTY_PARAMETER",
@@ -494,7 +494,7 @@ module.exports = function test (server) {
 
 				it("should test request with valid number", () => {
 
-					return httpRequestTest(URL_API + "/valid/body/number", "get", {
+					return httpRequestTest(URL_API + "/valid/body/number", "post", {
 						"body-param-number": "0.1"
 					}, 200, "OK", {
 						"body-param-number": 0.1
@@ -508,7 +508,7 @@ module.exports = function test (server) {
 
 				it("should test request with wrong data", () => {
 
-					return httpRequestTest(URL_API + "/valid/body/string", "get", {
+					return httpRequestTest(URL_API + "/valid/body/string", "post", {
 						"body-param-string": false
 					}, 400, "Bad Request", {
 						"code": "WRONG_TYPE_PARAMETER",
@@ -519,7 +519,7 @@ module.exports = function test (server) {
 
 				it("should test request with empty data", () => {
 
-					return httpRequestTest(URL_API + "/valid/body/string", "get", {
+					return httpRequestTest(URL_API + "/valid/body/string", "post", {
 						"body-param-string": ""
 					}, 400, "Bad Request", {
 						"code": "RANGE_OR_EMPTY_PARAMETER",
@@ -530,7 +530,7 @@ module.exports = function test (server) {
 
 				it("should test request with invalid string length", () => {
 
-					return httpRequestTest(URL_API + "/valid/body/string", "get", {
+					return httpRequestTest(URL_API + "/valid/body/string", "post", {
 						"body-param-string": "thisisatest"
 					}, 400, "Bad Request", {
 						"code": "RANGE_OR_EMPTY_PARAMETER",
@@ -541,7 +541,7 @@ module.exports = function test (server) {
 
 				it("should test request with valid string", () => {
 
-					return httpRequestTest(URL_API + "/valid/body/string", "get", {
+					return httpRequestTest(URL_API + "/valid/body/string", "post", {
 						"body-param-string": "test"
 					}, 200, "OK", {
 						"body-param-string": "test"
@@ -555,7 +555,7 @@ module.exports = function test (server) {
 
 				it("should test request with wrong data", () => {
 
-					return httpRequestTest(URL_API + "/valid/body/object", "get", {
+					return httpRequestTest(URL_API + "/valid/body/object", "post", {
 						"body-param-object": false
 					}, 400, "Bad Request", {
 						"code": "WRONG_TYPE_PARAMETER",
@@ -566,7 +566,7 @@ module.exports = function test (server) {
 
 				it("should test request with missing property", () => {
 
-					return httpRequestTest(URL_API + "/valid/body/object", "get", {
+					return httpRequestTest(URL_API + "/valid/body/object", "post", {
 						"body-param-object": {}
 					}, 400, "Bad Request", {
 						"code": "MISSING_PARAMETER",
@@ -577,7 +577,7 @@ module.exports = function test (server) {
 
 				it("should test request with valid object", () => {
 
-					return httpRequestTest(URL_API + "/valid/body/object", "get", {
+					return httpRequestTest(URL_API + "/valid/body/object", "post", {
 						"body-param-object": {
 							"body-param-string": "test"
 						}
@@ -595,7 +595,7 @@ module.exports = function test (server) {
 
 				it("should test request with wrong data", () => {
 
-					return httpRequestTest(URL_API + "/valid/body/array", "get", {
+					return httpRequestTest(URL_API + "/valid/body/array", "post", {
 						"body-param-array": false
 					}, 400, "Bad Request", {
 						"code": "WRONG_TYPE_PARAMETER",
@@ -606,7 +606,7 @@ module.exports = function test (server) {
 
 				it("should test request with missing data", () => {
 
-					return httpRequestTest(URL_API + "/valid/body/array", "get", {
+					return httpRequestTest(URL_API + "/valid/body/array", "post", {
 						"body-param-array": []
 					}, 400, "Bad Request", {
 						"code": "RANGE_OR_EMPTY_PARAMETER",
@@ -617,7 +617,7 @@ module.exports = function test (server) {
 
 				it("should test request with too much data", () => {
 
-					return httpRequestTest(URL_API + "/valid/body/array", "get", {
+					return httpRequestTest(URL_API + "/valid/body/array", "post", {
 						"body-param-array": [ "test", "test", "test", "test", "test", "test" ]
 					}, 400, "Bad Request", {
 						"code": "RANGE_OR_EMPTY_PARAMETER",
@@ -628,7 +628,7 @@ module.exports = function test (server) {
 
 				it("should test request with one incorrect data", () => {
 
-					return httpRequestTest(URL_API + "/valid/body/array", "get", {
+					return httpRequestTest(URL_API + "/valid/body/array", "post", {
 						"body-param-array": [ "test", "thisisatest", "test" ]
 					}, 400, "Bad Request", {
 						"code": "RANGE_OR_EMPTY_PARAMETER",
@@ -639,7 +639,7 @@ module.exports = function test (server) {
 
 				it("should test request with one incorrect data", () => {
 
-					return httpRequestTest(URL_API + "/valid/body/array", "get", {
+					return httpRequestTest(URL_API + "/valid/body/array", "post", {
 						"body-param-array": [ "test", 5, "test" ]
 					}, 400, "Bad Request", {
 						"code": "WRONG_TYPE_PARAMETER",
@@ -650,7 +650,7 @@ module.exports = function test (server) {
 
 				it("should test request with valid object", () => {
 
-					return httpRequestTest(URL_API + "/valid/body/object", "get", {
+					return httpRequestTest(URL_API + "/valid/body/object", "post", {
 						"body-param-object": {
 							"body-param-string": "test"
 						}
