@@ -51,6 +51,7 @@ describe("Orchestrator / checkDescriptor / schema / limits", () => {
 
 		return generateDescriptorWithSchemas({
 			"TestInteger": {
+				"description": "Integer description",
 				"type": "integer",
 				"minimum": false
 			}
@@ -81,6 +82,7 @@ describe("Orchestrator / checkDescriptor / schema / limits", () => {
 
 		return generateDescriptorWithSchemas({
 			"TestInteger": {
+				"description": "Integer description",
 				"type": "integer",
 				"maximum": false
 			}
@@ -110,7 +112,8 @@ describe("Orchestrator / checkDescriptor / schema / limits", () => {
 	it("should test wrong number minimum", () => {
 
 		return generateDescriptorWithSchemas({
-			"TestInteger": {
+			"TestNumber": {
+				"description": "Number description",
 				"type": "number",
 				"minimum": false
 			}
@@ -140,7 +143,8 @@ describe("Orchestrator / checkDescriptor / schema / limits", () => {
 	it("should test wrong number maximum", () => {
 
 		return generateDescriptorWithSchemas({
-			"TestInteger": {
+			"TestNumber": {
+				"description": "Number description",
 				"type": "number",
 				"maximum": false
 			}
@@ -171,6 +175,7 @@ describe("Orchestrator / checkDescriptor / schema / limits", () => {
 
 		return generateDescriptorWithSchemas({
 			"TestString": {
+				"description": "String description",
 				"type": "string",
 				"minLength": false
 			}
@@ -201,6 +206,7 @@ describe("Orchestrator / checkDescriptor / schema / limits", () => {
 
 		return generateDescriptorWithSchemas({
 			"TestString": {
+				"description": "String description",
 				"type": "string",
 				"maxLength": false
 			}

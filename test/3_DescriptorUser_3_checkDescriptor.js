@@ -315,22 +315,120 @@ describe("DescriptorUser / checkDescriptor", () => {
 
 	describe("paths", () => {
 
-		it("should check with mutliple operatorIds", (done) => {
+		it("should check without paths", (done) => {
 
 			new LocalDescriptorUser({
 				"descriptor": {
 					"info": {
 						"title": "test",
-						"version": ""
+						"version": "0.0.1"
+					}
+				}
+			}).checkDescriptor().then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+
+				done();
+
+			});
+
+		});
+
+		it("should check with empty paths", () => {
+
+			return new LocalDescriptorUser({
+				"descriptor": {
+					"info": {
+						"title": "test",
+						"version": "0.0.1"
+					},
+					"paths": {}
+				}
+			}).checkDescriptor();
+
+		});
+
+		/*
+		it("should check without summary", (done) => {
+
+			new LocalDescriptorUser({
+				"descriptor": {
+					"info": {
+						"title": "test",
+						"version": "0.0.1"
 					},
 					"paths": {
 						"/test/test1": {
 							"get": {
 								"operationId": "test"
 							}
+						}
+					}
+				}
+			}).checkDescriptor().then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof Error, true, "Generated error is not as expected");
+
+				done();
+
+			});
+
+		});
+
+		it("should check without operatorId", (done) => {
+
+			new LocalDescriptorUser({
+				"descriptor": {
+					"info": {
+						"title": "test",
+						"version": "0.0.1"
+					},
+					"paths": {
+						"/test/test1": {
+							"get": {
+								"summary": "test"
+							}
+						}
+					}
+				}
+			}).checkDescriptor().then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof Error, true, "Generated error is not as expected");
+
+				done();
+
+			});
+
+		});
+		*/
+
+		it("should check with mutliple operatorIds", (done) => {
+
+			new LocalDescriptorUser({
+				"descriptor": {
+					"info": {
+						"title": "test",
+						"version": "0.0.1"
+					},
+					"paths": {
+						"/test/test1": {
+							"get": {
+								"summary": "test",
+								"operationId": "test"
+							}
 						},
 						"/test/test2": {
 							"get": {
+								"summary": "test",
 								"operationId": "test"
 							}
 						}

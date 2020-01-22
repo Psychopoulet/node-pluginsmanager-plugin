@@ -51,9 +51,11 @@ describe("Orchestrator / checkDescriptor / schema / required", () => {
 
 		return generateDescriptorWithSchemas({
 			"TestObject": {
+				"description": "Object description",
 				"type": "object",
 				"properties": {
 					"test": {
+						"description": "String description",
 						"type": "string"
 					}
 				},
@@ -86,9 +88,11 @@ describe("Orchestrator / checkDescriptor / schema / required", () => {
 
 		return generateDescriptorWithSchemas({
 			"TestObject": {
+				"description": "Object description",
 				"type": "object",
 				"properties": {
 					"test": {
+						"description": "String description",
 						"type": "string"
 					}
 				},
@@ -121,9 +125,11 @@ describe("Orchestrator / checkDescriptor / schema / required", () => {
 
 		return generateDescriptorWithSchemas({
 			"TestObject": {
+				"description": "Object description",
 				"type": "object",
 				"properties": {
 					"test": {
+						"description": "String description",
 						"type": "string"
 					}
 				},

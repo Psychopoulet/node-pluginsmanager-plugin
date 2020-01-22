@@ -51,6 +51,7 @@ describe("Orchestrator / checkDescriptor / schema / enum", () => {
 
 		return generateDescriptorWithSchemas({
 			"TestInteger": {
+				"description": "Integer description",
 				"type": "integer",
 				"enum": false
 			}
@@ -81,6 +82,7 @@ describe("Orchestrator / checkDescriptor / schema / enum", () => {
 
 		return generateDescriptorWithSchemas({
 			"TestInteger": {
+				"description": "Integer description",
 				"type": "integer",
 				"enum": []
 			}
