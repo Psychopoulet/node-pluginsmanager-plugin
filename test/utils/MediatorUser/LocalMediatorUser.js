@@ -6,7 +6,7 @@
 	const { join } = require("path");
 
 	// locals
-	const MediatorUser = require(join(__dirname, "..", "..", "..", "lib", "components", "MediatorUser.js"));
+	const { MediatorUser } = require(join(__dirname, "..", "..", "..", "lib", "components", "main.js"));
 
 // module
 

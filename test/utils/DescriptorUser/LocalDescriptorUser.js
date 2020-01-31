@@ -6,7 +6,7 @@
 	const { join } = require("path");
 
 	// locals
-	const DescriptorUser = require(join(__dirname, "..", "..", "..", "lib", "components", "DescriptorUser.js"));
+	const { DescriptorUser } = require(join(__dirname, "..", "..", "..", "lib", "components", "main.js"));
 
 // module
 
