@@ -1,3 +1,7 @@
+/*
+	eslint-disable max-lines
+*/
+
 "use strict";
 
 // deps
@@ -13,7 +17,6 @@
 
 // consts
 
-	const DESCRIPTOR_BASIC = require(join(__dirname, "utils", "DescriptorUser", "DescriptorBasic.js"));
 	const DESCRIPTOR_ONLY_URL = require(join(__dirname, "utils", "DescriptorUser", "DescriptorOnlyUrl.js"));
 
 // tests
@@ -86,7 +89,12 @@ describe("Mediator / checkParameters", () => {
 
 			new LocalMediator({
 				"descriptor": descriptor
-			}).checkParameters("testString", {}, {}, "application/json").then(() => {
+			}).checkParameters("testString", {
+				"path": {},
+				"query": {},
+				"headers": {},
+				"cookie": {}
+			}, {}, "application/json").then(() => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
@@ -148,13 +156,268 @@ describe("Mediator / checkParameters", () => {
 
 		});
 
+		it("should test empty parameters", (done) => {
+
+			mediator.checkParameters("create", {}).then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated error is not as expected");
+				strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
+
+				done();
+
+			});
+
+		});
+
+		describe("path", () => {
+
+			it("should test missing parameters", (done) => {
+
+				mediator.checkParameters("create", {
+					"test": {}
+				}).then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not as expected");
+					strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+
+					done();
+
+				});
+
+			});
+
+			it("should test null parameters", (done) => {
+
+				mediator.checkParameters("create", {
+					"path": null
+				}).then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not as expected");
+					strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+
+					done();
+
+				});
+
+			});
+
+			it("should test wrong parameters", (done) => {
+
+				mediator.checkParameters("create", {
+					"path": false
+				}).then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not as expected");
+					strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+
+					done();
+
+				});
+
+			});
+
+		});
+
+		describe("query", () => {
+
+			it("should test missing parameters", (done) => {
+
+				mediator.checkParameters("create", {
+					"path": {}
+				}).then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not as expected");
+					strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+
+					done();
+
+				});
+
+			});
+
+			it("should test null parameters", (done) => {
+
+				mediator.checkParameters("create", {
+					"path": {},
+					"query": null
+				}).then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not as expected");
+					strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+
+					done();
+
+				});
+
+			});
+
+			it("should test wrong parameters", (done) => {
+
+				mediator.checkParameters("create", {
+					"path": {},
+					"query": false
+				}).then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not as expected");
+					strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+
+					done();
+
+				});
+
+			});
+
+		});
+
+		describe("headers", () => {
+
+			it("should test missing parameters", (done) => {
+
+				mediator.checkParameters("create", {
+					"path": {},
+					"headers": {}
+				}).then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not as expected");
+					strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+
+					done();
+
+				});
+
+			});
+
+			it("should test null parameters", (done) => {
+
+				mediator.checkParameters("create", {
+					"path": {},
+					"headers": {},
+					"query": null
+				}).then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not as expected");
+					strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+
+					done();
+
+				});
+
+			});
+
+			it("should test wrong parameters", (done) => {
+
+				mediator.checkParameters("create", {
+					"path": {},
+					"headers": {},
+					"query": false
+				}).then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not as expected");
+					strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+
+					done();
+
+				});
+
+			});
+
+		});
+
+		describe("cookie", () => {
+
+			it("should test missing parameters", (done) => {
+
+				mediator.checkParameters("create", {
+					"path": {},
+					"headers": {},
+					"query": {}
+				}).then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not as expected");
+					strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+
+					done();
+
+				});
+
+			});
+
+			it("should test null parameters", (done) => {
+
+				mediator.checkParameters("create", {
+					"path": {},
+					"headers": {},
+					"query": {},
+					"cookie": null
+				}).then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not as expected");
+					strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+
+					done();
+
+				});
+
+			});
+
+			it("should test wrong parameters", (done) => {
+
+				mediator.checkParameters("create", {
+					"path": {},
+					"headers": {},
+					"query": {},
+					"cookie": false
+				}).then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not as expected");
+					strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+
+					done();
+
+				});
+
+			});
+
+		});
+
 	});
 
 	describe("body parameters", () => {
 
 		it("should test missing parameters", (done) => {
 
-			mediator.checkParameters("create", {}).then(() => {
+			mediator.checkParameters("create", {
+				"path": {},
+				"query": {},
+				"headers": {},
+				"cookie": {}
+			}).then(() => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
@@ -169,7 +432,12 @@ describe("Mediator / checkParameters", () => {
 
 		it("should test null parameters", (done) => {
 
-			mediator.checkParameters("create", {}, null).then(() => {
+			mediator.checkParameters("create", {
+				"path": {},
+				"query": {},
+				"headers": {},
+				"cookie": {}
+			}, null).then(() => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
@@ -184,7 +452,12 @@ describe("Mediator / checkParameters", () => {
 
 		it("should test wrong parameters", (done) => {
 
-			mediator.checkParameters("create", {}, false).then(() => {
+			mediator.checkParameters("create", {
+				"path": {},
+				"query": {},
+				"headers": {},
+				"cookie": {}
+			}, false).then(() => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
@@ -203,7 +476,12 @@ describe("Mediator / checkParameters", () => {
 
 		it("should test missing contentType", (done) => {
 
-			mediator.checkParameters("create", {}, {}).then(() => {
+			mediator.checkParameters("create", {
+				"path": {},
+				"query": {},
+				"headers": {},
+				"cookie": {}
+			}, {}).then(() => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
@@ -218,7 +496,12 @@ describe("Mediator / checkParameters", () => {
 
 		it("should test wrong contentType", (done) => {
 
-			mediator.checkParameters("create", {}, {}, false).then(() => {
+			mediator.checkParameters("create", {
+				"path": {},
+				"query": {},
+				"headers": {},
+				"cookie": {}
+			}, {}, false).then(() => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
@@ -233,7 +516,12 @@ describe("Mediator / checkParameters", () => {
 
 		it("should test empty contentType", (done) => {
 
-			mediator.checkParameters("create", {}, {}, "").then(() => {
+			mediator.checkParameters("create", {
+				"path": {},
+				"query": {},
+				"headers": {},
+				"cookie": {}
+			}, {}, "").then(() => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
@@ -248,22 +536,18 @@ describe("Mediator / checkParameters", () => {
 
 	});
 
-	describe("without components", () => {
+	describe("valid", () => {
 
-		it("should test without components", () => {
+		it("should test valid url request", () => {
 
-			return new LocalMediator({
-				"descriptor": {
-					...DESCRIPTOR_BASIC,
-					"paths": {
-						"/test": {
-							"get": {
-								"operationId": "get"
-							}
-						}
-					}
-				}
-			}).checkParameters("get", {}, {}, "application/json");
+			return mediator.checkParameters("testString", {
+				"path": {
+					"path-param-string": "test2"
+				},
+				"query": {},
+				"headers": {},
+				"cookie": {}
+			}, {}, "application/json");
 
 		});
 

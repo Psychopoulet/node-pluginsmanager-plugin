@@ -101,6 +101,8 @@ describe("utils / descriptor / extractPathMethodByOperationId", () => {
 					}
 				}
 			}, "editTest"), {
+				"path": "/test",
+				"method": "put",
 				"operationId": "editTest"
 			}, "generated data is not as expected");
 
