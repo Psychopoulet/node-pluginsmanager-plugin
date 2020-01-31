@@ -34,7 +34,9 @@ module.exports = {
 							"in": "path",
 							"required": true,
 							"schema": {
-								"type": "string"
+								"type": "string",
+								"minLength": 1,
+								"maxLength": 5
 							}
 						}
 					]

@@ -7,69 +7,128 @@
 	const { strictEqual } = require("assert");
 
 	// locals
-	const checkObjectKeys = require(join(
-		__dirname, "..", "lib", "utils", "checkParameters", "checkExtractedParameter", "checkObjectKeys.js"
-	));
+
+		// plugin
+		const LocalMediator = require(join(__dirname, "utils", "Mediator", "LocalMediator.js"));
+
+// consts
+
+	const DESCRIPTOR_ONLY_URL = require(join(__dirname, "utils", "DescriptorUser", "DescriptorOnlyUrl.js"));
 
 // tests
 
 describe("Mediator / checkParameters / keys", () => {
 
-	it("should test missing params", () => {
+	const mediator = new LocalMediator({
+		"descriptor": DESCRIPTOR_ONLY_URL
+	});
 
-		const res = checkObjectKeys({}, [
-			{
-				"name": "test",
-				"type": "string",
-				"required": true
-			}
-		], "body");
+	before(() => {
+		return mediator.init();
+	});
 
-		strictEqual(typeof res, "object", "Generated result is not as expected");
-		strictEqual(res instanceof ReferenceError, true, "Generated result is not as expected");
+	after(() => {
+		return mediator.release();
+	});
+
+	it("should test missing params", (done) => {
+
+		mediator.checkParameters("testString", {
+			"path": {
+				"test": "test2"
+			},
+			"query": {},
+			"headers": {},
+			"cookie": {}
+		}, {}, "application/json").then(() => {
+			done(new Error("There is no generated error"));
+		}).catch((err) => {
+
+			strictEqual(typeof err, "object", "Generated error is not as expected");
+			strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+
+			done();
+
+		});
 
 	});
 
-	it("should test too much params", () => {
+	it("should test wrong params", (done) => {
 
-		const res = checkObjectKeys({
-			"test": "test"
-		}, [
-			{
-				"name": "sdvgsdvdsv",
-				"type": "string",
-				"required": false
-			}
-		], "body");
+		mediator.checkParameters("testString", {
+			"path": {
+				"path-param-string": false
+			},
+			"query": {},
+			"headers": {},
+			"cookie": {}
+		}, {}, "application/json").then(() => {
+			done(new Error("There is no generated error"));
+		}).catch((err) => {
 
-		strictEqual(typeof res, "object", "Generated result is not as expected");
-		strictEqual(res instanceof ReferenceError, true, "Generated result is not as expected");
+			strictEqual(typeof err, "object", "Generated error is not as expected");
+			strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+
+			done();
+
+		});
 
 	});
 
-	it("should test no params", () => {
+	it("should test too short params", (done) => {
 
-		const res = checkObjectKeys({}, [], "body");
+		mediator.checkParameters("testString", {
+			"path": {
+				"path-param-string": ""
+			},
+			"query": {},
+			"headers": {},
+			"cookie": {}
+		}, {}, "application/json").then(() => {
+			done(new Error("There is no generated error"));
+		}).catch((err) => {
 
-		strictEqual(typeof res, "object", "Generated result is not as expected");
-		strictEqual(res, null, "Generated result is not as expected");
+			strictEqual(typeof err, "object", "Generated error is not as expected");
+			strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
+
+			done();
+
+		});
+
+	});
+
+	it("should test too long params", (done) => {
+
+		mediator.checkParameters("testString", {
+			"path": {
+				"path-param-string": "testtesttesttest"
+			},
+			"query": {},
+			"headers": {},
+			"cookie": {}
+		}, {}, "application/json").then(() => {
+			done(new Error("There is no generated error"));
+		}).catch((err) => {
+
+			strictEqual(typeof err, "object", "Generated error is not as expected");
+			strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
+
+			done();
+
+		});
 
 	});
 
 	it("should test valid number of params", () => {
 
-		const res = checkObjectKeys({
-			"test": "test"
-		}, [
-			{
-				"name": "test",
-				"type": "string",
-				"required": true
-			}
-		], "body");
-
-		strictEqual(typeof res, "object", "Generated result is not as expected");
-		strictEqual(res, null, "Generated result is not as expected");
+		return mediator.checkParameters("testString", {
+			"path": {
+				"path-param-string": "test2"
+			},
+			"query": {},
+			"headers": {},
+			"cookie": {}
+		}, {}, "application/json");
 
 	});
 
