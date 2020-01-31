@@ -11,7 +11,7 @@
 
 // tests
 
-describe("errToString", () => {
+describe("utils / errToString", () => {
 
 	it("should test with missing data", () => {
 		strictEqual(errToString(), "", "generated data is not as expected");

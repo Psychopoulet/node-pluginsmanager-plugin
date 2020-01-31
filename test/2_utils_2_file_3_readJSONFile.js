@@ -7,15 +7,15 @@
 	const { join } = require("path");
 
 	// locals
-	const checkFile = require(join(__dirname, "..", "lib", "utils", "checkFile.js"));
+	const { readJSONFile } = require(join(__dirname, "..", "lib", "utils", "file", "main.js"));
 
 // tests
 
-describe("checkFile", () => {
+describe("utils / file / readJSONFile", () => {
 
 	it("should test with missing file", (done) => {
 
-		checkFile().then(() => {
+		readJSONFile().then(() => {
 			done(new Error("tests does not generate error"));
 		}).catch((err) => {
 
@@ -30,7 +30,7 @@ describe("checkFile", () => {
 
 	it("should test with wrong type file", (done) => {
 
-		checkFile(false).then(() => {
+		readJSONFile(false).then(() => {
 			done(new Error("tests does not generate error"));
 		}).catch((err) => {
 
@@ -45,7 +45,7 @@ describe("checkFile", () => {
 
 	it("should test with empty data", (done) => {
 
-		checkFile("").then(() => {
+		readJSONFile("").then(() => {
 			done(new Error("tests does not generate error"));
 		}).catch((err) => {
 
@@ -60,12 +60,12 @@ describe("checkFile", () => {
 
 	it("should test with inexistant file", (done) => {
 
-		checkFile("zrgzergzergerg").then(() => {
-			done(new Error("There is no generated error"));
+		readJSONFile("zrgzergzergerg").then(() => {
+			done(new Error("tests does not generate error"));
 		}).catch((err) => {
 
-			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+			strictEqual(typeof err, "object", "generated error is not as expected");
+			strictEqual(err instanceof Error, true, "generated error is not as expected");
 
 			done();
 
@@ -73,9 +73,15 @@ describe("checkFile", () => {
 
 	});
 
-	it("should test with existant file", () => {
+	it("should test with rigth file", () => {
 
-		return checkFile(__filename);
+		return readJSONFile(join(__dirname, "..", "package.json")).then((data) => {
+
+			strictEqual(typeof data, "object", "data is not as expected");
+
+			return Promise.resolve();
+
+		});
 
 	});
 

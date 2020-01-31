@@ -7,15 +7,15 @@
 	const { join } = require("path");
 
 	// locals
-	const isFile = require(join(__dirname, "..", "lib", "utils", "isFile.js"));
+	const { checkFile } = require(join(__dirname, "..", "lib", "utils", "file", "main.js"));
 
 // tests
 
-describe("isFile", () => {
+describe("utils / file / checkFile", () => {
 
 	it("should test with missing file", (done) => {
 
-		isFile().then(() => {
+		checkFile().then(() => {
 			done(new Error("tests does not generate error"));
 		}).catch((err) => {
 
@@ -30,7 +30,7 @@ describe("isFile", () => {
 
 	it("should test with wrong type file", (done) => {
 
-		isFile(false).then(() => {
+		checkFile(false).then(() => {
 			done(new Error("tests does not generate error"));
 		}).catch((err) => {
 
@@ -45,7 +45,7 @@ describe("isFile", () => {
 
 	it("should test with empty data", (done) => {
 
-		isFile("").then(() => {
+		checkFile("").then(() => {
 			done(new Error("tests does not generate error"));
 		}).catch((err) => {
 
@@ -58,14 +58,16 @@ describe("isFile", () => {
 
 	});
 
-	it("should test with inexistant file", () => {
+	it("should test with inexistant file", (done) => {
 
-		return isFile("zrgzergzergerg").then((exists) => {
+		checkFile("zrgzergzergerg").then(() => {
+			done(new Error("There is no generated error"));
+		}).catch((err) => {
 
-			strictEqual(typeof exists, "boolean", "check is not as expected");
-			strictEqual(exists, false, "check is not as expected");
+			strictEqual(typeof err, "object", "Generated error is not an object");
+			strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
 
-			return Promise.resolve();
+			done();
 
 		});
 
@@ -73,14 +75,7 @@ describe("isFile", () => {
 
 	it("should test with existant file", () => {
 
-		return isFile(__filename).then((exists) => {
-
-			strictEqual(typeof exists, "boolean", "check is not as expected");
-			strictEqual(exists, true, "check is not as expected");
-
-			return Promise.resolve();
-
-		});
+		return checkFile(__filename);
 
 	});
 

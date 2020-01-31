@@ -7,15 +7,15 @@
 	const { join } = require("path");
 
 	// locals
-	const readJSONFile = require(join(__dirname, "..", "lib", "utils", "readJSONFile.js"));
+	const { isFile } = require(join(__dirname, "..", "lib", "utils", "file", "main.js"));
 
 // tests
 
-describe("readJSONFile", () => {
+describe("utils / file / isFile", () => {
 
 	it("should test with missing file", (done) => {
 
-		readJSONFile().then(() => {
+		isFile().then(() => {
 			done(new Error("tests does not generate error"));
 		}).catch((err) => {
 
@@ -30,7 +30,7 @@ describe("readJSONFile", () => {
 
 	it("should test with wrong type file", (done) => {
 
-		readJSONFile(false).then(() => {
+		isFile(false).then(() => {
 			done(new Error("tests does not generate error"));
 		}).catch((err) => {
 
@@ -45,7 +45,7 @@ describe("readJSONFile", () => {
 
 	it("should test with empty data", (done) => {
 
-		readJSONFile("").then(() => {
+		isFile("").then(() => {
 			done(new Error("tests does not generate error"));
 		}).catch((err) => {
 
@@ -58,26 +58,25 @@ describe("readJSONFile", () => {
 
 	});
 
-	it("should test with inexistant file", (done) => {
+	it("should test with inexistant file", () => {
 
-		readJSONFile("zrgzergzergerg").then(() => {
-			done(new Error("tests does not generate error"));
-		}).catch((err) => {
+		return isFile("zrgzergzergerg").then((exists) => {
 
-			strictEqual(typeof err, "object", "generated error is not as expected");
-			strictEqual(err instanceof Error, true, "generated error is not as expected");
+			strictEqual(typeof exists, "boolean", "check is not as expected");
+			strictEqual(exists, false, "check is not as expected");
 
-			done();
+			return Promise.resolve();
 
 		});
 
 	});
 
-	it("should test with rigth file", () => {
+	it("should test with existant file", () => {
 
-		return readJSONFile(join(__dirname, "..", "package.json")).then((data) => {
+		return isFile(__filename).then((exists) => {
 
-			strictEqual(typeof data, "object", "data is not as expected");
+			strictEqual(typeof exists, "boolean", "check is not as expected");
+			strictEqual(exists, true, "check is not as expected");
 
 			return Promise.resolve();
 
