@@ -10,10 +10,8 @@
 	// locals
 
 		// plugin
-		const DescriptorUser = require(join(__dirname, "..", "lib", "components", "DescriptorUser.js"));
-		const MediatorUser = require(join(__dirname, "..", "lib", "components", "MediatorUser.js"));
-		const { Mediator, Server } = require(join(__dirname, "..", "lib", "main.js"));
-		const readJSONFile = require(join(__dirname, "..", "lib", "utils", "readJSONFile.js"));
+		const { DescriptorUser, MediatorUser, Mediator, Server } = require(join(__dirname, "..", "lib", "components", "main.js"));
+		const { readJSONFile } = require(join(__dirname, "..", "lib", "utils", "file", "main.js"));
 
 // tests
 
