@@ -7,6 +7,7 @@ declare module "node-pluginsmanager-plugin" {
 	import * as Events from "events";
 	import { Server as WebSocketServer } from "ws";
 	import { Server as SocketIOServer } from "socket.io";
+	import { OpenApiValidator } from "express-openapi-validate";
 
 	// options
 
@@ -75,6 +76,7 @@ declare module "node-pluginsmanager-plugin" {
 		// attributes
 
 			public initialized: boolean;
+			public _validator: null | OpenApiValidator;
 
 		// methods
 
