@@ -24,134 +24,85 @@ module.exports = class HeritedMediator extends LocalMediator {
 		return Promise.resolve([ "test" ]);
 	}
 
-	urlParamBoolean (urlParams, bodyParams, contentType) {
+	urlParamBoolean (urlParams, bodyParams) {
 
-		return this.checkParameters("urlParamBoolean", urlParams, bodyParams, contentType).then((parsed) => {
-
-			return Promise.resolve(parsed.url);
-
-		});
+		return this.checkParameters("urlParamBoolean", urlParams, bodyParams);
 
 	}
 
-	urlParamInteger (urlParams, bodyParams, contentType) {
+	urlParamInteger (urlParams, bodyParams) {
 
-		return this.checkParameters("urlParamInteger", urlParams, bodyParams, contentType).then((parsed) => {
-
-			return Promise.resolve(parsed.url);
-
-		});
+		return this.checkParameters("urlParamInteger", urlParams, bodyParams);
 
 	}
 
-	urlParamNumber (urlParams, bodyParams, contentType) {
+	urlParamNumber (urlParams, bodyParams) {
 
-		return this.checkParameters("urlParamNumber", urlParams, bodyParams, contentType).then((parsed) => {
-
-			return Promise.resolve(parsed.url);
-
-		});
+		return this.checkParameters("urlParamNumber", urlParams, bodyParams);
 
 	}
 
-	urlParamString (urlParams, bodyParams, contentType) {
+	urlParamString (urlParams, bodyParams) {
 
-		return this.checkParameters("urlParamString", urlParams, bodyParams, contentType).then((parsed) => {
-
-			if ("" === parsed.url["path-param-string"].trim()) {
-				return Promise.reject(new RangeError("\"parameters[path-param-string]\" url path parameter is empty"));
-			}
-
-			else {
-				return Promise.resolve(parsed.url);
-			}
-
-		});
+		return this.checkParameters("urlParamString", urlParams, bodyParams);
 
 	}
 
-	urlParamFacultative (urlParams, bodyParams, contentType) {
+	urlParamFacultative (urlParams, bodyParams) {
 
-		return this.checkParameters("urlParamFacultative", urlParams, bodyParams, contentType);
-
-	}
-
-	bodyParamBoolean (urlParams, bodyParams, contentType) {
-
-		return this.checkParameters("bodyParamBoolean", urlParams, bodyParams, contentType).then((parsed) => {
-
-			return Promise.resolve(parsed.body);
-
-		});
+		return this.checkParameters("urlParamFacultative", urlParams, bodyParams);
 
 	}
 
-	bodyParamInteger (urlParams, bodyParams, contentType) {
+	bodyParamBoolean (urlParams, bodyParams) {
 
-		return this.checkParameters("bodyParamInteger", urlParams, bodyParams, contentType).then((parsed) => {
-
-			return Promise.resolve(parsed.body);
-
-		});
+		return this.checkParameters("bodyParamBoolean", urlParams, bodyParams);
 
 	}
 
-	bodyParamNumber (urlParams, bodyParams, contentType) {
+	bodyParamInteger (urlParams, bodyParams) {
 
-		return this.checkParameters("bodyParamNumber", urlParams, bodyParams, contentType).then((parsed) => {
-
-			return Promise.resolve(parsed.body);
-
-		});
+		return this.checkParameters("bodyParamInteger", urlParams, bodyParams);
 
 	}
 
-	bodyParamString (urlParams, bodyParams, contentType) {
+	bodyParamNumber (urlParams, bodyParams) {
 
-		return this.checkParameters("bodyParamString", urlParams, bodyParams, contentType).then((parsed) => {
-
-			if ("" === parsed.body["body-param-string"].trim()) {
-				return Promise.reject(new RangeError("\"requestBody[body-param-string]\" body parameter is empty"));
-			}
-
-			else {
-				return Promise.resolve(parsed.body);
-			}
-
-		});
+		return this.checkParameters("bodyParamNumber", urlParams, bodyParams);
 
 	}
 
-	bodyParamObject (urlParams, bodyParams, contentType) {
+	bodyParamString (urlParams, bodyParams) {
 
-		return this.checkParameters("bodyParamObject", urlParams, bodyParams, contentType).then((parsed) => {
-			return Promise.resolve(parsed.body);
-		});
+		return this.checkParameters("bodyParamString", urlParams, bodyParams);
 
 	}
 
-	bodyParamArray (urlParams, bodyParams, contentType) {
+	bodyParamObject (urlParams, bodyParams) {
 
-		return this.checkParameters("bodyParamArray", urlParams, bodyParams, contentType).then((parsed) => {
-			return Promise.resolve(parsed.body);
-		});
+		return this.checkParameters("bodyParamObject", urlParams, bodyParams);
 
 	}
 
-	create (urlParams, bodyParams, contentType) {
+	bodyParamArray (urlParams, bodyParams) {
 
-		return this.checkParameters("create", urlParams, bodyParams, contentType).then(() => {
+		return this.checkParameters("bodyParamArray", urlParams, bodyParams);
+
+	}
+
+	create (urlParams, bodyParams) {
+
+		return this.checkParameters("create", urlParams, bodyParams).then(() => {
 
 			if ("generate-fail" === bodyParams["body-param"]) {
 				return Promise.reject(new Error("Generate artificial error"));
 			}
 
-
-			else if ("string" !== typeof urlParams["url-param"]) {
-				return Promise.reject(new TypeError("\"url-param\" url path parameter is not a string"));
+			else if ("string" !== typeof urlParams.query["url-param"]) {
+				return Promise.reject(new TypeError("\"query.url-param\" url path parameter is not a string"));
 			}
-				else if ("" === urlParams["url-param"].trim()) {
-					return Promise.reject(new RangeError("\"url-param\" url path parameter is empty"));
+				else if ("" === urlParams.query["url-param"].trim()) {
+					return Promise.reject(new RangeError("\"query.url-param\" url path parameter is empty"));
 				}
 
 			else if ("string" !== typeof bodyParams["body-param"]) {

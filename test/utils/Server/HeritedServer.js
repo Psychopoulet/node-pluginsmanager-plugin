@@ -35,6 +35,10 @@ module.exports = class HeritedServer extends Server {
 				"descriptor": this._Descriptor
 			});
 
+			return this._Mediator.init();
+
+		}).then(() => {
+
 			return super.init(...data);
 
 		});
