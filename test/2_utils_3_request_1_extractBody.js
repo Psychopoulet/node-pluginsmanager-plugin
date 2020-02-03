@@ -7,7 +7,7 @@
 	// const { join } = require("path");
 
 	// locals
-	// const { extractBody } = require(join(__dirname, "..", "lib", "utils", "descriptor", "main.js"));
+	// const { extractBody } = require(join(__dirname, "..", "lib", "utils", "request", "main.js"));
 
 it.todo = function todo (title, callback) {
 	return it.skip("@TODO " + title, callback);
@@ -15,7 +15,7 @@ it.todo = function todo (title, callback) {
 
 // tests
 
-describe("utils / descriptor / extractBody", () => {
+describe("utils / request / extractBody", () => {
 
 	it.todo("should test with missing data", () => {
 		// nothing to do here
