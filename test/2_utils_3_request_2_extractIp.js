@@ -83,4 +83,28 @@ describe("utils / request / extractIp", () => {
 
 	});
 
+	it("should test with valid mutli Ips", () => {
+
+		strictEqual(extractIp({
+			"ip": "::ffff:127.0.0.1"
+		}), "127.0.0.1", "generated data is not as expected");
+
+	});
+
+	it("should test with valid localhost origin", () => {
+
+		strictEqual(extractIp({
+			"ip": "localhost"
+		}), "127.0.0.1", "generated data is not as expected");
+
+	});
+
+	it("should test with valid ::1 origin", () => {
+
+		strictEqual(extractIp({
+			"ip": "::1"
+		}), "127.0.0.1", "generated data is not as expected");
+
+	});
+
 });
