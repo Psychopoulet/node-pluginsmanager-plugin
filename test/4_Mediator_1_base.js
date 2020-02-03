@@ -14,6 +14,10 @@
 		const { Mediator } = require(join(__dirname, "..", "lib", "main.js"));
 		const LocalMediator = require(join(__dirname, "utils", "Mediator", "LocalMediator.js"));
 
+// consts
+
+	const DESCRIPTOR_ONLY_URL = require(join(__dirname, "utils", "DescriptorUser", "DescriptorOnlyUrl.js"));
+
 // tests
 
 describe("Mediator", () => {
@@ -35,7 +39,9 @@ describe("Mediator", () => {
 
 	it("should test init", () => {
 
-		const mediator = new LocalMediator();
+		const mediator = new LocalMediator({
+			"descriptor": DESCRIPTOR_ONLY_URL
+		});
 
 		return mediator.init().then(() => {
 
@@ -88,7 +94,9 @@ describe("Mediator", () => {
 
 	it("should test release", () => {
 
-		const mediator = new LocalMediator();
+		const mediator = new LocalMediator({
+			"descriptor": DESCRIPTOR_ONLY_URL
+		});
 
 		return mediator.init().then(() => {
 

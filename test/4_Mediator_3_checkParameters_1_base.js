@@ -1,7 +1,3 @@
-/*
-	eslint-disable max-lines
-*/
-
 "use strict";
 
 // deps
@@ -94,7 +90,7 @@ describe("Mediator / checkParameters", () => {
 				"query": {},
 				"headers": {},
 				"cookie": {}
-			}, {}, "application/json").then(() => {
+			}, {}).then(() => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
@@ -472,70 +468,6 @@ describe("Mediator / checkParameters", () => {
 
 	});
 
-	describe("contentType", () => {
-
-		it("should test missing contentType", (done) => {
-
-			mediator.checkParameters("create", {
-				"path": {},
-				"query": {},
-				"headers": {},
-				"cookie": {}
-			}, {}).then(() => {
-				done(new Error("There is no generated error"));
-			}).catch((err) => {
-
-				strictEqual(typeof err, "object", "Generated error is not as expected");
-				strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
-
-				done();
-
-			});
-
-		});
-
-		it("should test wrong contentType", (done) => {
-
-			mediator.checkParameters("create", {
-				"path": {},
-				"query": {},
-				"headers": {},
-				"cookie": {}
-			}, {}, false).then(() => {
-				done(new Error("There is no generated error"));
-			}).catch((err) => {
-
-				strictEqual(typeof err, "object", "Generated error is not as expected");
-				strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
-
-				done();
-
-			});
-
-		});
-
-		it("should test empty contentType", (done) => {
-
-			mediator.checkParameters("create", {
-				"path": {},
-				"query": {},
-				"headers": {},
-				"cookie": {}
-			}, {}, "").then(() => {
-				done(new Error("There is no generated error"));
-			}).catch((err) => {
-
-				strictEqual(typeof err, "object", "Generated error is not as expected");
-				strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
-
-				done();
-
-			});
-
-		});
-
-	});
-
 	describe("valid", () => {
 
 		it("should test valid url request", () => {
@@ -547,7 +479,7 @@ describe("Mediator / checkParameters", () => {
 				"query": {},
 				"headers": {},
 				"cookie": {}
-			}, {}, "application/json");
+			}, {});
 
 		});
 

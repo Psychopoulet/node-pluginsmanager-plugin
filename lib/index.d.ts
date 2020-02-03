@@ -4,7 +4,7 @@
 
 declare module "node-pluginsmanager-plugin" {
 
-	import * as Events from "events";
+	import { EventEmitter } from "events";
 	import { Server as WebSocketServer } from "ws";
 	import { Server as SocketIOServer } from "socket.io";
 	import { OpenApiValidator } from "express-openapi-validate";
@@ -38,7 +38,7 @@ declare module "node-pluginsmanager-plugin" {
 
 	// classes
 
-	class DescriptorUser extends Events {
+	class DescriptorUser extends EventEmitter {
 
 		// attributes
 

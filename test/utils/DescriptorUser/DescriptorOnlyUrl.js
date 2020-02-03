@@ -22,7 +22,15 @@ module.exports = {
 						{
 							"$ref": "#/components/parameters/path-param-component"
 						}
-					]
+					],
+					"responses": {
+						"200": {
+							"description": "Everything is fine"
+						},
+						"default": {
+							"description": "An error occured"
+						}
+					}
 				}
 			},
 			"/test/{path-param-string}": {
@@ -39,7 +47,15 @@ module.exports = {
 								"maxLength": 5
 							}
 						}
-					]
+					],
+					"responses": {
+						"200": {
+							"description": "Everything is fine"
+						},
+						"default": {
+							"description": "An error occured"
+						}
+					}
 				}
 			},
 			"/test/{path-param-integer}": {
@@ -51,10 +67,20 @@ module.exports = {
 							"in": "path",
 							"required": true,
 							"schema": {
-								"type": "integer"
+								"type": "integer",
+								"minimum": 1,
+								"maximum": 5
 							}
 						}
-					]
+					],
+					"responses": {
+						"200": {
+							"description": "Everything is fine"
+						},
+						"default": {
+							"description": "An error occured"
+						}
+					}
 				}
 			},
 			"/test/{path-param-number}": {
@@ -66,10 +92,20 @@ module.exports = {
 							"in": "path",
 							"required": true,
 							"schema": {
-								"type": "number"
+								"type": "number",
+								"minimum": 1.1,
+								"maximum": 1.5
 							}
 						}
-					]
+					],
+					"responses": {
+						"200": {
+							"description": "Everything is fine"
+						},
+						"default": {
+							"description": "An error occured"
+						}
+					}
 				}
 			},
 			"/test/{path-param-boolean}": {
@@ -84,7 +120,15 @@ module.exports = {
 								"type": "boolean"
 							}
 						}
-					]
+					],
+					"responses": {
+						"200": {
+							"description": "Everything is fine"
+						},
+						"default": {
+							"description": "An error occured"
+						}
+					}
 				}
 			},
 			"/test/facultative": {
@@ -99,7 +143,39 @@ module.exports = {
 								"type": "string"
 							}
 						}
-					]
+					],
+					"responses": {
+						"200": {
+							"description": "Everything is fine"
+						},
+						"default": {
+							"description": "An error occured"
+						}
+					}
+				}
+			},
+			"/test/enum": {
+				"get": {
+					"operationId": "testEnum",
+					"parameters": [
+						{
+							"name": "path-param-enum",
+							"in": "path",
+							"required": true,
+							"schema": {
+								"type": "string",
+								"enum": [ "test1", "test2" ]
+							}
+						}
+					],
+					"responses": {
+						"200": {
+							"description": "Everything is fine"
+						},
+						"default": {
+							"description": "An error occured"
+						}
+					}
 				}
 			}
 		},
