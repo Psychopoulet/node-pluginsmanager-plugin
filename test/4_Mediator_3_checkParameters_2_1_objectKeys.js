@@ -13,14 +13,14 @@
 
 // consts
 
-	const DESCRIPTOR_ONLY_URL = require(join(__dirname, "utils", "DescriptorUser", "DescriptorOnlyUrl.js"));
+	const DESCRIPTOR = require(join(__dirname, "utils", "DescriptorUser", "DescriptorOnlyUrl.js"));
 
 // tests
 
 describe("Mediator / checkParameters / keys", () => {
 
 	const mediator = new LocalMediator({
-		"descriptor": DESCRIPTOR_ONLY_URL
+		"descriptor": DESCRIPTOR
 	});
 
 	before(() => {
@@ -40,7 +40,7 @@ describe("Mediator / checkParameters / keys", () => {
 			"query": {},
 			"headers": {},
 			"cookie": {}
-		}, {}, "application/json").then(() => {
+		}, {}).then(() => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
@@ -62,7 +62,7 @@ describe("Mediator / checkParameters / keys", () => {
 			"query": {},
 			"headers": {},
 			"cookie": {}
-		}, {}, "application/json").then(() => {
+		}, {}).then(() => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
@@ -84,7 +84,7 @@ describe("Mediator / checkParameters / keys", () => {
 			"query": {},
 			"headers": {},
 			"cookie": {}
-		}, {}, "application/json").then(() => {
+		}, {}).then(() => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
@@ -106,7 +106,7 @@ describe("Mediator / checkParameters / keys", () => {
 			"query": {},
 			"headers": {},
 			"cookie": {}
-		}, {}, "application/json").then(() => {
+		}, {}).then(() => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
@@ -128,7 +128,7 @@ describe("Mediator / checkParameters / keys", () => {
 			"query": {},
 			"headers": {},
 			"cookie": {}
-		}, {}, "application/json");
+		}, {});
 
 	});
 
