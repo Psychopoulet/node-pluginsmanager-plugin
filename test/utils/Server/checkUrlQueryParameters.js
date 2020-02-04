@@ -22,7 +22,7 @@ module.exports = function checkUrlQueryParameters (URL_API) {
 				"body-param": "test"
 			}, 400, "Bad Request", {
 				"code": "MISSING_PARAMETER",
-				"message": "Missing url parameters : [ \"url-param\" ]"
+				"message": "Error while validating request: request.query should have required property 'url-param'"
 			});
 
 		});
@@ -33,7 +33,7 @@ module.exports = function checkUrlQueryParameters (URL_API) {
 				"body-param": "test"
 			}, 400, "Bad Request", {
 				"code": "EMPTY_OR_RANGE_OR_ENUM_PARAMETER",
-				"message": "\"url-param\" url path parameter is empty"
+				"message": "\"query.url-param\" url path parameter is empty"
 			});
 
 		});

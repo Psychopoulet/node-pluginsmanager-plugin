@@ -44,49 +44,65 @@ module.exports = class HeritedMediator extends LocalMediator {
 
 	urlParamString (urlParams, bodyParams) {
 
-		return this.checkParameters("urlParamString", urlParams, bodyParams);
+		return this.checkParameters("urlParamString", urlParams, bodyParams).then(() => {
+			return Promise.resolve(urlParams.path["path-param-string"]);
+		});
 
 	}
 
 	urlParamFacultative (urlParams, bodyParams) {
 
-		return this.checkParameters("urlParamFacultative", urlParams, bodyParams);
+		return this.checkParameters("urlParamFacultative", urlParams, bodyParams).then(() => {
+			return Promise.resolve(urlParams.query["path-param-facultative"] ? urlParams.query["path-param-facultative"] : "ok");
+		});
 
 	}
 
 	bodyParamBoolean (urlParams, bodyParams) {
 
-		return this.checkParameters("bodyParamBoolean", urlParams, bodyParams);
+		return this.checkParameters("bodyParamBoolean", urlParams, bodyParams).then(() => {
+			return Promise.resolve(bodyParams["body-param-boolean"]);
+		});
 
 	}
 
 	bodyParamInteger (urlParams, bodyParams) {
 
-		return this.checkParameters("bodyParamInteger", urlParams, bodyParams);
+		return this.checkParameters("bodyParamInteger", urlParams, bodyParams).then(() => {
+			return Promise.resolve(bodyParams["body-param-integer"]);
+		});
 
 	}
 
 	bodyParamNumber (urlParams, bodyParams) {
 
-		return this.checkParameters("bodyParamNumber", urlParams, bodyParams);
+		return this.checkParameters("bodyParamNumber", urlParams, bodyParams).then(() => {
+			return Promise.resolve(bodyParams["body-param-number"]);
+		});
 
 	}
 
 	bodyParamString (urlParams, bodyParams) {
 
-		return this.checkParameters("bodyParamString", urlParams, bodyParams);
+		return this.checkParameters("bodyParamString", urlParams, bodyParams).then(() => {
+			return Promise.resolve(bodyParams["body-param-string"]);
+		});
 
 	}
 
 	bodyParamObject (urlParams, bodyParams) {
 
-		return this.checkParameters("bodyParamObject", urlParams, bodyParams);
+		return this.checkParameters("bodyParamObject", urlParams, bodyParams).then(() => {
+			return Promise.resolve(bodyParams["body-param-object"]);
+		});
 
 	}
 
 	bodyParamArray (urlParams, bodyParams) {
 
-		return this.checkParameters("bodyParamArray", urlParams, bodyParams);
+		return this.checkParameters("bodyParamArray", urlParams, bodyParams).then(() => {
+			return Promise.resolve(bodyParams["body-param-array"]);
+		});
 
 	}
 

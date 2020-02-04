@@ -400,8 +400,8 @@
 										"items": {
 											"$ref": "#/components/schemas/TestString"
 										},
-										"minLength": 1,
-										"maxLength": 5
+										"minItems": 1,
+										"maxItems": 5
 									}
 								},
 								"required": [ "body-param-array" ]
@@ -515,6 +515,7 @@
 			},
 			"TestString": {
 				"type": "string",
+				"minLength": 1,
 				"maxLength": 5
 			},
 			"TestObject": {
