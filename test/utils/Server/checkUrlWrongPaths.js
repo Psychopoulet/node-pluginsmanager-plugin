@@ -49,7 +49,7 @@ module.exports = function checkUrlWrongPaths (URL_API) {
 
 		});
 
-		it("should test request with valid delete path without returned data", () => {
+		it("should test request with valid path without returned data", () => {
 
 			return httpRequestTest(URL_API + "/empty", "post", null, 204, "No Content");
 
