@@ -91,6 +91,16 @@ describe("utils / request / extractCookies", () => {
 
 		});
 
+		it("should test with wrong cookie data", () => {
+
+			deepStrictEqual(extractCookies({
+				"headers": {
+					"cookie": true
+				}
+			}), {}, "generated data is not as expected");
+
+		});
+
 		it("should test with one cookie data", () => {
 
 			deepStrictEqual(extractCookies({
