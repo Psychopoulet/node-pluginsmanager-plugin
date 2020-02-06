@@ -13,6 +13,8 @@
 		const checkUrlValidPaths = require(join(__dirname, "checkUrlValidPaths.js"));
 		const checkUrlPathParameters = require(join(__dirname, "checkUrlPathParameters.js"));
 		const checkUrlQueryParameters = require(join(__dirname, "checkUrlQueryParameters.js"));
+		const checkUrlCookieParameters = require(join(__dirname, "checkUrlCookieParameters.js"));
+		const checkUrlHeaderParameters = require(join(__dirname, "checkUrlHeaderParameters.js"));
 
 		const checkBodyBasics = require(join(__dirname, "checkBodyBasics.js"));
 		const checkBodyContentType = require(join(__dirname, "checkBodyContentType.js"));
@@ -33,7 +35,8 @@ module.exports = function test (server) {
 		checkUrlValidPaths(URL_API, server);
 		checkUrlPathParameters(URL_API);
 		checkUrlQueryParameters(URL_API);
-
+		checkUrlCookieParameters(URL_API);
+		checkUrlHeaderParameters(URL_API);
 
 	});
 

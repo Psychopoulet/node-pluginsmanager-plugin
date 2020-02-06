@@ -14,47 +14,29 @@
 
 module.exports = function checkUrlPathParameters (URL_API) {
 
-	describe("check query parameters", () => {
+	describe("check path parameters", () => {
 
-		it("should test request with missing query parameter", () => {
+		it("should test request with missing parameter", () => {
 
-			return httpRequestTest(URL_API + "/create", "put", {
-				"body-param": "test"
-			}, 400, "Bad Request", {
-				"code": "MISSING_PARAMETER",
-				"message": "Error while validating request: request.query should have required property 'url-param'"
+			return httpRequestTest(URL_API + "/path/path", "get", null, 404, "Not Found", {
+				"code": "404",
+				"message": "Unknown page"
 			});
 
 		});
 
-		it("should test request with empty query parameter", () => {
+		it("should test request with empty parameter", () => {
 
-			return httpRequestTest(URL_API + "/create?url-param=", "put", {
-				"body-param": "test"
-			}, 400, "Bad Request", {
+			return httpRequestTest(URL_API + "/path/path/", "get", null, 400, "Bad Request", {
 				"code": "EMPTY_OR_RANGE_OR_ENUM_PARAMETER",
-				"message": "\"query.url-param\" url path parameter is empty"
+				"message": "Error while validating request: request.params['path-param'] should NOT be shorter than 1 characters"
 			});
 
 		});
 
 		it("should test request with valid request", () => {
 
-			return httpRequestTest(URL_API + "/create?url-param=ok", "put", {
-				"body-param": "test"
-			}, 201, "Created");
-
-		});
-
-		it("should test request with component", () => {
-
-			return httpRequestTest(URL_API + "/valid/url/string/test", "get", null, 200, "OK");
-
-		});
-
-		it("should test request with facultative parameter", () => {
-
-			return httpRequestTest(URL_API + "/valid/url/facultative", "get", null, 200, "OK");
+			return httpRequestTest(URL_API + "/path/path/test", "get", null, 200, "OK", "test");
 
 		});
 

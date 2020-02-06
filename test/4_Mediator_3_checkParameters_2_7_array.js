@@ -37,7 +37,7 @@ describe("Mediator / checkParameters / array", () => {
 			"path": {},
 			"query": {},
 			"headers": {},
-			"cookie": {}
+			"cookies": {}
 		}, {
 			"test": "test2"
 		}).then(() => {
@@ -59,7 +59,7 @@ describe("Mediator / checkParameters / array", () => {
 			"path": {},
 			"query": {},
 			"headers": {},
-			"cookie": {}
+			"cookies": {}
 		}, {
 			"body-param-array": "test2"
 		}).then(() => {
@@ -81,7 +81,7 @@ describe("Mediator / checkParameters / array", () => {
 			"path": {},
 			"query": {},
 			"headers": {},
-			"cookie": {}
+			"cookies": {}
 		}, {
 			"body-param-array": []
 		}).then(() => {
@@ -103,7 +103,7 @@ describe("Mediator / checkParameters / array", () => {
 			"path": {},
 			"query": {},
 			"headers": {},
-			"cookie": {}
+			"cookies": {}
 		}, {
 			"body-param-array": [ "test", "test", "test", "test", "test", "test" ]
 		}).then(() => {
@@ -125,7 +125,7 @@ describe("Mediator / checkParameters / array", () => {
 			"path": {},
 			"query": {},
 			"headers": {},
-			"cookie": {}
+			"cookies": {}
 		}, {
 			"body-param-array": [ 3 ]
 		}).then(() => {
@@ -147,7 +147,7 @@ describe("Mediator / checkParameters / array", () => {
 			"path": {},
 			"query": {},
 			"headers": {},
-			"cookie": {}
+			"cookies": {}
 		}, {
 			"body-param-array": [ "test", 3 ]
 		}).then(() => {
@@ -169,7 +169,7 @@ describe("Mediator / checkParameters / array", () => {
 			"path": {},
 			"query": {},
 			"headers": {},
-			"cookie": {}
+			"cookies": {}
 		}, {
 			"body-param-array": [ "test", "test", "test" ]
 		});

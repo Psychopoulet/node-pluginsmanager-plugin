@@ -37,7 +37,7 @@ describe("Mediator / checkParameters / object", () => {
 			"path": {},
 			"query": {},
 			"headers": {},
-			"cookie": {}
+			"cookies": {}
 		}, {
 			"test": "test2"
 		}).then(() => {
@@ -59,7 +59,7 @@ describe("Mediator / checkParameters / object", () => {
 			"path": {},
 			"query": {},
 			"headers": {},
-			"cookie": {}
+			"cookies": {}
 		}, {
 			"body-param-object": "test2"
 		}).then(() => {
@@ -81,7 +81,7 @@ describe("Mediator / checkParameters / object", () => {
 			"path": {},
 			"query": {},
 			"headers": {},
-			"cookie": {}
+			"cookies": {}
 		}, {
 			"body-param-object": {
 				"test": "test2"
@@ -105,7 +105,7 @@ describe("Mediator / checkParameters / object", () => {
 			"path": {},
 			"query": {},
 			"headers": {},
-			"cookie": {}
+			"cookies": {}
 		}, {
 			"body-param-object": {
 				"body-param-object-test": "test2"

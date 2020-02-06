@@ -7,7 +7,7 @@
 	const { writeFile } = require("fs");
 
 	// locals
-	const { readJSONFile } = require(join(__dirname, "..", "..", "..", "lib", "utils", "main.js"));
+	const { readJSONFile } = require(join(__dirname, "..", "..", "..", "lib", "utils", "file", "main.js"));
 
 // consts
 

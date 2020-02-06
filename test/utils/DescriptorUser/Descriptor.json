@@ -454,17 +454,6 @@
 				"description": "",
 				"summary": "Simple API test for Server class",
 				"operationId": "create",
-				"parameters": [
-					{
-						"name": "url-param",
-						"in": "query",
-						"description": "Entity name",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
 				"requestBody": {
 					"description": "test name",
 					"content": {
@@ -483,6 +472,110 @@
 				},
 				"responses": {
 					"201": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/path/path/{path-param}": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "pathPath",
+				"parameters": [
+					{
+						"name": "path-param",
+						"in": "path",
+						"description": "Entity name",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/TestString"
+						}
+					}
+				],
+				"responses": {
+					"404": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/path/query": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "pathQuery",
+				"parameters": [
+					{
+						"name": "query-param",
+						"in": "query",
+						"description": "Entity name",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/TestString"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/path/cookie": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "pathCookie",
+				"parameters": [
+					{
+						"name": "cookie-param",
+						"in": "cookie",
+						"description": "Entity name",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/TestString"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/path/header": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "pathHeader",
+				"parameters": [
+					{
+						"name": "header-param",
+						"in": "header",
+						"description": "Entity name",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/TestString"
+						}
+					}
+				],
+				"responses": {
+					"200": {
 						"description": "Everything is fine"
 					},
 					"500": {

@@ -37,7 +37,7 @@ describe("Mediator / checkParameters / inheritance", () => {
 			"path": {},
 			"query": {},
 			"headers": {},
-			"cookie": {}
+			"cookies": {}
 		}, {
 			"test": "test2"
 		}).then(() => {
@@ -59,7 +59,7 @@ describe("Mediator / checkParameters / inheritance", () => {
 			"path": {},
 			"query": {},
 			"headers": {},
-			"cookie": {}
+			"cookies": {}
 		}, {
 			"doors": "test",
 			"wheels": {
@@ -84,7 +84,7 @@ describe("Mediator / checkParameters / inheritance", () => {
 			"path": {},
 			"query": {},
 			"headers": {},
-			"cookie": {}
+			"cookies": {}
 		}, {
 			"doors": {
 				"count": 6
@@ -111,7 +111,7 @@ describe("Mediator / checkParameters / inheritance", () => {
 			"path": {},
 			"query": {},
 			"headers": {},
-			"cookie": {}
+			"cookies": {}
 		}, {
 			"doors": {
 				"count": 4

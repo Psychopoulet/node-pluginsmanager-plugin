@@ -45,7 +45,7 @@ module.exports = function checkUrlWrongPaths (URL_API) {
 
 		it("should test request with valid get path without returned data", () => {
 
-			return httpRequestTest(URL_API + "/empty", "get", null, 404, "Not Found");
+			return httpRequestTest(URL_API + "/empty", "get", null, 200, "OK");
 
 		});
 

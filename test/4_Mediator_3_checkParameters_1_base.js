@@ -339,7 +339,7 @@ describe("Mediator / checkParameters", () => {
 
 		});
 
-		describe("cookie", () => {
+		describe("cookies", () => {
 
 			it("should test missing parameters", (done) => {
 
@@ -366,7 +366,7 @@ describe("Mediator / checkParameters", () => {
 					"path": {},
 					"headers": {},
 					"query": {},
-					"cookie": null
+					"cookies": null
 				}).then(() => {
 					done(new Error("There is no generated error"));
 				}).catch((err) => {
@@ -386,7 +386,7 @@ describe("Mediator / checkParameters", () => {
 					"path": {},
 					"headers": {},
 					"query": {},
-					"cookie": false
+					"cookies": false
 				}).then(() => {
 					done(new Error("There is no generated error"));
 				}).catch((err) => {
@@ -412,7 +412,7 @@ describe("Mediator / checkParameters", () => {
 				"path": {},
 				"query": {},
 				"headers": {},
-				"cookie": {}
+				"cookies": {}
 			}).then(() => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
@@ -432,7 +432,7 @@ describe("Mediator / checkParameters", () => {
 				"path": {},
 				"query": {},
 				"headers": {},
-				"cookie": {}
+				"cookies": {}
 			}, null).then(() => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
@@ -452,7 +452,7 @@ describe("Mediator / checkParameters", () => {
 				"path": {},
 				"query": {},
 				"headers": {},
-				"cookie": {}
+				"cookies": {}
 			}, false).then(() => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
@@ -478,7 +478,7 @@ describe("Mediator / checkParameters", () => {
 				},
 				"query": {},
 				"headers": {},
-				"cookie": {}
+				"cookies": {}
 			}, {});
 
 		});
