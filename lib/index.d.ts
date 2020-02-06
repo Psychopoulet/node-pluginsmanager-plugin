@@ -22,9 +22,13 @@ declare module "node-pluginsmanager-plugin" {
 			"mediator": Mediator | null;
 		}
 
-	interface iMediatorCheckParametersResult {
-		"url": object;
-		"body": object;
+	interface iUrlParameters {
+		"url": {
+			"path": object;
+			"query": object;
+			"headers": object;
+			"cookies": object;
+		};
 	}
 
 	interface iOrchestratorOptions {
@@ -79,7 +83,7 @@ declare module "node-pluginsmanager-plugin" {
 
 		// methods
 
-			public checkParameters(operationId: string, urlParams: object, bodyParams: object, contentType: string): Promise<iMediatorCheckParametersResult>;
+			public checkParameters(operationId: string, urlParams: iUrlParameters, bodyParams: object): Promise<void>;
 
 	}
 

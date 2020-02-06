@@ -16,9 +16,13 @@ You will have to add all the methods you need here to pilote the targeted use (A
 ## Interfaces
 
 ```typescript
-interface iMediatorCheckParametersResult {
-  "url": object;
-  "body": object;
+interface iUrlParameters {
+  "url": {
+    "path": object;
+    "query": object;
+    "headers": object;
+    "cookies": object;
+  };
 }
 ```
 
@@ -32,7 +36,7 @@ interface iMediatorCheckParametersResult {
 
 ### Methods
 
-  * ``` public checkParameters(operationId: string, urlParams: object, bodyParams: object, contentType: string): Promise<iMediatorCheckParametersResult>; ``` Check sended parameters by method name and formate it if necessary ("true" => true, "1.1" => 1.1, etc...) (used by the [Server](./Server.md))
+  * ``` public checkParameters(operationId: string, urlParams: iUrlParameters, bodyParams: object): Promise<void>; ``` Check sended parameters by method name and formate it if necessary ("true" => true, "1.1" => 1.1, etc...) (used by the [Server](./Server.md))
 
 ### Events
 
