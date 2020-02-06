@@ -36,7 +36,7 @@ interface iUrlParameters {
 
 ### Methods
 
-  * ``` public checkParameters(operationId: string, urlParams: iUrlParameters, bodyParams: object): Promise<void>; ``` Check sended parameters by method name and formate it if necessary ("true" => true, "1.1" => 1.1, etc...) (used by the [Server](./Server.md))
+  * ``` public checkParameters(operationId: string, urlParams: iUrlParameters, bodyParams: object): Promise<void>; ``` Check sended parameters by method name (used by the [Server](./Server.md))
 
 ### Events
 
