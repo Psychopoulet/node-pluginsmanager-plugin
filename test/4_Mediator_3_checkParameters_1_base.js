@@ -81,15 +81,14 @@ describe("Mediator / checkParameters", () => {
 		it("should test unknown operationId", (done) => {
 
 			const descriptor = JSON.parse(JSON.stringify(DESCRIPTOR_ONLY_URL));
-			delete descriptor.paths["/test/{path-param-string}"].get.operationId;
 
 			new LocalMediator({
 				"descriptor": descriptor
-			}).checkParameters("testString", {
+			}).checkParameters("testUnknowOperationId", {
 				"path": {},
 				"query": {},
 				"headers": {},
-				"cookie": {}
+				"cookies": {}
 			}, {}).then(() => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
