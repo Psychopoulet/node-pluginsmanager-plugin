@@ -139,7 +139,7 @@ class MyPluginMediator extends Mediator {
 
   /**
   * Execute "test" search
-  * @param {object} urlParameters: parameters sended with url (path, query)
+  * @param {object} urlParameters: parameters sended with url (path, query, cookies, headers)
   * @param {object} bodyParameters: parameters sended in the query body
   * @param {string} contentType: type of content type detected by the Server and setted in the Descriptor (probably "application/json")
   * @return {Promise} operation result
@@ -148,7 +148,9 @@ class MyPluginMediator extends Mediator {
 
     /*
     urlParameters : {
-      "url-param": string
+      "query": {
+        "url-param": string
+      }
     }
     */
 
@@ -158,7 +160,7 @@ class MyPluginMediator extends Mediator {
     }
     */
 
-    return this._query(urlParameters["url-param"] + "_" + bodyParameters.["body-param"]);
+    return this._query(urlParameters.query["url-param"] + "_" + bodyParameters.["body-param"]);
 
   }
 
