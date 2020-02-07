@@ -16,9 +16,13 @@ You will have to add all the methods you need here to pilote the targeted use (A
 ## Interfaces
 
 ```typescript
-interface iMediatorCheckParametersResult {
-  "url": object;
-  "body": object;
+interface iUrlParameters {
+  "url": {
+    "path": object;
+    "query": object;
+    "headers": object;
+    "cookies": object;
+  };
 }
 ```
 
@@ -32,7 +36,7 @@ interface iMediatorCheckParametersResult {
 
 ### Methods
 
-  * ``` public checkParameters(operationId: string, urlParams: object, bodyParams: object, contentType: string): Promise<iMediatorCheckParametersResult>; ``` Check sended parameters by method name and formate it if necessary ("true" => true, "1.1" => 1.1, etc...) (used by the [Server](./Server.md))
+  * ``` public checkParameters(operationId: string, urlParams: iUrlParameters, bodyParams: object): Promise<void>; ``` Check sended parameters by method name (used by the [Server](./Server.md))
 
 ### Events
 
@@ -135,7 +139,7 @@ class MyPluginMediator extends Mediator {
 
   /**
   * Execute "test" search
-  * @param {object} urlParameters: parameters sended with url (path, query)
+  * @param {object} urlParameters: parameters sended with url (path, query, cookies, headers)
   * @param {object} bodyParameters: parameters sended in the query body
   * @param {string} contentType: type of content type detected by the Server and setted in the Descriptor (probably "application/json")
   * @return {Promise} operation result
@@ -144,7 +148,9 @@ class MyPluginMediator extends Mediator {
 
     /*
     urlParameters : {
-      "url-param": string
+      "query": {
+        "url-param": string
+      }
     }
     */
 
@@ -154,7 +160,7 @@ class MyPluginMediator extends Mediator {
     }
     */
 
-    return this._query(urlParameters["url-param"] + "_" + bodyParameters.["body-param"]);
+    return this._query(urlParameters.query["url-param"] + "_" + bodyParameters.["body-param"]);
 
   }
 

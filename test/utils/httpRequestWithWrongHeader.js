@@ -13,7 +13,7 @@
 	const { strictEqual } = require("assert");
 
 	// externals
-	const readJSONFile = require(join(__dirname, "..", "..", "lib", "utils", "readJSONFile.js"));
+	const { readJSONFile } = require(join(__dirname, "..", "..", "lib", "utils", "file", "main.js"));
 
 // module
 

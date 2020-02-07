@@ -1,5 +1,5 @@
 /*
-	eslint max-lines: 0
+	eslint max-nested-callbacks: 0
 */
 
 "use strict";
@@ -17,7 +17,7 @@
 
 // consts
 
-	const DESCRIPTOR_BASIC = require(join(
+	const DESCRIPTOR = require(join(
 		__dirname, "utils", "DescriptorUser", "DescriptorBasic.js"
 	));
 
@@ -25,15 +25,85 @@
 
 describe("DescriptorUser / checkDescriptor", () => {
 
-	describe("without paths", () => {
+	it("should check without Descriptor", (done) => {
 
-		it("should check without descriptor", (done) => {
+		const descriptorUser = new LocalDescriptorUser();
 
-			const descriptorUser = new LocalDescriptorUser();
+			delete descriptorUser._Descriptor;
 
-				delete descriptorUser._Descriptor;
+		descriptorUser.checkDescriptor().then(() => {
+			done(new Error("There is no generated error"));
+		}).catch((err) => {
 
-			descriptorUser.checkDescriptor().then(() => {
+			strictEqual(typeof err, "object", "Generated error is not an object");
+			strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+
+			done();
+
+		});
+
+	});
+
+	it("should check with null Descriptor", (done) => {
+
+		new LocalDescriptorUser({
+			"descriptor": null
+		}).checkDescriptor().then(() => {
+			done(new Error("There is no generated error"));
+		}).catch((err) => {
+
+			strictEqual(typeof err, "object", "Generated error is not an object");
+			strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+
+			done();
+
+		});
+
+	});
+
+	it("should check with wrong Descriptor (string)", (done) => {
+
+		new LocalDescriptorUser({
+			"descriptor": "test"
+		}).checkDescriptor().then(() => {
+			done(new Error("There is no generated error"));
+		}).catch((err) => {
+
+			strictEqual(typeof err, "object", "Generated error is not an object");
+			strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+
+			done();
+
+		});
+
+	});
+
+	it("should check with empty Descriptor", (done) => {
+
+		new LocalDescriptorUser({
+			"descriptor": {}
+		}).checkDescriptor().then(() => {
+			done(new Error("There is no generated error"));
+		}).catch((err) => {
+
+			strictEqual(typeof err, "object", "Generated error is not an object");
+			strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
+
+			done();
+
+		});
+
+	});
+
+	describe("info", () => {
+
+		it("should check with missing Descriptor info", (done) => {
+
+			new LocalDescriptorUser({
+				"descriptor": {
+					"test": "test"
+				}
+			}).checkDescriptor().then(() => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
@@ -46,10 +116,12 @@ describe("DescriptorUser / checkDescriptor", () => {
 
 		});
 
-		it("should check with null descriptor", (done) => {
+		it("should check with wrong Descriptor info (string)", (done) => {
 
 			new LocalDescriptorUser({
-				"descriptor": null
+				"descriptor": {
+					"info": "test"
+				}
 			}).checkDescriptor().then(() => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
@@ -63,16 +135,18 @@ describe("DescriptorUser / checkDescriptor", () => {
 
 		});
 
-		it("should check with wrong descriptor (string)", (done) => {
+		it("should check with empty Descriptor info", (done) => {
 
 			new LocalDescriptorUser({
-				"descriptor": "test"
+				"descriptor": {
+					"info": {}
+				}
 			}).checkDescriptor().then(() => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+				strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
 
 				done();
 
@@ -80,29 +154,174 @@ describe("DescriptorUser / checkDescriptor", () => {
 
 		});
 
-		it("should check without paths", () => {
+		describe("title", () => {
 
-			return new LocalDescriptorUser({
-				"descriptor": DESCRIPTOR_BASIC
-			}).checkDescriptor();
+			it("should check with missing Descriptor info title", (done) => {
+
+				new LocalDescriptorUser({
+					"descriptor": {
+						"info": {
+							"test": "test"
+						}
+					}
+				}).checkDescriptor().then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not an object");
+					strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+
+					done();
+
+				});
+
+			});
+
+			it("should check with wrong Descriptor info title (boolean)", (done) => {
+
+				new LocalDescriptorUser({
+					"descriptor": {
+						"info": {
+							"title": true
+						}
+					}
+				}).checkDescriptor().then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not an object");
+					strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+
+					done();
+
+				});
+
+			});
+
+			it("should check with empty Descriptor info title", (done) => {
+
+				new LocalDescriptorUser({
+					"descriptor": {
+						"info": {
+							"title": ""
+						}
+					}
+				}).checkDescriptor().then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not an object");
+					strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
+
+					done();
+
+				});
+
+			});
+
+			it("should check with UpperCase Descriptor info title", (done) => {
+
+				new LocalDescriptorUser({
+					"descriptor": {
+						"info": {
+							"title": "Test"
+						}
+					}
+				}).checkDescriptor().then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not an object");
+					strictEqual(err instanceof Error, true, "Generated error is not as expected");
+
+					done();
+
+				});
+
+			});
+
+		});
+
+		describe("version", () => {
+
+			it("should check with missing Descriptor info version", (done) => {
+
+				new LocalDescriptorUser({
+					"descriptor": {
+						"info": {
+							"title": "test"
+						}
+					}
+				}).checkDescriptor().then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not an object");
+					strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+
+					done();
+
+				});
+
+			});
+
+			it("should check with wrong Descriptor info version (boolean)", (done) => {
+
+				new LocalDescriptorUser({
+					"descriptor": {
+						"info": {
+							"title": "test",
+							"version": true
+						}
+					}
+				}).checkDescriptor().then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not an object");
+					strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+
+					done();
+
+				});
+
+			});
+
+			it("should check with empty Descriptor info version", (done) => {
+
+				new LocalDescriptorUser({
+					"descriptor": {
+						"info": {
+							"title": "test",
+							"version": ""
+						}
+					}
+				}).checkDescriptor().then(() => {
+					done(new Error("There is no generated error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated error is not an object");
+					strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
+
+					done();
+
+				});
+
+			});
 
 		});
 
 	});
 
-	describe("with paths", () => {
+	describe("paths", () => {
 
-		it("should check with path which does not start with slash", (done) => {
+		it("should check without paths", (done) => {
 
 			new LocalDescriptorUser({
 				"descriptor": {
-					...DESCRIPTOR_BASIC,
-					"paths": {
-						"test/test/s": {
-							"get": {
-								"operationId": "test"
-							}
-						}
+					"info": {
+						"title": "test",
+						"version": "0.0.1"
 					}
 				}
 			}).checkDescriptor().then(() => {
@@ -110,7 +329,7 @@ describe("DescriptorUser / checkDescriptor", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof Error, true, "Generated error is not as expected");
+				strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
 
 				done();
 
@@ -118,71 +337,124 @@ describe("DescriptorUser / checkDescriptor", () => {
 
 		});
 
-		it("should check with path which does no start with plugin name", (done) => {
-
-			new LocalDescriptorUser({
-				"descriptor": {
-					...DESCRIPTOR_BASIC,
-					"paths": {
-						"/sgvsebrsdtbrdstb/test/s": {
-							"get": {
-								"operationId": "test"
-							}
-						}
-					}
-				}
-			}).checkDescriptor().then(() => {
-				done(new Error("There is no generated error"));
-			}).catch((err) => {
-
-				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof Error, true, "Generated error is not as expected");
-
-				done();
-
-			});
-
-		});
-
-		it("should check with paths which contains spaces", (done) => {
-
-			new LocalDescriptorUser({
-				"descriptor": {
-					...DESCRIPTOR_BASIC,
-					"paths": {
-						"/test/ test/s": {
-							"get": {
-								"operationId": "test"
-							}
-						}
-					}
-				}
-			}).checkDescriptor().then(() => {
-				done(new Error("There is no generated error"));
-			}).catch((err) => {
-
-				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof Error, true, "Generated error is not as expected");
-
-				done();
-
-			});
-
-		});
-
-		it("should check with valid basic descriptor", () => {
+		it("should check with empty paths", () => {
 
 			return new LocalDescriptorUser({
 				"descriptor": {
-					...DESCRIPTOR_BASIC,
+					"info": {
+						"title": "test",
+						"version": "0.0.1"
+					},
+					"paths": {}
+				}
+			}).checkDescriptor();
+
+		});
+
+		/*
+		it("should check without summary", (done) => {
+
+			new LocalDescriptorUser({
+				"descriptor": {
+					"info": {
+						"title": "test",
+						"version": "0.0.1"
+					},
 					"paths": {
-						"/test": {
+						"/test/test1": {
 							"get": {
 								"operationId": "test"
 							}
 						}
 					}
 				}
+			}).checkDescriptor().then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof Error, true, "Generated error is not as expected");
+
+				done();
+
+			});
+
+		});
+
+		it("should check without operatorId", (done) => {
+
+			new LocalDescriptorUser({
+				"descriptor": {
+					"info": {
+						"title": "test",
+						"version": "0.0.1"
+					},
+					"paths": {
+						"/test/test1": {
+							"get": {
+								"summary": "test"
+							}
+						}
+					}
+				}
+			}).checkDescriptor().then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof Error, true, "Generated error is not as expected");
+
+				done();
+
+			});
+
+		});
+		*/
+
+		it("should check with mutliple operatorIds", (done) => {
+
+			new LocalDescriptorUser({
+				"descriptor": {
+					"info": {
+						"title": "test",
+						"version": "0.0.1"
+					},
+					"paths": {
+						"/test/test1": {
+							"get": {
+								"summary": "test",
+								"operationId": "test"
+							}
+						},
+						"/test/test2": {
+							"get": {
+								"summary": "test",
+								"operationId": "test"
+							}
+						}
+					}
+				}
+			}).checkDescriptor().then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof Error, true, "Generated error is not as expected");
+
+				done();
+
+			});
+
+		});
+
+	});
+
+	describe("correct", () => {
+
+		it("should check with valid basic Descriptor", () => {
+
+			return new LocalDescriptorUser({
+				"descriptor": DESCRIPTOR
 			}).checkDescriptor();
 
 		});

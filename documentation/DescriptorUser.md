@@ -31,7 +31,6 @@ interface iDescriptorUserOptions {
 #### protected
 
   * ``` protected _externalRessourcesDirectory: string; ``` provided by "externalRessourcesDirectory" option, sent by the [Orchestrator](./Orchestrator.md)
-  * ``` protected _descriptorValidated: boolean; ``` if checkDescriptor is already successfuly executed, do not execute it again (for performances)
   * ``` protected _Descriptor: object | null; ``` provided by "descriptor" option, sent by the [Orchestrator](./Orchestrator.md)
   * ``` protected _Logger: Function | null; ``` provided by "logger" option, sent by the [Orchestrator](./Orchestrator.md)
 

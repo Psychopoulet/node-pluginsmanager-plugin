@@ -27,21 +27,8 @@ It's loaded and shared by the [Orchestrator](./Orchestrator.md) and used by
 
 ### paths
 
-  * You only need this section if you want to create an API for your plugin
-
-### parameters
-
-  * Supported types for "parameters" are [ "string", "number", "integer", "boolean" ]
-
-### schemas
-
-  * Supported types for "schema" are [ "string", "number", "integer", "boolean", "object", "array" ]
-  * You can add limits ("minLength" & "maxLength") for "string" & "array" types
-  * You can add limits ("minimum" & "maximum") for "number" & "integer" types
-
-### components
-
-  * Only "schemas" and "parameters" are supported.
+  * There MUST have an "paths" section
+  * You only need this section if you want to create an API for your plugin, but you have to create an empty object if not
 
 ## Descriptor interactions
 

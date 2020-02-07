@@ -1,6 +1,6 @@
 {
   "name": "node-pluginsmanager-plugin",
-  "version": "3.2.7",
+  "version": "4.0.0",
   "description": "An abstract parent plugin for node-pluginsmanager",
   "main": "lib/main.js",
   "typings": "lib/index.d.ts",
@@ -34,18 +34,21 @@
   "bugs": {
     "url": "https://github.com/Psychopoulet/node-pluginsmanager-plugin/issues"
   },
-  "dependencies": {},
+  "dependencies": {
+    "swagger-parser": "~8.0.4",
+    "express-openapi-validate": "~0.5.0"
+  },
   "devDependencies": {
-    "@types/node": "13.1.7",
-    "@types/ws": "7.2.0",
+    "@types/node": "13.7.0",
+    "@types/ws": "7.2.1",
     "@types/socket.io": "2.1.4",
     "check-version-modules": "1.3.0",
     "coveralls": "3.0.9",
     "colors": "1.4.0",
     "eslint": "6.8.0",
     "express": "4.17.1",
-    "husky": "4.0.10",
-    "mocha": "7.0.0",
+    "husky": "4.2.1",
+    "mocha": "7.0.1",
     "nyc": "15.0.0",
     "socket.io": "2.3.0",
     "ws": "7.2.1"

@@ -73,7 +73,7 @@ interface iOrchestratorOptions {
     --- checkers ---
 
   * ``` checkConf(void): Promise<void>; ``` check plugin's conf (optional, can be re-writted if a specific conf is used)
-  * ``` isEnable(void): Promise<void>; ``` used to define plugin execution (optional, can be re-writted with a local plugins manager)
+  * ``` isEnable(void): Promise<void>; ``` used to define plugin execution (optional, can be re-writted with a local plugins manager) (WARNING : it's an asynchronous setter, not a getter)
   * ``` checkFiles(void): Promise<void>; ``` check files existance
   * ``` checkServer(void): Promise<void>; ``` check server
 

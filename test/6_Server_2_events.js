@@ -9,7 +9,7 @@
 
 		// plugin
 		const { Mediator, Server } = require(join(__dirname, "..", "lib", "main.js"));
-		const readJSONFile = require(join(__dirname, "..", "lib", "utils", "readJSONFile.js"));
+		const { readJSONFile } = require(join(__dirname, "..", "lib", "utils", "file", "main.js"));
 
 // tests
 

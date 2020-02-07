@@ -51,19 +51,18 @@ Expose the [Mediator](./Mediator.md)'s methods with the [Descriptor](./Descripto
 ### Callable urls
 
   * Paths must start with plugin name (same as descriptor.info.title)
-  * If a path contains path parameter (ex : /plugin/api/users/{user-id}), the parameter MUST be defined in the "parameters" section of this path, with the same name, and a "path" type
-  * Path parameters must only use this pattern : "[a-z-]" (ex : {user-id})
+  * If a path contains path parameter (ex : /[descriptor.info.title]/api/users/{user-id}), the parameter MUST be defined in the "parameters" section of this path, with the same name, and a "path" type
   * "/[descriptor.info.title]/descriptor" [GET] : return json [Descriptor](./Descriptor.md) (already and automaticly setted in parent Server, no need for "operationId" data in the [Descriptor](./Descriptor.md) for this path)
   * "/[descriptor.info.title]/api/[path]" : expose API path
   * "/[descriptor.info.title]/public/[path]" : expose plugins files (HTML, CSS, etc...)
 
 ### Used HTTP statusCode
 
-  * [200](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/200) (everything is fine with a content)
+  * [200](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/200) (everything is fine with content)
   * [201](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/201) (everything is fine for PUT request, with or without content)
   * [204](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/204) (everything is fine without content)
   * [400](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/400) (the request does not match with the [Descriptor](./Descriptor.md))
-  * [404](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/404) (everything is fine for GET request, without content)
+  * [404](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/404) (this path does not exist)
   * [411](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/411) (the request does not have "Content-length" header)
   * [500](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/500) (the [Mediator](./Mediator.md) generate an unknown error)
   * [501](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/501) (there is no "operationId" for this path in the [Descriptor](./Descriptor.md) or the [Mediator](./Mediator.md) does not have the "operationId" method given by the [Descriptor](./Descriptor.md))

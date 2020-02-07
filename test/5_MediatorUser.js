@@ -10,13 +10,15 @@
 	// locals
 
 		// plugin
-		const DescriptorUser = require(join(__dirname, "..", "lib", "components", "DescriptorUser.js"));
-		const MediatorUser = require(join(__dirname, "..", "lib", "components", "MediatorUser.js"));
-		const { Mediator } = require(join(__dirname, "..", "lib", "main.js"));
+		const { DescriptorUser, MediatorUser, Mediator } = require(join(__dirname, "..", "lib", "components", "main.js"));
 
 		// utils
 		const LocalMediator = require(join(__dirname, "utils", "Mediator", "LocalMediator.js"));
 		const LocalMediatorUser = require(join(__dirname, "utils", "MediatorUser", "LocalMediatorUser.js"));
+
+// consts
+
+	const DESCRIPTOR = require(join(__dirname, "utils", "DescriptorUser", "DescriptorOnlyUrl.js"));
 
 // tests
 
@@ -179,7 +181,9 @@ describe("MediatorUser", () => {
 
 		it("should test events after init", () => {
 
-			const mediatorUser = new LocalMediator();
+			const mediatorUser = new LocalMediator({
+				"descriptor": DESCRIPTOR
+			});
 
 			return new Promise((resolve, reject) => {
 
@@ -196,7 +200,9 @@ describe("MediatorUser", () => {
 
 		it("should test events after release", () => {
 
-			const mediatorUser = new LocalMediator();
+			const mediatorUser = new LocalMediator({
+				"descriptor": DESCRIPTOR
+			});
 
 			return new Promise((resolve, reject) => {
 

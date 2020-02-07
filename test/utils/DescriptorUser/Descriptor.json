@@ -2,7 +2,7 @@
 	"openapi": "3.0.2",
 	"info": {
 		"title": "node-pluginsmanager-plugin",
-		"version": "3.2.7",
+		"version": "4.0.0",
 		"description": "An abstract parent plugin for node-pluginsmanager",
 		"contact": {
 			"name": "Sébastien VIDAL",
@@ -235,7 +235,7 @@
 			}
 		},
 		"/node-pluginsmanager-plugin/api/valid/body/boolean": {
-			"get": {
+			"post": {
 				"description": "",
 				"summary": "Simple API test for Server class",
 				"operationId": "bodyParamBoolean",
@@ -265,7 +265,7 @@
 			}
 		},
 		"/node-pluginsmanager-plugin/api/valid/body/integer": {
-			"get": {
+			"post": {
 				"description": "",
 				"summary": "Simple API test for Server class",
 				"operationId": "bodyParamInteger",
@@ -295,7 +295,7 @@
 			}
 		},
 		"/node-pluginsmanager-plugin/api/valid/body/number": {
-			"get": {
+			"post": {
 				"description": "",
 				"summary": "Simple API test for Server class",
 				"operationId": "bodyParamNumber",
@@ -325,7 +325,7 @@
 			}
 		},
 		"/node-pluginsmanager-plugin/api/valid/body/string": {
-			"get": {
+			"post": {
 				"description": "",
 				"summary": "Simple API test for Server class",
 				"operationId": "bodyParamString",
@@ -355,7 +355,7 @@
 			}
 		},
 		"/node-pluginsmanager-plugin/api/valid/body/object": {
-			"get": {
+			"post": {
 				"description": "",
 				"summary": "Simple API test for Server class",
 				"operationId": "bodyParamObject",
@@ -385,7 +385,7 @@
 			}
 		},
 		"/node-pluginsmanager-plugin/api/valid/body/array": {
-			"get": {
+			"post": {
 				"description": "",
 				"summary": "Simple API test for Server class",
 				"operationId": "bodyParamArray",
@@ -400,8 +400,8 @@
 										"items": {
 											"$ref": "#/components/schemas/TestString"
 										},
-										"minLength": 1,
-										"maxLength": 5
+										"minItems": 1,
+										"maxItems": 5
 									}
 								},
 								"required": [ "body-param-array" ]
@@ -420,7 +420,7 @@
 			}
 		},
 		"/node-pluginsmanager-plugin/api/valid/body/facultative": {
-			"get": {
+			"post": {
 				"description": "",
 				"summary": "Simple API test for Server class",
 				"operationId": "bodyParamFacultative",
@@ -454,17 +454,6 @@
 				"description": "",
 				"summary": "Simple API test for Server class",
 				"operationId": "create",
-				"parameters": [
-					{
-						"name": "url-param",
-						"in": "query",
-						"description": "Entity name",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
 				"requestBody": {
 					"description": "test name",
 					"content": {
@@ -483,6 +472,110 @@
 				},
 				"responses": {
 					"201": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/path/path/{path-param}": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "pathPath",
+				"parameters": [
+					{
+						"name": "path-param",
+						"in": "path",
+						"description": "Entity name",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/TestString"
+						}
+					}
+				],
+				"responses": {
+					"404": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/path/query": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "pathQuery",
+				"parameters": [
+					{
+						"name": "query-param",
+						"in": "query",
+						"description": "Entity name",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/TestString"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/path/cookie": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "pathCookie",
+				"parameters": [
+					{
+						"name": "cookie-param",
+						"in": "cookie",
+						"description": "Entity name",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/TestString"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/path/header": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "pathHeader",
+				"parameters": [
+					{
+						"name": "header-param",
+						"in": "header",
+						"description": "Entity name",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/TestString"
+						}
+					}
+				],
+				"responses": {
+					"200": {
 						"description": "Everything is fine"
 					},
 					"500": {
@@ -515,6 +608,7 @@
 			},
 			"TestString": {
 				"type": "string",
+				"minLength": 1,
 				"maxLength": 5
 			},
 			"TestObject": {

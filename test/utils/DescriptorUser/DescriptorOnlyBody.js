@@ -147,11 +147,11 @@ module.exports = {
 										"body-param-object": {
 											"type": "object",
 											"properties": {
-												"test": {
+												"body-param-object-test": {
 													"$ref": "#/components/schemas/Test"
 												}
 											},
-											"required": [ "test" ]
+											"required": [ "body-param-object-test" ]
 										}
 									},
 									"required": [ "body-param-object" ]
@@ -175,8 +175,8 @@ module.exports = {
 											"items": {
 												"$ref": "#/components/schemas/Test"
 											},
-											"minLength": 1,
-											"maxLength": 5
+											"minItems": 1,
+											"maxItems": 5
 										}
 									},
 									"required": [ "body-param-array" ]

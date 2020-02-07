@@ -4,7 +4,7 @@
 
 declare module "node-pluginsmanager-plugin" {
 
-	import * as Events from "events";
+	import { EventEmitter } from "events";
 	import { Server as WebSocketServer } from "ws";
 	import { Server as SocketIOServer } from "socket.io";
 
@@ -22,9 +22,13 @@ declare module "node-pluginsmanager-plugin" {
 			"mediator": Mediator | null;
 		}
 
-	interface iMediatorCheckParametersResult {
-		"url": object;
-		"body": object;
+	interface iUrlParameters {
+		"url": {
+			"path": object;
+			"query": object;
+			"headers": object;
+			"cookies": object;
+		};
 	}
 
 	interface iOrchestratorOptions {
@@ -37,7 +41,7 @@ declare module "node-pluginsmanager-plugin" {
 
 	// classes
 
-	class DescriptorUser extends Events {
+	class DescriptorUser extends EventEmitter {
 
 		// attributes
 
@@ -75,10 +79,11 @@ declare module "node-pluginsmanager-plugin" {
 		// attributes
 
 			public initialized: boolean;
+			public _validator: null | object;
 
 		// methods
 
-			public checkParameters(operationId: string, urlParams: object, bodyParams: object, contentType: string): Promise<iMediatorCheckParametersResult>;
+			public checkParameters(operationId: string, urlParams: iUrlParameters, bodyParams: object): Promise<void>;
 
 	}
 
