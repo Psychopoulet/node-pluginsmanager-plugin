@@ -26,19 +26,25 @@ module.exports = class HeritedMediator extends LocalMediator {
 
 	urlParamBoolean (urlParams, bodyParams) {
 
-		return this.checkParameters("urlParamBoolean", urlParams, bodyParams);
+		return this.checkParameters("urlParamBoolean", urlParams, bodyParams).then(() => {
+			return Promise.resolve(urlParams.path["path-param-boolean"]);
+		});
 
 	}
 
 	urlParamInteger (urlParams, bodyParams) {
 
-		return this.checkParameters("urlParamInteger", urlParams, bodyParams);
+		return this.checkParameters("urlParamInteger", urlParams, bodyParams).then(() => {
+			return Promise.resolve(urlParams.path["path-param-integer"]);
+		});
 
 	}
 
 	urlParamNumber (urlParams, bodyParams) {
 
-		return this.checkParameters("urlParamNumber", urlParams, bodyParams);
+		return this.checkParameters("urlParamNumber", urlParams, bodyParams).then(() => {
+			return Promise.resolve(urlParams.path["path-param-number"]);
+		});
 
 	}
 

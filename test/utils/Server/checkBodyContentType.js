@@ -4,7 +4,6 @@
 
 	// natives
 	const { join } = require("path");
-	const { strictEqual } = require("assert");
 
 	// locals
 
@@ -13,75 +12,40 @@
 
 // module
 
-module.exports = function checkBodyContentType (URL_API) {
+module.exports = function checkBodyContentLength (URL_API) {
 
-	describe("content-length", () => {
+	describe("content-type", () => {
 
 		it("should test request with missing data", () => {
 
 			return httpRequestWithWrongHeader(URL_API + "/create?url-param=ok", "put", {
 				"body-param": "test"
-			}, {
-				"Content-Type": "application/json"
-			}, 411, "Length Required", {
+			}, null, 400, "Bad Request", {
 				"code": "MISSING_HEADER",
-				"message": "No \"Content-Length\" header found"
+				"message": "No \"Content-Type\" header found"
 			});
 
 		});
 
-		// must crash request body parsing
-		it("should test request with wrong content-length", (done) => {
+		it("should test request with wrong data", () => {
 
-			httpRequestWithWrongHeader(URL_API + "/create?url-param=ok", "put", {
+			return httpRequestWithWrongHeader(URL_API + "/create?url-param=ok", "put", {
 				"body-param": "test"
-			}, {
-				"Content-Type": "application/json",
-				"Content-Length": "test"
-			}, 411, "Length Required").then(() => {
-				done(new Error("There is no generated error"));
-			}).catch((err) => {
-
-				strictEqual(typeof err, "object", "generated error is not as expected");
-				strictEqual(err instanceof Error, true, "generated error is not as expected");
-
-				done();
-
+			}, "test", 400, "Bad Request", {
+				"code": "MISSING_HEADER",
+				"message": "No \"Content-Type\" header found"
 			});
 
 		});
 
-		// must interrupt request body parsing before the end and generate a socket error
-		it("should test request with inexact content-length", (done) => {
+		it("should test request with missing content-length", () => {
 
-			httpRequestWithWrongHeader(URL_API + "/create?url-param=ok", "put", {
+			return httpRequestWithWrongHeader(URL_API + "/create?url-param=ok", "put", {
 				"body-param": "test"
-			}, {
-				"Content-Type": "application/json",
-				"Content-Length": 2
-			}, 411, "Length Required").then(() => {
-				done(new Error("There is no generated error"));
-			}).catch((err) => {
-
-				strictEqual(typeof err, "object", "generated error is not as expected");
-				strictEqual(err instanceof Error, true, "generated error is not as expected");
-
-				done();
-
+			}, {}, 400, "Bad Request", {
+				"code": "MISSING_HEADER",
+				"message": "No \"Content-Type\" header found"
 			});
-
-		});
-
-		it("should test valid request", () => {
-
-			const params = {
-				"body-param": "test"
-			};
-
-			return httpRequestWithWrongHeader(URL_API + "/create?url-param=ok", "put", params, {
-				"Content-Type": "application/json",
-				"Content-Length": Buffer.byteLength(JSON.stringify(params))
-			}, 201, "Created");
 
 		});
 

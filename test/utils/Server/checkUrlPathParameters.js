@@ -40,6 +40,55 @@ module.exports = function checkUrlPathParameters (URL_API) {
 
 		});
 
+		describe("parameters", () => {
+
+			it("should test request with wrong boolean", () => {
+
+				return httpRequestTest(URL_API + "/valid/url/boolean/test", "get", null, 400, "Bad Request", {
+					"code": "WRONG_TYPE_PARAMETER",
+					"message": "Error while validating request: request.params['path-param-boolean'] should be boolean"
+				});
+
+			});
+
+			it("should test request with wrong integer", () => {
+
+				return httpRequestTest(URL_API + "/valid/url/integer/test", "get", null, 400, "Bad Request", {
+					"code": "WRONG_TYPE_PARAMETER",
+					"message": "Error while validating request: request.params['path-param-integer'] should be integer"
+				});
+
+			});
+
+			it("should test request with wrong number", () => {
+
+				return httpRequestTest(URL_API + "/valid/url/number/test", "get", null, 400, "Bad Request", {
+					"code": "WRONG_TYPE_PARAMETER",
+					"message": "Error while validating request: request.params['path-param-number'] should be number"
+				});
+
+			});
+
+			it("should test request with valid boolean", () => {
+
+				return httpRequestTest(URL_API + "/valid/url/boolean/true", "get", null, 200, "OK", true);
+
+			});
+
+			it("should test request with valid integer", () => {
+
+				return httpRequestTest(URL_API + "/valid/url/integer/1", "get", null, 200, "OK", 1);
+
+			});
+
+			it("should test request with valid number", () => {
+
+				return httpRequestTest(URL_API + "/valid/url/number/0.1", "get", null, 200, "OK", 0.1);
+
+			});
+
+		});
+
 	});
 
 };
