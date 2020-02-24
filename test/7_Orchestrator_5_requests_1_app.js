@@ -31,7 +31,7 @@
 		"packageFile": join(__dirname, "..", "package.json"),
 		"descriptorFile": join(__dirname, "utils", "DescriptorUser", "Descriptor.json"),
 		"mediatorFile": join(__dirname, "utils", "Mediator", "HeritedMediator.js"),
-		"serverFile": join(__dirname, "utils", "Server", "HeritedServer.js"),
+		"serverFile": join(__dirname, "utils", "Server", "ServerWithSockets.js"),
 		"logger": (type, log) => {
 
 			let message = MAX_LENGTH_LOGS < log.length ? log.substr(0, MAX_LENGTH_LOGS) + "..." : log;
