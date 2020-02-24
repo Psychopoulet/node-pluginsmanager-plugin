@@ -27,12 +27,12 @@
 
 // module
 
-module.exports = function test (server) {
+module.exports = function test (descriptor) {
 
 	describe("check url", () => {
 
 		checkUrlWrongPaths(URL_API);
-		checkUrlValidPaths(URL_API, server);
+		checkUrlValidPaths(URL_API, descriptor);
 		checkUrlPathParameters(URL_API);
 		checkUrlQueryParameters(URL_API);
 		checkUrlCookieParameters(URL_API);

@@ -12,13 +12,13 @@
 
 // module
 
-module.exports = function checkUrlValidPaths (URL_API, server) {
+module.exports = function checkUrlValidPaths (URL_API, component) {
 
 	describe("check valid paths", () => {
 
 		it("should test descriptor request", () => {
 
-			return httpRequestTest("/node-pluginsmanager-plugin/descriptor", "get", null, 200, "OK", server._Descriptor);
+			return httpRequestTest("/node-pluginsmanager-plugin/descriptor", "get", null, 200, "OK", component._Descriptor);
 
 		});
 
