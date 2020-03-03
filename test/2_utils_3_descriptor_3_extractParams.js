@@ -59,6 +59,16 @@ describe("utils / descriptor / extractParams", () => {
 
 		});
 
+		it("should test with encoded parameter", () => {
+
+			const data = "this is a test";
+
+			deepStrictEqual(extractParams("/test/{test}", "/test/" + encodeURI(data)), {
+				"test": data
+			}, "generated data is not as expected");
+
+		});
+
 	});
 
 });
