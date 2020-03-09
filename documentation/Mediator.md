@@ -30,18 +30,9 @@ interface iUrlParameters {
 
 ### Attributes
 
-#### public
-
-  * ``` public initialized: boolean; ``` mediator status
-
 ### Methods
 
   * ``` public checkParameters(operationId: string, urlParams: iUrlParameters, bodyParams: object): Promise<void>; ``` Check sended parameters by method name (used by the [Server](./Server.md))
-
-### Events
-
-  * ``` initialized ``` fired when mediator is initialized
-  * ``` released ``` fired when mediator is released
 
 ## Descriptor interactions
 

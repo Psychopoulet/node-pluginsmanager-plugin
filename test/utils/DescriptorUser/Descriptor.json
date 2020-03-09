@@ -2,7 +2,7 @@
 	"openapi": "3.0.2",
 	"info": {
 		"title": "node-pluginsmanager-plugin",
-		"version": "4.1.1",
+		"version": "4.2.0",
 		"description": "An abstract parent plugin for node-pluginsmanager",
 		"contact": {
 			"name": "Sébastien VIDAL",
@@ -20,7 +20,35 @@
 				"summary": "Simple API test for Server class",
 				"responses": {
 					"200": {
-						"description": "Everything is fine"
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/status": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"responses": {
+					"200": {
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Status"
+								}
+							}
+						}
 					},
 					"500": {
 						"description": "An error occured"
@@ -598,6 +626,10 @@
 			}
 		},
 		"schemas": {
+			"Status": {
+				"type": "string",
+				"enum": [ "ENABLED", "INITIALIZED" ]
+			},
 			"TestInteger": {
 				"type": "integer",
 				"maximum": 5

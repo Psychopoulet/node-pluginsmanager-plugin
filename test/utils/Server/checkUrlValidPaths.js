@@ -22,6 +22,12 @@ module.exports = function checkUrlValidPaths (URL_API, component) {
 
 		});
 
+		it("should test status request", () => {
+
+			return httpRequestTest("/node-pluginsmanager-plugin/status", "get", null, 200, "OK", "INITIALIZED");
+
+		});
+
 		it("should test request with valid path", () => {
 
 			return httpRequestTest(URL_API + "/valid", "get", null, 200, "OK", [ "test" ]);

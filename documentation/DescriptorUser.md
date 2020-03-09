@@ -28,6 +28,10 @@ interface iDescriptorUserOptions {
 
 ### Attributes
 
+#### public
+
+  * ``` public initialized: boolean; ``` initialized plugin status
+
 #### protected
 
   * ``` protected _externalRessourcesDirectory: string; ``` provided by "externalRessourcesDirectory" option, sent by the [Orchestrator](./Orchestrator.md)
@@ -55,3 +59,8 @@ interface iDescriptorUserOptions {
   * ``` public init(data?: any): Promise<void>; ``` // returned data : defined by "_initWorkSpace" return
   * ``` public release(data?: any): Promise<void>; ``` // returned data : defined by "_releaseWorkSpace" return
   * ``` public checkDescriptor(void): Promise<void>; ``` check Descriptor (type and content)
+
+### Events
+
+  * ``` initialized [, data?: any ] ``` fired when mediator is initialized
+  * ``` released [, data?: any ] ``` fired when mediator is released
