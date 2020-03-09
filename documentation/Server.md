@@ -26,6 +26,7 @@ Expose the [Mediator](./Mediator.md)'s methods with the [Descriptor](./Descripto
 
   * ``` protected _socketServer: WebSocketServer | SocketIOServer | null; ``` middleware for [WebSocket server](https://www.npmjs.com/package/ws) or [SocketIO server](https://www.npmjs.com/package/socket.io)
   * ``` protected _checkParameters: boolean; ``` default true, if true always automaticly check parameters sended with Descriptor
+  * ``` protected _cors: boolean; ``` default false, if true always allow CORS requests
 
 ### Methods
 
@@ -35,6 +36,8 @@ Expose the [Mediator](./Mediator.md)'s methods with the [Descriptor](./Descripto
 
   * ``` disableCheckParameters(): this; ``` disable automatic sended parameters checking with Descriptor
   * ``` enableCheckParameters(): this; ``` enable automatic sended parameters checking with Descriptor
+  * ``` disableCors(): this; ``` block CORS requests
+  * ``` enableCors(): this; ``` allow CORS requests
   * ``` public appMiddleware(req: Request, res: Response, next: Function): void; ``` middleware for express (& others) to add routes
   * ``` public socketMiddleware(server: WebSocketServer | SocketIOServer): void; ``` middleware for socket to add bilateral push events, should be re-writted if used
   * ``` public push(command: string, data?: any): this; ``` if socket server setted, push data to all clients

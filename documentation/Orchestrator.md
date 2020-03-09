@@ -80,6 +80,8 @@ interface iOrchestratorOptions {
 
   * ``` disableCheckParameters(): this; ``` execute [Server](./Server.md) disableCheckParameters
   * ``` enableCheckParameters(): this; ``` execute [Server](./Server.md) enableCheckParameters
+  * ``` disableCors(): this; ``` block CORS requests
+  * ``` enableCors(): this; ``` allow CORS requests
   * ``` appMiddleware(req: Request, res: Response, next: function): void; ``` transfert request to [Server](./Server.md) middleware
   * ``` socketMiddleware(server: WebSocketServer | SocketIOServer): void; ``` transfert to [Server](./Server.md) middleware
 

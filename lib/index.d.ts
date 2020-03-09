@@ -109,11 +109,15 @@ declare module "node-pluginsmanager-plugin" {
 
 			protected _socketServer: WebSocketServer | SocketIOServer | null;
 			protected _checkParameters: boolean;
+			protected _cors: boolean;
 
 		// methods
 
 			public disableCheckParameters(): this;
 			public enableCheckParameters(): this;
+
+			public disableCors(): this;
+			public enableCors(): this;
 
 			public appMiddleware(req: Request, res: Response, next: Function): void;
 			public socketMiddleware(server: WebSocketServer | SocketIOServer): void;
@@ -173,6 +177,9 @@ declare module "node-pluginsmanager-plugin" {
 
 			public disableCheckParameters(): this;
 			public enableCheckParameters(): this;
+
+			public disableCors(): this;
+			public enableCors(): this;
 
 			public appMiddleware(req: Request, res: Response, next: Function): void;
 			public socketMiddleware(server: WebSocketServer | SocketIOServer): void;
