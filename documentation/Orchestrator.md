@@ -45,7 +45,6 @@ interface iOrchestratorOptions {
 #### public
 
   * ``` enabled: boolean; ``` is plugin enable ? default=true (you should define it by re-write "isEnable" method)
-  * ``` initialized: boolean; ``` is plugin initialized ?
 
   * ``` authors: Array<string>; ```
   * ``` description: string; ```
@@ -94,11 +93,6 @@ interface iOrchestratorOptions {
   * ``` install(data?: any): Promise<void>; ``` used after plugin installation (create ressources). can be re-writted.
   * ``` update(data?: any): Promise<void>; ``` used after plugin update. can be re-writted.
   * ``` uninstall(data?: any): Promise<void>; ``` used before plugin uninstall (remove ressources). can be re-writted.
-
-### Events
-
-  * ``` initialized [, data?: any ] ``` where "data" arguments is the same as in "init" method
-  * ``` released [, data?: any ] ``` where "data" arguments is the same as in "release" method
 
 ## Sample
 
