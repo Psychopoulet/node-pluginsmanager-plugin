@@ -17,7 +17,6 @@
 		const checkUrlHeaderParameters = require(join(__dirname, "checkUrlHeaderParameters.js"));
 
 		const checkBodyBasics = require(join(__dirname, "checkBodyBasics.js"));
-		const checkBodyContentType = require(join(__dirname, "checkBodyContentType.js"));
 		const checkBodyContentLength = require(join(__dirname, "checkBodyContentLength.js"));
 		const checkBodyParameters = require(join(__dirname, "checkBodyParameters.js"));
 
@@ -43,7 +42,6 @@ module.exports = function test (descriptor) {
 	describe("check body", () => {
 
 		checkBodyBasics(URL_API);
-		checkBodyContentType(URL_API);
 		checkBodyContentLength(URL_API);
 		checkBodyParameters(URL_API);
 
