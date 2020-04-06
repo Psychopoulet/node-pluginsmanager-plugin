@@ -1,6 +1,6 @@
 {
   "name": "node-pluginsmanager-plugin",
-  "version": "4.2.4",
+  "version": "4.2.5",
   "description": "An abstract parent plugin for node-pluginsmanager",
   "main": "lib/main.js",
   "typings": "lib/index.d.ts",
