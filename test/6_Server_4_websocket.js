@@ -48,7 +48,7 @@ describe("Server / websockets", () => {
 				port = parseInt(parse(server._Descriptor.servers[1].url).port, 10);
 
 				runningServer = new WebSocketServer({
-					"port": port
+					port
 				});
 
 				server.socketMiddleware(runningServer);

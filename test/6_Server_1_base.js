@@ -64,7 +64,7 @@ describe("Server", () => {
 	it("should init server without Mediator with Descriptor", (done) => {
 
 		const server = new Server({
-			"descriptor": descriptor
+			descriptor
 		});
 
 		strictEqual(typeof server._Descriptor, "object", "Generated server _Descriptor is not an object");
@@ -89,7 +89,7 @@ describe("Server", () => {
 
 		const mediator = new Mediator();
 		const server = new Server({
-			"mediator": mediator
+			mediator
 		});
 
 		strictEqual(typeof server._Descriptor, "object", "Generated server _Descriptor is not an object");
@@ -120,8 +120,8 @@ describe("Server", () => {
 
 		const mediator = new Mediator();
 		const server = new Server({
-			"descriptor": descriptor,
-			"mediator": mediator
+			descriptor,
+			mediator
 		});
 
 		strictEqual(typeof server._Descriptor, "object", "Generated server _Descriptor is not an object");
