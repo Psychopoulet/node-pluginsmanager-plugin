@@ -126,7 +126,7 @@ describe("Orchestrator / websockets", () => {
 					port = parseInt(parse(orchestrator._Descriptor.servers[1].url).port, 10);
 
 					runningServer = new WebSocketServer({
-						"port": port
+						port
 					});
 
 					orchestrator.socketMiddleware(runningServer);
@@ -171,7 +171,7 @@ describe("Orchestrator / websockets", () => {
 			before(() => {
 
 				runningServer = new WebSocketServer({
-					"port": port
+					port
 				});
 
 				orchestrator.socketMiddleware(runningServer);

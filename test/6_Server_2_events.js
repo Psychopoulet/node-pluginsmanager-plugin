@@ -29,8 +29,8 @@ describe("Server / events", () => {
 	it("should test events before init", () => {
 
 		const server = new Server({
-			"descriptor": descriptor,
-			"mediator": mediator
+			descriptor,
+			mediator
 		});
 
 		return new Promise((resolve) => {
@@ -46,8 +46,8 @@ describe("Server / events", () => {
 	it("should test events after init", () => {
 
 		const server = new Server({
-			"descriptor": descriptor,
-			"mediator": mediator
+			descriptor,
+			mediator
 		});
 
 		return new Promise((resolve, reject) => {
@@ -66,8 +66,8 @@ describe("Server / events", () => {
 	it("should test events after release", () => {
 
 		const server = new Server({
-			"descriptor": descriptor,
-			"mediator": mediator
+			descriptor,
+			mediator
 		});
 
 		return new Promise((resolve, reject) => {

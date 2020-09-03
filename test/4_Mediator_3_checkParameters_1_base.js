@@ -83,7 +83,7 @@ describe("Mediator / checkParameters", () => {
 			const descriptor = JSON.parse(JSON.stringify(DESCRIPTOR_ONLY_URL));
 
 			new LocalMediator({
-				"descriptor": descriptor
+				descriptor
 			}).checkParameters("testUnknowOperationId", {
 				"path": {},
 				"query": {},

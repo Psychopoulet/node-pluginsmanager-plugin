@@ -34,7 +34,7 @@ module.exports = function httpRequestWithWrongHeader (urlpath, method, params, h
 				"path": url.path,
 				"query": url.query,
 				"method": method.toUpperCase(),
-				"headers": headers
+				headers
 			};
 
 			const req = request(opts, (res) => {
