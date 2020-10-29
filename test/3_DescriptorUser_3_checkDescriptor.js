@@ -154,7 +154,7 @@ describe("DescriptorUser / checkDescriptor", () => {
 
 		});
 
-		it("should check accessors", (done) => {
+		it("should check accessors", () => {
 
 			const du = new LocalDescriptorUser({
 				"descriptor": {
@@ -164,15 +164,11 @@ describe("DescriptorUser / checkDescriptor", () => {
 						"description": "This is a test"
 					}
 				}
-			}).then(() => {
+			});
 
-				strictEqual(du.getPluginName(), "test", "name accessor does not work");
-				strictEqual(du.getPluginVersion(), "1.7.0", "version accessor does not work");
-				strictEqual(du.getPluginDescription(), "This is a test", "description accessor does not work");
-
-				done();
-
-			}).catch(done);
+			strictEqual(du.getPluginName(), "test", "name accessor does not work");
+			strictEqual(du.getPluginVersion(), "1.7.0", "version accessor does not work");
+			strictEqual(du.getPluginDescription(), "This is a test", "description accessor does not work");
 
 		});
 
