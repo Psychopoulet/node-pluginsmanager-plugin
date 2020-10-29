@@ -58,4 +58,28 @@ describe("DescriptorUser / init", () => {
 		return new LocalDescriptorUser().init();
 	});
 
+	it("should test logger", (done) => {
+
+		new LocalDescriptorUser({
+			"descriptor": {
+				"info": {
+					"title": "test",
+					"version": "1.7.0",
+					"description": "This is a test"
+				}
+			},
+			"logger": (type, message, bold, pluginName) => {
+
+				strictEqual(type, "error", "logger does not send correct value");
+				strictEqual(message, "This is a test", "logger does not send correct value");
+				strictEqual(bold, true, "logger does not send correct value");
+				strictEqual(pluginName, "test", "logger does not send correct value");
+
+				done();
+
+			}
+		})._log("error", "This is a test", true, "test");
+
+	});
+
 });
