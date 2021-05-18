@@ -51,8 +51,18 @@ module.exports = function httpRequestTest (urlpath, method, params, returnCode, 
 					strictEqual(
 						res.headers["content-type"].toLowerCase(),
 						"application/json; charset=utf-8",
-						"The content-type header are not json/utf8"
+						"The content-type header is not as expected"
 					);
+
+					if (404 !== res.statusCode) {
+
+						strictEqual(
+							res.headers["api-version"].toLowerCase(),
+							content.info.version,
+							"The api-version header is not as expected"
+						);
+
+					}
 
 					res.setEncoding("utf8");
 
