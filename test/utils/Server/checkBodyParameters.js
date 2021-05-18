@@ -24,7 +24,7 @@ module.exports = function checkBodyParameters (URL_API) {
 					"body-param-boolean": "test"
 				}, 400, "Bad Request", {
 					"code": "WRONG_TYPE_PARAMETER",
-					"message": "Error while validating request: request.body['body-param-boolean'] should be boolean"
+					"message": "Error while validating request: request/body/body-param-boolean must be boolean"
 				});
 
 			});
@@ -47,7 +47,7 @@ module.exports = function checkBodyParameters (URL_API) {
 					"body-param-integer": "test"
 				}, 400, "Bad Request", {
 					"code": "WRONG_TYPE_PARAMETER",
-					"message": "Error while validating request: request.body['body-param-integer'] should be integer"
+					"message": "Error while validating request: request/body/body-param-integer must be integer"
 				});
 
 			});
@@ -58,7 +58,7 @@ module.exports = function checkBodyParameters (URL_API) {
 					"body-param-integer": 6
 				}, 400, "Bad Request", {
 					"code": "EMPTY_OR_RANGE_OR_ENUM_PARAMETER",
-					"message": "Error while validating request: request.body['body-param-integer'] should be <= 5"
+					"message": "Error while validating request: request/body/body-param-integer must be <= 5"
 				});
 
 			});
@@ -81,7 +81,7 @@ module.exports = function checkBodyParameters (URL_API) {
 					"body-param-number": "test"
 				}, 400, "Bad Request", {
 					"code": "WRONG_TYPE_PARAMETER",
-					"message": "Error while validating request: request.body['body-param-number'] should be number"
+					"message": "Error while validating request: request/body/body-param-number must be number"
 				});
 
 			});
@@ -92,7 +92,7 @@ module.exports = function checkBodyParameters (URL_API) {
 					"body-param-number": 0.6
 				}, 400, "Bad Request", {
 					"code": "EMPTY_OR_RANGE_OR_ENUM_PARAMETER",
-					"message": "Error while validating request: request.body['body-param-number'] should be <= 0.5"
+					"message": "Error while validating request: request/body/body-param-number must be <= 0.5"
 				});
 
 			});
@@ -115,7 +115,7 @@ module.exports = function checkBodyParameters (URL_API) {
 					"body-param-string": false
 				}, 400, "Bad Request", {
 					"code": "WRONG_TYPE_PARAMETER",
-					"message": "Error while validating request: request.body['body-param-string'] should be string"
+					"message": "Error while validating request: request/body/body-param-string must be string"
 				});
 
 			});
@@ -126,7 +126,7 @@ module.exports = function checkBodyParameters (URL_API) {
 					"body-param-string": ""
 				}, 400, "Bad Request", {
 					"code": "EMPTY_OR_RANGE_OR_ENUM_PARAMETER",
-					"message": "Error while validating request: request.body['body-param-string'] should NOT be shorter than 1 characters"
+					"message": "Error while validating request: request/body/body-param-string must NOT have fewer than 1 characters"
 				});
 
 			});
@@ -137,7 +137,7 @@ module.exports = function checkBodyParameters (URL_API) {
 					"body-param-string": "thisisatest"
 				}, 400, "Bad Request", {
 					"code": "EMPTY_OR_RANGE_OR_ENUM_PARAMETER",
-					"message": "Error while validating request: request.body['body-param-string'] should NOT be longer than 5 characters"
+					"message": "Error while validating request: request/body/body-param-string must NOT have more than 5 characters"
 				});
 
 			});
@@ -160,7 +160,7 @@ module.exports = function checkBodyParameters (URL_API) {
 					"body-param-object": false
 				}, 400, "Bad Request", {
 					"code": "WRONG_TYPE_PARAMETER",
-					"message": "Error while validating request: request.body['body-param-object'] should be object"
+					"message": "Error while validating request: request/body/body-param-object must be object"
 				});
 
 			});
@@ -171,7 +171,7 @@ module.exports = function checkBodyParameters (URL_API) {
 					"body-param-object": {}
 				}, 400, "Bad Request", {
 					"code": "MISSING_PARAMETER",
-					"message": "Error while validating request: request.body['body-param-object'] should have required property 'body-param-string'"
+					"message": "Error while validating request: request/body/body-param-object must have required property 'body-param-string'"
 				});
 
 			});
@@ -198,7 +198,7 @@ module.exports = function checkBodyParameters (URL_API) {
 					"body-param-array": false
 				}, 400, "Bad Request", {
 					"code": "WRONG_TYPE_PARAMETER",
-					"message": "Error while validating request: request.body['body-param-array'] should be array"
+					"message": "Error while validating request: request/body/body-param-array must be array"
 				});
 
 			});
@@ -209,7 +209,7 @@ module.exports = function checkBodyParameters (URL_API) {
 					"body-param-array": []
 				}, 400, "Bad Request", {
 					"code": "EMPTY_OR_RANGE_OR_ENUM_PARAMETER",
-					"message": "Error while validating request: request.body['body-param-array'] should NOT have fewer than 1 items"
+					"message": "Error while validating request: request/body/body-param-array must NOT have fewer than 1 items"
 				});
 
 			});
@@ -220,7 +220,7 @@ module.exports = function checkBodyParameters (URL_API) {
 					"body-param-array": [ "test", "test", "test", "test", "test", "test" ]
 				}, 400, "Bad Request", {
 					"code": "EMPTY_OR_RANGE_OR_ENUM_PARAMETER",
-					"message": "Error while validating request: request.body['body-param-array'] should NOT have more than 5 items"
+					"message": "Error while validating request: request/body/body-param-array must NOT have more than 5 items"
 				});
 
 			});
@@ -231,7 +231,7 @@ module.exports = function checkBodyParameters (URL_API) {
 					"body-param-array": [ "test", "thisisatest", "test" ]
 				}, 400, "Bad Request", {
 					"code": "EMPTY_OR_RANGE_OR_ENUM_PARAMETER",
-					"message": "Error while validating request: request.body['body-param-array'][1] should NOT be longer than 5 characters"
+					"message": "Error while validating request: request/body/body-param-array/1 must NOT have more than 5 characters"
 				});
 
 			});
@@ -242,7 +242,7 @@ module.exports = function checkBodyParameters (URL_API) {
 					"body-param-array": [ "test", 5, "test" ]
 				}, 400, "Bad Request", {
 					"code": "WRONG_TYPE_PARAMETER",
-					"message": "Error while validating request: request.body['body-param-array'][1] should be string"
+					"message": "Error while validating request: request/body/body-param-array/1 must be string"
 				});
 
 			});

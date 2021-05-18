@@ -20,7 +20,7 @@ module.exports = function checkBodyBasics (URL_API) {
 
 			return httpRequestTest(URL_API + "/create?url-param=ok", "put", null, 400, "Bad Request", {
 				"code": "MISSING_PARAMETER",
-				"message": "Error while validating request: request.body should have required property 'body-param'"
+				"message": "Error while validating request: request/body must have required property 'body-param'"
 			});
 
 		});
@@ -31,7 +31,7 @@ module.exports = function checkBodyBasics (URL_API) {
 				"body-param": false
 			}, 400, "Bad Request", {
 				"code": "WRONG_TYPE_PARAMETER",
-				"message": "Error while validating request: request.body['body-param'] should be string"
+				"message": "Error while validating request: request/body/body-param must be string"
 			});
 
 		});

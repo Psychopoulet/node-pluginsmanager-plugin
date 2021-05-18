@@ -29,7 +29,7 @@ module.exports = function checkUrlPathParameters (URL_API) {
 
 			return httpRequestTest(URL_API + "/path/path/", "get", null, 400, "Bad Request", {
 				"code": "EMPTY_OR_RANGE_OR_ENUM_PARAMETER",
-				"message": "Error while validating request: request.params['path-param'] should NOT be shorter than 1 characters"
+				"message": "Error while validating request: request/params/path-param must NOT have fewer than 1 characters"
 			});
 
 		});

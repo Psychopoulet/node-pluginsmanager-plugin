@@ -20,7 +20,7 @@ module.exports = function checkUrlCookieParameters (URL_API) {
 
 			return httpRequestCookieTest(URL_API + "/path/cookie", "get", {}, 400, "Bad Request", {
 				"code": "MISSING_PARAMETER",
-				"message": "Error while validating request: request.cookies should have required property 'cookie-param'"
+				"message": "Error while validating request: request/cookies must have required property 'cookie-param'"
 			});
 
 		});
@@ -31,7 +31,7 @@ module.exports = function checkUrlCookieParameters (URL_API) {
 				"cookie-param": ""
 			}, 400, "Bad Request", {
 				"code": "EMPTY_OR_RANGE_OR_ENUM_PARAMETER",
-				"message": "Error while validating request: request.cookies['cookie-param'] should NOT be shorter than 1 characters"
+				"message": "Error while validating request: request/cookies/cookie-param must NOT have fewer than 1 characters"
 			});
 
 		});
