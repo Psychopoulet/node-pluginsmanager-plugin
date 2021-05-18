@@ -20,7 +20,7 @@ module.exports = function checkUrlQueryParameters (URL_API) {
 
 			return httpRequestTest(URL_API + "/path/query", "get", null, 400, "Bad Request", {
 				"code": "MISSING_PARAMETER",
-				"message": "Error while validating request: request.query should have required property 'query-param'"
+				"message": "Error while validating request: request/query must have required property 'query-param'"
 			});
 
 		});
@@ -29,7 +29,7 @@ module.exports = function checkUrlQueryParameters (URL_API) {
 
 			return httpRequestTest(URL_API + "/path/query?query-param=", "get", null, 400, "Bad Request", {
 				"code": "EMPTY_OR_RANGE_OR_ENUM_PARAMETER",
-				"message": "Error while validating request: request.query['query-param'] should NOT be shorter than 1 characters"
+				"message": "Error while validating request: request/query/query-param must NOT have fewer than 1 characters"
 			});
 
 		});

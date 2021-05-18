@@ -20,7 +20,7 @@ module.exports = function checkUrlHeaderParameters (URL_API) {
 
 			return httpRequestHeaderTest(URL_API + "/path/header", "get", {}, 400, "Bad Request", {
 				"code": "MISSING_PARAMETER",
-				"message": "Error while validating request: request.headers should have required property 'header-param'"
+				"message": "Error while validating request: request/headers must have required property 'header-param'"
 			});
 
 		});
@@ -31,7 +31,7 @@ module.exports = function checkUrlHeaderParameters (URL_API) {
 				"header-param": ""
 			}, 400, "Bad Request", {
 				"code": "EMPTY_OR_RANGE_OR_ENUM_PARAMETER",
-				"message": "Error while validating request: request.headers['header-param'] should NOT be shorter than 1 characters"
+				"message": "Error while validating request: request/headers/header-param must NOT have fewer than 1 characters"
 			});
 
 		});
