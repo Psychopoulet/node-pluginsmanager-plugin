@@ -19,6 +19,7 @@ $ npm install node-pluginsmanager-plugin
   * inheritable parent for node-pluginsmanager's plugins
   * proper architecture for simple plugin creation
   * heritable classes for each usage
+  * multi-files support
 
 ## Architecture
 
@@ -28,7 +29,7 @@ $ npm install node-pluginsmanager-plugin
 
 ### Resume
 
-* [Descriptor](https://github.com/Psychopoulet/node-pluginsmanager-plugin/tree/master/documentation/Descriptor.md) : OpenAPI (v3) description for Server and Mediator endpoints (this is NOT a js file, but a json OpenAPI file)
+* [Descriptor](https://github.com/Psychopoulet/node-pluginsmanager-plugin/tree/master/documentation/Descriptor.md) : OpenAPI (v3) description for Server and Mediator endpoints (this is NOT a js file, but a json/xaml/whatever OpenAPI file)
 * [Mediator](https://github.com/Psychopoulet/node-pluginsmanager-plugin/tree/master/documentation/Mediator.md) : contains the plugin's logic (communication with targeted device/api/whatever)
 * [Server](https://github.com/Psychopoulet/node-pluginsmanager-plugin/tree/master/documentation/Server.md) : expose plugin's roots to external use (API)
 * [Orchestrator](https://github.com/Psychopoulet/node-pluginsmanager-plugin/tree/master/documentation/Orchestrator.md) : plugin's data (extracted from plugin's package.json) and Descriptor, Mediator & Server initializer
