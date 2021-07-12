@@ -25,8 +25,9 @@ describe("Server / requests / app", () => {
 
 	before(() => {
 
-		return server.disableCheckParameters()
-					.disableCheckResponse().init().then(() => {
+		server.disableCheckParameters().disableCheckResponse();
+
+		return server.init().then(() => {
 
 			const port = parseInt(parse(server._Descriptor.servers[0].url).port, 10);
 
@@ -94,6 +95,6 @@ describe("Server / requests / app", () => {
 
 	});
 
-	tests(server);
+	tests(server, false);
 
 });

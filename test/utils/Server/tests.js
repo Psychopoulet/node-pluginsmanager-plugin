@@ -20,13 +20,15 @@
 		const checkBodyContentLength = require(join(__dirname, "checkBodyContentLength.js"));
 		const checkBodyParameters = require(join(__dirname, "checkBodyParameters.js"));
 
+		const checkResponse = require(join(__dirname, "checkResponse.js"));
+
 // consts
 
 	const URL_API = "/node-pluginsmanager-plugin/api";
 
 // module
 
-module.exports = function test (descriptor) {
+module.exports = function tests (descriptor, checkResponseWanted = false) {
 
 	describe("check url", () => {
 
@@ -44,6 +46,12 @@ module.exports = function test (descriptor) {
 		checkBodyBasics(URL_API);
 		checkBodyContentLength(URL_API);
 		checkBodyParameters(URL_API);
+
+	});
+
+	describe("check response", () => {
+
+		checkResponse(URL_API, checkResponseWanted);
 
 	});
 

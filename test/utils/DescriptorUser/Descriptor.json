@@ -611,6 +611,21 @@
 					}
 				}
 			}
+		},
+		"/node-pluginsmanager-plugin/api/wrong-result": {
+			"post": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "wrongResult",
+				"responses": {
+					"201": {
+						"description": "Everything is fine"
+					},
+					"500": {
+						"description": "An error occured"
+					}
+				}
+			}
 		}
 	},
 	"components": {
