@@ -137,6 +137,7 @@ declare module "node-pluginsmanager-plugin" {
 				protected _Server: Server | null;
 				protected _socketServer: WebSocketServer | SocketIOServer | null;
 				protected _checkParameters: boolean;
+				protected _checkResponse: boolean;
 
 				// params
 				protected _packageFile: string;
@@ -180,6 +181,8 @@ declare module "node-pluginsmanager-plugin" {
 
 			public disableCheckParameters(): this;
 			public enableCheckParameters(): this;
+			public disableCheckResponse(): this;
+			public enableCheckResponse(): this;
 
 			public disableCors(): this;
 			public enableCors(): this;
