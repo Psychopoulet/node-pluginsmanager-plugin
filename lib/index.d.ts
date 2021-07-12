@@ -109,12 +109,15 @@ declare module "node-pluginsmanager-plugin" {
 
 			protected _socketServer: WebSocketServer | SocketIOServer | null;
 			protected _checkParameters: boolean;
+			protected _checkResponse: boolean;
 			protected _cors: boolean;
 
 		// methods
 
 			public disableCheckParameters(): this;
 			public enableCheckParameters(): this;
+			public disableCheckResponse(): this;
+			public enableCheckResponse(): this;
 
 			public disableCors(): this;
 			public enableCors(): this;
