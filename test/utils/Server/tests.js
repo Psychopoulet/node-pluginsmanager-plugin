@@ -28,7 +28,7 @@
 
 // module
 
-module.exports = function tests (descriptor, checkResponseWanted = false) {
+module.exports = function tests (descriptor) {
 
 	describe("check url", () => {
 
@@ -51,7 +51,7 @@ module.exports = function tests (descriptor, checkResponseWanted = false) {
 
 	describe("check response", () => {
 
-		checkResponse(URL_API, checkResponseWanted);
+		checkResponse(URL_API);
 
 	});
 

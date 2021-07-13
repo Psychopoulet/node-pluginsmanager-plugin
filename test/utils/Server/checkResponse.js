@@ -12,11 +12,11 @@
 
 // module
 
-module.exports = function checkResponse (URL_API, checkResponseWanted) {
+module.exports = function checkResponse (URL_API) {
 
 	it("should test wrong response", () => {
 
-		return checkResponseWanted ? httpRequestTest("/node-pluginsmanager-plugin/api/wrong-result", "post", null, 200, "OK", "test") : Promise.resolve();
+		return httpRequestTest("/node-pluginsmanager-plugin/api/wrong-result", "post", null, 200, "OK", "test");
 
 	});
 

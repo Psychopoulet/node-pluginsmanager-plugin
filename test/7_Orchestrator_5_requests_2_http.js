@@ -38,13 +38,13 @@ describe("Orchestrator / request / http", () => {
 
 	before(() => {
 
-		orchestrator.enableCheckParameters().enableCheckResponse();
+		orchestrator.disableCheckParameters().disableCheckResponse();
 
 		return orchestrator.load().then(() => {
 			return orchestrator.init();
 		}).then(() => {
 
-			orchestrator.enableCheckParameters().enableCheckResponse();
+			orchestrator.disableCheckParameters().disableCheckResponse();
 
 			const port = parseInt(parse(orchestrator._Descriptor.servers[0].url).port, 10);
 
