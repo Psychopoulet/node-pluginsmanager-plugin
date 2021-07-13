@@ -16,7 +16,7 @@ module.exports = function checkResponse (URL_API) {
 
 	it("should test wrong response", () => {
 
-		return httpRequestTest("/node-pluginsmanager-plugin/api/wrong-result", "post", null, 200, "OK", "test");
+		return httpRequestTest(URL_API + "/wrong-result", "post", null, 200, "OK", "test");
 
 	});
 
