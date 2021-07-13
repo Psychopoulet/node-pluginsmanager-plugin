@@ -158,6 +158,9 @@
 					"200": {
 						"description": "Everything is fine"
 					},
+					"400": {
+						"description": "Missing parameter"
+					},
 					"500": {
 						"description": "An error occured"
 					}
@@ -184,6 +187,9 @@
 					"200": {
 						"description": "Everything is fine"
 					},
+					"400": {
+						"description": "Missing parameter"
+					},
 					"500": {
 						"description": "An error occured"
 					}
@@ -209,6 +215,9 @@
 				"responses": {
 					"200": {
 						"description": "Everything is fine"
+					},
+					"400": {
+						"description": "Missing parameter"
 					},
 					"500": {
 						"description": "An error occured"
@@ -284,7 +293,17 @@
 				},
 				"responses": {
 					"200": {
-						"description": "Everything is fine"
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "boolean"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Missing parameter"
 					},
 					"500": {
 						"description": "An error occured"
@@ -502,6 +521,9 @@
 					"201": {
 						"description": "Everything is fine"
 					},
+					"400": {
+						"description": "Missing parameter"
+					},
 					"500": {
 						"description": "An error occured"
 					}
@@ -525,8 +547,14 @@
 					}
 				],
 				"responses": {
-					"404": {
+					"200": {
 						"description": "Everything is fine"
+					},
+					"404": {
+						"description": "Everything is fine (with no data)"
+					},
+					"400": {
+						"description": "Missing parameter"
 					},
 					"500": {
 						"description": "An error occured"
@@ -554,6 +582,9 @@
 					"200": {
 						"description": "Everything is fine"
 					},
+					"400": {
+						"description": "Missing parameter"
+					},
 					"500": {
 						"description": "An error occured"
 					}
@@ -580,6 +611,9 @@
 					"200": {
 						"description": "Everything is fine"
 					},
+					"400": {
+						"description": "Missing parameter"
+					},
 					"500": {
 						"description": "An error occured"
 					}
@@ -605,6 +639,9 @@
 				"responses": {
 					"200": {
 						"description": "Everything is fine"
+					},
+					"400": {
+						"description": "Missing parameter"
 					},
 					"500": {
 						"description": "An error occured"
