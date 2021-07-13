@@ -45,6 +45,10 @@ declare module "node-pluginsmanager-plugin" {
 
 		// attributes
 
+			// public
+
+				public initialized: boolean;
+
 			// protected
 
 				protected _descriptorValidated: boolean;
@@ -78,12 +82,12 @@ declare module "node-pluginsmanager-plugin" {
 
 		// attributes
 
-			public initialized: boolean;
 			public _validator: null | object;
 
 		// methods
 
 			public checkParameters(operationId: string, urlParams: iUrlParameters, bodyParams: object): Promise<void>;
+			public checkResponse(operationId: string, res: Response): Promise<void>;
 
 	}
 
@@ -150,7 +154,6 @@ declare module "node-pluginsmanager-plugin" {
 			// public
 
 				public enabled: boolean;
-				public initialized: boolean;
 
 				// native
 				public authors: Array<string> | null;
