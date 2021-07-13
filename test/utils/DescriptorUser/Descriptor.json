@@ -335,6 +335,9 @@
 					"200": {
 						"description": "Everything is fine"
 					},
+					"400": {
+						"description": "Missing parameter"
+					},
 					"500": {
 						"description": "An error occured"
 					}
@@ -364,6 +367,9 @@
 				"responses": {
 					"200": {
 						"description": "Everything is fine"
+					},
+					"400": {
+						"description": "Missing parameter"
 					},
 					"500": {
 						"description": "An error occured"
@@ -395,6 +401,9 @@
 					"200": {
 						"description": "Everything is fine"
 					},
+					"400": {
+						"description": "Missing parameter"
+					},
 					"500": {
 						"description": "An error occured"
 					}
@@ -424,6 +433,9 @@
 				"responses": {
 					"200": {
 						"description": "Everything is fine"
+					},
+					"400": {
+						"description": "Missing parameter"
 					},
 					"500": {
 						"description": "An error occured"
@@ -459,6 +471,9 @@
 				"responses": {
 					"200": {
 						"description": "Everything is fine"
+					},
+					"400": {
+						"description": "Missing parameter"
 					},
 					"500": {
 						"description": "An error occured"
