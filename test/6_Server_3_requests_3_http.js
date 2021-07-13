@@ -23,7 +23,9 @@ describe("Server / requests / http", () => {
 
 	before(() => {
 
-		return server.enableCheckParameters().init().then(() => {
+		server.enableCheckParameters().enableCheckResponse();
+
+		return server.init().then(() => {
 
 			const port = parseInt(parse(server._Descriptor.servers[0].url).port, 10);
 
@@ -91,6 +93,6 @@ describe("Server / requests / http", () => {
 
 	});
 
-	tests(server);
+	tests(server, true);
 
 });

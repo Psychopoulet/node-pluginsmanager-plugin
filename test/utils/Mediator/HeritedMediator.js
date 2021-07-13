@@ -182,4 +182,14 @@ module.exports = class HeritedMediator extends LocalMediator {
 
 	}
 
+	wrongResult (urlParams) {
+
+		return this.checkParameters("wrongResult", urlParams, {}).then(() => {
+
+			return Promise.resolve("test");
+
+		});
+
+	}
+
 };

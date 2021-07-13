@@ -45,6 +45,10 @@ declare module "node-pluginsmanager-plugin" {
 
 		// attributes
 
+			// public
+
+				public initialized: boolean;
+
 			// protected
 
 				protected _descriptorValidated: boolean;
@@ -78,12 +82,12 @@ declare module "node-pluginsmanager-plugin" {
 
 		// attributes
 
-			public initialized: boolean;
 			public _validator: null | object;
 
 		// methods
 
 			public checkParameters(operationId: string, urlParams: iUrlParameters, bodyParams: object): Promise<void>;
+			public checkResponse(operationId: string, res: Response): Promise<void>;
 
 	}
 
@@ -109,12 +113,15 @@ declare module "node-pluginsmanager-plugin" {
 
 			protected _socketServer: WebSocketServer | SocketIOServer | null;
 			protected _checkParameters: boolean;
+			protected _checkResponse: boolean;
 			protected _cors: boolean;
 
 		// methods
 
 			public disableCheckParameters(): this;
 			public enableCheckParameters(): this;
+			public disableCheckResponse(): this;
+			public enableCheckResponse(): this;
 
 			public disableCors(): this;
 			public enableCors(): this;
@@ -134,6 +141,7 @@ declare module "node-pluginsmanager-plugin" {
 				protected _Server: Server | null;
 				protected _socketServer: WebSocketServer | SocketIOServer | null;
 				protected _checkParameters: boolean;
+				protected _checkResponse: boolean;
 
 				// params
 				protected _packageFile: string;
@@ -146,7 +154,6 @@ declare module "node-pluginsmanager-plugin" {
 			// public
 
 				public enabled: boolean;
-				public initialized: boolean;
 
 				// native
 				public authors: Array<string> | null;
@@ -177,6 +184,8 @@ declare module "node-pluginsmanager-plugin" {
 
 			public disableCheckParameters(): this;
 			public enableCheckParameters(): this;
+			public disableCheckResponse(): this;
+			public enableCheckResponse(): this;
 
 			public disableCors(): this;
 			public enableCors(): this;

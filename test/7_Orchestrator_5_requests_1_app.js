@@ -74,11 +74,15 @@ describe("Orchestrator / request / app", () => {
 
 	before(() => {
 
-		return orchestrator.disableCheckParameters().enableCheckParameters().load().then(() => {
+		orchestrator.enableCheckParameters().enableCheckResponse();
+
+		return orchestrator.load().then(() => {
+
 			return orchestrator.init();
+
 		}).then(() => {
 
-			orchestrator.disableCheckParameters().enableCheckParameters();
+			orchestrator.enableCheckParameters().enableCheckResponse();
 
 			const port = parseInt(parse(orchestrator._Descriptor.servers[0].url).port, 10);
 
@@ -134,6 +138,6 @@ describe("Orchestrator / request / app", () => {
 
 	});
 
-	tests(orchestrator);
+	tests(orchestrator, false);
 
 });
