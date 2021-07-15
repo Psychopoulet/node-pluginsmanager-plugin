@@ -5,7 +5,6 @@
 	// natives
 	const { join } = require("path");
 	const { parse } = require("url");
-	const { strictEqual } = require("assert");
 
 	// externals
 	const express = require("express");
@@ -69,28 +68,6 @@ describe("Server / requests / app", () => {
 
 			}) : Promise.resolve();
 
-		});
-
-	});
-
-	it("should test http server without server", (done) => {
-
-		new HeritedServer().on("error", (err) => {
-
-			strictEqual(typeof err, "object", "Generated Error is not as expected");
-			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
-
-			done();
-
-		}).appMiddleware(null, {
-			"writeHead": () => {
-				// nothing to do here
-			},
-			"end": () => {
-				// nothing to do here
-			}
-		}, () => {
-			// nothing to do here
 		});
 
 	});
