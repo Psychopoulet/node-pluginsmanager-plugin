@@ -23,12 +23,23 @@ describe("Server / websockets", () => {
 
 	it("should test socket server without server", (done) => {
 
+		let ended = false;
+
+		setTimeout(() => {
+
+			if (!ended) {
+				ended = true;
+				done();
+			}
+
+		}, 500);
+
 		new HeritedServer().on("error", (err) => {
 
-			strictEqual(typeof err, "object", "Generated Error is not as expected");
-			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
-
-			done();
+			if (!ended) {
+				ended = true;
+				done(err);
+			}
 
 		}).push("ping", "pong");
 
@@ -142,12 +153,23 @@ describe("Server / websockets", () => {
 
 		it("should test socket server without server", (done) => {
 
+			let ended = false;
+
+			setTimeout(() => {
+
+				if (!ended) {
+					ended = true;
+					done();
+				}
+
+			}, 500);
+
 			new HeritedServer().on("error", (err) => {
 
-				strictEqual(typeof err, "object", "Generated Error is not as expected");
-				strictEqual(err instanceof Error, true, "Generated Error is not as expected");
-
-				done();
+				if (!ended) {
+					ended = true;
+					done(err);
+				}
 
 			}).push("ping", "pong");
 

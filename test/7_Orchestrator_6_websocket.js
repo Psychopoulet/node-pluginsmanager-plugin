@@ -93,16 +93,25 @@ describe("Orchestrator / websockets", () => {
 
 		it("should test socket server without server", (done) => {
 
+			let ended = false;
+
+			setTimeout(() => {
+
+				if (!ended) {
+					ended = true;
+					done();
+				}
+
+			}, 500);
+
 			orchestrator.on("error", (err) => {
 
-				strictEqual(typeof err, "object", "Generated Error is not as expected");
-				strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+				if (!ended) {
+					ended = true;
+					done(err);
+				}
 
-				done();
-
-			});
-
-			orchestrator._Server.push("ping", "pong");
+			})._Server.push("ping", "pong");
 
 		});
 
