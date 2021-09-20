@@ -1,6 +1,6 @@
 {
   "name": "node-pluginsmanager-plugin",
-  "version": "4.7.1",
+  "version": "4.7.2",
   "description": "An abstract parent plugin for node-pluginsmanager",
   "main": "lib/main.js",
   "typings": "lib/index.d.ts",
@@ -35,25 +35,25 @@
     "url": "https://github.com/Psychopoulet/node-pluginsmanager-plugin/issues"
   },
   "dependencies": {
-    "@apidevtools/swagger-parser": "10.0.2",
+    "@apidevtools/swagger-parser": "10.0.3",
     "express-openapi-validate": "0.6.1"
   },
   "devDependencies": {
-    "@types/node": "16.4.7",
+    "@types/node": "16.9.4",
     "@types/socket.io": "3.0.2",
     "@types/ws": "7.4.7",
-    "check-version-modules": "1.3.2",
+    "check-version-modules": "1.3.3",
     "coveralls": "3.1.1",
     "colors": "1.4.0",
-    "eslint": "7.31.0",
+    "eslint": "7.32.0",
     "express": "4.17.1",
-    "husky": "7.0.1",
-    "mocha": "9.0.3",
+    "husky": "7.0.2",
+    "mocha": "9.1.1",
     "nyc": "15.1.0",
-    "socket.io": "4.1.3",
-    "socket.io-client": "4.1.3",
-    "typescript": "4.3.5",
-    "ws": "8.0.0"
+    "socket.io": "4.2.0",
+    "socket.io-client": "4.2.0",
+    "typescript": "4.4.3",
+    "ws": "8.2.2"
   },
   "homepage": "https://github.com/Psychopoulet/node-pluginsmanager-plugin#readme",
   "engines": {
