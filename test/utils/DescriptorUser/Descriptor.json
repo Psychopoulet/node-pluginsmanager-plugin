@@ -14,7 +14,7 @@
 		}
 	},
 	"paths": {
-		"/node-pluginsmanager-plugin/descriptor": {
+		"/node-pluginsmanager-plugin/api/descriptor": {
 			"get": {
 				"description": "",
 				"summary": "Simple API test for Server class",
@@ -35,7 +35,7 @@
 				}
 			}
 		},
-		"/node-pluginsmanager-plugin/status": {
+		"/node-pluginsmanager-plugin/api/status": {
 			"get": {
 				"description": "",
 				"summary": "Simple API test for Server class",
@@ -695,7 +695,7 @@
 		"schemas": {
 			"Status": {
 				"type": "string",
-				"enum": [ "ENABLED", "INITIALIZED" ]
+				"enum": [ "ENABLED", "INITIALIZED", "DISABLED" ]
 			},
 			"TestInteger": {
 				"type": "integer",
@@ -718,6 +718,21 @@
 					}
 				},
 				"required": [ "body-param-string" ]
+			},
+			"Error": {
+				"type": "object",
+				"required": [
+					"code",
+					"message"
+				],
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					}
+				}
 			}
 		}
 	},
