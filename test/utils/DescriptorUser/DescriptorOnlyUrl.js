@@ -28,7 +28,14 @@ module.exports = {
 							"description": "Everything is fine"
 						},
 						"default": {
-							"description": "An error occured"
+							"description": "An error occured",
+							"content": {
+								"application/json": {
+									"schema": {
+										"$ref": "#/components/schemas/Error"
+									}
+								}
+							}
 						}
 					}
 				}
@@ -53,7 +60,14 @@ module.exports = {
 							"description": "Everything is fine"
 						},
 						"default": {
-							"description": "An error occured"
+							"description": "An error occured",
+							"content": {
+								"application/json": {
+									"schema": {
+										"$ref": "#/components/schemas/Error"
+									}
+								}
+							}
 						}
 					}
 				}
@@ -78,7 +92,14 @@ module.exports = {
 							"description": "Everything is fine"
 						},
 						"default": {
-							"description": "An error occured"
+							"description": "An error occured",
+							"content": {
+								"application/json": {
+									"schema": {
+										"$ref": "#/components/schemas/Error"
+									}
+								}
+							}
 						}
 					}
 				}
@@ -103,7 +124,14 @@ module.exports = {
 							"description": "Everything is fine"
 						},
 						"default": {
-							"description": "An error occured"
+							"description": "An error occured",
+							"content": {
+								"application/json": {
+									"schema": {
+										"$ref": "#/components/schemas/Error"
+									}
+								}
+							}
 						}
 					}
 				}
@@ -126,7 +154,14 @@ module.exports = {
 							"description": "Everything is fine"
 						},
 						"default": {
-							"description": "An error occured"
+							"description": "An error occured",
+							"content": {
+								"application/json": {
+									"schema": {
+										"$ref": "#/components/schemas/Error"
+									}
+								}
+							}
 						}
 					}
 				}
@@ -149,7 +184,14 @@ module.exports = {
 							"description": "Everything is fine"
 						},
 						"default": {
-							"description": "An error occured"
+							"description": "An error occured",
+							"content": {
+								"application/json": {
+									"schema": {
+										"$ref": "#/components/schemas/Error"
+									}
+								}
+							}
 						}
 					}
 				}
@@ -173,7 +215,14 @@ module.exports = {
 							"description": "Everything is fine"
 						},
 						"default": {
-							"description": "An error occured"
+							"description": "An error occured",
+							"content": {
+								"application/json": {
+									"schema": {
+										"$ref": "#/components/schemas/Error"
+									}
+								}
+							}
 						}
 					}
 				}

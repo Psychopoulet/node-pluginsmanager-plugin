@@ -26,6 +26,21 @@ module.exports = {
 								}
 							}
 						}
+					},
+					"responses": {
+						"200": {
+							"description": "Everything is fine"
+						},
+						"default": {
+							"description": "An error occured",
+							"content": {
+								"application/json": {
+									"schema": {
+										"$ref": "#/components/schemas/Error"
+									}
+								}
+							}
+						}
 					}
 				}
 			},
@@ -48,6 +63,21 @@ module.exports = {
 								}
 							}
 						}
+					},
+					"responses": {
+						"200": {
+							"description": "Everything is fine"
+						},
+						"default": {
+							"description": "An error occured",
+							"content": {
+								"application/json": {
+									"schema": {
+										"$ref": "#/components/schemas/Error"
+									}
+								}
+							}
+						}
 					}
 				}
 			},
@@ -67,6 +97,21 @@ module.exports = {
 										}
 									},
 									"required": [ "body-param-integer" ]
+								}
+							}
+						}
+					},
+					"responses": {
+						"200": {
+							"description": "Everything is fine"
+						},
+						"default": {
+							"description": "An error occured",
+							"content": {
+								"application/json": {
+									"schema": {
+										"$ref": "#/components/schemas/Error"
+									}
 								}
 							}
 						}
@@ -112,6 +157,21 @@ module.exports = {
 								}
 							}
 						}
+					},
+					"responses": {
+						"200": {
+							"description": "Everything is fine"
+						},
+						"default": {
+							"description": "An error occured",
+							"content": {
+								"application/json": {
+									"schema": {
+										"$ref": "#/components/schemas/Error"
+									}
+								}
+							}
+						}
 					}
 				}
 			},
@@ -129,6 +189,21 @@ module.exports = {
 										}
 									},
 									"required": [ "body-param-facultative" ]
+								}
+							}
+						}
+					},
+					"responses": {
+						"200": {
+							"description": "Everything is fine"
+						},
+						"default": {
+							"description": "An error occured",
+							"content": {
+								"application/json": {
+									"schema": {
+										"$ref": "#/components/schemas/Error"
+									}
 								}
 							}
 						}
@@ -158,6 +233,21 @@ module.exports = {
 								}
 							}
 						}
+					},
+					"responses": {
+						"200": {
+							"description": "Everything is fine"
+						},
+						"default": {
+							"description": "An error occured",
+							"content": {
+								"application/json": {
+									"schema": {
+										"$ref": "#/components/schemas/Error"
+									}
+								}
+							}
+						}
 					}
 				}
 			},
@@ -180,6 +270,21 @@ module.exports = {
 										}
 									},
 									"required": [ "body-param-array" ]
+								}
+							}
+						}
+					},
+					"responses": {
+						"200": {
+							"description": "Everything is fine"
+						},
+						"default": {
+							"description": "An error occured",
+							"content": {
+								"application/json": {
+									"schema": {
+										"$ref": "#/components/schemas/Error"
+									}
 								}
 							}
 						}
