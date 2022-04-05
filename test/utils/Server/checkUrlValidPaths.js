@@ -18,13 +18,13 @@ module.exports = function checkUrlValidPaths (URL_API, component) {
 
 		it("should test descriptor request", () => {
 
-			return httpRequestTest("/node-pluginsmanager-plugin/descriptor", "get", null, 200, "OK", component._Descriptor);
+			return httpRequestTest("/node-pluginsmanager-plugin/api/descriptor", "get", null, 200, "OK", component._Descriptor);
 
 		});
 
 		it("should test status request", () => {
 
-			return httpRequestTest("/node-pluginsmanager-plugin/status", "get", null, 200, "OK", "INITIALIZED");
+			return httpRequestTest("/node-pluginsmanager-plugin/api/status", "get", null, 200, "OK", "INITIALIZED");
 
 		});
 

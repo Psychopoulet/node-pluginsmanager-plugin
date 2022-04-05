@@ -14,10 +14,11 @@
 		}
 	},
 	"paths": {
-		"/doc-sample/descriptor": {
+		"/doc-sample/api/descriptor": {
 			"get": {
 				"description": "",
-				"summary": "Get plugin descriptor",
+				"summary": "Get plugin descriptor (always available)",
+				"operationId": "getDescriptor",
 				"responses": {
 					"200": {
 						"description": "Everything is fine",
@@ -25,6 +26,46 @@
 							"application/json": {
 								"schema": {
 									"type": "object"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occured",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/doc-sample/api/status": {
+			"get": {
+				"description": "",
+				"summary": "Get plugin status (always available)",
+				"operationId": "getStatus",
+				"responses": {
+					"200": {
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string",
+									"enum": [ "ENABLED", "INITIALIZED" ]
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Returned status (=\"DISABLED\")",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
 								}
 							}
 						}

@@ -34,8 +34,15 @@ module.exports = {
 						"201": {
 							"description": "Everything is fine"
 						},
-						"500": {
-							"description": "An error occured"
+						"default": {
+							"description": "An error occured",
+							"content": {
+								"application/json": {
+									"schema": {
+										"$ref": "#/components/schemas/Error"
+									}
+								}
+							}
 						}
 					}
 				}

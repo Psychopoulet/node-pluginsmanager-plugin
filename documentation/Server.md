@@ -55,8 +55,8 @@ Expose the [Mediator](./Mediator.md)'s methods with the [Descriptor](./Descripto
 
   * Paths must start with plugin name (same as descriptor.info.title)
   * If a path contains path parameter (ex : /[descriptor.info.title]/api/users/{user-id}), the parameter MUST be defined in the "parameters" section of this path, with the same name, and a "path" type
-  * "/[descriptor.info.title]/descriptor" [GET] : return parsed json [Descriptor](./Descriptor.md) (already and automaticly setted in parent Server, no need for "operationId" data in the [Descriptor](./Descriptor.md) for this path)
-  * "/[descriptor.info.title]/status" [GET] : return plugin status [ "DISABLED", "ENABLED", "INITIALIZED" ] (http status code = 404 for "DISABLED")
+  * "/[descriptor.info.title]/api/descriptor" [GET] : return parsed json [Descriptor](./Descriptor.md) (already and automaticly setted in parent Server, always available, and no need for "operationId" data in the [Descriptor](./Descriptor.md) for this path)
+  * "/[descriptor.info.title]/api/status" [GET] : return plugin status [ "DISABLED", "ENABLED", "INITIALIZED" ] (http status code = 404 for "DISABLED") (already and automaticly setted in parent Server, always available, and no need for "operationId" data in the [Descriptor](./Descriptor.md) for this path)
   * "/[descriptor.info.title]/api/[path]" : expose API path
   * "/[descriptor.info.title]/public/[path]" : expose plugins files (HTML, CSS, etc...)
 
