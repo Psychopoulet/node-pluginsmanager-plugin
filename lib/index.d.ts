@@ -206,4 +206,6 @@ declare module "node-pluginsmanager-plugin" {
 
 	}
 
+	export class NotFoundError extends Error {}
+
 }
