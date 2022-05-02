@@ -17,19 +17,6 @@ module.exports = function checkBodyContentType (URL_API) {
 
 	describe("content-length", () => {
 
-		it("should test request with missing data", () => {
-
-			return httpRequestWithWrongHeader(URL_API + "/create?url-param=ok", "put", {
-				"body-param": "test"
-			}, {
-				"Content-Type": "application/json"
-			}, 411, "Length Required", {
-				"code": "MISSING_HEADER",
-				"message": "No valid \"Content-Length\" header found"
-			});
-
-		});
-
 		// must crash request body parsing
 		it("should test request with wrong content-length", (done) => {
 
