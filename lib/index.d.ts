@@ -195,8 +195,8 @@ declare module "node-pluginsmanager-plugin" {
 
 			// init / release
 
-			public load(): Promise<void>;
-			public destroy(): Promise<void>;
+			public load(data?: any): Promise<void>;
+			public destroy(data?: any): Promise<void>;
 
 			// write
 
