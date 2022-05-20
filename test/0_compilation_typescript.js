@@ -1,15 +1,16 @@
+
 "use strict";
 
 // deps
 
 	// natives
-	const { exec } = require("child_process");
+	// const { exec } = require("child_process");
 	const { join } = require("path");
 	const { unlink } = require("fs");
 
 // consts
 
-	const MAX_TIMEOUT = 10000;
+	// const MAX_TIMEOUT = 10000;
 
 // tests
 
@@ -23,9 +24,9 @@ describe("compilation typescript", () => {
 
 	});
 
-	it("should compile typescript file", (done) => {
+	/* it("should compile typescript file", (done) => {
 
-		exec("npx tsc " + join(__dirname, "typescript", "compilation.ts"), {
+		exec("npx tsc " + join(__dirname, "typescript", "compilation.ts") + " --downlevelIteration --esModuleInterop", {
 			"cwd": join(__dirname, ".."),
 			"windowsHide": true
 		}, (err) => {
@@ -33,5 +34,16 @@ describe("compilation typescript", () => {
 		});
 
 	}).timeout(MAX_TIMEOUT);
+
+	it("should exec compiled typescript file", (done) => {
+
+		exec("node " + join(__dirname, "typescript", "compilation.js"), {
+			"cwd": join(__dirname, ".."),
+			"windowsHide": true
+		}, (err) => {
+			return err ? done(err) : done();
+		});
+
+	}); */
 
 });
