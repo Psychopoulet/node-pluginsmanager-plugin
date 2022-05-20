@@ -8,7 +8,7 @@
 	import { join } from 'path';
 
 	// locals
-	import { Orchestrator, Mediator, Server } from "../../lib/main.js";
+	import { Orchestrator, Mediator, Server } from "node-pluginsmanager-plugin";
 
 	console.log(Orchestrator);
 	console.log(Mediator);
