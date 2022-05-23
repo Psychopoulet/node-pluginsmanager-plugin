@@ -80,19 +80,19 @@ declare module "node-pluginsmanager-plugin" {
 
 	// components
 
-		type tLogType = "log" | "info" | "warning" | "error" | "debug";
+		export type tLogType = "log" | "info" | "warning" | "error" | "debug";
 
-		interface iDescriptorUserOptions {
+		export interface iDescriptorUserOptions {
 			"descriptor": { [key:string]: any };
 			"externalRessourcesDirectory": string;
 			"logger"?: (type: tLogType, message: string, bold?: boolean) => void;
 		}
 
-			interface iMediatorUserOptions extends iDescriptorUserOptions {
+		export interface iMediatorUserOptions extends iDescriptorUserOptions {
 				"mediator": Mediator | null;
 			}
 
-		interface iUrlParameters {
+		export interface iUrlParameters {
 			"url": {
 				"path": object;
 				"query": object;
@@ -101,7 +101,7 @@ declare module "node-pluginsmanager-plugin" {
 			};
 		}
 
-		interface iOrchestratorOptions {
+		export interface iOrchestratorOptions {
 			"externalRessourcesDirectory": string;
 			"packageFile": string;
 			"descriptorFile": string;
