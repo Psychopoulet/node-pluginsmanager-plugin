@@ -10,11 +10,7 @@
 	// locals
 	import { Orchestrator, Mediator, Server } from "node-pluginsmanager-plugin";
 
-	console.log(Orchestrator);
-	console.log(Mediator);
-	console.log(Server);
-
-// consts
+// classes
 
 	class OrchestratorTest extends Orchestrator {
 
@@ -24,15 +20,21 @@
 
 	}
 
-	const orchestrator = new OrchestratorTest({
+// consts
+
+	const orchestrator: OrchestratorTest = new OrchestratorTest({
 		"externalRessourcesDirectory": ".",
 		"packageFile": join(__dirname, "..", "..", "package.json"),
 		"descriptorFile": join(__dirname, "..", "utils", "DescriptorUser", "Descriptor.json"),
-		"mediatorFile": join(__dirname, "..", "..", "lib", "components", "Mediator.js"),
+		"mediatorFile": join(__dirname, "..", "utils", "Mediator", "LocalMediator.js"),
 		"serverFile": join(__dirname, "..", "..", "lib", "components", "Server.js")
 	});
 
 // module
+
+console.log(Orchestrator);
+console.log(Mediator);
+console.log(Server);
 
 console.log(orchestrator);
 
