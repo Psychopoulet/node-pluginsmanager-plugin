@@ -84,7 +84,7 @@ declare module "node-pluginsmanager-plugin" {
 
 		export interface iDescriptorUserOptions {
 			"descriptor": { [key:string]: any };
-			"externalRessourcesDirectory": string;
+			"externalRessourcesDirectory": string; // used to write local data like sqlite database, json files, pictures, etc...
 			"logger"?: (type: tLogType, message: string, bold?: boolean) => void;
 		}
 
@@ -102,13 +102,15 @@ declare module "node-pluginsmanager-plugin" {
 		}
 
 		export interface iOrchestratorOptions {
-			"externalRessourcesDirectory": string;
-			"packageFile": string;
-			"descriptorFile": string;
-			"mediatorFile": string;
-			"serverFile": string;
+			"externalRessourcesDirectory": string; // used to write local data like sqlite database, json files, pictures, etc...
+			"packageFile": string; // package file used by the plugin (absolute path)
+			"descriptorFile": string; // descriptor file used by the plugin (absolute path)
+			"mediatorFile": string; // mediator file used by the plugin (absolute path)
+			"serverFile": string; // server file used by the plugin (absolute path)
 		}
 
+		// Please note the fact that "_initWorkSpace" and "_releaseWorkSpace" method MUST be re-writted in Mediator class, and not in MediatorUser childs.
+		// Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic.
 		export class DescriptorUser extends EventEmitter {
 
 			// attributes
@@ -154,16 +156,17 @@ declare module "node-pluginsmanager-plugin" {
 
 			// methods
 
-				public checkParameters(operationId: string, urlParams: iUrlParameters, bodyParams: object): Promise<void>;
-				public checkResponse(operationId: string, res: Response): Promise<void>;
+				public checkParameters(operationId: string, urlParams: iUrlParameters, bodyParams: object): Promise<void>; // Check sended parameters by method name (used by the Server)
+				public checkResponse(operationId: string, res: Response): Promise<void>; // Check sended parameters by method name (used by the Server)
 
 		}
 
+		// Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic
 		export class MediatorUser extends DescriptorUser {
 
 			// attributes
 
-				protected _Mediator: Mediator | null;
+				protected _Mediator: Mediator | null; // provided by "mediator" option, sent by the [Orchestrator](./Orchestrator.md)
 
 			// constructor
 
@@ -175,6 +178,7 @@ declare module "node-pluginsmanager-plugin" {
 
 		}
 
+		// Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic.
 		export class Server extends MediatorUser {
 
 			// attributes
@@ -200,6 +204,7 @@ declare module "node-pluginsmanager-plugin" {
 
 		}
 
+		// Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic.
 		export class Orchestrator extends MediatorUser {
 
 			// attributes
@@ -243,8 +248,8 @@ declare module "node-pluginsmanager-plugin" {
 
 				// checkers
 
-				public checkConf(): Promise<void>;
-				public isEnable(): Promise<void>;
+				public checkConf(): Promise<void>; // check plugin's conf (optional, can be re-writted if a specific conf is used)
+				public isEnable(): Promise<void>; // used to define plugin execution (optional, can be re-writted with a local plugins manager) (WARNING : it's an asynchronous setter, not a getter)
 				public checkFiles(): Promise<void>;
 				public checkServer(): Promise<void>;
 

@@ -1,4 +1,4 @@
-# Mediator
+# Mediator (extends [DescriptorUser](./DescriptorUser.md))
 
 [<= Architecture](./architecture.md)
 
@@ -13,26 +13,9 @@
 
 You will have to add all the methods you need here to pilote the targeted use (API, device, etc...)
 
-## Interfaces
+## Code
 
-```typescript
-interface iUrlParameters {
-  "url": {
-    "path": object;
-    "query": object;
-    "headers": object;
-    "cookies": object;
-  };
-}
-```
-
-## Class (extends [DescriptorUser](./DescriptorUser.md))
-
-### Attributes
-
-### Methods
-
-  * ``` public checkParameters(operationId: string, urlParams: iUrlParameters, bodyParams: object): Promise<void>; ``` Check sended parameters by method name (used by the [Server](./Server.md))
+[check the TypeScript definition file](../lib/index.d.ts)
 
 ## Descriptor interactions
 
