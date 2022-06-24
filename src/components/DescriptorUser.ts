@@ -5,8 +5,10 @@
 	// natives
 	import Events from "events";
 
-	// locals
+	// externals
 	import { OpenApiDocument } from "express-openapi-validate";
+
+	// locals
 	import checkObject from "../checkers/TypeError/checkObject";
 	import checkNonEmptyObject from "../checkers/RangeError/checkNonEmptyObject";
 	import checkNonEmptyString from "../checkers/RangeError/checkNonEmptyString";
@@ -14,7 +16,7 @@
 // types & interfaces
 
 	export type tLogType = "log" | "info" | "success" | "warning" | "error";
-	export type tLogger = (type: tLogType, message: string, bold?: boolean, pluginName?: string) => void;
+	export type tLogger = (type: tLogType, message: string | Error, bold?: boolean, pluginName?: string) => void;
 
 	export interface iDescriptorUserOptions {
 		"descriptor": OpenApiDocument;
@@ -86,7 +88,7 @@ export default class DescriptorUser extends Events {
 
 		}
 
-		protected _log(type: tLogType, message: string, bold?: boolean): this {
+		protected _log(type: tLogType, message: string | Error, bold?: boolean): this {
 
 			if (message && "function" === typeof this._Logger && LOG_TYPES_ALLOWED.includes(type)) {
 				(this._Logger as tLogger)(type, message, bold, this.getPluginName());

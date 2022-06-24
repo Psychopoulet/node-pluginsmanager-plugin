@@ -4,79 +4,8 @@
 
 declare module "node-pluginsmanager-plugin" {
 
-	import { EventEmitter } from "events";
 	import { Server as WebSocketServer } from "ws";
 	import { Server as SocketIOServer } from "socket.io";
-
-	// checkers
-
-		// undefined
-		export function checkExists (dataName: string, data: any, async?: boolean): Promise<void>;
-		export function checkExists (dataName: string, data: any, async: boolean): null | ReferenceError;
-
-		// native
-		export function checkBoolean (dataName: string, data: any, async?: boolean): Promise<void>;
-		export function checkBoolean (dataName: string, data: any, async: boolean): null | ReferenceError | TypeError;
-
-		export function checkFunction (dataName: string, data: any, async?: boolean): Promise<void>;
-		export function checkFunction (dataName: string, data: any, async: boolean): null | ReferenceError | TypeError;
-
-		export function checkNumber (dataName: string, data: any, async?: boolean): Promise<void>;
-		export function checkNumber (dataName: string, data: any, async: boolean): null | ReferenceError | TypeError;
-
-		export function checkObject (dataName: string, data: any, async?: boolean): Promise<void>;
-		export function checkObject (dataName: string, data: any, async: boolean): null | ReferenceError | TypeError;
-
-		export function checkString (dataName: string, data: any, async?: boolean): Promise<void>;
-		export function checkString (dataName: string, data: any, async: boolean): null | ReferenceError | TypeError;
-
-		// abstract
-		export function checkArray (dataName: string, data: any, async?: boolean): Promise<void>;
-		export function checkArray (dataName: string, data: any, async: boolean): null | ReferenceError | TypeError;
-
-		export function checkInteger (dataName: string, data: any, async?: boolean): Promise<void>;
-		export function checkInteger (dataName: string, data: any, async: boolean): null | ReferenceError | TypeError;
-
-		// empty
-		export function checkNonEmptyArray (dataName: string, data: any, async?: boolean): Promise<void>;
-		export function checkNonEmptyArray (dataName: string, data: any, async: boolean): null | ReferenceError | TypeError | RangeError;
-
-		export function checkNonEmptyInteger (dataName: string, data: any, async?: boolean): Promise<void>;
-		export function checkNonEmptyInteger (dataName: string, data: any, async: boolean): null | ReferenceError | TypeError | RangeError;
-
-		export function checkNonEmptyNumber (dataName: string, data: any, async?: boolean): Promise<void>;
-		export function checkNonEmptyNumber (dataName: string, data: any, async: boolean): null | ReferenceError | TypeError | RangeError;
-
-		export function checkNonEmptyObject (dataName: string, data: any, async?: boolean): Promise<void>;
-		export function checkNonEmptyObject (dataName: string, data: any, async: boolean): null | ReferenceError | TypeError | RangeError;
-
-		export function checkNonEmptyString (dataName: string, data: any, async?: boolean): Promise<void>;
-		export function checkNonEmptyString (dataName: string, data: any, async: boolean): null | ReferenceError | TypeError | RangeError;
-
-		// range
-		export function checkArrayLength (dataName: string, data: any, length: number, async?: boolean): Promise<void>;
-		export function checkArrayLength (dataName: string, data: any, length: number, async: boolean): null | ReferenceError | TypeError | RangeError;
-
-		export function checkArrayLengthBetween (dataName: string, data: any, min: number, max: number, async?: boolean): Promise<void>;
-		export function checkArrayLengthBetween (dataName: string, data: any, min: number, max: number, async: boolean): null | ReferenceError | TypeError | RangeError;
-
-		export function checkIntegerBetween (dataName: string, data: any, min: number, max: number, async?: boolean): Promise<void>;
-		export function checkIntegerBetween (dataName: string, data: any, min: number, max: number, async: boolean): null | ReferenceError | TypeError | RangeError;
-
-		export function checkNumberBetween (dataName: string, data: any, min: number, max: number, async?: boolean): Promise<void>;
-		export function checkNumberBetween (dataName: string, data: any, min: number, max: number, async: boolean): null | ReferenceError | TypeError | RangeError;
-
-		export function checkObjectLength (dataName: string, data: any, length: number, async?: boolean): Promise<void>;
-		export function checkObjectLength (dataName: string, data: any, length: number, async: boolean): null | ReferenceError | TypeError | RangeError;
-
-		export function checkObjectLengthBetween (dataName: string, data: any, min: number, max: number, async?: boolean): Promise<void>;
-		export function checkObjectLengthBetween (dataName: string, data: any, min: number, max: number, async: boolean): null | ReferenceError | TypeError | RangeError;
-
-		export function checkStringLength (dataName: string, data: any, length: number, async?: boolean): Promise<void>;
-		export function checkStringLength (dataName: string, data: any, length: number, async: boolean): null | ReferenceError | TypeError | RangeError;
-
-		export function checkStringLengthBetween (dataName: string, data: any, min: number, max: number, async?: boolean): Promise<void>;
-		export function checkStringLengthBetween (dataName: string, data: any, min: number, max: number, async: boolean): null | ReferenceError | TypeError | RangeError;
 
 	// components
 
@@ -86,32 +15,6 @@ declare module "node-pluginsmanager-plugin" {
 			"descriptorFile": string; // descriptor file used by the plugin (absolute path)
 			"mediatorFile": string; // mediator file used by the plugin (absolute path)
 			"serverFile": string; // server file used by the plugin (absolute path)
-		}
-
-		// Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic.
-		export class Server extends MediatorUser {
-
-			// attributes
-
-				protected _socketServer: WebSocketServer | SocketIOServer | null;
-				protected _checkParameters: boolean;
-				protected _checkResponse: boolean;
-				protected _cors: boolean;
-
-			// methods
-
-				public disableCheckParameters(): this;
-				public enableCheckParameters(): this;
-				public disableCheckResponse(): this;
-				public enableCheckResponse(): this;
-
-				public disableCors(): this;
-				public enableCors(): this;
-
-				public appMiddleware(req: Request, res: Response, next: Function): void;
-				public socketMiddleware(server: WebSocketServer | SocketIOServer): void;
-				public push(command: string, data?: any): this;
-
 		}
 
 		// Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic.
@@ -188,7 +91,5 @@ declare module "node-pluginsmanager-plugin" {
 				public uninstall(data?: any): Promise<void>;
 
 		}
-
-		export class NotFoundError extends Error {}
 
 }

@@ -6,11 +6,14 @@
 	import { OpenApiValidator, ValidationError, OpenApiDocument } from "express-openapi-validate";
 
 	// locals
+
 	import checkObject from "../checkers/TypeError/checkObject";
 	import checkNonEmptyString from "../checkers/RangeError/checkNonEmptyString";
 	import checkNonEmptyObject from "../checkers/RangeError/checkNonEmptyObject";
-	import DescriptorUser, { iDescriptorUserOptions } from "./DescriptorUser";
+
 	import extractPathMethodByOperationId, { iPathMethod } from "../utils/descriptor/extractPathMethodByOperationId";
+
+	import DescriptorUser, { iDescriptorUserOptions } from "./DescriptorUser";
 
 // types & interfaces
 
