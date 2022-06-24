@@ -8,13 +8,13 @@
 	import { join } from 'path';
 
 	// locals
-	import { Orchestrator, Mediator, Server } from "node-pluginsmanager-plugin";
+	import { Orchestrator, Mediator, Server } = require("../../lib/cjs/main.cjs");
 
 // classes
 
 	class OrchestratorTest extends Orchestrator {
 
-		_initWorkspace () {
+		public _initWorkspace (): Promise<void> {
 			return Promise.resolve();
 		}
 
