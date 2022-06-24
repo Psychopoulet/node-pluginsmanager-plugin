@@ -19,7 +19,7 @@
 
 			let err: ReferenceError | TypeError | RangeError | null = checkNumber(dataName, data, false) as ReferenceError | TypeError | null;
 
-				if (!err && 0 >= data) {
+				if (!err && 0 >= (data as number)) {
 
 					err = new RangeError(
 						"\"" + dataName + "\" must be higher than 0"

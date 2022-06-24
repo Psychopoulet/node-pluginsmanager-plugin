@@ -19,7 +19,7 @@
 
 			let err: ReferenceError | TypeError | RangeError | null = checkString(dataName, data, false) as ReferenceError | TypeError | null;
 
-				if (!err && "" === data.trim()) {
+				if (!err && "" === (data as string).trim()) {
 
 					err = new RangeError(
 						"\"" + dataName + "\" must be higher than 0"

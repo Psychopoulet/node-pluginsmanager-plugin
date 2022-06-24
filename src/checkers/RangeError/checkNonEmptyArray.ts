@@ -19,7 +19,7 @@
 
 			let err: ReferenceError | TypeError | RangeError | null = checkArray(dataName, data, false) as ReferenceError | TypeError | null;
 
-				if (!err && 1 > data.length) {
+				if (!err && 1 > (data as Array<any>).length) {
 
 					err = new RangeError(
 						"\"" + dataName + "\" length must be higher than 0"
