@@ -1,23 +1,40 @@
 {
   "name": "node-pluginsmanager-plugin",
-  "version": "4.8.8",
+  "version": "4.9.0",
   "description": "An abstract parent plugin for node-pluginsmanager",
-  "main": "lib/main.js",
-  "typings": "lib/index.d.ts",
-  "scripts": {
-    "lint": "npx eslint ./lib/**/*.js ./test/**/*.js",
-    "check-updates": "npx check-version-modules",
-    "unit-tests": "npx nyc --reporter=html --reporter=text mocha",
-    "tests": "npm run-script lint && npm run-script check-updates && npm run-script unit-tests",
-    "ci": "npm run-script tests && npx nyc report --reporter=text-lcov | coveralls"
+
+  "type": "commonjs",
+  "typings": "./lib/cjs/main.d.cts",
+  "main": "./lib/cjs/main.cjs",
+
+  "exports": {
+    ".": {
+      "require": {
+        "types": "./lib/cjs/main.d.cts",
+        "default": "./lib/cjs/main.cjs"
+      }
+    }
   },
+
+  "scripts": {
+
+    "check-updates": "npx check-version-modules",
+
+    "compile": "npx tsc --project \"./tsconfig.json\"",
+
+    "unit-tests": "npm run compile && npx nyc --reporter=html --reporter=text mocha",
+    "tests": "npm run-script check-updates && npm run-script unit-tests",
+    "ci": "npm run-script tests && npx nyc report --reporter=text-lcov | coveralls"
+
+  },
+
   "files": [
     "/lib"
   ],
+
   "husky": {
     "hooks": {
-      "pre-commit": "npm run-script lint",
-      "pre-push": "npm run-script tests"
+		"pre-push": "npm run-script tests"
     }
   },
   "repository": {
@@ -39,20 +56,19 @@
     "express-openapi-validate": "0.6.1"
   },
   "devDependencies": {
-    "@types/node": "17.0.36",
+    "@types/node": "18.0.0",
     "@types/socket.io": "3.0.2",
     "@types/ws": "8.5.3",
     "check-version-modules": "1.3.5",
     "coveralls": "3.1.1",
     "colors": "1.4.0",
-    "eslint": "8.16.0",
     "express": "4.18.1",
     "husky": "8.0.1",
     "mocha": "10.0.0",
     "nyc": "15.1.0",
     "socket.io": "4.5.1",
     "socket.io-client": "4.5.1",
-    "typescript": "4.7.2",
+    "typescript": "4.7.4",
     "ws": "8.7.0"
   },
   "homepage": "https://github.com/Psychopoulet/node-pluginsmanager-plugin#readme",
