@@ -17,7 +17,7 @@
 		*/
 		function _checkSync (dataName: string, data: any): ReferenceError | TypeError | RangeError | null {
 
-			let err: ReferenceError | TypeError | null = checkObject(dataName, data, false) as ReferenceError | TypeError | null;
+			let err: ReferenceError | TypeError | RangeError | null = checkObject(dataName, data, false) as ReferenceError | TypeError | null;
 
 				if (!err && 1 > Object.keys(data).length) {
 

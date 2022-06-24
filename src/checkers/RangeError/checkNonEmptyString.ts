@@ -17,7 +17,7 @@
 		*/
 		function _checkSync (dataName: string, data: any): ReferenceError | TypeError | RangeError | null {
 
-			let err: ReferenceError | TypeError | null = checkString(dataName, data, false) as ReferenceError | TypeError | null;
+			let err: ReferenceError | TypeError | RangeError | null = checkString(dataName, data, false) as ReferenceError | TypeError | null;
 
 				if (!err && "" === data.trim()) {
 
