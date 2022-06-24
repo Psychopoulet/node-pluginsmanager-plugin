@@ -80,102 +80,12 @@ declare module "node-pluginsmanager-plugin" {
 
 	// components
 
-		export type tLogType = "log" | "info" | "warning" | "error" | "debug";
-
-		export interface iDescriptorUserOptions {
-			"descriptor": { [key:string]: any };
-			"externalRessourcesDirectory": string; // used to write local data like sqlite database, json files, pictures, etc...
-			"logger"?: (type: tLogType, message: string, bold?: boolean) => void;
-		}
-
-		export interface iMediatorUserOptions extends iDescriptorUserOptions {
-				"mediator": Mediator | null;
-			}
-
-		export interface iUrlParameters {
-			"url": {
-				"path": object;
-				"query": object;
-				"headers": object;
-				"cookies": object;
-			};
-		}
-
 		export interface iOrchestratorOptions {
 			"externalRessourcesDirectory": string; // used to write local data like sqlite database, json files, pictures, etc...
 			"packageFile": string; // package file used by the plugin (absolute path)
 			"descriptorFile": string; // descriptor file used by the plugin (absolute path)
 			"mediatorFile": string; // mediator file used by the plugin (absolute path)
 			"serverFile": string; // server file used by the plugin (absolute path)
-		}
-
-		// Please note the fact that "_initWorkSpace" and "_releaseWorkSpace" method MUST be re-writted in Mediator class, and not in MediatorUser childs.
-		// Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic.
-		export class DescriptorUser extends EventEmitter {
-
-			// attributes
-
-				// public
-
-					public initialized: boolean;
-
-				// protected
-
-					protected _descriptorValidated: boolean;
-
-					protected _externalRessourcesDirectory: string;
-
-					protected _Descriptor: object | null;
-					protected _Logger: Function | null;
-
-			// constructor
-
-				constructor (options: iDescriptorUserOptions);
-
-			// methods
-
-				// protected
-
-					protected _initWorkSpace(data?: any): Promise<void>;
-					protected _releaseWorkSpace(data?: any): Promise<void>;
-					protected _log(type: tLogType, message: string, bold?: boolean): this;
-
-				// public
-
-					public checkDescriptor(): Promise<void>;
-					public init(data?: any): Promise<void>;
-					public release(data?: any): Promise<void>;
-
-		}
-
-		export class Mediator extends DescriptorUser {
-
-			// attributes
-
-				public _validator: null | object;
-
-			// methods
-
-				public checkParameters(operationId: string, urlParams: iUrlParameters, bodyParams: object): Promise<void>; // Check sended parameters by method name (used by the Server)
-				public checkResponse(operationId: string, res: Response): Promise<void>; // Check sended parameters by method name (used by the Server)
-
-		}
-
-		// Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic
-		export class MediatorUser extends DescriptorUser {
-
-			// attributes
-
-				protected _Mediator: Mediator | null; // provided by "mediator" option, sent by the [Orchestrator](./Orchestrator.md)
-
-			// constructor
-
-				constructor (options: iMediatorUserOptions);
-
-			// methods
-
-				public checkMediator(): Promise<void>;
-
 		}
 
 		// Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic.

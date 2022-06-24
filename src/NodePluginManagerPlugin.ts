@@ -24,11 +24,14 @@
 	export * from "./checkers/RangeError/checkNonEmptyString";
 
 	// range
-	export * from "./checkers/RangeError/checkArrayLength";
-	export * from "./checkers/RangeError/checkArrayLengthBetween";
+
 	export * from "./checkers/RangeError/checkIntegerBetween";
 	export * from "./checkers/RangeError/checkNumberBetween";
+
+	export * from "./checkers/RangeError/checkArrayLength";
+	export * from "./checkers/RangeError/checkArrayLengthBetween";
 	export * from "./checkers/RangeError/checkObjectLength";
+	export * from "./checkers/RangeError/checkObjectLengthBetween";
 	export * from "./checkers/RangeError/checkStringLength";
 	export * from "./checkers/RangeError/checkStringLengthBetween";
 

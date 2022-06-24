@@ -43,6 +43,7 @@ export default class Mediator extends DescriptorUser {
 
 	// public
 
+		 // Check sended parameters by method name (used by the Server)
 		public checkParameters (operationId: string, urlParams: iUrlParameters, bodyParams: { [key:string]: any }): Promise<unknown> | Promise<void> {
 
 			// parameters validation
@@ -121,6 +122,7 @@ export default class Mediator extends DescriptorUser {
 
 		}
 
+		// Check sended parameters by method name (used by the Server)
 		public checkResponse (operationId: string, res): Promise<void> {
 
 			// parameters validation
