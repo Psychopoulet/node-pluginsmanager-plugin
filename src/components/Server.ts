@@ -6,13 +6,14 @@
 	import { join } from "path";
 	import { parse } from "url";
 	import { EOL } from "os";
-	import { IncomingMessage, ServerResponse } from "http";
+	import { IncomingMessage, ServerResponse as HTTPServerResponse } from "http";
+	import { ServerResponse as HTTPSServerResponse } from "http";
 
 	// externals
 
 	import { OpenApiDocument } from "express-openapi-validate";
 
-	import { Server as WebSocketServer } from "ws";
+	import { Server as WebSocketServer, WebSocket } from "ws";
 	import { Server as SocketIOServer } from "socket.io";
 
 	// locals
@@ -37,13 +38,37 @@
 
 // types & interfaces
 
+	interface iSendedError {
+		"code": string;
+		"message": string;
+	}
+
+	interface iPush {
+		"plugin": string;
+		"command": string;
+		"data"?: any;
+	}
+
+	interface iClient {
+		"id": string;
+		"status": "CONNECTED" | "DISCONNECTED";
+	}
+
+	// extensions
+
 	export interface iIncomingMessage extends IncomingMessage {
+		"method": string;
 		"pattern": string;
 		"validatedIp": string;
 		"headers": { [key:string]: any; };
 		"cookies": { [key:string]: any; };
 		"query": { [key:string]: any; };
 		"params": { [key:string]: any; };
+		"body": { [key:string]: any; };
+	}
+
+	interface iWebSocketWithId extends WebSocket {
+		"id"?: string;
 	}
 
 // consts
@@ -123,7 +148,7 @@ export default class Server extends MediatorUser {
 			this._cors = true; return this;
 		}
 
-		public appMiddleware (_req: IncomingMessage | iIncomingMessage, res: ServerResponse, next: Function): void { // req, res, next : void
+		public appMiddleware (_req: IncomingMessage | iIncomingMessage, res: HTTPServerResponse | HTTPSServerResponse, next: Function): void { // req, res, next : void
 
 			const req: iIncomingMessage = _req as iIncomingMessage;
 
@@ -139,7 +164,7 @@ export default class Server extends MediatorUser {
 
 				// parse
 				const { pathname, query }: { "pathname": string | null; "query": any; } = parse((req.url as string), true);
-				req.method = (req.method as string).toLowerCase();
+				req.method = req.method ? req.method.toLowerCase() : "get";
 				req.pattern = !checkNonEmptyString("pattern", req.pattern, false) ? req.pattern : extractPattern(
 					(this._Descriptor as OpenApiDocument).paths, pathname as string, req.method
 				);
@@ -154,7 +179,7 @@ export default class Server extends MediatorUser {
 				req.headers = !checkNonEmptyObject("headers", req.headers, false) ? req.headers : {};
 				req.cookies = !checkNonEmptyObject("cookies", req.cookies, false) ? req.cookies : extractCookies(req);
 				req.query = !checkNonEmptyObject("query", req.query, false) ? req.query : query || {};
-				req.params = !checkNonEmptyObject("params", req.params, false) ? req.params : extractParams(req.pattern, pathname);
+				req.params = !checkNonEmptyObject("params", req.params, false) ? req.params : extractParams(req.pattern, pathname as string);
 
 				// ensure content length formate
 				if ("undefined" === typeof req.headers["content-length"]) {
@@ -217,12 +242,12 @@ export default class Server extends MediatorUser {
 
 						return Promise.resolve(api);
 
-					}).then((api: OpenApiDocument) => {
+					}).then((api: OpenApiDocument): Promise<void> => {
 
 						this._log("info", "<= [" + req.validatedIp + "] " + JSON.stringify(api));
 						return send(req, res, SERVER_CODES.OK, api, (this._Descriptor as OpenApiDocument).info.version, this._cors);
 
-					}).catch((err: Error) => {
+					}).catch((err: Error): Promise<void> => {
 
 						this._log("error", err);
 
@@ -293,23 +318,23 @@ export default class Server extends MediatorUser {
 				else {
 
 					// force formate for path parameters
-					return Promise.resolve().then(() => {
+					return Promise.resolve().then((): Promise<void> => {
 
-						const keys = Object.keys(req.params);
-						return !keys.length ? Promise.resolve() : Promise.resolve().then(() => {
+						const keys: Array<string> = Object.keys(req.params);
+						return !keys.length ? Promise.resolve() : Promise.resolve().then((): Promise<void> => {
 
-							const docParameters = (this._Descriptor as OpenApiDocument).paths[req.pattern][req.method].parameters.filter((p) => {
+							const docParameters = (this._Descriptor as OpenApiDocument).paths[req.pattern][req.method].parameters.filter((p): boolean => {
 								return "path" === p.in;
 							});
 
-							return !docParameters.length ? Promise.resolve() : Promise.resolve().then(() => {
+							return !docParameters.length ? Promise.resolve() : Promise.resolve().then((): Promise<void> => {
 
 								let err: Error | null = null;
-								for (let i = 0; i < keys.length; ++i) {
+								for (let i: number = 0; i < keys.length; ++i) {
 
 									const key = keys[i];
 
-									const schema = docParameters.find((dp) => {
+									const schema = docParameters.find((dp): boolean => {
 										return dp.name === key;
 									}).schema || null;
 
@@ -317,7 +342,7 @@ export default class Server extends MediatorUser {
 										err = new ReferenceError("Unknown parameter: request.params['" + key + "']"); break;
 									}
 
-									switch (extractSchemaType(schema, (this._Descriptor as OpenApiDocument).components.schemas)) {
+									switch (extractSchemaType(schema, ((this._Descriptor as OpenApiDocument).components as { [key:string]: any }).schemas)) {
 
 										case "boolean":
 
@@ -346,7 +371,7 @@ export default class Server extends MediatorUser {
 											// error returned, not an integer
 											if (checkInteger("request.params['" + key + "']", req.params[key], false)) {
 
-												const value = parseInt(req.params[key], 10);
+												const value: number = parseInt(req.params[key], 10);
 
 												if (!Number.isNaN(value)) {
 													req.params[key] = value;
@@ -367,7 +392,7 @@ export default class Server extends MediatorUser {
 
 											if ("number" !== typeof req.params[key]) {
 
-												const value = parseFloat(req.params[key]);
+												const value: number = parseFloat(req.params[key]);
 
 												if (!Number.isNaN(value)) {
 													req.params[key] = value;
@@ -399,7 +424,7 @@ export default class Server extends MediatorUser {
 						});
 
 					// extract body
-					}).then(() => {
+					}).then((): Promise<{ [key:string]: string }> => {
 
 						if ("get" === req.method.toLowerCase()) {
 							return Promise.resolve({});
@@ -409,7 +434,7 @@ export default class Server extends MediatorUser {
 						}
 						else {
 
-							return extractBody(req).then((body) => {
+							return extractBody(req).then((body): Promise<{ [key:string]: string }> => {
 
 								req.body = body.parsed;
 
@@ -424,7 +449,7 @@ export default class Server extends MediatorUser {
 						}
 
 					// formate data
-					}).then((body) => {
+					}).then((body: { [key:string]: string }): Promise<void> => {
 
 						const parsed = {
 							"url": {
@@ -437,21 +462,21 @@ export default class Server extends MediatorUser {
 						};
 
 						// check parameters
-						return Promise.resolve().then(() => {
+						return Promise.resolve().then((): Promise<void> => {
 
-							return this._checkParameters ? this._Mediator.checkParameters(
+							return this._checkParameters ? (this._Mediator as Mediator).checkParameters(
 								operationId, parsed.url, parsed.body
 							) : Promise.resolve();
 
 						// execute Mediator method
 						}).then(() => {
 
-							return this._Mediator[operationId](parsed.url, parsed.body);
+							return (this._Mediator as Mediator)[operationId](parsed.url, parsed.body);
 
 						});
 
 					// send response
-					}).then((content) => {
+					}).then((content: any): Promise<void> => {
 
 						// created
 						if ("put" === req.method) {
@@ -479,11 +504,11 @@ export default class Server extends MediatorUser {
 							return send(req, res, SERVER_CODES.OK, content, (this._Descriptor as OpenApiDocument).info.version, this._cors);
 						}
 
-					}).catch((err) => {
+					}).catch((err: Error): Promise<void> => {
 
 						if (err instanceof ReferenceError) {
 
-							const result = {
+							const result: iSendedError = {
 								"code": "MISSING_PARAMETER",
 								"message": cleanSendedError(err)
 							};
@@ -494,7 +519,7 @@ export default class Server extends MediatorUser {
 						}
 						else if (err instanceof TypeError) {
 
-							const result = {
+							const result: iSendedError = {
 								"code": "WRONG_TYPE_PARAMETER",
 								"message": cleanSendedError(err)
 							};
@@ -505,7 +530,7 @@ export default class Server extends MediatorUser {
 						}
 						else if (err instanceof RangeError) {
 
-							const result = {
+							const result: iSendedError = {
 								"code": "EMPTY_OR_RANGE_OR_ENUM_PARAMETER",
 								"message": cleanSendedError(err)
 							};
@@ -516,7 +541,7 @@ export default class Server extends MediatorUser {
 						}
 						else if (err instanceof SyntaxError) {
 
-							const result = {
+							const result: iSendedError = {
 								"code": "JSON_PARSE",
 								"message": cleanSendedError(err)
 							};
@@ -527,7 +552,7 @@ export default class Server extends MediatorUser {
 						}
 						else if (err instanceof NotFoundError) {
 
-							const result = {
+							const result: iSendedError = {
 								"code": "NOT_FOUND",
 								"message": cleanSendedError(err)
 							};
@@ -540,7 +565,7 @@ export default class Server extends MediatorUser {
 
 							this._log("error", err);
 
-							const result = {
+							const result: iSendedError = {
 								"code": "INTERNAL_SERVER_ERROR",
 								"message": cleanSendedError(err)
 							};
@@ -551,20 +576,20 @@ export default class Server extends MediatorUser {
 						}
 
 					// check response
-					}).then(() => {
+					}).then((): Promise<void> => {
 
-						return this._checkResponse ? this._Mediator.checkResponse(operationId, res) : Promise.resolve();
+						return this._checkResponse ? (this._Mediator as Mediator).checkResponse(operationId, res) : Promise.resolve();
 
 					});
 
 				}
 
-			}).then(() => {
+			}).then((): void => {
 
 				// nothing to do here
 				// must not be blocking in http server or express app
 
-			}).catch((err) => {
+			}).catch((err: Error): void => {
 				this._log("error", err);
 			});
 
@@ -576,7 +601,7 @@ export default class Server extends MediatorUser {
 
 		public push (command: string, data?: any, log: boolean = true): this {
 
-			const serverType = this._serverType();
+			const serverType: "NO_SERVER" | "WEBSOCKET" | "SOCKETIO" | "UNKNOWN" = this._serverType();
 
 			if (![ "WEBSOCKET", "SOCKETIO" ].includes(serverType)) {
 				return this;
@@ -585,7 +610,7 @@ export default class Server extends MediatorUser {
 			// valid descriptor && formate data
 			this.checkDescriptor().then((): Promise<string> => {
 
-				const result = {
+				const result: iPush = {
 					"plugin": (this._Descriptor as OpenApiDocument).info.title,
 					command
 				};
@@ -597,7 +622,7 @@ export default class Server extends MediatorUser {
 				return Promise.resolve(JSON.stringify(result));
 
 			// log & send data
-			}).then((result) => {
+			}).then((result: string): void => {
 
 				if (log) {
 					this._log("info", "<= [PUSH] " + result, true);
@@ -607,7 +632,7 @@ export default class Server extends MediatorUser {
 
 					case "WEBSOCKET":
 
-						this._socketServer.clients.forEach((client) => {
+						(this._socketServer as WebSocketServer).clients.forEach((client: iWebSocketWithId): void => {
 
 							if (!client.id) {
 								client.id = getUniqueID();
@@ -622,7 +647,7 @@ export default class Server extends MediatorUser {
 					break;
 
 					case "SOCKETIO":
-						this._socketServer.sockets.emit("message", result);
+						(this._socketServer as SocketIOServer).sockets.emit("message", result);
 					break;
 
 					default:
@@ -631,7 +656,7 @@ export default class Server extends MediatorUser {
 
 				}
 
-			}).catch((err) => {
+			}).catch((err: Error): void => {
 				this._log("error", err);
 			});
 
@@ -639,30 +664,34 @@ export default class Server extends MediatorUser {
 
 		}
 
-		public getClients () {
+		public getClients (): Array<iClient> {
 
 			switch (this._serverType()) {
 
 				case "WEBSOCKET":
 
-					return this._socketServer.clients.map((s) => {
+					const result: Array<iClient> = [];
 
-						if (!s.id) {
-							s.id = getUniqueID();
-						}
+						(this._socketServer as WebSocketServer).clients.forEach((s: { "id"?: string; "readyState": number; }): iClient => {
 
-						return {
-							"id": s.id,
-							"status": WEBSOCKET_STATE_OPEN === s.readyState ? "CONNECTED" : "DISCONNECTED"
-						};
+							if (!s.id) {
+								s.id = getUniqueID();
+							}
 
-					});
+							return {
+								"id": s.id,
+								"status": WEBSOCKET_STATE_OPEN === s.readyState ? "CONNECTED" : "DISCONNECTED"
+							};
+
+						});
+
+					return result;
 
 				case "SOCKETIO": {
 
-					const result = [];
+					const result: Array<iClient> = [];
 
-						this._socketServer.sockets.sockets.forEach((s) => {
+						(this._socketServer as SocketIOServer).sockets.sockets.forEach((s): void => {
 
 							result.push({
 								"id": s.id,
@@ -682,7 +711,7 @@ export default class Server extends MediatorUser {
 
 		}
 
-		public pushClient (clientId, command, data, log = true) {
+		public pushClient (clientId: string, command: string, data: any, log: boolean = true): this {
 
 			const serverType = this._serverType();
 
@@ -691,9 +720,9 @@ export default class Server extends MediatorUser {
 			}
 
 			// valid descriptor && formate data
-			this.checkDescriptor().then(() => {
+			this.checkDescriptor().then((): Promise<string> => {
 
-				const result = {
+				const result: iPush = {
 					"plugin": (this._Descriptor as OpenApiDocument).info.title,
 					command
 				};
@@ -705,13 +734,13 @@ export default class Server extends MediatorUser {
 				return Promise.resolve(JSON.stringify(result));
 
 			// log & send data
-			}).then((result) => {
+			}).then((result: string): void => {
 
 				switch (serverType) {
 
 					case "WEBSOCKET":
 
-						this._socketServer.clients.forEach((client) => {
+						(this._socketServer as WebSocketServer).clients.forEach((client: iWebSocketWithId): void => {
 
 							if (!client.id) {
 								client.id = getUniqueID();
@@ -732,11 +761,11 @@ export default class Server extends MediatorUser {
 
 					case "SOCKETIO":
 
-						if (this._socketServer.sockets.sockets.has(clientId)) {
+						if ((this._socketServer as SocketIOServer).sockets.sockets.has(clientId)) {
 
-							const socket = this._socketServer.sockets.sockets.get(clientId);
+							const socket = (this._socketServer as SocketIOServer).sockets.sockets.get(clientId);
 
-							if (socket.connected) {
+							if (socket && socket.connected) {
 
 								if (log) {
 									this._log("info", "<= [PUSH|" + clientId + "] " + result);
@@ -755,7 +784,7 @@ export default class Server extends MediatorUser {
 					break;
 
 				}
-			}).catch((err) => {
+			}).catch((err: Error): void => {
 				this._log("error", err);
 			});
 
@@ -765,13 +794,13 @@ export default class Server extends MediatorUser {
 
 		// init / release
 
-			public init (...data) {
+			public init (...data): Promise<void> {
 
-				return this.checkDescriptor().then(() => {
+				return this.checkDescriptor().then((): Promise<void> => {
 					return this.checkMediator();
-				}).then(() => {
+				}).then((): Promise<void> => {
 					return this._initWorkSpace(...data);
-				}).then(() => {
+				}).then((): void => {
 
 					this.initialized = true;
 					this.emit("initialized", ...data);
@@ -780,9 +809,9 @@ export default class Server extends MediatorUser {
 
 			}
 
-			public release (...data) {
+			public release (...data): Promise<void> {
 
-				return this._releaseWorkSpace(...data).then(() => {
+				return this._releaseWorkSpace(...data).then((): void => {
 
 					// can only be released by Orchestrator
 					if (this._Descriptor) {
@@ -800,7 +829,7 @@ export default class Server extends MediatorUser {
 					this.initialized = false;
 					this.emit("released", ...data);
 
-				}).then(() => {
+				}).then((): void => {
 
 					this.removeAllListeners();
 

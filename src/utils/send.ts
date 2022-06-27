@@ -7,7 +7,7 @@
 
 // module
 
-export default function send (req: IncomingMessage, res: any, code: number, content: string, apiVersion: string, cors: boolean): Promise<void> {
+export default function send (req: IncomingMessage, res: any, code: number, content: any, apiVersion: string, cors: boolean): Promise<void> {
 
 	return new Promise((resolve: () => void): void => {
 
