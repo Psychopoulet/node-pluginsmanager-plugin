@@ -1,5 +1,10 @@
 "use strict";
 
+// deps
+
+	// locals
+	import { iIncomingMessage } from "../../components/Server";
+
 // private
 
 	// methods
@@ -34,7 +39,7 @@
 
 // module
 
-export default function extractCookies (req: any): { [key:string]: string } {
+export default function extractCookies (req: iIncomingMessage): { [key:string]: string } {
 
 	if ("object" !== typeof req) {
 		return {};

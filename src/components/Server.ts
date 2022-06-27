@@ -37,7 +37,7 @@
 
 // types & interfaces
 
-	interface iIncomingMessage extends IncomingMessage {
+	export interface iIncomingMessage extends IncomingMessage {
 		"pattern": string;
 		"validatedIp": string;
 		"headers": { [key:string]: any; };
@@ -138,10 +138,10 @@ export default class Server extends MediatorUser {
 			this.checkDescriptor().then(() => {
 
 				// parse
-				const { pathname, query } = parse((req.url as string), true);
+				const { pathname, query }: { "pathname": string | null; "query": any; } = parse((req.url as string), true);
 				req.method = (req.method as string).toLowerCase();
 				req.pattern = !checkNonEmptyString("pattern", req.pattern, false) ? req.pattern : extractPattern(
-					(this._Descriptor as OpenApiDocument).paths, pathname, req.method
+					(this._Descriptor as OpenApiDocument).paths, pathname as string, req.method
 				);
 
 				if (!req.pattern) {
@@ -173,7 +173,7 @@ export default class Server extends MediatorUser {
 					return next();
 				}
 
-				const { operationId } = (this._Descriptor as OpenApiDocument).paths[req.pattern][req.method];
+				const { operationId }: { "operationId": string; } = (this._Descriptor as OpenApiDocument).paths[req.pattern][req.method];
 
 				this._log("info", "" +
 					"=> [" + req.validatedIp + "] " + req.url + " (" + req.method.toUpperCase() + ")" +
