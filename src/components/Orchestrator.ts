@@ -3,6 +3,7 @@
 // deps
 
 	// externals
+	import { join } from "path";
 
 	import SwaggerParser from "@apidevtools/swagger-parser";
 	import { OpenApiDocument } from "express-openapi-validate";
@@ -348,15 +349,15 @@ export default class Orchestrator extends MediatorUser {
 			public load (): Promise<void> {
 
 				return this.checkFiles().then((): Promise<any> => {
+					return readJSONFile(join(__dirname, "..", "..", "..", "package.json"));
+				}).then(({ engines }: { "engines": { "node": string; }; }): Promise<any> => {
 
 					// native
 					this.authors = [];
 					this.description = "";
 					this.dependencies = {};
 					this.devDependencies = {};
-					this.engines = {
-						"node": ">=12.0.0"
-					};
+					this.engines = engines;
 					this.license = "MIT";
 					this.main = "lib/main.js";
 					this.name = "";
