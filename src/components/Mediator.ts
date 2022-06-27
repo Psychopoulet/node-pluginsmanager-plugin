@@ -32,7 +32,7 @@ export default class Mediator extends DescriptorUser {
 
 		// protected
 
-		protected _validator: OpenApiValidator | null;
+			protected _validator: OpenApiValidator | null;
 
 	// constructor
 
@@ -47,7 +47,7 @@ export default class Mediator extends DescriptorUser {
 	// public
 
 		 // Check sended parameters by method name (used by the Server)
-		public checkParameters (operationId: string, urlParams: iUrlParameters, bodyParams: { [key:string]: any }): Promise<unknown> | Promise<void> {
+		public checkParameters (operationId: string, urlParams: iUrlParameters, bodyParams: { [key:string]: any }): Promise<void> {
 
 			// parameters validation
 			return this.checkDescriptor().then((): Promise<void> => {
@@ -66,14 +66,14 @@ export default class Mediator extends DescriptorUser {
 
 			}).then(() => {
 				return (checkObject("bodyParams", bodyParams) as Promise<void>);
-			}).then((): Promise<unknown> | Promise<void> => {
+			}).then((): Promise<void> => {
 
 				// search wanted operation
 				const foundPathMethod: iPathMethod | null = extractPathMethodByOperationId((this._Descriptor as OpenApiDocument).paths, operationId);
 
 				return !foundPathMethod ? Promise.reject(
 					new ReferenceError("Unknown operationId \"" + operationId + "\"")
-				) : new Promise((resolve, reject): void => {
+				) : new Promise((resolve: () => void, reject: (err: Error) => void): void => {
 
 					const req = {
 						"path": foundPathMethod.path,
@@ -88,7 +88,7 @@ export default class Mediator extends DescriptorUser {
 					const validateRequest = (this._validator as OpenApiValidator).validate(req.method, req.path);
 
 					validateRequest(req, null, (err: Error): void => {
-						return err ? reject(err) : resolve(null);
+						return err ? reject(err) : resolve();
 					});
 
 				}).catch((err: Error): Promise<void> => {
@@ -138,7 +138,7 @@ export default class Mediator extends DescriptorUser {
 
 				return !foundPathMethod ? Promise.reject(
 					new ReferenceError("Unknown operationId \"" + operationId + "\"")
-				) : new Promise((resolve, reject): void => {
+				) : new Promise((resolve: () => void, reject: (err: Error) => void): void => {
 
 					// no content, no validation
 					if (204 === res.statusCode) {

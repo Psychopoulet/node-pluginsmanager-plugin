@@ -9,7 +9,7 @@
 // types & interfaces
 
 	export interface iMediatorUserOptions extends iDescriptorUserOptions {
-		"mediator": Mediator | null;
+		"mediator"?: Mediator; // not sended by Orchestrator
 	}
 
 // module
@@ -21,7 +21,7 @@ export default class MediatorUser extends DescriptorUser {
 
 		// protected
 
-		protected _Mediator: Mediator | null; // provided by "mediator" option, sent by the [Orchestrator](./Orchestrator.md)
+			protected _Mediator: Mediator | null; // provided by "mediator" option, sent by the [Orchestrator](./Orchestrator.md)
 
 	// constructor
 
@@ -36,13 +36,13 @@ export default class MediatorUser extends DescriptorUser {
 
 	// protected
 
-		public _initWorkSpace (): Promise<void> {
+		public _initWorkSpace (...data: any): Promise<void> {
 
 			return Promise.resolve();
 
 		}
 
-		public _releaseWorkSpace (): Promise<void> {
+		public _releaseWorkSpace (...data: any): Promise<void> {
 
 			return Promise.resolve();
 

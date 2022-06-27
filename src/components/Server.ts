@@ -188,7 +188,7 @@ export default class Server extends MediatorUser {
 				// get descriptor
 				if ("/" + (this._Descriptor as OpenApiDocument).info.title + "/api/descriptor" === req.pattern && "get" === req.method) {
 
-					return new Promise((resolve, reject): void => {
+					return new Promise((resolve: (api: OpenApiDocument) => void, reject: (err: Error) => void): void => {
 
 						const { validate } = require("@apidevtools/swagger-parser");
 

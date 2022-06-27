@@ -3,23 +3,76 @@
 // deps
 
 	// externals
+
 	import SwaggerParser from "@apidevtools/swagger-parser";
+	import { OpenApiDocument } from "express-openapi-validate";
+	import { OpenAPI } from "openapi-types";
+
+	import { Server as WebSocketServer } from "ws";
+	import { Server as SocketIOServer } from "socket.io";
 
 	// locals
 
 	import checkObject from "../checkers/TypeError/checkObject";
 
+	import { tLogger } from "./DescriptorUser";
 	import MediatorUser from "./MediatorUser";
+	import Mediator from "./Mediator";
 	import Server from "./Server";
 
 	import checkFile from "../utils/file/checkFile";
 	import readJSONFile from "../utils/file/readJSONFile";
 
+// types & interfaces
+
+	export interface iOrchestratorOptions {
+		"externalRessourcesDirectory": string; // used to write local data like sqlite database, json files, pictures, etc...
+		"packageFile": string; // package file used by the plugin (absolute path)
+		"descriptorFile": string; // descriptor file used by the plugin (absolute path)
+		"mediatorFile": string; // mediator file used by the plugin (absolute path)
+		"serverFile": string; // server file used by the plugin (absolute path)
+	};
+
 // module
 
 export default class Orchestrator extends MediatorUser {
 
-	constructor (options) {
+	// attributes
+
+		// protected
+
+			protected _Server: Server | null;
+			protected _socketServer: WebSocketServer | SocketIOServer | null;
+			protected _checkParameters: boolean;
+			protected _checkResponse: boolean;
+
+			// params
+			protected _packageFile: string;
+			protected _descriptorFile: string;
+			protected _mediatorFile: string;
+			protected _serverFile: string;
+
+			protected _extended: Array<string>;
+
+		// public
+
+			public enabled: boolean;
+
+			// native
+			public authors: Array<string>;
+			public description: string;
+			public dependencies: object | null;
+			public devDependencies: object | null;
+			public engines: object | null;
+			public license: string;
+			public main: string;
+			public name: string;
+			public scripts: object | null;
+			public version: string;
+
+	// constructor
+
+	public constructor (options: iOrchestratorOptions) {
 
 		super(options);
 
@@ -44,7 +97,7 @@ export default class Orchestrator extends MediatorUser {
 			this.enabled = true;
 
 			// native
-			this.authors = null;
+			this.authors = [];
 			this.description = "";
 			this.dependencies = null;
 			this.devDependencies = null;
@@ -59,23 +112,23 @@ export default class Orchestrator extends MediatorUser {
 
 	// public
 
-		checkDescriptor () {
+		public checkDescriptor (): Promise<void> {
 
-			return super.checkDescriptor().then(() => {
-
+			return super.checkDescriptor().then((): Promise<OpenAPI.Document> => {
 				return SwaggerParser.validate(this._descriptorFile);
-
+			}).then((): Promise<void> => {
+				return Promise.resolve();
 			});
 
 		}
 
 		// checkers
 
-			checkConf () {
+			public checkConf (): Promise<void> {
 				return Promise.resolve();
 			}
 
-			isEnable () {
+			public isEnable (): Promise<void> {
 
 				this.enabled = true;
 
@@ -83,12 +136,12 @@ export default class Orchestrator extends MediatorUser {
 
 			}
 
-			checkFiles () {
+			public checkFiles (): Promise<void> {
 
 				// check package
-				return Promise.resolve().then(() => {
+				return Promise.resolve().then((): Promise<void> => {
 
-					return checkFile(this._packageFile).catch((err) => {
+					return checkFile(this._packageFile).catch((err: Error): Promise<void> => {
 
 						err.message = "package : " + err.message;
 
@@ -97,9 +150,9 @@ export default class Orchestrator extends MediatorUser {
 					});
 
 				// check Descriptor
-				}).then(() => {
+				}).then((): Promise<void> => {
 
-					return checkFile(this._descriptorFile).catch((err) => {
+					return checkFile(this._descriptorFile).catch((err: Error): Promise<void> => {
 
 						err.message = "descriptor : " + err.message;
 
@@ -108,9 +161,9 @@ export default class Orchestrator extends MediatorUser {
 					});
 
 				// check Mediator
-				}).then(() => {
+				}).then((): Promise<void> => {
 
-					return checkFile(this._mediatorFile).catch((err) => {
+					return checkFile(this._mediatorFile).catch((err: Error): Promise<void> => {
 
 						err.message = "mediator : " + err.message;
 
@@ -119,9 +172,9 @@ export default class Orchestrator extends MediatorUser {
 					});
 
 				// check Server
-				}).then(() => {
+				}).then((): Promise<void> => {
 
-					return checkFile(this._serverFile).catch((err) => {
+					return checkFile(this._serverFile).catch((err: Error): Promise<void> => {
 
 						err.message = "server : " + err.message;
 
@@ -133,9 +186,9 @@ export default class Orchestrator extends MediatorUser {
 
 			}
 
-			checkServer () {
+			public checkServer (): Promise<void> {
 
-				return checkObject("Server", this._Server).then(() => {
+				return (checkObject("Server", this._Server) as Promise<void>).then((): Promise<void> => {
 
 					return this._Server instanceof Server ? Promise.resolve() : Promise.reject(new TypeError(
 						"The plugin has an invalid Server which is not an instance (or a child) of the official Server class"
@@ -147,13 +200,13 @@ export default class Orchestrator extends MediatorUser {
 
 		// middlewares
 
-			disableCheckParameters () {
+			public disableCheckParameters (): this {
 
-				this.checkServer().then(() => {
+				this.checkServer().then((): void => {
 
-					this._Server.disableCheckParameters();
+					(this._Server as Server).disableCheckParameters();
 
-				}).catch(() => {
+				}).catch((): void => {
 
 					this._checkParameters = false; // delay checkParameters if necessary
 
@@ -163,13 +216,13 @@ export default class Orchestrator extends MediatorUser {
 
 			}
 
-			enableCheckParameters () {
+			public enableCheckParameters (): this {
 
-				this.checkServer().then(() => {
+				this.checkServer().then((): void => {
 
-					this._Server.enableCheckParameters();
+					(this._Server as Server).enableCheckParameters();
 
-				}).catch(() => {
+				}).catch((): void => {
 
 					this._checkParameters = true; // delay checkParameters if necessary
 
@@ -179,13 +232,13 @@ export default class Orchestrator extends MediatorUser {
 
 			}
 
-			disableCheckResponse () {
+			public disableCheckResponse (): this {
 
-				this.checkServer().then(() => {
+				this.checkServer().then((): void => {
 
-					this._Server.disableCheckResponse();
+					(this._Server as Server).disableCheckResponse();
 
-				}).catch(() => {
+				}).catch((): void => {
 
 					this._checkResponse = false; // delay checkResponse if necessary
 
@@ -195,13 +248,13 @@ export default class Orchestrator extends MediatorUser {
 
 			}
 
-			enableCheckResponse () {
+			public enableCheckResponse (): this {
 
-				this.checkServer().then(() => {
+				this.checkServer().then((): void => {
 
-					this._Server.enableCheckResponse();
+					(this._Server as Server).enableCheckResponse();
 
-				}).catch(() => {
+				}).catch((): void => {
 
 					this._checkResponse = true; // delay checkResponse if necessary
 
@@ -211,13 +264,13 @@ export default class Orchestrator extends MediatorUser {
 
 			}
 
-			disableCors () {
+			public disableCors (): this {
 
-				this.checkServer().then(() => {
+				this.checkServer().then((): void => {
 
-					this._Server.disableCors();
+					(this._Server as Server).disableCors();
 
-				}).catch((err) => {
+				}).catch((err: Error): void => {
 					this.emit("error", err);
 				});
 
@@ -225,13 +278,13 @@ export default class Orchestrator extends MediatorUser {
 
 			}
 
-			enableCors () {
+			public enableCors (): this {
 
-				this.checkServer().then(() => {
+				this.checkServer().then((): void => {
 
-					this._Server.enableCors();
+					(this._Server as Server).enableCors();
 
-				}).catch((err) => {
+				}).catch((err: Error): void => {
 					this.emit("error", err);
 				});
 
@@ -239,7 +292,7 @@ export default class Orchestrator extends MediatorUser {
 
 			}
 
-			appMiddleware (req, res, next) {
+			public appMiddleware (req, res, next): void {
 
 				if (!this.enabled) {
 
@@ -253,11 +306,11 @@ export default class Orchestrator extends MediatorUser {
 				}
 				else {
 
-					this.checkServer().then(() => {
+					this.checkServer().then((): void => {
 
-						this._Server.appMiddleware(req, res, next);
+						(this._Server as Server).appMiddleware(req, res, next);
 
-					}).catch(() => {
+					}).catch((): void => {
 
 						next();
 
@@ -267,7 +320,7 @@ export default class Orchestrator extends MediatorUser {
 
 			}
 
-			socketMiddleware (server) {
+			public socketMiddleware (server): void {
 
 				if (!this.enabled) {
 
@@ -276,11 +329,11 @@ export default class Orchestrator extends MediatorUser {
 				}
 				else {
 
-					this.checkServer().then(() => {
+					this.checkServer().then((): void => {
 
-						this._Server.socketMiddleware(server);
+						(this._Server as Server).socketMiddleware(server);
 
-					}).catch(() => {
+					}).catch((): void => {
 
 						this._socketServer = server; // delay socketMiddleware if necessary
 
@@ -292,9 +345,9 @@ export default class Orchestrator extends MediatorUser {
 
 		// load / destroy
 
-			load () {
+			public load (): Promise<void> {
 
-				return this.checkFiles().then(() => {
+				return this.checkFiles().then((): Promise<any> => {
 
 					// native
 					this.authors = [];
@@ -313,7 +366,7 @@ export default class Orchestrator extends MediatorUser {
 					return readJSONFile(this._packageFile);
 
 				// formate authors
-				}).then((data) => {
+				}).then((data: any): Promise<void> => {
 
 					if (data.authors) {
 
@@ -341,9 +394,9 @@ export default class Orchestrator extends MediatorUser {
 					return Promise.resolve(data);
 
 				// formate other data
-				}).then((data) => {
+				}).then((data: any): void => {
 
-					Object.keys(data).forEach((key) => {
+					Object.keys(data).forEach((key: string): void => {
 
 						if ("function" !== typeof this[key]) {
 
@@ -361,9 +414,9 @@ export default class Orchestrator extends MediatorUser {
 
 			}
 
-			destroy () {
+			public destroy (): Promise<void> {
 
-				return Promise.resolve().then(() => {
+				return Promise.resolve().then((): void => {
 
 					// protected
 
@@ -375,7 +428,7 @@ export default class Orchestrator extends MediatorUser {
 
 						// extended
 
-						this._extended.forEach((key) => {
+						this._extended.forEach((key: string): void => {
 							delete this[key];
 						});
 
@@ -384,7 +437,7 @@ export default class Orchestrator extends MediatorUser {
 					// public
 
 						// native
-						this.authors = null;
+						this.authors = [];
 						this.description = "";
 						this.dependencies = null;
 						this.devDependencies = null;
@@ -395,7 +448,7 @@ export default class Orchestrator extends MediatorUser {
 						this.scripts = null;
 						this.version = "";
 
-				}).then(() => {
+				}).then((): void => {
 
 					this.removeAllListeners();
 
@@ -405,28 +458,30 @@ export default class Orchestrator extends MediatorUser {
 
 		// init / release
 
-			init (...data) {
+			public init (...data: any): Promise<void> {
 
 				// ensure conf validity
-				return Promise.resolve().then(() => {
+				return Promise.resolve().then((): Promise<void> => {
 
 					return this.checkConf();
 
 				// get enable status
-				}).then(() => {
+				}).then((): Promise<void> => {
 
 					return this.isEnable();
 
-				}).then(() => {
+				}).then((): Promise<void> => {
 
-					return !this.enabled ? Promise.resolve() : Promise.resolve().then(() => {
+					return !this.enabled ? Promise.resolve() : Promise.resolve().then((): Promise<void> => {
 
 						// create Descriptor
-						return SwaggerParser.bundle(this._descriptorFile).then((content) => {
+						return SwaggerParser.bundle(this._descriptorFile).then((content: OpenAPI.Document): Promise<OpenApiDocument> => {
+							return Promise.resolve(content as OpenApiDocument);
+						}).then((content: OpenApiDocument): Promise<void> => {
 
 							this._Descriptor = content;
 
-							return this.checkDescriptor().catch((err) => {
+							return this.checkDescriptor().catch((err: Error): Promise<void> => {
 
 								this._Descriptor = null;
 
@@ -435,19 +490,19 @@ export default class Orchestrator extends MediatorUser {
 							});
 
 						// compare title to package name
-						}).then(() => {
+						}).then((): Promise<void> => {
 
-							return this._Descriptor.info.title !== this.name ? Promise.reject(new Error(
-								"The descriptor's title (\"" + this._Descriptor.info.title + "\") " +
+							return (this._Descriptor as OpenApiDocument).info.title !== this.name ? Promise.reject(new Error(
+								"The descriptor's title (\"" + (this._Descriptor as OpenApiDocument).info.title + "\") " +
 								"is not equals to " +
 								"the package's name (\"" + this.name + "\")"
 							)) : Promise.resolve();
 
 						// compare version to package version
-						}).then(() => {
+						}).then((): Promise<void> => {
 
-							return this._Descriptor.info.version !== this.version ? Promise.reject(new Error(
-								"The descriptor's version (\"" + this._Descriptor.info.version + "\") " +
+							return (this._Descriptor as OpenApiDocument).info.version !== this.version ? Promise.reject(new Error(
+								"The descriptor's version (\"" + (this._Descriptor as OpenApiDocument).info.version + "\") " +
 								"is not equals to " +
 								"the package's version (\"" + this.version + "\")"
 							)) : Promise.resolve();
@@ -455,115 +510,111 @@ export default class Orchestrator extends MediatorUser {
 						});
 
 					// create Mediator
-					}).then(() => {
+					}).then((): Promise<void> => {
 
 						// load
-						return new Promise((resolve, reject) => {
+						return new Promise((resolve: (value: typeof Mediator) => void, reject: (err: Error) => void): void => {
 
 							try {
-								resolve(require(this._mediatorFile));
+								resolve(require(this._mediatorFile) as typeof Mediator);
 							}
 							catch (e) {
 								reject(e);
 							}
 
 						// init
-						}).then((PluginMediator) => {
+						}).then((PluginMediator: typeof Mediator): void => {
 
 							this._Mediator = new PluginMediator({
-								"descriptor": this._Descriptor,
+								"descriptor": this._Descriptor as OpenApiDocument,
 								"externalRessourcesDirectory": this._externalRessourcesDirectory,
-								"logger": this._Logger
+								"logger": this._Logger as tLogger
 							});
 
 						// check
-						}).then(() => {
+						}).then((): Promise<void> => {
 
-							return this.checkMediator().then(() => {
+							return this.checkMediator().then((): void => {
 
 								// intercept errors to avoid non-catched ones
-								this._Mediator.on("error", (err) => {
+								(this._Mediator as Mediator).on("error", (err: Error): void => {
 									this.emit("error", err);
 								});
-
-								return Promise.resolve();
 
 							});
 
 						});
 
 					// create Server
-					}).then(() => {
+					}).then((): Promise<void> => {
 
 						// load
-						return new Promise((resolve, reject) => {
+						return new Promise((resolve: (value: typeof Server) => void, reject: (err: Error) => void) => {
 
 							try {
-								resolve(require(this._serverFile));
+								resolve(require(this._serverFile) as typeof Server);
 							}
 							catch (e) {
 								reject(e);
 							}
 
 						// init
-						}).then((PluginServer) => {
+						}).then((PluginServer: typeof Server): void => {
 
 							this._Server = new PluginServer({
-								"descriptor": this._Descriptor,
-								"mediator": this._Mediator,
+								"descriptor": this._Descriptor as OpenApiDocument,
+								"mediator": this._Mediator as Mediator,
 								"externalRessourcesDirectory": this._externalRessourcesDirectory,
-								"logger": this._Logger
+								"logger": this._Logger as tLogger
 							});
 
 						// check
-						}).then(() => {
+						}).then((): Promise<void> => {
 
-							return this.checkServer().then(() => {
+							return this.checkServer().then((): void => {
 
 								// intercept errors to avoid non-catched ones
-								this._Server.on("error", (err) => {
+								(this._Server as Server).on("error", (err: Error): void => {
 									this.emit("error", err);
 								});
-
-								return Promise.resolve();
 
 							});
 
 						});
 
-					}).then(() => {
+					}).then((): Promise<void> => {
 
 						return this._initWorkSpace(...data);
 
 					// init Server (before Mediator)
-					}).then(() => {
+					}).then((): Promise<void> => {
 
-						return this._Server.init(...data).then(() => {
+						return (this._Server as Server).init(...data).then((): void => {
 
 							if (this._socketServer) { // delayed socketMiddleware
 
-								this._Server.socketMiddleware(this._socketServer);
+								(this._Server as Server).socketMiddleware(this._socketServer);
 
 								this._socketServer = null;
 
 							}
 
 							if (!this._checkParameters) { // delayed checkParameters
-								this._Server.disableCheckParameters();
+								(this._Server as Server).disableCheckParameters();
 							}
 
 							if (!this._checkResponse) { // delayed checkResponse
-								this._Server.disableCheckResponse();
+								(this._Server as Server).disableCheckResponse();
 							}
 
 						});
 
 					// init Mediator
-					}).then(() => {
+					}).then((): Promise<void> => {
 
-						return this._Mediator.init(...data);
+						return (this._Mediator as Mediator).init(...data);
 
-					}).then(() => {
+					}).then((): void => {
 
 						this.initialized = true;
 						this.emit("initialized", ...data);
@@ -574,30 +625,30 @@ export default class Orchestrator extends MediatorUser {
 
 			}
 
-			release (...data) {
+			public release (...data): Promise<void> {
 
-				return Promise.resolve().then(() => {
+				return Promise.resolve().then((): Promise<void> => {
 
-					return this._Mediator ? this._Mediator.release(...data).then(() => {
+					return this._Mediator ? this._Mediator.release(...data).then((): void => {
 
 						this._Mediator = null;
 
 					}) : Promise.resolve();
 
-				}).then(() => {
+				}).then((): Promise<void> => {
 
-					return this._Server ? this._Server.release(...data).then(() => {
+					return this._Server ? this._Server.release(...data).then((): void => {
 
 						this._socketServer = null;
 						this._Server = null;
 
 					}) : Promise.resolve();
 
-				}).then(() => {
+				}).then((): Promise<void> => {
 
 					return this._releaseWorkSpace(...data);
 
-				}).then(() => {
+				}).then((): void => {
 
 					this._Descriptor = null;
 
@@ -610,19 +661,19 @@ export default class Orchestrator extends MediatorUser {
 
 		// write
 
-			install () {
+			public install (): Promise<void> {
 
 				return Promise.resolve();
 
 			}
 
-			update () {
+			public update (): Promise<void> {
 
 				return Promise.resolve();
 
 			}
 
-			uninstall () {
+			public uninstall (): Promise<void> {
 
 				return Promise.resolve();
 
