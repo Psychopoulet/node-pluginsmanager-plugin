@@ -3,7 +3,7 @@
 // deps
 
 	// locals
-	import NodePluginManagerPlugin from "./NodePluginManagerPlugin";
+	import * as NodePluginManagerPlugin from "./NodePluginManagerPlugin";
 
 // module
 
