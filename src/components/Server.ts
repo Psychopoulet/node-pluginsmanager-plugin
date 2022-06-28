@@ -6,8 +6,8 @@
 	import { join } from "path";
 	import { parse } from "url";
 	import { EOL } from "os";
-	import { IncomingMessage, ServerResponse as HTTPServerResponse } from "http";
-	import { ServerResponse as HTTPSServerResponse } from "http";
+	import { IncomingMessage, ServerResponse } from "http";
+	import { AddressInfo } from "net";
 
 	// externals
 
@@ -64,7 +64,12 @@
 		"cookies": { [key:string]: any; };
 		"query": { [key:string]: any; };
 		"params": { [key:string]: any; };
-		"body": { [key:string]: any; };
+		"body": any;
+	}
+
+	export interface iServerResponse extends ServerResponse {
+		"body": any;
+		"headers": { [key:string]: any; };
 	}
 
 	interface iWebSocketWithId extends WebSocket {
@@ -148,7 +153,7 @@ export default class Server extends MediatorUser {
 			this._cors = true; return this;
 		}
 
-		public appMiddleware (_req: IncomingMessage | iIncomingMessage, res: HTTPServerResponse | HTTPSServerResponse, next: Function): void { // req, res, next : void
+		public appMiddleware (_req: IncomingMessage | iIncomingMessage, res: iServerResponse, next: Function): void { // req, res, next : void
 
 			const req: iIncomingMessage = _req as iIncomingMessage;
 
@@ -194,11 +199,11 @@ export default class Server extends MediatorUser {
 					req.headers["content-type"] = "application/json";
 				}
 
-				if (!req.pattern || !(this._Descriptor as OpenApiDocument).paths[req.pattern] || !(this._Descriptor as OpenApiDocument).paths[req.pattern][req.method]) {
+				if (!req.pattern || !(this._Descriptor as OpenApiDocument).paths[req.pattern] || !((this._Descriptor as OpenApiDocument).paths[req.pattern] as { [key:string]: any })[req.method]) {
 					return next();
 				}
 
-				const { operationId }: { "operationId": string; } = (this._Descriptor as OpenApiDocument).paths[req.pattern][req.method];
+				const { operationId }: { "operationId": string; } = ((this._Descriptor as OpenApiDocument).paths[req.pattern] as { [key:string]: any })[req.method];
 
 				this._log("info", "" +
 					"=> [" + req.validatedIp + "] " + req.url + " (" + req.method.toUpperCase() + ")" +
@@ -224,19 +229,14 @@ export default class Server extends MediatorUser {
 					// add current server
 					}).then((api: OpenApiDocument): Promise<OpenApiDocument> => {
 
-						const protocol: "https" | "http" = res.socket && Boolean(res.socket.encrypted) ? "https" : "http";
-
-						let port: number = res.socket && res.socket.localPort ? res.socket.localPort : 0;
-						if (!port) {
-							port = "http" === protocol ? 80 : 443;
-						}
-
 						if (!api.servers) {
 							api.servers = [];
 						}
 
+						const port: number = res.socket && res.socket.localPort ? res.socket.localPort : (res.socket?.address() as AddressInfo).port;
+
 						api.servers.push({
-							"url": protocol + "://" + req.validatedIp + ":" + port,
+							"url":  req.validatedIp + ":" + port,
 							"description": "Actual current server"
 						});
 
@@ -288,7 +288,7 @@ export default class Server extends MediatorUser {
 				}
 
 				// not implemented operationId
-				else if ("function" !== typeof (this._Mediator as Mediator)[operationId]) {
+				else if ("function" !== typeof (this._Mediator as { [key:string]: any })[operationId]) {
 
 					const result: { "code": string; "message": string; } = {
 						"code": "NOT_IMPLEMENTED",
@@ -323,7 +323,7 @@ export default class Server extends MediatorUser {
 						const keys: Array<string> = Object.keys(req.params);
 						return !keys.length ? Promise.resolve() : Promise.resolve().then((): Promise<void> => {
 
-							const docParameters = (this._Descriptor as OpenApiDocument).paths[req.pattern][req.method].parameters.filter((p): boolean => {
+							const docParameters: Array<{ [key:string]: any }> = ((this._Descriptor as OpenApiDocument).paths[req.pattern] as { [key:string]: any })[req.method].parameters.filter((p: { [key:string]: any }): boolean => {
 								return "path" === p.in;
 							});
 
@@ -332,11 +332,11 @@ export default class Server extends MediatorUser {
 								let err: Error | null = null;
 								for (let i: number = 0; i < keys.length; ++i) {
 
-									const key = keys[i];
+									const key: string = keys[i];
 
-									const schema = docParameters.find((dp): boolean => {
+									const schema = docParameters.find((dp: { [key:string]: any }): boolean => {
 										return dp.name === key;
-									}).schema || null;
+									})?.schema || null;
 
 									if (!schema) {
 										err = new ReferenceError("Unknown parameter: request.params['" + key + "']"); break;
@@ -471,7 +471,7 @@ export default class Server extends MediatorUser {
 						// execute Mediator method
 						}).then(() => {
 
-							return (this._Mediator as Mediator)[operationId](parsed.url, parsed.body);
+							return (this._Mediator as { [key:string]: any })[operationId](parsed.url, parsed.body);
 
 						});
 
@@ -794,7 +794,7 @@ export default class Server extends MediatorUser {
 
 		// init / release
 
-			public init (...data): Promise<void> {
+			public init (...data: any): Promise<void> {
 
 				return this.checkDescriptor().then((): Promise<void> => {
 					return this.checkMediator();
@@ -809,7 +809,7 @@ export default class Server extends MediatorUser {
 
 			}
 
-			public release (...data): Promise<void> {
+			public release (...data: any): Promise<void> {
 
 				return this._releaseWorkSpace(...data).then((): void => {
 

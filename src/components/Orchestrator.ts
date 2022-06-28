@@ -19,7 +19,7 @@
 	import { tLogger } from "./DescriptorUser";
 	import MediatorUser from "./MediatorUser";
 	import Mediator from "./Mediator";
-	import Server from "./Server";
+	import Server, { iIncomingMessage, iServerResponse } from "./Server";
 
 	import checkFile from "../utils/file/checkFile";
 	import readJSONFile from "../utils/file/readJSONFile";
@@ -293,7 +293,7 @@ export default class Orchestrator extends MediatorUser {
 
 			}
 
-			public appMiddleware (req, res, next): void {
+			public appMiddleware (req: iIncomingMessage, res: iServerResponse, next: Function): void {
 
 				if (!this.enabled) {
 
@@ -321,7 +321,7 @@ export default class Orchestrator extends MediatorUser {
 
 			}
 
-			public socketMiddleware (server): void {
+			public socketMiddleware (server: WebSocketServer | SocketIOServer): void {
 
 				if (!this.enabled) {
 
@@ -367,7 +367,7 @@ export default class Orchestrator extends MediatorUser {
 					return readJSONFile(this._packageFile);
 
 				// formate authors
-				}).then((data: any): Promise<void> => {
+				}).then((data: { [key:string]: any }): Promise<{ [key:string]: any }> => {
 
 					if (data.authors) {
 
@@ -395,17 +395,19 @@ export default class Orchestrator extends MediatorUser {
 					return Promise.resolve(data);
 
 				// formate other data
-				}).then((data: any): void => {
+				}).then((data: { [key:string]: any }): void => {
+
+					const self: { [key:string]: any } = this;
 
 					Object.keys(data).forEach((key: string): void => {
 
-						if ("function" !== typeof this[key]) {
+						if ("function" !== typeof self[key]) {
 
-							if ("undefined" === typeof this[key]) {
+							if ("undefined" === typeof self[key]) {
 								this._extended.push(key);
 							}
 
-							this[key] = data[key];
+							self[key] = data[key];
 
 						}
 
@@ -430,7 +432,7 @@ export default class Orchestrator extends MediatorUser {
 						// extended
 
 						this._extended.forEach((key: string): void => {
-							delete this[key];
+							delete (this as { [key:string]: any })[key];
 						});
 
 						this._extended = [];
@@ -520,7 +522,7 @@ export default class Orchestrator extends MediatorUser {
 								resolve(require(this._mediatorFile) as typeof Mediator);
 							}
 							catch (e) {
-								reject(e);
+								reject(e as Error);
 							}
 
 						// init
@@ -556,7 +558,7 @@ export default class Orchestrator extends MediatorUser {
 								resolve(require(this._serverFile) as typeof Server);
 							}
 							catch (e) {
-								reject(e);
+								reject(e as Error);
 							}
 
 						// init
@@ -626,7 +628,7 @@ export default class Orchestrator extends MediatorUser {
 
 			}
 
-			public release (...data): Promise<void> {
+			public release (...data: any): Promise<void> {
 
 				return Promise.resolve().then((): Promise<void> => {
 

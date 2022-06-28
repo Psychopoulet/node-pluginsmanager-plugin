@@ -75,14 +75,14 @@ export default class DescriptorUser extends Events {
 	// protected
 
 		// must be inherited
-		protected _initWorkSpace (data?: any): Promise<void> {
+		protected _initWorkSpace (): Promise<void> {
 
 			return Promise.reject(new Error("\"_initWorkSpace\" method must be inherited"));
 
 		}
 
 		// must be inherited
-		protected _releaseWorkSpace (data?: any): Promise<void> {
+		protected _releaseWorkSpace (): Promise<void> {
 
 			return Promise.reject(new Error("\"_releaseWorkSpace\" method must be inherited"));
 
@@ -160,12 +160,14 @@ export default class DescriptorUser extends Events {
 					return Promise.resolve().then((): Promise<void> => {
 
 						const operationIds: Array<string> = [];
-						Object.keys((this._Descriptor as OpenApiDocument).paths).forEach((p): void => {
+						Object.keys((this._Descriptor as OpenApiDocument).paths).forEach((p: string): void => {
 
 							Object.keys((this._Descriptor as OpenApiDocument).paths[p]).forEach((m: string): void => {
 
-								if ((this._Descriptor as OpenApiDocument).paths[p][m].operationId) {
-									operationIds.push((this._Descriptor as OpenApiDocument).paths[p][m].operationId);
+								const path: { [key:string]: any } = (this._Descriptor as OpenApiDocument).paths[p];
+
+								if (path[m].operationId) {
+									operationIds.push(path[m].operationId);
 								}
 
 							});

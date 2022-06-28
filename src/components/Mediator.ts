@@ -7,6 +7,8 @@
 
 	// locals
 
+	import { iServerResponse } from "./Server";
+
 	import checkObject from "../checkers/TypeError/checkObject";
 	import checkNonEmptyString from "../checkers/RangeError/checkNonEmptyString";
 	import checkNonEmptyObject from "../checkers/RangeError/checkNonEmptyObject";
@@ -126,7 +128,7 @@ export default class Mediator extends DescriptorUser {
 		}
 
 		// Check sended parameters by method name (used by the Server)
-		public checkResponse (operationId: string, res): Promise<void> {
+		public checkResponse (operationId: string, res: iServerResponse): Promise<void> {
 
 			// parameters validation
 			return this.checkDescriptor().then((): Promise<void> => {
@@ -161,8 +163,6 @@ export default class Mediator extends DescriptorUser {
 
 					else {
 
-						const validateResponse = (this._validator as OpenApiValidator).validateResponse(foundPathMethod.method, foundPathMethod.path);
-
 						try {
 
 							res.headers = res.getHeaders();
@@ -174,6 +174,7 @@ export default class Mediator extends DescriptorUser {
 								res.body = "string" === typeof res.body ? JSON.parse(res.body) : res.body;
 							}
 
+							const validateResponse = (this._validator as OpenApiValidator).validateResponse(foundPathMethod.method, foundPathMethod.path);
 							validateResponse(res);
 
 							return resolve();
@@ -187,7 +188,7 @@ export default class Mediator extends DescriptorUser {
 								" (" + foundPathMethod.operationId + ") => " +
 								res.statusCode +
 								"\r\n" +
-								(e.message ? e.message : e)
+								((e as Error).message ? (e as Error).message : e)
 							));
 
 						}
@@ -202,7 +203,7 @@ export default class Mediator extends DescriptorUser {
 
 		// init / release
 
-		public init (...data): Promise<void> {
+		public init (...data: any): Promise<void> {
 
 			return this._initWorkSpace(...data).then((): void => {
 
