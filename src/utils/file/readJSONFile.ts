@@ -14,7 +14,7 @@ export default function readJSONFile (file: string): Promise<any> {
 
 	return checkFile(file).then((): Promise<string> => {
 
-		return new Promise((resolve, reject): void => {
+		return new Promise((resolve: (content: any) => void, reject: (err: Error) => void): void => {
 
 			readFile(file, "utf8", (err: Error | null, content: string): void => {
 				return err ? reject(err) : resolve(content);

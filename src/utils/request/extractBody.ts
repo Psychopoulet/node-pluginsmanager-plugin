@@ -3,6 +3,9 @@
 // deps
 
 	// locals
+
+	import { iIncomingMessage } from "../../components/Server";
+
 	import checkInteger from "../../checkers/TypeError/checkInteger";
 	import checkFunction from "../../checkers/TypeError/checkFunction";
 	import checkNonEmptyObject from "../../checkers/RangeError/checkNonEmptyObject";
@@ -16,7 +19,7 @@
 
 // module
 
-export default function extractBody (req) {
+export default function extractBody (req: iIncomingMessage): Promise<iResult> {
 
 	return (checkNonEmptyObject("req", req) as Promise<void>).then((): Promise<void> => {
 		return (checkFunction("req.on", req.on) as Promise<void>);
@@ -65,7 +68,7 @@ export default function extractBody (req) {
 
 						}
 						catch (e) {
-							reject(e);
+							reject(e as Error);
 						}
 
 					}

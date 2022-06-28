@@ -9,7 +9,7 @@
 
 export default function extractParams (patternPath: string, realPath: string): { [key:string]: any } {
 
-	const params = {};
+	const params: { [key:string]: any } = {};
 
 		const patternPathSplitted = removeFirstSlash(patternPath).split("/");
 
