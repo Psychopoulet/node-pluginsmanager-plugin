@@ -87,41 +87,41 @@ export default class Mediator extends DescriptorUser {
 						"body": bodyParams
 					};
 
-					const validateRequest = (this._validator as OpenApiValidator).validate(req.method, req.path);
+					const validateRequest: any = (this._validator as OpenApiValidator).validate(req.method, req.path); // set to "any" for ts validation
 
 					validateRequest(req, null, (err: Error): void => {
 						return err ? reject(err) : resolve();
 					});
 
-				}).catch((err: Error): Promise<void> => {
-
-					return err instanceof ValidationError ? Promise.resolve().then((): Promise<void> => {
-
-						switch ((err as ValidationError).data[0].keyword) { // extract first Error
-
-							case "required":
-								return Promise.reject(new ReferenceError(err.message));
-
-							case "type":
-								return Promise.reject(new TypeError(err.message));
-
-							case "minimum":
-							case "maximum":
-							case "minLength":
-							case "maxLength":
-							case "minItems":
-							case "maxItems":
-							case "enum":
-								return Promise.reject(new RangeError(err.message));
-
-							default:
-								return Promise.reject(new Error(err.message));
-
-						}
-
-					}) : Promise.reject(err);
-
 				});
+
+			}).catch((err: Error): Promise<void> => {
+
+				return err instanceof ValidationError ? Promise.resolve().then((): Promise<void> => {
+
+					switch ((err as ValidationError).data[0].keyword) { // extract first Error
+
+						case "required":
+							return Promise.reject(new ReferenceError(err.message));
+
+						case "type":
+							return Promise.reject(new TypeError(err.message));
+
+						case "minimum":
+						case "maximum":
+						case "minLength":
+						case "maxLength":
+						case "minItems":
+						case "maxItems":
+						case "enum":
+							return Promise.reject(new RangeError(err.message));
+
+						default:
+							return Promise.reject(new Error(err.message));
+
+					}
+
+				}) : Promise.reject(err);
 
 			});
 
@@ -203,7 +203,7 @@ export default class Mediator extends DescriptorUser {
 
 		// init / release
 
-		public init (...data: any): Promise<void> {
+		public init (...data: Array<any>): Promise<void> {
 
 			return this._initWorkSpace(...data).then((): void => {
 
@@ -216,7 +216,7 @@ export default class Mediator extends DescriptorUser {
 
 		}
 
-		public release (...data: any): Promise<void> {
+		public release (...data: Array<any>): Promise<void> {
 
 			return this._releaseWorkSpace(...data).then((): void => {
 

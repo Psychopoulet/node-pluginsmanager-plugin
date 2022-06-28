@@ -794,7 +794,7 @@ export default class Server extends MediatorUser {
 
 		// init / release
 
-			public init (...data: any): Promise<void> {
+			public init (...data: Array<any>): Promise<void> {
 
 				return this.checkDescriptor().then((): Promise<void> => {
 					return this.checkMediator();
@@ -809,7 +809,7 @@ export default class Server extends MediatorUser {
 
 			}
 
-			public release (...data: any): Promise<void> {
+			public release (...data: Array<any>): Promise<void> {
 
 				return this._releaseWorkSpace(...data).then((): void => {
 
