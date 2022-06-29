@@ -37,9 +37,18 @@
 
 // components
 
-	export * from "./components/DescriptorUser";
-	export * from "./components/Mediator";
-	export * from "./components/MediatorUser";
-	export * from "./components/Orchestrator";
-	export * from "./components/Server";
-	export * from "./components/NotFoundError";
+	import DescriptorUser from "./components/DescriptorUser";
+	import Mediator from "./components/Mediator";
+	import MediatorUser from "./components/MediatorUser";
+	import Orchestrator from "./components/Orchestrator";
+	import Server from "./components/Server";
+	import NotFoundError from "./components/NotFoundError";
+
+	export {
+		DescriptorUser,
+		Mediator,
+		MediatorUser,
+		Orchestrator,
+		Server,
+		NotFoundError
+	};
