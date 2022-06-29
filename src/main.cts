@@ -3,37 +3,78 @@
 // checkers
 
 	// undefined
-	export * from "./checkers/ReferenceError/checkExists";
+	import { checkExists, checkExistsSync } from "./checkers/ReferenceError/checkExists";
 
 	// native
-	export * from "./checkers/TypeError/checkBoolean";
-	export * from "./checkers/TypeError/checkFunction";
-	export * from "./checkers/TypeError/checkNumber";
-	export * from "./checkers/TypeError/checkObject";
-	export * from "./checkers/TypeError/checkString";
+	import { checkBoolean, checkBooleanSync } from "./checkers/TypeError/checkBoolean";
+	import { checkFunction, checkFunctionSync } from "./checkers/TypeError/checkFunction";
+	import { checkNumber, checkNumberSync } from "./checkers/TypeError/checkNumber";
+	import { checkObject, checkObjectSync } from "./checkers/TypeError/checkObject";
+	import { checkString, checkStringSync } from "./checkers/TypeError/checkString";
 
 	// abstract
-	export * from "./checkers/TypeError/checkArray";
-	export * from "./checkers/TypeError/checkInteger";
+	import { checkArray, checkArraySync } from "./checkers/TypeError/checkArray";
+	import { checkInteger, checkIntegerSync } from "./checkers/TypeError/checkInteger";
 
 	// empty
-	export * from "./checkers/RangeError/checkNonEmptyArray";
-	export * from "./checkers/RangeError/checkNonEmptyInteger";
-	export * from "./checkers/RangeError/checkNonEmptyNumber";
-	export * from "./checkers/RangeError/checkNonEmptyObject";
-	export * from "./checkers/RangeError/checkNonEmptyString";
+	import { checkNonEmptyArray, checkNonEmptyArraySync } from "./checkers/RangeError/checkNonEmptyArray";
+	import { checkNonEmptyInteger, checkNonEmptyIntegerSync } from "./checkers/RangeError/checkNonEmptyInteger";
+	import { checkNonEmptyNumber, checkNonEmptyNumberSync } from "./checkers/RangeError/checkNonEmptyNumber";
+	import { checkNonEmptyObject, checkNonEmptyObjectSync } from "./checkers/RangeError/checkNonEmptyObject";
+	import { checkNonEmptyString, checkNonEmptyStringSync } from "./checkers/RangeError/checkNonEmptyString";
 
 	// range
 
-	export * from "./checkers/RangeError/checkIntegerBetween";
-	export * from "./checkers/RangeError/checkNumberBetween";
+		// native
+		import { checkNumberBetween, checkNumberBetweenSync } from "./checkers/RangeError/checkNumberBetween";
+		import { checkObjectLength, checkObjectLengthSync } from "./checkers/RangeError/checkObjectLength";
+		import { checkObjectLengthBetween, checkObjectLengthBetweenSync } from "./checkers/RangeError/checkObjectLengthBetween";
+		import { checkStringLength, checkStringLengthSync } from "./checkers/RangeError/checkStringLength";
+		import { checkStringLengthBetween, checkStringLengthBetweenSync } from "./checkers/RangeError/checkStringLengthBetween";
 
-	export * from "./checkers/RangeError/checkArrayLength";
-	export * from "./checkers/RangeError/checkArrayLengthBetween";
-	export * from "./checkers/RangeError/checkObjectLength";
-	export * from "./checkers/RangeError/checkObjectLengthBetween";
-	export * from "./checkers/RangeError/checkStringLength";
-	export * from "./checkers/RangeError/checkStringLengthBetween";
+		// abstract
+		import { checkIntegerBetween, checkIntegerBetweenSync } from "./checkers/RangeError/checkIntegerBetween";
+		import { checkArrayLength, checkArrayLengthSync } from "./checkers/RangeError/checkArrayLength";
+		import { checkArrayLengthBetween, checkArrayLengthBetweenSync } from "./checkers/RangeError/checkArrayLengthBetween";
+
+	export {
+
+		// undefined
+		checkExists, checkExistsSync,
+
+		// native
+		checkBoolean, checkBooleanSync,
+		checkFunction, checkFunctionSync,
+		checkNumber, checkNumberSync,
+		checkObject, checkObjectSync,
+		checkString, checkStringSync,
+
+		// abstract
+		checkArray, checkArraySync,
+		checkInteger, checkIntegerSync,
+
+		// empty
+		checkNonEmptyArray, checkNonEmptyArraySync,
+		checkNonEmptyInteger, checkNonEmptyIntegerSync,
+		checkNonEmptyNumber, checkNonEmptyNumberSync,
+		checkNonEmptyObject, checkNonEmptyObjectSync,
+		checkNonEmptyString, checkNonEmptyStringSync,
+
+		// range
+
+			// native
+			checkNumberBetween, checkNumberBetweenSync,
+			checkObjectLength, checkObjectLengthSync,
+			checkObjectLengthBetween, checkObjectLengthBetweenSync,
+			checkStringLength, checkStringLengthSync,
+			checkStringLengthBetween, checkStringLengthBetweenSync,
+
+			// abstract
+			checkIntegerBetween, checkIntegerBetweenSync,
+			checkArrayLength, checkArrayLengthSync,
+			checkArrayLengthBetween, checkArrayLengthBetweenSync
+
+	};
 
 // components
 
