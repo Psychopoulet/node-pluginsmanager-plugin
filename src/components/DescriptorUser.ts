@@ -138,13 +138,13 @@ export default class DescriptorUser extends Events {
 		checkDescriptor (): Promise<void> {
 
 			// check Descriptor object
-			return this._descriptorValidated ? Promise.resolve() : (checkNonEmptyObject("Descriptor", this._Descriptor) as Promise<void>).then((): Promise<void> => {
+			return this._descriptorValidated ? Promise.resolve() : checkNonEmptyObject("Descriptor", this._Descriptor).then((): Promise<void> => {
 
 				// check info object
-				return (checkNonEmptyObject("Descriptor.info", (this._Descriptor as OpenApiDocument).info) as Promise<void>).then((): Promise<void> => {
+				return checkNonEmptyObject("Descriptor.info", (this._Descriptor as OpenApiDocument).info).then((): Promise<void> => {
 
 					// check title
-					return (checkNonEmptyString("Descriptor.info.title", (this._Descriptor as OpenApiDocument).info.title) as Promise<void>).then((): Promise<void> => {
+					return checkNonEmptyString("Descriptor.info.title", (this._Descriptor as OpenApiDocument).info.title).then((): Promise<void> => {
 
 						return (this._Descriptor as OpenApiDocument).info.title !== (this._Descriptor as OpenApiDocument).info.title.toLowerCase() ?
 						Promise.reject(new Error(
@@ -154,7 +154,7 @@ export default class DescriptorUser extends Events {
 
 					// check version
 					}).then((): Promise<void> => {
-						return (checkNonEmptyString("Descriptor.info.version", (this._Descriptor as OpenApiDocument).info.version) as Promise<void>);
+						return checkNonEmptyString("Descriptor.info.version", (this._Descriptor as OpenApiDocument).info.version);
 					});
 
 				});
@@ -162,7 +162,7 @@ export default class DescriptorUser extends Events {
 			}).then((): Promise<void> => {
 
 				// check paths object
-				return (checkObject("Descriptor.paths", (this._Descriptor as OpenApiDocument).paths) as Promise<void>).then((): Promise<void> => {
+				return (checkObject("Descriptor.paths", (this._Descriptor as OpenApiDocument).paths)).then((): Promise<void> => {
 
 					// check multiple operationIds
 					return Promise.resolve().then((): Promise<void> => {

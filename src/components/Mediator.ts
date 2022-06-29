@@ -53,21 +53,21 @@ export default class Mediator extends DescriptorUser {
 
 			// parameters validation
 			return this.checkDescriptor().then((): Promise<void> => {
-				return (checkNonEmptyString("operationId", operationId) as Promise<void>);
+				return checkNonEmptyString("operationId", operationId);
 			}).then((): Promise<void> => {
 
-				return (checkNonEmptyObject("urlParams", urlParams) as Promise<void>).then((): Promise<void> => {
-					return checkObject("urlParams.path", urlParams.path) as Promise<void>;
+				return checkNonEmptyObject("urlParams", urlParams).then((): Promise<void> => {
+					return checkObject("urlParams.path", urlParams.path);
 				}).then(() => {
-					return checkObject("urlParams.query", urlParams.query) as Promise<void>;
+					return checkObject("urlParams.query", urlParams.query);
 				}).then(() => {
-					return checkObject("urlParams.headers", urlParams.headers) as Promise<void>;
+					return checkObject("urlParams.headers", urlParams.headers);
 				}).then(() => {
-					return checkObject("urlParams.cookies", urlParams.cookies) as Promise<void>;
+					return checkObject("urlParams.cookies", urlParams.cookies);
 				});
 
 			}).then(() => {
-				return (checkObject("bodyParams", bodyParams) as Promise<void>);
+				return checkObject("bodyParams", bodyParams);
 			}).then((): Promise<void> => {
 
 				// search wanted operation
@@ -132,7 +132,7 @@ export default class Mediator extends DescriptorUser {
 
 			// parameters validation
 			return this.checkDescriptor().then((): Promise<void> => {
-				return (checkNonEmptyString("operationId", operationId) as Promise<void>);
+				return checkNonEmptyString("operationId", operationId);
 			}).then((): Promise<void> => {
 
 				// search wanted operation

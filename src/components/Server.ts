@@ -18,9 +18,9 @@
 
 	// locals
 
-	import checkInteger from "../checkers/TypeError/checkInteger";
-	import checkNonEmptyObject from "../checkers/RangeError/checkNonEmptyObject";
-	import checkNonEmptyString from "../checkers/RangeError/checkNonEmptyString";
+	import { checkIntegerSync } from "../checkers/TypeError/checkInteger";
+	import { checkNonEmptyObjectSync } from "../checkers/RangeError/checkNonEmptyObject";
+	import { checkNonEmptyStringSync } from "../checkers/RangeError/checkNonEmptyString";
 
 	import extractPattern from "../utils/descriptor/extractPattern";
 	import extractParams from "../utils/descriptor/extractParams";
@@ -170,7 +170,7 @@ export default class Server extends MediatorUser {
 				// parse
 				const { pathname, query }: { "pathname": string | null; "query": any; } = parse((req.url as string), true);
 				req.method = req.method ? req.method.toLowerCase() : "get";
-				req.pattern = !checkNonEmptyString("pattern", req.pattern, false) ? req.pattern : extractPattern(
+				req.pattern = null === checkNonEmptyStringSync("pattern", req.pattern) ? req.pattern : extractPattern(
 					(this._Descriptor as OpenApiDocument).paths, pathname as string, req.method
 				);
 
@@ -178,13 +178,13 @@ export default class Server extends MediatorUser {
 					return next();
 				}
 
-				req.validatedIp = !checkNonEmptyString("ip", req.validatedIp, false) ? req.validatedIp : extractIp(req);
+				req.validatedIp = null === checkNonEmptyStringSync("ip", req.validatedIp) ? req.validatedIp : extractIp(req);
 
 				// url
-				req.headers = !checkNonEmptyObject("headers", req.headers, false) ? req.headers : {};
-				req.cookies = !checkNonEmptyObject("cookies", req.cookies, false) ? req.cookies : extractCookies(req);
-				req.query = !checkNonEmptyObject("query", req.query, false) ? req.query : query || {};
-				req.params = !checkNonEmptyObject("params", req.params, false) ? req.params : extractParams(req.pattern, pathname as string);
+				req.headers = null === checkNonEmptyObjectSync("headers", req.headers) ? req.headers : {};
+				req.cookies = null === checkNonEmptyObjectSync("cookies", req.cookies) ? req.cookies : extractCookies(req);
+				req.query = null === checkNonEmptyObjectSync("query", req.query) ? req.query : query || {};
+				req.params = null === checkNonEmptyObjectSync("params", req.params) ? req.params : extractParams(req.pattern, pathname as string);
 
 				// ensure content length formate
 				if ("undefined" === typeof req.headers["content-length"]) {
@@ -301,8 +301,8 @@ export default class Server extends MediatorUser {
 				}
 
 				// no "Content-Length" header found
-				else if ("get" !== req.method && null !== checkInteger(
-					"headers[\"content-length\"]", req.headers["content-length"], false
+				else if ("get" !== req.method && null !== checkIntegerSync(
+					"headers[\"content-length\"]", req.headers["content-length"]
 				)) {
 
 					const result: { "code": string; "message": string; } = {
@@ -369,7 +369,7 @@ export default class Server extends MediatorUser {
 										case "integer":
 
 											// error returned, not an integer
-											if (checkInteger("request.params['" + key + "']", req.params[key], false)) {
+											if (null !== checkIntegerSync("request.params['" + key + "']", req.params[key])) {
 
 												const value: number = parseInt(req.params[key], 10);
 
@@ -429,7 +429,7 @@ export default class Server extends MediatorUser {
 						if ("get" === req.method.toLowerCase()) {
 							return Promise.resolve({});
 						}
-						else if (!checkNonEmptyObject("body", req.body, false)) {
+						else if (!checkNonEmptyObjectSync("body", req.body)) {
 							return Promise.resolve(req.body);
 						}
 						else {

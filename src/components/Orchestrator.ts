@@ -189,7 +189,7 @@ export default class Orchestrator extends MediatorUser {
 
 			public checkServer (): Promise<void> {
 
-				return (checkObject("Server", this._Server) as Promise<void>).then((): Promise<void> => {
+				return checkObject("Server", this._Server).then((): Promise<void> => {
 
 					return this._Server instanceof Server ? Promise.resolve() : Promise.reject(new TypeError(
 						"The plugin has an invalid Server which is not an instance (or a child) of the official Server class"
