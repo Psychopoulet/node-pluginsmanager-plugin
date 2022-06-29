@@ -14,7 +14,7 @@
 
 	// locals
 
-	import checkObject from "../checkers/TypeError/checkObject";
+	import { checkObject } from "../checkers/TypeError/checkObject";
 
 	import { tLogger } from "./DescriptorUser";
 	import MediatorUser from "./MediatorUser";

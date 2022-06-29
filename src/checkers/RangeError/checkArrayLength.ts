@@ -28,7 +28,7 @@ export function checkArrayLengthSync (dataName: string, data: any, length: numbe
 
 };
 
-export default function checkArrayLength (dataName: string, data: any, length: number): Promise<void> {
+export function checkArrayLength (dataName: string, data: any, length: number): Promise<void> {
 
 	const err: ReferenceError | TypeError | RangeError | null = checkArrayLengthSync(dataName, data, length);
 

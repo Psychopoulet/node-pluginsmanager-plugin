@@ -23,7 +23,7 @@ export function checkBooleanSync (dataName: string, data: any): ReferenceError |
 
 };
 
-export default function checkBoolean (dataName: string, data: any): Promise<void> {
+export function checkBoolean (dataName: string, data: any): Promise<void> {
 
 	const err: ReferenceError | TypeError | null = checkBooleanSync(dataName, data);
 

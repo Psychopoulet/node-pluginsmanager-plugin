@@ -41,7 +41,7 @@ export function checkStringLengthBetweenSync (dataName: string, data: any, min: 
 
 };
 
-export default function checkStringLengthBetween (dataName: string, data: any, min: number, max: number): Promise<void> {
+export function checkStringLengthBetween (dataName: string, data: any, min: number, max: number): Promise<void> {
 
 	const err: ReferenceError | TypeError | RangeError | null = checkStringLengthBetweenSync(dataName, data, min, max);
 

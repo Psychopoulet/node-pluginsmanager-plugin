@@ -23,7 +23,7 @@ export function checkNonEmptyObjectSync (dataName: string, data: any): Reference
 
 };
 
-export default function checkNonEmptyObject (dataName: string, data: any): Promise<void> {
+export function checkNonEmptyObject (dataName: string, data: any): Promise<void> {
 
 	const err: ReferenceError | TypeError | RangeError | null = checkNonEmptyObjectSync(dataName, data);
 

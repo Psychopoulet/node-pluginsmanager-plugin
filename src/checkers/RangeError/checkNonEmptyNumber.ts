@@ -23,7 +23,7 @@ export function checkNonEmptyNumberSync (dataName: string, data: any): Reference
 
 };
 
-export default function checkNonEmptyNumber (dataName: string, data: any): Promise<void> {
+export function checkNonEmptyNumber (dataName: string, data: any): Promise<void> {
 
 	const err: ReferenceError | TypeError | RangeError | null = checkNonEmptyNumberSync(dataName, data);
 

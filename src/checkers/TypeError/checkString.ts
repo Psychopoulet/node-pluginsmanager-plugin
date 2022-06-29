@@ -23,7 +23,7 @@ export function checkStringSync (dataName: string, data: any): ReferenceError | 
 
 };
 
-export default function checkString (dataName: string, data: any): Promise<void> {
+export function checkString (dataName: string, data: any): Promise<void> {
 
 	const err: ReferenceError | TypeError | null = checkStringSync(dataName, data);
 

@@ -23,7 +23,7 @@ export function checkIntegerSync (dataName: string, data: any): ReferenceError |
 
 };
 
-export default function checkInteger (dataName: string, data: any): Promise<void> {
+export function checkInteger (dataName: string, data: any): Promise<void> {
 
 	const err: ReferenceError | TypeError | null = checkIntegerSync(dataName, data);
 

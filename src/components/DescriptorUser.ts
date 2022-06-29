@@ -9,9 +9,9 @@
 	import { OpenApiDocument } from "express-openapi-validate";
 
 	// locals
-	import checkObject from "../checkers/TypeError/checkObject";
-	import checkNonEmptyObject from "../checkers/RangeError/checkNonEmptyObject";
-	import checkNonEmptyString from "../checkers/RangeError/checkNonEmptyString";
+	import { checkObject } from "../checkers/TypeError/checkObject";
+	import { checkNonEmptyObject } from "../checkers/RangeError/checkNonEmptyObject";
+	import { checkNonEmptyString } from "../checkers/RangeError/checkNonEmptyString";
 
 // types & interfaces
 

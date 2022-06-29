@@ -40,7 +40,7 @@ export function checkIntegerBetweenSync (dataName: string, data: any, min: numbe
 
 };
 
-export default function checkIntegerBetween (dataName: string, data: any, min: number, max: number): Promise<void> {
+export function checkIntegerBetween (dataName: string, data: any, min: number, max: number): Promise<void> {
 
 	const err: ReferenceError | TypeError | RangeError | null = checkIntegerBetweenSync(dataName, data, min, max);
 

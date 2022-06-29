@@ -23,7 +23,7 @@ export function checkArraySync (dataName: string, data: any): ReferenceError | T
 
 };
 
-export default function checkArray (dataName: string, data: any): Promise<void> {
+export function checkArray (dataName: string, data: any): Promise<void> {
 
 	const err: ReferenceError | TypeError | null = checkArraySync(dataName, data);
 

@@ -6,7 +6,7 @@
 	import { lstat } from "fs";
 
 	// locals
-	import checkNonEmptyString from "../../checkers/RangeError/checkNonEmptyString";
+	import { checkNonEmptyString } from "../../checkers/RangeError/checkNonEmptyString";
 
 // module
 

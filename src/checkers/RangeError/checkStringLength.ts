@@ -28,7 +28,7 @@ export function checkStringLengthSync (dataName: string, data: any, length: numb
 
 };
 
-export default function checkStringLength (dataName: string, data: any, length: number): Promise<void> {
+export function checkStringLength (dataName: string, data: any, length: number): Promise<void> {
 
 	const err: ReferenceError | TypeError | RangeError | null = checkStringLengthSync(dataName, data, length);
 

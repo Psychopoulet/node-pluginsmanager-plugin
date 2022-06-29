@@ -18,7 +18,7 @@ export function checkExistsSync (dataName: string, data: any): ReferenceError | 
 
 };
 
-export default function checkExists (dataName: string, data: any): Promise<void> {
+export function checkExists (dataName: string, data: any): Promise<void> {
 
 	const err: ReferenceError | null = checkExistsSync(dataName, data);
 

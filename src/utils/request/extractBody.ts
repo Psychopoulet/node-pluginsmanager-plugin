@@ -6,9 +6,9 @@
 
 	import { iIncomingMessage } from "../../components/Server";
 
-	import checkInteger from "../../checkers/TypeError/checkInteger";
-	import checkFunction from "../../checkers/TypeError/checkFunction";
-	import checkNonEmptyObject from "../../checkers/RangeError/checkNonEmptyObject";
+	import { checkInteger } from "../../checkers/TypeError/checkInteger";
+	import { checkFunction } from "../../checkers/TypeError/checkFunction";
+	import { checkNonEmptyObject } from "../../checkers/RangeError/checkNonEmptyObject";
 
 // types & interfaces
 

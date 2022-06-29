@@ -35,7 +35,7 @@ export function checkObjectLengthSync (dataName: string, data: any, _length: num
 
 };
 
-export default function checkObjectLength (dataName: string, data: any, length: number): Promise<void> {
+export function checkObjectLength (dataName: string, data: any, length: number): Promise<void> {
 
 	const err: ReferenceError | TypeError | RangeError | null = checkObjectLengthSync(dataName, data, length);
 

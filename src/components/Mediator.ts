@@ -9,9 +9,9 @@
 
 	import { iServerResponse } from "./Server";
 
-	import checkObject from "../checkers/TypeError/checkObject";
-	import checkNonEmptyString from "../checkers/RangeError/checkNonEmptyString";
-	import checkNonEmptyObject from "../checkers/RangeError/checkNonEmptyObject";
+	import { checkObject } from "../checkers/TypeError/checkObject";
+	import { checkNonEmptyString } from "../checkers/RangeError/checkNonEmptyString";
+	import { checkNonEmptyObject } from "../checkers/RangeError/checkNonEmptyObject";
 
 	import extractPathMethodByOperationId, { iPathMethod } from "../utils/descriptor/extractPathMethodByOperationId";
 
