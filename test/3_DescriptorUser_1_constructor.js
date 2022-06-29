@@ -10,7 +10,7 @@
 	// locals
 
 		// plugin
-		const DescriptorUser = require(join(__dirname, "..", "lib", "cjs", "components", "DescriptorUser.js"));
+		const { DescriptorUser } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
 		const LocalDescriptorUser = require(join(__dirname, "utils", "DescriptorUser", "LocalDescriptorUser.js"));
 
 // tests
@@ -24,7 +24,7 @@ describe("DescriptorUser / constructor", () => {
 		strictEqual(typeof bootable, "object", "Generated bootable is not an object");
 		strictEqual(bootable instanceof Events, true, "Generated bootable is not a Events instance");
 		strictEqual(bootable instanceof LocalDescriptorUser, true, "Generated bootable is not a LocalDescriptorUser instance");
-		strictEqual(bootable instanceof DescriptorUser.default, true, "Generated bootable is not a DescriptorUser instance");
+		strictEqual(bootable instanceof DescriptorUser, true, "Generated bootable is not a DescriptorUser instance");
 
 		strictEqual(typeof bootable._Descriptor, "object", "Generated bootable _Descriptor is not an object");
 		strictEqual(bootable._Descriptor, null, "Generated bootable _Descriptor is not as expected");
@@ -76,7 +76,7 @@ describe("DescriptorUser / constructor", () => {
 
 		it("should test non-herited _initWorkSpace", (done) => {
 
-			const nonHerited = new DescriptorUser.default();
+			const nonHerited = new DescriptorUser();
 
 			nonHerited._initWorkSpace().then(() => {
 				done(new Error("There is no generated Error"));
@@ -93,7 +93,7 @@ describe("DescriptorUser / constructor", () => {
 
 		it("should test non-herited init", (done) => {
 
-			const nonHerited = new DescriptorUser.default();
+			const nonHerited = new DescriptorUser();
 
 			nonHerited.init().then(() => {
 				done(new Error("There is no generated Error"));
@@ -122,7 +122,7 @@ describe("DescriptorUser / constructor", () => {
 
 		it("should test non-herited _releaseWorkSpace", (done) => {
 
-			const nonHerited = new DescriptorUser.default();
+			const nonHerited = new DescriptorUser();
 
 			nonHerited._releaseWorkSpace().then(() => {
 				done(new Error("There is no generated Error"));
@@ -139,7 +139,7 @@ describe("DescriptorUser / constructor", () => {
 
 		it("should test non-herited release", (done) => {
 
-			const nonHerited = new DescriptorUser.default();
+			const nonHerited = new DescriptorUser();
 
 			nonHerited.release().then(() => {
 				done(new Error("There is no generated Error"));
