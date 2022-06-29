@@ -21,12 +21,12 @@
 
 export default function extractBody (req: iIncomingMessage): Promise<iResult> {
 
-	return (checkNonEmptyObject("req", req) as Promise<void>).then((): Promise<void> => {
-		return (checkFunction("req.on", req.on) as Promise<void>);
+	return checkNonEmptyObject("req", req).then((): Promise<void> => {
+		return checkFunction("req.on", req.on);
 	}).then((): Promise<void> => {
-		return (checkNonEmptyObject("req.headers", req.headers) as Promise<void>);
+		return checkNonEmptyObject("req.headers", req.headers);
 	}).then((): Promise<void> => {
-		return (checkInteger("req.headers[\"content-length\"]", req.headers["content-length"]) as Promise<void>);
+		return checkInteger("req.headers[\"content-length\"]", req.headers["content-length"]);
 	}).then((): Promise<iResult> => {
 
 		return new Promise((resolve: (res: iResult) => void, reject: (err: Error) => void): void => {

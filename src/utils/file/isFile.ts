@@ -12,7 +12,7 @@
 
 export default function isFile (file: string): Promise<boolean> {
 
-	return (checkNonEmptyString("file", file) as Promise<void>).then((): Promise<boolean> => {
+	return checkNonEmptyString("file", file).then((): Promise<boolean> => {
 
 		return new Promise((resolve): void => {
 
