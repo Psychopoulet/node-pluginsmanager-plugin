@@ -26,7 +26,17 @@ export default function cleanSendedError (data: any): string {
 
 		}
 		else if (data.err) { // 1 level recursive for "err" data (avoid too deep recursive analyse)
-			return data.err instanceof Error ? data.err.message : data.err;
+
+			if (data.err instanceof Error) {
+				return data.err.message;
+			}
+			else if (data.err.message) {
+				return data.err.message instanceof Error ? data.err.message.message : data.err.message;
+			}
+			else {
+				return data.err;
+			}
+
 		}
 		else {
 			return String(data);
