@@ -7,7 +7,7 @@
 	const { join } = require("path");
 
 	// locals
-	const { checkInteger } = require(join(__dirname, "..", "lib", "main.js"));
+	const { checkInteger, checkIntegerSync } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
 
 // tests
 
@@ -70,8 +70,7 @@ describe("checkers / TypeError / checkInteger", () => {
 
 		it("should test with missing data", () => {
 
-			const test = {};
-			const err = checkInteger("test", test.test, false);
+			const err = checkIntegerSync("test");
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
 			strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
@@ -80,7 +79,7 @@ describe("checkers / TypeError / checkInteger", () => {
 
 		it("should test with wrong type data", () => {
 
-			const err = checkInteger("test", "test", false);
+			const err = checkIntegerSync("test", "test");
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
 			strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
@@ -89,7 +88,7 @@ describe("checkers / TypeError / checkInteger", () => {
 
 		it("should test with float data", () => {
 
-			const err = checkInteger("test", 1.1, false);
+			const err = checkIntegerSync("test", 1.1);
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
 			strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
@@ -98,7 +97,7 @@ describe("checkers / TypeError / checkInteger", () => {
 
 		it("should test with valid data", () => {
 
-			const err = checkInteger("test", 1, false);
+			const err = checkIntegerSync("test", 1);
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
 			strictEqual(err, null, "Generated error is not as expected");

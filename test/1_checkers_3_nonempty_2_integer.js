@@ -7,13 +7,28 @@
 	const { join } = require("path");
 
 	// locals
-	const { checkNonEmptyInteger } = require(join(__dirname, "..", "lib", "main.js"));
+	const { checkNonEmptyInteger, checkNonEmptyIntegerSync } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
 
 // tests
 
 describe("checkers / RangeError / checkNonEmptyInteger", () => {
 
 	describe("async", () => {
+
+		it("should test with missing data", (done) => {
+
+			checkNonEmptyInteger("test").then(() => {
+				done(new Error("There is no generated error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated error is not an object");
+				strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+
+				done();
+
+			});
+
+		});
 
 		it("should test with wrong type data", (done) => {
 
@@ -53,9 +68,18 @@ describe("checkers / RangeError / checkNonEmptyInteger", () => {
 
 	describe("sync", () => {
 
+		it("should test with missing data", () => {
+
+			const err = checkNonEmptyIntegerSync("test");
+
+			strictEqual(typeof err, "object", "Generated error is not an object");
+			strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+
+		});
+
 		it("should test with wrong type data", () => {
 
-			const err = checkNonEmptyInteger("test", "test", false);
+			const err = checkNonEmptyIntegerSync("test", "test");
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
 			strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
@@ -64,7 +88,7 @@ describe("checkers / RangeError / checkNonEmptyInteger", () => {
 
 		it("should test with empty data", () => {
 
-			const err = checkNonEmptyInteger("test", 0, false);
+			const err = checkNonEmptyIntegerSync("test", 0);
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
 			strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
@@ -73,7 +97,7 @@ describe("checkers / RangeError / checkNonEmptyInteger", () => {
 
 		it("should test with valid data", () => {
 
-			const err = checkNonEmptyInteger("test", 1, false);
+			const err = checkNonEmptyIntegerSync("test", 1);
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
 			strictEqual(err, null, "Generated error is not as expected");

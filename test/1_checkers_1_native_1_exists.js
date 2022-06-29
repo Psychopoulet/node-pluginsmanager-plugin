@@ -7,7 +7,7 @@
 	const { join } = require("path");
 
 	// locals
-	const { checkExists } = require(join(__dirname, "..", "lib", "main.js"));
+	const { checkExists, checkExistsSync } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
 
 // tests
 
@@ -40,8 +40,7 @@ describe("checkers / ReferenceError / checkExists", () => {
 
 		it("should test with missing data", () => {
 
-			const test = {};
-			const err = checkExists("test", test.test, false);
+			const err = checkExistsSync("test");
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
 			strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
@@ -50,10 +49,7 @@ describe("checkers / ReferenceError / checkExists", () => {
 
 		it("should test with valid data", () => {
 
-			const test = {
-				"test": true
-			};
-			const err = checkExists("test", test.test, false);
+			const err = checkExistsSync("test", "test");
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
 			strictEqual(err, null, "Generated error is not as expected");
