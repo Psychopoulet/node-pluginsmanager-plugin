@@ -21,13 +21,17 @@ export function checkObjectLengthSync (dataName: string, data: any, _length: num
 			err = checkIntegerSync(dataName + "/length", _length) as ReferenceError | TypeError | null;
 		}
 
-		const { length }: { "length": number; } = Object.keys(data);
+		if (!err) {
 
-		if (!err && _length !== length) {
+			const { length }: { "length": number; } = Object.keys(data);
 
-			err = new RangeError(
-				"\"" + dataName + "\" length must be equal to " + _length
-			);
+			if (_length !== length) {
+
+				err = new RangeError(
+					"\"" + dataName + "\" length must be equal to " + _length
+				);
+
+			}
 
 		}
 

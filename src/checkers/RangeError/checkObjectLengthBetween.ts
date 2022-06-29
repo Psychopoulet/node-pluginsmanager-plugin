@@ -21,21 +21,25 @@ export function checkObjectLengthBetweenSync (dataName: string, data: any, min: 
 			err = checkNonEmptyIntegerSync(dataName + "/max", max) as ReferenceError | TypeError | RangeError | null;
 		}
 
-		const { length }: { "length": number; } = Object.keys(data);
+		if (!err) {
 
-		if (!err && min > length) {
+			const { length }: { "length": number; } = Object.keys(data);
 
-			err = new RangeError(
-				"\"" + dataName + "\" length must be higher than " + min
-			);
+			if (min > length) {
 
-		}
+				err = new RangeError(
+					"\"" + dataName + "\" length must be higher than " + min
+				);
 
-		if (!err && max < length) {
+			}
 
-			err = new RangeError(
-				"\"" + dataName + "\" length must be lower than " + max
-			);
+			if (!err && max < length) {
+
+				err = new RangeError(
+					"\"" + dataName + "\" length must be lower than " + max
+				);
+
+			}
 
 		}
 
