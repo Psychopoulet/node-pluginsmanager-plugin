@@ -1,4 +1,4 @@
-{
+export default {
 
 	"OK": 200,
 	"OK_PUT": 201,
@@ -14,4 +14,4 @@
 	"INTERNAL_SERVER_ERROR": 500,
 	"NOT_IMPLEMENTED": 501
 
-}
+};

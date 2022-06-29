@@ -3,7 +3,6 @@
 // deps
 
 	// natives
-	import { join } from "path";
 	import { parse } from "url";
 	import { EOL } from "os";
 	import { IncomingMessage, ServerResponse } from "http";
@@ -35,6 +34,8 @@
 	import MediatorUser, { iMediatorUserOptions } from "./MediatorUser";
 	import Mediator from "./Mediator";
 	import NotFoundError from "./NotFoundError";
+
+	import SERVER_CODES from "../utils/serverCodes";
 
 // types & interfaces
 
@@ -79,7 +80,6 @@
 // consts
 
 	const WEBSOCKET_STATE_OPEN: number = 1;
-	const SERVER_CODES: { [key:string]: number } = require(join(__dirname, "..", "utils", "serverCodes.json"));
 
 // module
 
