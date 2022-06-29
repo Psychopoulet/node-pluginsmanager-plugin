@@ -9,7 +9,7 @@
 	// locals
 
 		// plugin
-		const DescriptorUser = require(join(__dirname, "..", "lib", "components", "DescriptorUser.js"));
+		const DescriptorUser = require(join(__dirname, "..", "lib", "cjs", "components", "DescriptorUser.js"));
 		const LocalDescriptorUser = require(join(__dirname, "utils", "DescriptorUser", "LocalDescriptorUser.js"));
 
 // tests
@@ -18,7 +18,7 @@ describe("DescriptorUser / init", () => {
 
 	it("should test non-herited _initWorkSpace", (done) => {
 
-		const nonHerited = new DescriptorUser();
+		const nonHerited = new DescriptorUser.default();
 
 		nonHerited._initWorkSpace().then(() => {
 			done(new Error("There is no generated Error"));
@@ -35,7 +35,7 @@ describe("DescriptorUser / init", () => {
 
 	it("should test non-herited init", (done) => {
 
-		const nonHerited = new DescriptorUser();
+		const nonHerited = new DescriptorUser.default();
 
 		nonHerited.init().then(() => {
 			done(new Error("There is no generated Error"));
