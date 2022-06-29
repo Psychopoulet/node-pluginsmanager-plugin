@@ -3,45 +3,30 @@
 //  deps
 
 	// locals
-	import checkInteger from "../TypeError/checkInteger";
-
-// private
-
-	// methods
-
-		/**
-		* Execute a synchronous check on data
-		* @param {string} dataName: data identifier
-		* @param {any} data: data to check
-		* @returns {ReferenceError|TypeError|RangeError|null} check result
-		*/
-		function _checkSync (dataName: string, data: any): ReferenceError | TypeError | RangeError | null {
-
-			let err: ReferenceError | TypeError | RangeError | null = checkInteger(dataName, data, false) as ReferenceError | TypeError | null;
-
-				if (!err && 0 >= (data as number)) {
-
-					err = new RangeError(
-						"\"" + dataName + "\" must be higher than 0"
-					);
-
-				}
-
-			return err;
-
-		}
+	import { checkIntegerSync } from "./../TypeError/checkInteger";
 
 // module
 
-export default function checkNonEmptyInteger (dataName: string, data: any, async: boolean = true): ReferenceError | TypeError | RangeError | null | Promise<void> {
+export function checkNonEmptyIntegerSync (dataName: string, data: any): ReferenceError | TypeError | RangeError | null {
 
-	const err: ReferenceError | TypeError | RangeError | null = _checkSync(dataName, data);
+	let err: ReferenceError | TypeError | RangeError | null = checkIntegerSync(dataName, data) as ReferenceError | TypeError | null;
 
-	if (async) {
-		return err ? Promise.reject(err) : Promise.resolve();
-	}
-	else {
-		return err;
-	}
+		if (!err && 0 >= (data as number)) {
+
+			err = new RangeError(
+				"\"" + dataName + "\" must be higher than 0"
+			);
+
+		}
+
+	return err;
+
+};
+
+export default function checkNonEmptyInteger (dataName: string, data: any): Promise<void> {
+
+	const err: ReferenceError | TypeError | RangeError | null = checkNonEmptyIntegerSync(dataName, data);
+
+	return err ? Promise.reject(err) : Promise.resolve();
 
 };
