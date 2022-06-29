@@ -61,7 +61,9 @@ describe("Orchestrator / load & destroy", () => {
 				strictEqual(typeof orchestrator._extended, "object", "Generated orchestrator extended is not an object");
 				strictEqual(orchestrator._extended instanceof Array, true, "Generated orchestrator extended is not an Array");
 				deepStrictEqual(orchestrator._extended, [
+					"type",
 					"typings",
+					"exports",
 					"files",
 					"husky",
 					"repository",
