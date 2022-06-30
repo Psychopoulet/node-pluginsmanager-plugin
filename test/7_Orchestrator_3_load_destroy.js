@@ -170,7 +170,8 @@ describe("Orchestrator / load & destroy", () => {
 				// native
 
 				strictEqual(typeof orchestrator.authors, "object", "Generated orchestrator authors is not an object");
-				strictEqual(orchestrator.authors, null, "Generated orchestrator authors is not as expected");
+				strictEqual(orchestrator.authors instanceof Array, true, "Generated orchestrator authors is not an Array");
+				deepStrictEqual(orchestrator.authors, [], "Generated orchestrator authors is not as expected");
 
 				strictEqual(typeof orchestrator.description, "string", "Generated orchestrator description is not a string");
 				strictEqual(orchestrator.description, "", "Generated orchestrator description is not as expected");

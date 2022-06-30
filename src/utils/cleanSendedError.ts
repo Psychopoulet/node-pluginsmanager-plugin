@@ -39,7 +39,7 @@ export default function cleanSendedError (data: any): string {
 
 		}
 		else {
-			return String(data);
+			return data;
 		}
 
 	}
