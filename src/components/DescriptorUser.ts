@@ -77,16 +77,12 @@ export default class DescriptorUser extends Events {
 		// must be inherited
 		protected _initWorkSpace (...data: Array<any>): Promise<void> {
 
-			console.log("DescriptorUser", "_initWorkSpace", ...data);
-
 			return Promise.reject(new Error("\"_initWorkSpace\" method must be inherited"));
 
 		}
 
 		// must be inherited
 		protected _releaseWorkSpace (...data: Array<any>): Promise<void> {
-
-			console.log("DescriptorUser", "_releaseWorkSpace", ...data);
 
 			return Promise.reject(new Error("\"_releaseWorkSpace\" method must be inherited"));
 

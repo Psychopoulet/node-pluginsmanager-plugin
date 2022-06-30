@@ -34,7 +34,8 @@ describe("compilation typescript", () => {
 					"npx tsc",
 					join(__dirname, "typescript", "compilation.cts"),
 					"--target es6",
-					"--module commonjs"
+					"--module commonjs",
+					"--esModuleInterop"
 				];
 
 				exec(args.join(" "), {

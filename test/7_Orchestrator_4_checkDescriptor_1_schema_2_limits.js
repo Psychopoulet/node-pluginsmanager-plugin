@@ -24,7 +24,7 @@ describe("Orchestrator / checkDescriptor / schema / limits", () => {
 		"packageFile": join(__dirname, "..", "package.json"),
 		"descriptorFile": TMP_DESCRIPTOR,
 		"mediatorFile": join(__dirname, "utils", "Mediator", "LocalMediator.js"),
-		"serverFile": join(__dirname, "..", "lib", "components", "Server.js")
+		"serverFile": join(__dirname, "utils", "Server", "LocalServer.js")
 	});
 
 	afterEach(() => {

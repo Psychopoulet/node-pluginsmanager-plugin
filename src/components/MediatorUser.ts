@@ -38,15 +38,11 @@ export default class MediatorUser extends DescriptorUser {
 
 		public _initWorkSpace (...data: Array<any>): Promise<void> {
 
-			console.log("MediatorUser", "_initWorkSpace", ...data);
-
 			return Promise.resolve();
 
 		}
 
 		public _releaseWorkSpace (...data: Array<any>): Promise<void> {
-
-			console.log("MediatorUser", "_releaseWorkSpace", ...data);
 
 			return Promise.resolve();
 

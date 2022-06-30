@@ -8,7 +8,7 @@
 	import { join } from 'path';
 
 	// locals
-	import { Orchestrator, Mediator, Server } = require("../../lib/cjs/main.cjs");
+	import { Orchestrator, Mediator, Server } from "../../lib/cjs/main.cjs";
 
 // classes
 
@@ -27,7 +27,7 @@
 		"packageFile": join(__dirname, "..", "..", "package.json"),
 		"descriptorFile": join(__dirname, "..", "utils", "DescriptorUser", "Descriptor.json"),
 		"mediatorFile": join(__dirname, "..", "utils", "Mediator", "LocalMediator.js"),
-		"serverFile": join(__dirname, "..", "..", "lib", "components", "Server.js")
+		"serverFile": join(__dirname, "..", "utils", "Server", "LocalServer.js")
 	});
 
 // module
