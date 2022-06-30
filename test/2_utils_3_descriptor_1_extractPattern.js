@@ -7,7 +7,7 @@
 	const { join } = require("path");
 
 	// locals
-	const { extractPattern } = require(join(__dirname, "..", "lib", "utils", "descriptor", "main.js"));
+	const extractPattern = require(join(__dirname, "..", "lib", "cjs", "utils", "descriptor", "extractPattern.js"));
 
 // tests
 
@@ -16,15 +16,15 @@ describe("utils / descriptor / extractPattern", () => {
 	describe("paths", () => {
 
 		it("should test with missing data", () => {
-			strictEqual(extractPattern(), "", "generated data is not as expected");
+			strictEqual(extractPattern.default(), "", "generated data is not as expected");
 		});
 
 		it("should test with wrong data", () => {
-			strictEqual(extractPattern(false), "", "generated data is not as expected");
+			strictEqual(extractPattern.default(false), "", "generated data is not as expected");
 		});
 
 		it("should test with empty data", () => {
-			strictEqual(extractPattern({}), "", "generated data is not as expected");
+			strictEqual(extractPattern.default({}), "", "generated data is not as expected");
 		});
 
 	});
@@ -33,7 +33,7 @@ describe("utils / descriptor / extractPattern", () => {
 
 		it("should test with missing data", () => {
 
-			strictEqual(extractPattern({
+			strictEqual(extractPattern.default({
 				"/test/test2": {}
 			}), "", "generated data is not as expected");
 
@@ -41,7 +41,7 @@ describe("utils / descriptor / extractPattern", () => {
 
 		it("should test with wrong data", () => {
 
-			strictEqual(extractPattern({
+			strictEqual(extractPattern.default({
 				"/test/test2": {}
 			}, false), "", "generated data is not as expected");
 
@@ -49,7 +49,7 @@ describe("utils / descriptor / extractPattern", () => {
 
 		it("should test with empty data", () => {
 
-			strictEqual(extractPattern({
+			strictEqual(extractPattern.default({
 				"/test/test2": {}
 			}, ""), "", "generated data is not as expected");
 
@@ -61,7 +61,7 @@ describe("utils / descriptor / extractPattern", () => {
 
 		it("should test with missing data", () => {
 
-			strictEqual(extractPattern({
+			strictEqual(extractPattern.default({
 				"/test/test2": {}
 			}, "/test/test2"), "", "generated data is not as expected");
 
@@ -69,7 +69,7 @@ describe("utils / descriptor / extractPattern", () => {
 
 		it("should test with wrong data", () => {
 
-			strictEqual(extractPattern({
+			strictEqual(extractPattern.default({
 				"/test/test2": {}
 			}, "/test/test2", false), "", "generated data is not as expected");
 
@@ -77,7 +77,7 @@ describe("utils / descriptor / extractPattern", () => {
 
 		it("should test with empty data", () => {
 
-			strictEqual(extractPattern({
+			strictEqual(extractPattern.default({
 				"/test/test2": {}
 			}, "/test/test2", ""), "", "generated data is not as expected");
 
@@ -85,7 +85,7 @@ describe("utils / descriptor / extractPattern", () => {
 
 		it("should test with no existing path parameter", () => {
 
-			strictEqual(extractPattern({
+			strictEqual(extractPattern.default({
 				"/test/test2": {
 					"post": {}
 				}
@@ -99,7 +99,7 @@ describe("utils / descriptor / extractPattern", () => {
 
 		it("should test with valid path parameter", () => {
 
-			strictEqual(extractPattern({
+			strictEqual(extractPattern.default({
 				"/test/test2": {
 					"get": {}
 				}
@@ -109,7 +109,7 @@ describe("utils / descriptor / extractPattern", () => {
 
 		it("should test with pattern path parameter", () => {
 
-			strictEqual(extractPattern({
+			strictEqual(extractPattern.default({
 				"/test/{test}": {
 					"get": {}
 				}
@@ -119,7 +119,7 @@ describe("utils / descriptor / extractPattern", () => {
 
 		it("should test with mutliples valid path parameter", () => {
 
-			strictEqual(extractPattern({
+			strictEqual(extractPattern.default({
 				"/test": {
 					"post": {}
 				},

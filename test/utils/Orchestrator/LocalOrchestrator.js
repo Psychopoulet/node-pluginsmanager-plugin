@@ -8,8 +8,8 @@
 	const { homedir } = require("os");
 
 	// locals
-	const { isFile } = require(join(__dirname, "..", "..", "..", "lib", "utils", "file", "main.js"));
-	const { Orchestrator } = require(join(__dirname, "..", "..", "..", "lib", "components", "main.js"));
+	const isFile = require(join(__dirname, "..", "..", "..", "lib", "cjs", "utils", "file", "isFile.js"));
+	const { Orchestrator } = require(join(__dirname, "..", "..", "..", "lib", "cjs", "main.cjs"));
 
 // consts
 
@@ -43,7 +43,7 @@ module.exports = class LocalOrchestrator extends Orchestrator {
 
 	update () {
 
-		return isFile(FILE).then((exists) => {
+		return isFile.default(FILE).then((exists) => {
 			return exists ? Promise.resolve() : this.install();
 		});
 

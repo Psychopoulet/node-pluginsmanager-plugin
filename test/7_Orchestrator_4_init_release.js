@@ -9,7 +9,7 @@
 	// locals
 
 		// plugin
-		const { Mediator, Server, Orchestrator } = require(join(__dirname, "..", "lib", "main.js"));
+		const { Mediator, Server, Orchestrator } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
 
 		// utils
 		const LocalOrchestrator = require(join(__dirname, "utils", "Orchestrator", "LocalOrchestrator.js"));

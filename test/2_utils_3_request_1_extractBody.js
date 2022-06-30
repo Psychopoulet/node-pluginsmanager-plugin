@@ -8,7 +8,7 @@
 	const EventEmitter = require("events");
 
 	// locals
-	const { extractBody } = require(join(__dirname, "..", "lib", "utils", "request", "main.js"));
+	const extractBody = require(join(__dirname, "..", "lib", "cjs", "utils", "request", "extractBody.js"));
 
 // tests
 
@@ -16,7 +16,7 @@ describe("utils / request / extractBody", () => {
 
 	it("should test with missing data", (done) => {
 
-		extractBody().then(() => {
+		extractBody.default().then(() => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
@@ -31,7 +31,7 @@ describe("utils / request / extractBody", () => {
 
 	it("should test with wrong data", (done) => {
 
-		extractBody(false).then(() => {
+		extractBody.default(false).then(() => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
@@ -46,7 +46,7 @@ describe("utils / request / extractBody", () => {
 
 	it("should test with empty object", (done) => {
 
-		extractBody({}).then(() => {
+		extractBody.default({}).then(() => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
@@ -63,7 +63,7 @@ describe("utils / request / extractBody", () => {
 
 		it("should test with missing data", (done) => {
 
-			extractBody({
+			extractBody.default({
 				"test": "test"
 			}).then(() => {
 				done(new Error("There is no generated error"));
@@ -80,7 +80,7 @@ describe("utils / request / extractBody", () => {
 
 		it("should test with wrong data", (done) => {
 
-			extractBody({
+			extractBody.default({
 				"on": "test"
 			}).then(() => {
 				done(new Error("There is no generated error"));
@@ -101,7 +101,7 @@ describe("utils / request / extractBody", () => {
 
 		it("should test with missing data", (done) => {
 
-			extractBody({
+			extractBody.default({
 				"on": () => {
 					// nothing to do here
 				}
@@ -120,7 +120,7 @@ describe("utils / request / extractBody", () => {
 
 		it("should test with wrong data", (done) => {
 
-			extractBody({
+			extractBody.default({
 				"on": () => {
 					// nothing to do here
 				},
@@ -140,7 +140,7 @@ describe("utils / request / extractBody", () => {
 
 		it("should test with empty data", (done) => {
 
-			extractBody({
+			extractBody.default({
 				"on": () => {
 					// nothing to do here
 				},
@@ -162,7 +162,7 @@ describe("utils / request / extractBody", () => {
 
 			it("should test with missing data", (done) => {
 
-				extractBody({
+				extractBody.default({
 					"on": () => {
 						// nothing to do here
 					},
@@ -184,7 +184,7 @@ describe("utils / request / extractBody", () => {
 
 			it("should test with wrong data", (done) => {
 
-				extractBody({
+				extractBody.default({
 					"on": () => {
 						// nothing to do here
 					},
@@ -220,7 +220,7 @@ describe("utils / request / extractBody", () => {
 
 			return new Promise((resolve, reject) => {
 
-				extractBody(event)
+				extractBody.default(event)
 					.then(resolve)
 					.catch(reject);
 
@@ -240,7 +240,7 @@ describe("utils / request / extractBody", () => {
 				"content-length": Buffer.byteLength(JSON.stringify(data))
 			};
 
-			extractBody(event)
+			extractBody.default(event)
 				.then(() => {
 					done(new Error("There is no generated error"));
 				})
@@ -270,7 +270,7 @@ describe("utils / request / extractBody", () => {
 				"content-length": Buffer.byteLength(data)
 			};
 
-			extractBody(event)
+			extractBody.default(event)
 				.then(() => {
 					done(new Error("There is no generated error"));
 				})
@@ -302,7 +302,7 @@ describe("utils / request / extractBody", () => {
 
 			return new Promise((resolve, reject) => {
 
-				extractBody(event)
+				extractBody.default(event)
 					.then(resolve)
 					.catch(reject);
 

@@ -13,7 +13,7 @@
 	// locals
 
 		// plugin
-		const { readJSONFile } = require(join(__dirname, "..", "lib", "utils", "file", "main.js"));
+		const readJSONFile = require(join(__dirname, "..", "lib", "cjs", "utils", "file", "readJSONFile.js"));
 
 		// utils
 		const LocalOrchestrator = require(join(__dirname, "utils", "Orchestrator", "LocalOrchestrator.js"));
@@ -72,7 +72,7 @@ describe("Orchestrator / load & destroy", () => {
 					"homepage"
 				], "Generated orchestrator extended is not as expected");
 
-				return readJSONFile(GOOD_OPTIONS.packageFile);
+				return readJSONFile.default(GOOD_OPTIONS.packageFile);
 
 			}).then((data) => {
 

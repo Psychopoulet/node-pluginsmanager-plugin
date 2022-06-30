@@ -6,11 +6,11 @@
 	const { join } = require("path");
 
 	// locals
-	const DescriptorUser = require(join(__dirname, "..", "..", "..", "lib", "cjs", "components", "DescriptorUser.js"));
+	const { DescriptorUser } = require(join(__dirname, "..", "..", "..", "lib", "cjs", "main.cjs"));
 
 // module
 
-module.exports = class LocalDescriptorUser extends DescriptorUser.default {
+module.exports = class LocalDescriptorUser extends DescriptorUser {
 
 	_initWorkSpace () {
 

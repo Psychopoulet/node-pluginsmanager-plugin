@@ -35,7 +35,20 @@ describe("Server / requests / app", () => {
 				runningServer = express().use(
 					"/node-pluginsmanager-plugin", express.static(join(__dirname, "utils", "public"))
 				).use((req, res, next) => {
-					server.appMiddleware(req, res, next);
+
+					try {
+						server.appMiddleware(req, res, next);
+					}
+					catch (e) {
+						console.log("");
+						console.log("");
+						console.log("");
+						console.log(e);
+						console.log("");
+						console.log("");
+						console.log("");
+					}
+
 				}).use((req, res) => {
 
 					res.writeHead(404, {
