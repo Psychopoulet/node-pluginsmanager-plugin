@@ -7,7 +7,7 @@
 	const { join } = require("path");
 
 	// locals
-	const { readJSONFile } = require(join(__dirname, "..", "lib", "utils", "file", "main.js"));
+	const readJSONFile = require(join(__dirname, "..", "lib", "cjs", "utils", "file", "readJSONFile.js"));
 
 // tests
 
@@ -15,7 +15,7 @@ describe("utils / file / readJSONFile", () => {
 
 	it("should test with missing file", (done) => {
 
-		readJSONFile().then(() => {
+		readJSONFile.default().then(() => {
 			done(new Error("tests does not generate error"));
 		}).catch((err) => {
 
@@ -30,7 +30,7 @@ describe("utils / file / readJSONFile", () => {
 
 	it("should test with wrong type file", (done) => {
 
-		readJSONFile(false).then(() => {
+		readJSONFile.default(false).then(() => {
 			done(new Error("tests does not generate error"));
 		}).catch((err) => {
 
@@ -45,7 +45,7 @@ describe("utils / file / readJSONFile", () => {
 
 	it("should test with empty data", (done) => {
 
-		readJSONFile("").then(() => {
+		readJSONFile.default("").then(() => {
 			done(new Error("tests does not generate error"));
 		}).catch((err) => {
 
@@ -60,7 +60,7 @@ describe("utils / file / readJSONFile", () => {
 
 	it("should test with inexistant file", (done) => {
 
-		readJSONFile("zrgzergzergerg").then(() => {
+		readJSONFile.default("zrgzergzergerg").then(() => {
 			done(new Error("tests does not generate error"));
 		}).catch((err) => {
 
@@ -75,7 +75,7 @@ describe("utils / file / readJSONFile", () => {
 
 	it("should test with rigth file", () => {
 
-		return readJSONFile(join(__dirname, "..", "package.json")).then((data) => {
+		return readJSONFile.default(join(__dirname, "..", "package.json")).then((data) => {
 
 			strictEqual(typeof data, "object", "data is not as expected");
 

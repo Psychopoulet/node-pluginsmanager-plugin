@@ -7,7 +7,7 @@
 	const { join } = require("path");
 
 	// locals
-	const { checkFile } = require(join(__dirname, "..", "lib", "utils", "file", "main.js"));
+	const checkFile = require(join(__dirname, "..", "lib", "cjs", "utils", "file", "checkFile.js"));
 
 // tests
 
@@ -15,7 +15,7 @@ describe("utils / file / checkFile", () => {
 
 	it("should test with missing file", (done) => {
 
-		checkFile().then(() => {
+		checkFile.default().then(() => {
 			done(new Error("tests does not generate error"));
 		}).catch((err) => {
 
@@ -30,7 +30,7 @@ describe("utils / file / checkFile", () => {
 
 	it("should test with wrong type file", (done) => {
 
-		checkFile(false).then(() => {
+		checkFile.default(false).then(() => {
 			done(new Error("tests does not generate error"));
 		}).catch((err) => {
 
@@ -45,7 +45,7 @@ describe("utils / file / checkFile", () => {
 
 	it("should test with empty data", (done) => {
 
-		checkFile("").then(() => {
+		checkFile.default("").then(() => {
 			done(new Error("tests does not generate error"));
 		}).catch((err) => {
 
@@ -60,7 +60,7 @@ describe("utils / file / checkFile", () => {
 
 	it("should test with inexistant file", (done) => {
 
-		checkFile("zrgzergzergerg").then(() => {
+		checkFile.default("zrgzergzergerg").then(() => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
@@ -75,7 +75,7 @@ describe("utils / file / checkFile", () => {
 
 	it("should test with existant file", () => {
 
-		return checkFile(__filename);
+		return checkFile.default(__filename);
 
 	});
 

@@ -9,7 +9,7 @@
 	// locals
 
 		// plugin
-		const DescriptorUser = require(join(__dirname, "..", "lib", "components", "DescriptorUser.js"));
+		const { DescriptorUser } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
 		const LocalDescriptorUser = require(join(__dirname, "utils", "DescriptorUser", "LocalDescriptorUser.js"));
 
 // tests

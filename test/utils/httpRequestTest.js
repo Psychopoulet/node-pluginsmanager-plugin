@@ -13,13 +13,13 @@
 	const { strictEqual } = require("assert");
 
 	// externals
-	const { readJSONFile } = require(join(__dirname, "..", "..", "lib", "utils", "file", "main.js"));
+	const readJSONFile = require(join(__dirname, "..", "..", "lib", "cjs", "utils", "file", "readJSONFile.js"));
 
 // module
 
 module.exports = function httpRequestTest (urlpath, method, params, returnCode, returnResponse, returnContent) {
 
-	return readJSONFile(join(__dirname, "DescriptorUser", "Descriptor.json")).then((content) => {
+	return readJSONFile.default(join(__dirname, "DescriptorUser", "Descriptor.json")).then((content) => {
 
 		const url = parse(content.servers[0].url + urlpath);
 
@@ -100,6 +100,15 @@ module.exports = function httpRequestTest (urlpath, method, params, returnCode, 
 
 				}
 				catch (e) {
+
+					console.log("");
+					console.log("");
+					console.log("statusCode", res.statusCode);
+					console.log("statusMessage", res.statusMessage);
+					console.log(e);
+					console.log("");
+					console.log("");
+
 					reject(e);
 				}
 

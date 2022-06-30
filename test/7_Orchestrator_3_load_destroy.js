@@ -13,7 +13,7 @@
 	// locals
 
 		// plugin
-		const { readJSONFile } = require(join(__dirname, "..", "lib", "utils", "file", "main.js"));
+		const readJSONFile = require(join(__dirname, "..", "lib", "cjs", "utils", "file", "readJSONFile.js"));
 
 		// utils
 		const LocalOrchestrator = require(join(__dirname, "utils", "Orchestrator", "LocalOrchestrator.js"));
@@ -24,7 +24,7 @@
 		"packageFile": join(__dirname, "..", "package.json"),
 		"descriptorFile": join(__dirname, "utils", "DescriptorUser", "Descriptor.json"),
 		"mediatorFile": join(__dirname, "utils", "Mediator", "LocalMediator.js"),
-		"serverFile": join(__dirname, "..", "lib", "components", "Server.js")
+		"serverFile": join(__dirname, "utils", "Server", "LocalServer.js")
 	};
 
 // tests
@@ -61,7 +61,9 @@ describe("Orchestrator / load & destroy", () => {
 				strictEqual(typeof orchestrator._extended, "object", "Generated orchestrator extended is not an object");
 				strictEqual(orchestrator._extended instanceof Array, true, "Generated orchestrator extended is not an Array");
 				deepStrictEqual(orchestrator._extended, [
+					"type",
 					"typings",
+					"exports",
 					"files",
 					"husky",
 					"repository",
@@ -70,7 +72,7 @@ describe("Orchestrator / load & destroy", () => {
 					"homepage"
 				], "Generated orchestrator extended is not as expected");
 
-				return readJSONFile(GOOD_OPTIONS.packageFile);
+				return readJSONFile.default(GOOD_OPTIONS.packageFile);
 
 			}).then((data) => {
 
@@ -168,7 +170,8 @@ describe("Orchestrator / load & destroy", () => {
 				// native
 
 				strictEqual(typeof orchestrator.authors, "object", "Generated orchestrator authors is not an object");
-				strictEqual(orchestrator.authors, null, "Generated orchestrator authors is not as expected");
+				strictEqual(orchestrator.authors instanceof Array, true, "Generated orchestrator authors is not an Array");
+				deepStrictEqual(orchestrator.authors, [], "Generated orchestrator authors is not as expected");
 
 				strictEqual(typeof orchestrator.description, "string", "Generated orchestrator description is not a string");
 				strictEqual(orchestrator.description, "", "Generated orchestrator description is not as expected");

@@ -7,7 +7,7 @@
 	const { join } = require("path");
 
 	// locals
-	const { extractPathMethodByOperationId } = require(join(__dirname, "..", "lib", "utils", "descriptor", "main.js"));
+	const extractPathMethodByOperationId = require(join(__dirname, "..", "lib", "cjs", "utils", "descriptor", "extractPathMethodByOperationId.js"));
 
 // tests
 
@@ -16,15 +16,15 @@ describe("utils / descriptor / extractPathMethodByOperationId", () => {
 	describe("paths", () => {
 
 		it("should test with missing data", () => {
-			deepStrictEqual(extractPathMethodByOperationId(), null, "generated data is not as expected");
+			deepStrictEqual(extractPathMethodByOperationId.default(), null, "generated data is not as expected");
 		});
 
 		it("should test with wrong data", () => {
-			deepStrictEqual(extractPathMethodByOperationId(false), null, "generated data is not as expected");
+			deepStrictEqual(extractPathMethodByOperationId.default(false), null, "generated data is not as expected");
 		});
 
 		it("should test with empty data", () => {
-			deepStrictEqual(extractPathMethodByOperationId({}), null, "generated data is not as expected");
+			deepStrictEqual(extractPathMethodByOperationId.default({}), null, "generated data is not as expected");
 		});
 
 	});
@@ -33,7 +33,7 @@ describe("utils / descriptor / extractPathMethodByOperationId", () => {
 
 		it("should test with missing data", () => {
 
-			deepStrictEqual(extractPathMethodByOperationId({
+			deepStrictEqual(extractPathMethodByOperationId.default({
 				"test": {
 					"get": {
 						"operationId": "test"
@@ -45,7 +45,7 @@ describe("utils / descriptor / extractPathMethodByOperationId", () => {
 
 		it("should test with wrong data", () => {
 
-			deepStrictEqual(extractPathMethodByOperationId({
+			deepStrictEqual(extractPathMethodByOperationId.default({
 				"test": {
 					"get": {
 						"operationId": "test"
@@ -57,7 +57,7 @@ describe("utils / descriptor / extractPathMethodByOperationId", () => {
 
 		it("should test with empty data", () => {
 
-			deepStrictEqual(extractPathMethodByOperationId({
+			deepStrictEqual(extractPathMethodByOperationId.default({
 				"test": {
 					"get": {
 						"operationId": "test"
@@ -69,7 +69,7 @@ describe("utils / descriptor / extractPathMethodByOperationId", () => {
 
 		it("should test with inexisting data", () => {
 
-			deepStrictEqual(extractPathMethodByOperationId({
+			deepStrictEqual(extractPathMethodByOperationId.default({
 				"test": {
 					"get": {
 						"operationId": "test"
@@ -85,7 +85,7 @@ describe("utils / descriptor / extractPathMethodByOperationId", () => {
 
 		it("should test with mutliples data", () => {
 
-			deepStrictEqual(extractPathMethodByOperationId({
+			deepStrictEqual(extractPathMethodByOperationId.default({
 				"/test": {
 					"get": {
 						"operationId": "getTest"
