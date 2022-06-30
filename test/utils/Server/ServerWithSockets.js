@@ -10,8 +10,6 @@
 		// plugin
 		const { Server } = require(join(__dirname, "..", "..", "..", "lib", "cjs", "main.cjs"));
 
-		console.log(Server);
-
 // module
 
 module.exports = class ServerWithSockets extends Server {

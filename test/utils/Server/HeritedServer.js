@@ -22,26 +22,12 @@ module.exports = class HeritedServer extends ServerWithSockets {
 
 		return readJSONFile.default(join(__dirname, "..", "DescriptorUser", "Descriptor.json")).then((content) => {
 
-			try {
-
 			this._Descriptor = content;
 			this._Mediator = new HeritedMediator({
 				"descriptor": this._Descriptor
 			});
 
 			return this._Mediator.init();
-					}
-					catch (e) {
-						console.log("");
-						console.log("");
-						console.log("");
-						console.log(e);
-						console.log("");
-						console.log("");
-						console.log("");
-
-						return Promise.reject(e);
-					}
 
 		}).then(() => {
 
