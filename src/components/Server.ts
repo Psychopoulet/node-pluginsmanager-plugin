@@ -16,6 +16,8 @@
 	import { Server as WebSocketServer, WebSocket } from "ws";
 	import { Server as SocketIOServer } from "socket.io";
 
+	import uniqid from "uniqid";
+
 	// locals
 
 	import { checkIntegerSync } from "../checkers/TypeError/checkInteger";
@@ -29,7 +31,6 @@
 	import extractIp from "../utils/request/extractIp";
 	import extractCookies from "../utils/request/extractCookies";
 	import send from "../utils/send";
-	import getUniqueID from "../utils/getUniqueID";
 	import cleanSendedError from "../utils/cleanSendedError";
 
 	import MediatorUser, { iMediatorUserOptions } from "./MediatorUser";
@@ -46,6 +47,7 @@
 	}
 
 	interface iPush {
+		"id": string;
 		"plugin": string;
 		"command": string;
 		"data"?: any;
@@ -614,6 +616,7 @@ export default class Server extends MediatorUser {
 			this.checkDescriptor().then((): Promise<string> => {
 
 				const result: iPush = {
+					"id": uniqid(),
 					"plugin": (this._Descriptor as OpenApiDocument).info.title,
 					command
 				};
@@ -638,7 +641,7 @@ export default class Server extends MediatorUser {
 						(this._socketServer as WebSocketServer).clients.forEach((client: iWebSocketWithId): void => {
 
 							if (!client.id) {
-								client.id = getUniqueID();
+								client.id = uniqid();
 							}
 
 							if (WEBSOCKET_STATE_OPEN === client.readyState) {
@@ -678,7 +681,7 @@ export default class Server extends MediatorUser {
 						(this._socketServer as WebSocketServer).clients.forEach((s: { "id"?: string; "readyState": number; }): iClient => {
 
 							if (!s.id) {
-								s.id = getUniqueID();
+								s.id = uniqid();
 							}
 
 							return {
@@ -726,6 +729,7 @@ export default class Server extends MediatorUser {
 			this.checkDescriptor().then((): Promise<string> => {
 
 				const result: iPush = {
+					"id": uniqid(),
 					"plugin": (this._Descriptor as OpenApiDocument).info.title,
 					command
 				};
@@ -746,7 +750,7 @@ export default class Server extends MediatorUser {
 						(this._socketServer as WebSocketServer).clients.forEach((client: iWebSocketWithId): void => {
 
 							if (!client.id) {
-								client.id = getUniqueID();
+								client.id = uniqid();
 							}
 							else if (client.id === clientId && WEBSOCKET_STATE_OPEN === client.readyState) {
 
