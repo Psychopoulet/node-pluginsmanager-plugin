@@ -153,9 +153,8 @@ export default class Server extends MediatorUser {
 			this._cors = true; return this;
 		}
 
-		public appMiddleware (_req: IncomingMessage | iIncomingMessage, res: iServerResponse, next: Function): void { // req, res, next : void
+		public appMiddleware (req: iIncomingMessage, res: iServerResponse, next: Function): void { // req, res, next : void
 
-			const req: iIncomingMessage = _req as iIncomingMessage;
 
 			if (!this._Descriptor) {
 				return next();

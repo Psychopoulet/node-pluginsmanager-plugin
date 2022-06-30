@@ -44,7 +44,7 @@ export default class Server extends MediatorUser {
     enableCheckResponse(): this;
     disableCors(): this;
     enableCors(): this;
-    appMiddleware(_req: IncomingMessage | iIncomingMessage, res: iServerResponse, next: Function): void;
+    appMiddleware(req: iIncomingMessage, res: iServerResponse, next: Function): void;
     socketMiddleware(socketServer: WebSocketServer | SocketIOServer): void;
     push(command: string, data?: any, log?: boolean): this;
     getClients(): Array<iClient>;
