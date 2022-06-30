@@ -10,6 +10,7 @@
 
 	// externals
 
+	import { OpenAPI } from "openapi-types";
 	import { OpenApiDocument } from "express-openapi-validate";
 
 	import { Server as WebSocketServer, WebSocket } from "ws";
@@ -155,7 +156,6 @@ export default class Server extends MediatorUser {
 
 		public appMiddleware (req: iIncomingMessage, res: iServerResponse, next: Function): void { // req, res, next : void
 
-
 			if (!this._Descriptor) {
 				return next();
 			}
@@ -217,12 +217,16 @@ export default class Server extends MediatorUser {
 				// get descriptor
 				if ("/" + (this._Descriptor as OpenApiDocument).info.title + "/api/descriptor" === req.pattern && "get" === req.method) {
 
-					return new Promise((resolve: (api: OpenApiDocument) => void, reject: (err: Error) => void): void => {
+					return Promise.resolve().then((): Promise<OpenApiDocument> => {
 
-						const { validate } = require("@apidevtools/swagger-parser");
+						// cannot extract only validate because of stupid malformatted references
+						const SwaggerParser = require("@apidevtools/swagger-parser");
 
-						validate(this._Descriptor, (err: Error, api: OpenApiDocument): void => {
-							return err ? reject(err) : resolve(api);
+						return SwaggerParser.validate(this._Descriptor as OpenAPI.Document).then((api: OpenAPI.Document): Promise<OpenApiDocument> => {
+
+							// force compatibility
+							return Promise.resolve(api as OpenApiDocument);
+	
 						});
 
 					// add current server
