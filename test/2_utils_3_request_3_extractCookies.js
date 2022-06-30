@@ -7,29 +7,29 @@
 	const { join } = require("path");
 
 	// locals
-	const { extractCookies } = require(join(__dirname, "..", "lib", "utils", "request", "main.js"));
+	const extractCookies = require(join(__dirname, "..", "lib", "cjs", "utils", "request", "extractCookies.js"));
 
 // tests
 
 describe("utils / request / extractCookies", () => {
 
 	it("should test with missing data", () => {
-		deepStrictEqual(extractCookies(), {}, "generated data is not as expected");
+		deepStrictEqual(extractCookies.default(), {}, "generated data is not as expected");
 	});
 
 	it("should test with wrong data", () => {
-		deepStrictEqual(extractCookies("test"), {}, "generated data is not as expected");
+		deepStrictEqual(extractCookies.default("test"), {}, "generated data is not as expected");
 	});
 
 	it("should test with empty data", () => {
-		deepStrictEqual(extractCookies({}), {}, "generated data is not as expected");
+		deepStrictEqual(extractCookies.default({}), {}, "generated data is not as expected");
 	});
 
 	describe("cookies", () => {
 
 		it("should test with missing data", () => {
 
-			deepStrictEqual(extractCookies({
+			deepStrictEqual(extractCookies.default({
 				"test": "test"
 			}), {}, "generated data is not as expected");
 
@@ -37,7 +37,7 @@ describe("utils / request / extractCookies", () => {
 
 		it("should test with wrong data", () => {
 
-			deepStrictEqual(extractCookies({
+			deepStrictEqual(extractCookies.default({
 				"cookies": "test"
 			}), {}, "generated data is not as expected");
 
@@ -45,7 +45,7 @@ describe("utils / request / extractCookies", () => {
 
 		it("should test with empty data", () => {
 
-			deepStrictEqual(extractCookies({
+			deepStrictEqual(extractCookies.default({
 				"cookies": {}
 			}), {}, "generated data is not as expected");
 
@@ -53,7 +53,7 @@ describe("utils / request / extractCookies", () => {
 
 		it("should test with valid data", () => {
 
-			deepStrictEqual(extractCookies({
+			deepStrictEqual(extractCookies.default({
 				"cookies": {
 					"test": "test2"
 				}
@@ -69,7 +69,7 @@ describe("utils / request / extractCookies", () => {
 
 		it("should test with missing data", () => {
 
-			deepStrictEqual(extractCookies({
+			deepStrictEqual(extractCookies.default({
 				"test": "test"
 			}), {}, "generated data is not as expected");
 
@@ -77,7 +77,7 @@ describe("utils / request / extractCookies", () => {
 
 		it("should test with wrong data", () => {
 
-			deepStrictEqual(extractCookies({
+			deepStrictEqual(extractCookies.default({
 				"headers": "test"
 			}), {}, "generated data is not as expected");
 
@@ -85,7 +85,7 @@ describe("utils / request / extractCookies", () => {
 
 		it("should test with empty data", () => {
 
-			deepStrictEqual(extractCookies({
+			deepStrictEqual(extractCookies.default({
 				"headers": {}
 			}), {}, "generated data is not as expected");
 
@@ -93,7 +93,7 @@ describe("utils / request / extractCookies", () => {
 
 		it("should test with wrong cookie data", () => {
 
-			deepStrictEqual(extractCookies({
+			deepStrictEqual(extractCookies.default({
 				"headers": {
 					"cookie": true
 				}
@@ -103,7 +103,7 @@ describe("utils / request / extractCookies", () => {
 
 		it("should test with one cookie data", () => {
 
-			deepStrictEqual(extractCookies({
+			deepStrictEqual(extractCookies.default({
 				"headers": {
 					"cookie": "test1=test1"
 				}
@@ -115,7 +115,7 @@ describe("utils / request / extractCookies", () => {
 
 		it("should test with two cookie data", () => {
 
-			deepStrictEqual(extractCookies({
+			deepStrictEqual(extractCookies.default({
 				"headers": {
 					"cookie": "test1=test1;test2=test2"
 				}
@@ -128,7 +128,7 @@ describe("utils / request / extractCookies", () => {
 
 		it("should test with cookie data", () => {
 
-			deepStrictEqual(extractCookies({
+			deepStrictEqual(extractCookies.default({
 				"headers": {
 					"Cookie": "test1=test1;test2=test2"
 				}
@@ -141,7 +141,7 @@ describe("utils / request / extractCookies", () => {
 
 		it("should test with cookies data", () => {
 
-			deepStrictEqual(extractCookies({
+			deepStrictEqual(extractCookies.default({
 				"headers": {
 					"cookies": "test1=test1;test2=test2"
 				}
@@ -154,7 +154,7 @@ describe("utils / request / extractCookies", () => {
 
 		it("should test with Cookies data", () => {
 
-			deepStrictEqual(extractCookies({
+			deepStrictEqual(extractCookies.default({
 				"headers": {
 					"Cookies": "test1=test1;test2=test2"
 				}

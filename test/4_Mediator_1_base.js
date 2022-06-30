@@ -10,8 +10,7 @@
 	// locals
 
 		// plugin
-		const DescriptorUser = require(join(__dirname, "..", "lib", "components", "DescriptorUser.js"));
-		const { Mediator } = require(join(__dirname, "..", "lib", "main.js"));
+		const { DescriptorUser, Mediator } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
 		const LocalMediator = require(join(__dirname, "utils", "Mediator", "LocalMediator.js"));
 
 // consts

@@ -7,7 +7,7 @@
 	const { writeFile } = require("fs");
 
 	// locals
-	const { readJSONFile } = require(join(__dirname, "..", "..", "..", "lib", "utils", "file", "main.js"));
+	const readJSONFile = require(join(__dirname, "..", "..", "..", "lib", "cjs", "utils", "file", "readJSONFile.js"));
 
 // consts
 
@@ -19,7 +19,7 @@
 
 module.exports = function generateDescriptorWithSchemas (schemas, targetedFile, logs = false) {
 
-	return readJSONFile(DESCRIPTOR).then((descriptor) => {
+	return readJSONFile.default(DESCRIPTOR).then((descriptor) => {
 
 		return new Promise((resolve, reject) => {
 

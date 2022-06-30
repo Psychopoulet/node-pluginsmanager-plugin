@@ -8,8 +8,8 @@
 	// locals
 
 		// plugin
-		const { Mediator, Server } = require(join(__dirname, "..", "lib", "main.js"));
-		const { readJSONFile } = require(join(__dirname, "..", "lib", "utils", "file", "main.js"));
+		const { Mediator, Server } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
+		const readJSONFile = require(join(__dirname, "..", "lib", "cjs", "utils", "file", "readJSONFile.js"));
 
 // tests
 
@@ -20,7 +20,7 @@ describe("Server / events", () => {
 
 	before(() => {
 
-		return readJSONFile(join(__dirname, "utils", "DescriptorUser", "Descriptor.json")).then((data) => {
+		return readJSONFile.default(join(__dirname, "utils", "DescriptorUser", "Descriptor.json")).then((data) => {
 			descriptor = data;
 		});
 

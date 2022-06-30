@@ -14,9 +14,7 @@
 	// locals
 
 		// plugin
-		const DescriptorUser = require(join(__dirname, "..", "lib", "components", "DescriptorUser.js"));
-		const MediatorUser = require(join(__dirname, "..", "lib", "components", "MediatorUser.js"));
-		const { Server, Orchestrator } = require(join(__dirname, "..", "lib", "main.js"));
+		const { DescriptorUser, MediatorUser, Server, Orchestrator } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
 
 		// utils
 		const LocalOrchestrator = require(join(__dirname, "utils", "Orchestrator", "LocalOrchestrator.js"));
@@ -29,7 +27,7 @@
 		"packageFile": join(__dirname, "..", "package.json"),
 		"descriptorFile": join(__dirname, "utils", "DescriptorUser", "Descriptor.json"),
 		"mediatorFile": join(__dirname, "utils", "Mediator", "LocalMediator.js"),
-		"serverFile": join(__dirname, "..", "lib", "components", "Server.js"),
+		"serverFile": join(__dirname, "utils", "Server", "LocalServer.js"),
 		"externalRessourcesDirectory": EXTERNAL_RESSOURCES_DIRECTORY
 	};
 
@@ -90,7 +88,7 @@ describe("Orchestrator", () => {
 			// native
 
 			strictEqual(typeof orchestrator.authors, "object", "Generated orchestrator authors is not an object");
-			deepStrictEqual(orchestrator.authors, null, "Generated orchestrator authors is not as expected");
+			deepStrictEqual(orchestrator.authors, [], "Generated orchestrator authors is not as expected");
 
 			strictEqual(typeof orchestrator.description, "string", "Generated orchestrator description is not a string");
 			strictEqual(orchestrator.description, "", "Generated orchestrator description is not as expected");

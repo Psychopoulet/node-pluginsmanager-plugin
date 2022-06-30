@@ -6,7 +6,7 @@
 	const { join } = require("path");
 
 	// locals
-	const Orchestrator = require(join(__dirname, "..", "lib", "components", "Orchestrator.js"));
+	const { Orchestrator } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
 	const LocalOrchestrator = require(join(__dirname, "utils", "Orchestrator", "LocalOrchestrator.js"));
 
 // tests

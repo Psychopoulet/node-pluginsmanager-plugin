@@ -35,9 +35,14 @@ module.exports = function socketWaitPush (port, commandPush, dataPush, requester
 
 				try {
 
-					const { plugin, command } = JSON.parse(message);
+					const { id, plugin, command } = JSON.parse(message);
 
+					strictEqual(typeof id, "string", "The id is not a string");
+
+					strictEqual(typeof plugin, "string", "The plugin is not a string");
 					strictEqual(plugin, "node-pluginsmanager-plugin", "The plugin is not node-pluginsmanager-plugin");
+
+					strictEqual(typeof command, "string", "The command is not a string");
 					strictEqual(command, commandPush, "The command is not " + commandPush);
 
 					if (dataPush) {

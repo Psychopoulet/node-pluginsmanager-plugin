@@ -7,7 +7,7 @@
 	const { join } = require("path");
 
 	// locals
-	const { checkString } = require(join(__dirname, "..", "lib", "main.js"));
+	const { checkString, checkStringSync } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
 
 // tests
 
@@ -55,8 +55,7 @@ describe("checkers / TypeError / checkString", () => {
 
 		it("should test with missing data", () => {
 
-			const test = {};
-			const err = checkString("test", test.test, false);
+			const err = checkStringSync("test");
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
 			strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
@@ -65,7 +64,7 @@ describe("checkers / TypeError / checkString", () => {
 
 		it("should test with wrong type data", () => {
 
-			const err = checkString("test", false, false);
+			const err = checkStringSync("test", false);
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
 			strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
@@ -74,7 +73,7 @@ describe("checkers / TypeError / checkString", () => {
 
 		it("should test with valid data", () => {
 
-			const err = checkString("test", "test", false);
+			const err = checkStringSync("test", "test");
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
 			strictEqual(err, null, "Generated error is not as expected");

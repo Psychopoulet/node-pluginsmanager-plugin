@@ -7,7 +7,7 @@
 	const { join } = require("path");
 
 	// locals
-	const { isFile } = require(join(__dirname, "..", "lib", "utils", "file", "main.js"));
+	const isFile = require(join(__dirname, "..", "lib", "cjs", "utils", "file", "isFile.js"));
 
 // tests
 
@@ -15,7 +15,7 @@ describe("utils / file / isFile", () => {
 
 	it("should test with missing file", (done) => {
 
-		isFile().then(() => {
+		isFile.default().then(() => {
 			done(new Error("tests does not generate error"));
 		}).catch((err) => {
 
@@ -30,7 +30,7 @@ describe("utils / file / isFile", () => {
 
 	it("should test with wrong type file", (done) => {
 
-		isFile(false).then(() => {
+		isFile.default(false).then(() => {
 			done(new Error("tests does not generate error"));
 		}).catch((err) => {
 
@@ -45,7 +45,7 @@ describe("utils / file / isFile", () => {
 
 	it("should test with empty data", (done) => {
 
-		isFile("").then(() => {
+		isFile.default("").then(() => {
 			done(new Error("tests does not generate error"));
 		}).catch((err) => {
 
@@ -60,7 +60,7 @@ describe("utils / file / isFile", () => {
 
 	it("should test with inexistant file", () => {
 
-		return isFile("zrgzergzergerg").then((exists) => {
+		return isFile.default("zrgzergzergerg").then((exists) => {
 
 			strictEqual(typeof exists, "boolean", "check is not as expected");
 			strictEqual(exists, false, "check is not as expected");
@@ -73,7 +73,7 @@ describe("utils / file / isFile", () => {
 
 	it("should test with existant file", () => {
 
-		return isFile(__filename).then((exists) => {
+		return isFile.default(__filename).then((exists) => {
 
 			strictEqual(typeof exists, "boolean", "check is not as expected");
 			strictEqual(exists, true, "check is not as expected");
