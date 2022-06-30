@@ -1,1 +1,1 @@
-export default function checkFile(file: string): Promise<void>;
+export default function checkFile(filename: string): Promise<void>;

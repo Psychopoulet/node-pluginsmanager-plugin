@@ -7,12 +7,12 @@
 
 // module
 
-export default function checkFile (file: string): Promise<void> {
+export default function checkFile (filename: string): Promise<void> {
 
-	return isFile(file).then((exists: boolean): Promise<void> => {
+	return isFile(filename).then((exists: boolean): Promise<void> => {
 
 		return exists ? Promise.resolve() :
-			Promise.reject(new Error("\"" + file + "\" does not exist."));
+			Promise.reject(new Error("\"" + filename + "\" does not exist."));
 
 	});
 

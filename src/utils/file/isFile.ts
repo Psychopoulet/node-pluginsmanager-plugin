@@ -10,13 +10,13 @@
 
 // module
 
-export default function isFile (file: string): Promise<boolean> {
+export default function isFile (filename: string): Promise<boolean> {
 
-	return checkNonEmptyString("file", file).then((): Promise<boolean> => {
+	return checkNonEmptyString("filename", filename).then((): Promise<boolean> => {
 
 		return new Promise((resolve): void => {
 
-			lstat(file, (err, stats): void => {
+			lstat(filename, (err, stats): void => {
 				return resolve(Boolean(!err && stats.isFile()));
 			});
 

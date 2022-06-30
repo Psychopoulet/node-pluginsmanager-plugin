@@ -1,1 +1,1 @@
-export default function isFile(file: string): Promise<boolean>;
+export default function isFile(filename: string): Promise<boolean>;

@@ -14,7 +14,7 @@ export function checkNonEmptyStringSync (dataName: string, data: any): Reference
 		if (!err && "" === (data as string).trim()) {
 
 			err = new RangeError(
-				"\"" + dataName + "\" must be higher than 0"
+				"\"" + dataName + "\" length must be higher than 0"
 			);
 
 		}

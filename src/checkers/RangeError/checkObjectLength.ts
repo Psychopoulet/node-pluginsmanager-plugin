@@ -28,7 +28,7 @@ export function checkObjectLengthSync (dataName: string, data: any, _length: num
 			if (_length !== length) {
 
 				err = new RangeError(
-					"\"" + dataName + "\" length must be equal to " + _length
+					"\"" + dataName + "\" keys count must be equal to " + _length
 				);
 
 			}
