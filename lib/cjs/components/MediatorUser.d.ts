@@ -6,7 +6,7 @@ export interface iMediatorUserOptions extends iDescriptorUserOptions {
 export default class MediatorUser extends DescriptorUser {
     protected _Mediator: Mediator | null;
     constructor(options: iMediatorUserOptions);
-    _initWorkSpace(...data: Array<any>): Promise<void>;
-    _releaseWorkSpace(...data: Array<any>): Promise<void>;
+    _initWorkSpace(...data: any): Promise<void>;
+    _releaseWorkSpace(...data: any): Promise<void>;
     checkMediator(): Promise<void>;
 }

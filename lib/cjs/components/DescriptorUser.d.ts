@@ -15,13 +15,13 @@ export default class DescriptorUser extends Events {
     protected _Descriptor: OpenApiDocument | null;
     protected _Logger: tLogger | null;
     constructor(options: iDescriptorUserOptions);
-    protected _initWorkSpace(...data: Array<any>): Promise<void>;
-    protected _releaseWorkSpace(...data: Array<any>): Promise<void>;
+    protected _initWorkSpace(...data: any): Promise<void>;
+    protected _releaseWorkSpace(...data: any): Promise<void>;
     protected _log(type: tLogType, message: string | Error, bold?: boolean): this;
     getPluginName(): string;
     getPluginVersion(): string;
     getPluginDescription(): string;
-    init(...data: Array<any>): Promise<void>;
-    release(...data: Array<any>): Promise<void>;
+    init(...data: any): Promise<void>;
+    release(...data: any): Promise<void>;
     checkDescriptor(): Promise<void>;
 }
