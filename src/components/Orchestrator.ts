@@ -670,19 +670,19 @@ export default class Orchestrator extends MediatorUser {
 
 		// write
 
-			public install (): Promise<void> {
+			public install (...data: any): Promise<void> {
 
 				return Promise.resolve();
 
 			}
 
-			public update (): Promise<void> {
+			public update (...data: any): Promise<void> {
 
 				return Promise.resolve();
 
 			}
 
-			public uninstall (): Promise<void> {
+			public uninstall (...data: any): Promise<void> {
 
 				return Promise.resolve();
 

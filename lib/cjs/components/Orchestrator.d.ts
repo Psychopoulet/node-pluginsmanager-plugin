@@ -49,7 +49,7 @@ export default class Orchestrator extends MediatorUser {
     destroy(): Promise<void>;
     init(...data: any): Promise<void>;
     release(...data: any): Promise<void>;
-    install(): Promise<void>;
-    update(): Promise<void>;
-    uninstall(): Promise<void>;
+    install(...data: any): Promise<void>;
+    update(...data: any): Promise<void>;
+    uninstall(...data: any): Promise<void>;
 }
