@@ -2,6 +2,7 @@ import MediatorUser from "./MediatorUser";
 import Server from "./Server";
 import { Server as WebSocketServer } from "ws";
 import { Server as SocketIOServer } from "socket.io";
+import { tLogger } from "./DescriptorUser";
 import { iIncomingMessage, iServerResponse } from "./Server";
 export interface iOrchestratorOptions {
     "externalRessourcesDirectory": string;
@@ -9,6 +10,7 @@ export interface iOrchestratorOptions {
     "descriptorFile": string;
     "mediatorFile": string;
     "serverFile": string;
+    "logger"?: tLogger;
 }
 export default class Orchestrator extends MediatorUser {
     protected _Server: Server | null;
