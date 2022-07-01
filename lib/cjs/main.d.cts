@@ -20,10 +20,11 @@ import { checkIntegerBetween, checkIntegerBetweenSync } from "./checkers/RangeEr
 import { checkArrayLength, checkArrayLengthSync } from "./checkers/RangeError/checkArrayLength";
 import { checkArrayLengthBetween, checkArrayLengthBetweenSync } from "./checkers/RangeError/checkArrayLengthBetween";
 export { checkExists, checkExistsSync, checkBoolean, checkBooleanSync, checkFunction, checkFunctionSync, checkNumber, checkNumberSync, checkObject, checkObjectSync, checkString, checkStringSync, checkArray, checkArraySync, checkInteger, checkIntegerSync, checkNonEmptyArray, checkNonEmptyArraySync, checkNonEmptyInteger, checkNonEmptyIntegerSync, checkNonEmptyNumber, checkNonEmptyNumberSync, checkNonEmptyObject, checkNonEmptyObjectSync, checkNonEmptyString, checkNonEmptyStringSync, checkNumberBetween, checkNumberBetweenSync, checkObjectLength, checkObjectLengthSync, checkObjectLengthBetween, checkObjectLengthBetweenSync, checkStringLength, checkStringLengthSync, checkStringLengthBetween, checkStringLengthBetweenSync, checkIntegerBetween, checkIntegerBetweenSync, checkArrayLength, checkArrayLengthSync, checkArrayLengthBetween, checkArrayLengthBetweenSync };
-import DescriptorUser from "./components/DescriptorUser";
-import Mediator from "./components/Mediator";
+import DescriptorUser, { tLogType, tLogger } from "./components/DescriptorUser";
+import Mediator, { iUrlParameters, iBodyParameters } from "./components/Mediator";
 import MediatorUser from "./components/MediatorUser";
-import Orchestrator from "./components/Orchestrator";
-import Server from "./components/Server";
 import NotFoundError from "./components/NotFoundError";
-export { DescriptorUser, Mediator, MediatorUser, Orchestrator, Server, NotFoundError };
+import Orchestrator from "./components/Orchestrator";
+import Server, { iClient, iIncomingMessage, iServerResponse } from "./components/Server";
+export { tLogType, tLogger, iUrlParameters, iBodyParameters, iClient, iIncomingMessage, iServerResponse };
+export { DescriptorUser, Mediator, MediatorUser, NotFoundError, Orchestrator, Server };

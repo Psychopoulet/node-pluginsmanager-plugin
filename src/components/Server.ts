@@ -5,17 +5,9 @@
 	// natives
 	import { parse } from "url";
 	import { EOL } from "os";
-	import { IncomingMessage, ServerResponse } from "http";
 	import { AddressInfo } from "net";
 
 	// externals
-
-	import { OpenAPI } from "openapi-types";
-	import { OpenApiDocument } from "express-openapi-validate";
-
-	import { Server as WebSocketServer, WebSocket } from "ws";
-	import { Server as SocketIOServer } from "socket.io";
-
 	import uniqid from "uniqid";
 
 	// locals
@@ -33,13 +25,28 @@
 	import send from "../utils/send";
 	import cleanSendedError from "../utils/cleanSendedError";
 
-	import MediatorUser, { iMediatorUserOptions } from "./MediatorUser";
+	import MediatorUser from "./MediatorUser";
 	import Mediator from "./Mediator";
 	import NotFoundError from "./NotFoundError";
 
 	import SERVER_CODES from "../utils/serverCodes";
 
 // types & interfaces
+
+	// natives
+	import { IncomingMessage, ServerResponse } from "http";
+
+	// externals
+
+	import { OpenAPI } from "openapi-types";
+	import { OpenApiDocument } from "express-openapi-validate";
+
+	import { Server as WebSocketServer, WebSocket } from "ws";
+	import { Server as SocketIOServer } from "socket.io";
+
+	// locals
+
+	import { iMediatorUserOptions } from "./MediatorUser";
 
 	interface iSendedError {
 		"code": string;
@@ -53,12 +60,10 @@
 		"data"?: any;
 	}
 
-	interface iClient {
+	export interface iClient {
 		"id": string;
 		"status": "CONNECTED" | "DISCONNECTED";
 	}
-
-	// extensions
 
 	export interface iIncomingMessage extends IncomingMessage {
 		"method": string;
@@ -228,7 +233,7 @@ export default class Server extends MediatorUser {
 
 							// force compatibility
 							return Promise.resolve(api as OpenApiDocument);
-	
+
 						});
 
 					// add current server
@@ -685,7 +690,7 @@ export default class Server extends MediatorUser {
 							}
 
 							return {
-								"id": s.id,
+								"id": s.id as string,
 								"status": WEBSOCKET_STATE_OPEN === s.readyState ? "CONNECTED" : "DISCONNECTED"
 							};
 

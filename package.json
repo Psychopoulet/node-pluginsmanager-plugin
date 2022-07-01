@@ -1,6 +1,6 @@
 {
   "name": "node-pluginsmanager-plugin",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "An abstract parent plugin for node-pluginsmanager",
 
   "type": "commonjs",

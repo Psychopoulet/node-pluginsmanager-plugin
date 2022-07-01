@@ -1,6 +1,6 @@
 "use strict";
 
-// deps
+// types & interfaces
 
 	// externals
 	import { OpenAPIV3_1 } from "openapi-types";

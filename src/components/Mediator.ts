@@ -26,6 +26,10 @@
 		"cookies": object;
 	}
 
+	export interface iBodyParameters {
+		[key:string]: any
+	}
+
 // module
 
 export default class Mediator extends DescriptorUser {
@@ -49,7 +53,7 @@ export default class Mediator extends DescriptorUser {
 	// public
 
 		 // Check sended parameters by method name (used by the Server)
-		public checkParameters (operationId: string, urlParams: iUrlParameters, bodyParams: { [key:string]: any }): Promise<void> {
+		public checkParameters (operationId: string, urlParams: iUrlParameters, bodyParams: iBodyParameters): Promise<void> {
 
 			// parameters validation
 			return this.checkDescriptor().then((): Promise<void> => {

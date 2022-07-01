@@ -1,8 +1,8 @@
 "use strict";
 
-// deps
+// types & interfaces
 
-	// natives
+	// locals
 	import { iIncomingMessage, iServerResponse } from "../components/Server";
 
 // module
