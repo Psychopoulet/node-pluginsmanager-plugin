@@ -77,14 +77,14 @@ export default class DescriptorUser extends Events {
 	// protected
 
 		// must be inherited
-		protected _initWorkSpace (...data: Array<any>): Promise<void> {
+		protected _initWorkSpace (...data: any): Promise<void> {
 
 			return Promise.reject(new Error("\"_initWorkSpace\" method must be inherited"));
 
 		}
 
 		// must be inherited
-		protected _releaseWorkSpace (...data: Array<any>): Promise<void> {
+		protected _releaseWorkSpace (...data: any): Promise<void> {
 
 			return Promise.reject(new Error("\"_releaseWorkSpace\" method must be inherited"));
 
@@ -115,7 +115,7 @@ export default class DescriptorUser extends Events {
 		}
 
 		// must be inherited
-		init (...data: Array<any>): Promise<void> {
+		init (...data: any): Promise<void> {
 
 			console.log("DescriptorUser", "init", ...data);
 
@@ -124,7 +124,7 @@ export default class DescriptorUser extends Events {
 		}
 
 		// must be inherited
-		release (...data: Array<any>): Promise<void> {
+		release (...data: any): Promise<void> {
 
 			console.log("DescriptorUser", "release", ...data);
 

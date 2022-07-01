@@ -50,6 +50,6 @@ export default class Server extends MediatorUser {
     push(command: string, data?: any, log?: boolean): this;
     getClients(): Array<iClient>;
     pushClient(clientId: string, command: string, data: any, log?: boolean): this;
-    init(...data: Array<any>): Promise<void>;
-    release(...data: Array<any>): Promise<void>;
+    init(...data: any): Promise<void>;
+    release(...data: any): Promise<void>;
 }

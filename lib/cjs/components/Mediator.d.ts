@@ -15,6 +15,6 @@ export default class Mediator extends DescriptorUser {
     constructor(options: iDescriptorUserOptions);
     checkParameters(operationId: string, urlParams: iUrlParameters, bodyParams: iBodyParameters): Promise<void>;
     checkResponse(operationId: string, res: iServerResponse): Promise<void>;
-    init(...data: Array<any>): Promise<void>;
-    release(...data: Array<any>): Promise<void>;
+    init(...data: any): Promise<void>;
+    release(...data: any): Promise<void>;
 }

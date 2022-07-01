@@ -467,7 +467,7 @@ export default class Orchestrator extends MediatorUser {
 
 		// init / release
 
-			public init (...data: Array<any>): Promise<void> {
+			public init (...data: any): Promise<void> {
 
 				// ensure conf validity
 				return Promise.resolve().then((): Promise<void> => {
@@ -634,7 +634,7 @@ export default class Orchestrator extends MediatorUser {
 
 			}
 
-			public release (...data: Array<any>): Promise<void> {
+			public release (...data: any): Promise<void> {
 
 				return Promise.resolve().then((): Promise<void> => {
 

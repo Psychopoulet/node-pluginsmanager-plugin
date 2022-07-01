@@ -207,7 +207,7 @@ export default class Mediator extends DescriptorUser {
 
 		// init / release
 
-		public init (...data: Array<any>): Promise<void> {
+		public init (...data: any): Promise<void> {
 
 			return this._initWorkSpace(...data).then((): void => {
 
@@ -220,7 +220,7 @@ export default class Mediator extends DescriptorUser {
 
 		}
 
-		public release (...data: Array<any>): Promise<void> {
+		public release (...data: any): Promise<void> {
 
 			return this._releaseWorkSpace(...data).then((): void => {
 

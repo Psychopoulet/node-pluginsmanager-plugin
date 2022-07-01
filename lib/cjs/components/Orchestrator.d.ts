@@ -47,8 +47,8 @@ export default class Orchestrator extends MediatorUser {
     socketMiddleware(server: WebSocketServer | SocketIOServer): void;
     load(): Promise<void>;
     destroy(): Promise<void>;
-    init(...data: Array<any>): Promise<void>;
-    release(...data: Array<any>): Promise<void>;
+    init(...data: any): Promise<void>;
+    release(...data: any): Promise<void>;
     install(): Promise<void>;
     update(): Promise<void>;
     uninstall(): Promise<void>;
