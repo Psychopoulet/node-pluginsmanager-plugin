@@ -38,6 +38,7 @@
 		"descriptorFile": string; // descriptor file used by the plugin (absolute path)
 		"mediatorFile": string; // mediator file used by the plugin (absolute path)
 		"serverFile": string; // server file used by the plugin (absolute path)
+		"logger"?: tLogger;
 	};
 
 // module
