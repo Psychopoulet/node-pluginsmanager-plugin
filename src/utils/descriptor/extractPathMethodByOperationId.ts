@@ -1,11 +1,11 @@
 "use strict";
 
-// deps
+// types & interfaces
 
 	// externals
 	import { OpenApiDocument } from "express-openapi-validate";
 
-// types & interfaces
+	// locals
 
 	export type tMethod = "get" | "put" | "post" | "delete" | "options" | "head" | "patch" | "trace";
 

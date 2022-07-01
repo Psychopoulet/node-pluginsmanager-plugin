@@ -5,15 +5,17 @@
 	// natives
 	import Events from "events";
 
-	// externals
-	import { OpenApiDocument } from "express-openapi-validate";
-
 	// locals
 	import { checkObject } from "../checkers/TypeError/checkObject";
 	import { checkNonEmptyObject } from "../checkers/RangeError/checkNonEmptyObject";
 	import { checkNonEmptyString } from "../checkers/RangeError/checkNonEmptyString";
 
 // types & interfaces
+
+	// externals
+	import { OpenApiDocument } from "express-openapi-validate";
+
+	// locals
 
 	export type tLogType = "log" | "info" | "success" | "warning" | "error";
 	export type tLogger = (type: tLogType, message: string | Error, bold?: boolean, pluginName?: string) => void;

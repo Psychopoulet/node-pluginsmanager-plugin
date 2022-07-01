@@ -1,9 +1,10 @@
 /// <reference types="node" />
+import MediatorUser from "./MediatorUser";
 import { IncomingMessage, ServerResponse } from "http";
 import { Server as WebSocketServer } from "ws";
 import { Server as SocketIOServer } from "socket.io";
-import MediatorUser, { iMediatorUserOptions } from "./MediatorUser";
-interface iClient {
+import { iMediatorUserOptions } from "./MediatorUser";
+export interface iClient {
     "id": string;
     "status": "CONNECTED" | "DISCONNECTED";
 }
@@ -52,4 +53,3 @@ export default class Server extends MediatorUser {
     init(...data: Array<any>): Promise<void>;
     release(...data: Array<any>): Promise<void>;
 }
-export {};

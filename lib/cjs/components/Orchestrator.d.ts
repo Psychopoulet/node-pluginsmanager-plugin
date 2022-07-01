@@ -1,7 +1,8 @@
+import MediatorUser from "./MediatorUser";
+import Server from "./Server";
 import { Server as WebSocketServer } from "ws";
 import { Server as SocketIOServer } from "socket.io";
-import MediatorUser from "./MediatorUser";
-import Server, { iIncomingMessage, iServerResponse } from "./Server";
+import { iIncomingMessage, iServerResponse } from "./Server";
 export interface iOrchestratorOptions {
     "externalRessourcesDirectory": string;
     "packageFile": string;

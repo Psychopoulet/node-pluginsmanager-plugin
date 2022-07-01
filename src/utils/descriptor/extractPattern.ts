@@ -2,10 +2,13 @@
 
 // deps
 
-	import { OpenApiDocument } from	"express-openapi-validate";
-
 	// locals
 	import removeFirstSlash from "../removeFirstSlash";
+
+// types & interfaces
+
+	// externals
+	import { OpenApiDocument } from	"express-openapi-validate";
 
 // module
 

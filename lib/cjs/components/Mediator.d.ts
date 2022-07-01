@@ -7,12 +7,13 @@ export interface iUrlParameters {
     "headers": object;
     "cookies": object;
 }
+export interface iBodyParameters {
+    [key: string]: any;
+}
 export default class Mediator extends DescriptorUser {
     protected _validator: OpenApiValidator | null;
     constructor(options: iDescriptorUserOptions);
-    checkParameters(operationId: string, urlParams: iUrlParameters, bodyParams: {
-        [key: string]: any;
-    }): Promise<void>;
+    checkParameters(operationId: string, urlParams: iUrlParameters, bodyParams: iBodyParameters): Promise<void>;
     checkResponse(operationId: string, res: iServerResponse): Promise<void>;
     init(...data: Array<any>): Promise<void>;
     release(...data: Array<any>): Promise<void>;

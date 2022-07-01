@@ -1,6 +1,6 @@
 "use strict";
 
-// deps
+// types & interfaces
 
 	// locals
 	import { iIncomingMessage } from "../../components/Server";

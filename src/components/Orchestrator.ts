@@ -6,25 +6,31 @@
 	import { join } from "path";
 
 	import SwaggerParser from "@apidevtools/swagger-parser";
-	import { OpenApiDocument } from "express-openapi-validate";
-	import { OpenAPI } from "openapi-types";
-
-	import { Server as WebSocketServer } from "ws";
-	import { Server as SocketIOServer } from "socket.io";
 
 	// locals
 
 	import { checkObject } from "../checkers/TypeError/checkObject";
 
-	import { tLogger } from "./DescriptorUser";
 	import MediatorUser from "./MediatorUser";
 	import Mediator from "./Mediator";
-	import Server, { iIncomingMessage, iServerResponse } from "./Server";
+	import Server from "./Server";
 
 	import checkFile from "../utils/file/checkFile";
 	import readJSONFile from "../utils/file/readJSONFile";
 
 // types & interfaces
+
+	// externals
+	import { OpenApiDocument } from "express-openapi-validate";
+	import { OpenAPI } from "openapi-types";
+
+	// locals
+
+	import { Server as WebSocketServer } from "ws";
+	import { Server as SocketIOServer } from "socket.io";
+
+	import { tLogger } from "./DescriptorUser";
+	import { iIncomingMessage, iServerResponse } from "./Server";
 
 	export interface iOrchestratorOptions {
 		"externalRessourcesDirectory": string; // used to write local data like sqlite database, json files, pictures, etc...

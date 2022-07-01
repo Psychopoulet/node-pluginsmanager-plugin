@@ -78,18 +78,24 @@
 
 // components
 
-	import DescriptorUser from "./components/DescriptorUser";
-	import Mediator from "./components/Mediator";
+	import DescriptorUser, { tLogType, tLogger } from "./components/DescriptorUser";
+	import Mediator, { iUrlParameters, iBodyParameters } from "./components/Mediator";
 	import MediatorUser from "./components/MediatorUser";
-	import Orchestrator from "./components/Orchestrator";
-	import Server from "./components/Server";
 	import NotFoundError from "./components/NotFoundError";
+	import Orchestrator from "./components/Orchestrator";
+	import Server, { iClient, iIncomingMessage, iServerResponse } from "./components/Server";
+
+	export {
+		tLogType, tLogger,
+		iUrlParameters, iBodyParameters,
+		iClient, iIncomingMessage, iServerResponse
+	};
 
 	export {
 		DescriptorUser,
 		Mediator,
 		MediatorUser,
+		NotFoundError,
 		Orchestrator,
-		Server,
-		NotFoundError
+		Server
 	};
