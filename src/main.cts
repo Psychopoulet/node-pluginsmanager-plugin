@@ -78,11 +78,11 @@
 
 // components
 
-	import DescriptorUser, { tLogType, tLogger } from "./components/DescriptorUser";
+	import DescriptorUser, { iDescriptorUserOptions, tLogType, tLogger } from "./components/DescriptorUser";
 	import Mediator, { iUrlParameters, iBodyParameters } from "./components/Mediator";
-	import MediatorUser from "./components/MediatorUser";
+	import MediatorUser, { iMediatorUserOptions } from "./components/MediatorUser";
 	import NotFoundError from "./components/NotFoundError";
-	import Orchestrator from "./components/Orchestrator";
+	import Orchestrator, { iOrchestratorOptions } from "./components/Orchestrator";
 	import Server, { iClient, iIncomingMessage, iServerResponse } from "./components/Server";
 
 	export {
@@ -92,10 +92,10 @@
 	};
 
 	export {
-		DescriptorUser,
+		DescriptorUser, iDescriptorUserOptions,
 		Mediator,
-		MediatorUser,
+		MediatorUser, iMediatorUserOptions,
 		NotFoundError,
-		Orchestrator,
+		Orchestrator, iOrchestratorOptions,
 		Server
 	};
