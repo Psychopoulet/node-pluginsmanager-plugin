@@ -353,7 +353,7 @@ export default class Orchestrator extends MediatorUser {
 
 		// load / destroy
 
-			public load (): Promise<void> {
+			public load (...data: any): Promise<void> {
 
 				return this.checkFiles().then((): Promise<any> => {
 					return readJSONFile(join(__dirname, "..", "..", "..", "package.json"));
@@ -424,7 +424,7 @@ export default class Orchestrator extends MediatorUser {
 
 			}
 
-			public destroy (): Promise<void> {
+			public destroy (...data: any): Promise<void> {
 
 				return Promise.resolve().then((): void => {
 

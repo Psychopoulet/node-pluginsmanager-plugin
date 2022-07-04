@@ -47,8 +47,8 @@ export default class Orchestrator extends MediatorUser {
     enableCors(): this;
     appMiddleware(req: iIncomingMessage, res: iServerResponse, next: Function): void;
     socketMiddleware(server: WebSocketServer | SocketIOServer): void;
-    load(): Promise<void>;
-    destroy(): Promise<void>;
+    load(...data: any): Promise<void>;
+    destroy(...data: any): Promise<void>;
     init(...data: any): Promise<void>;
     release(...data: any): Promise<void>;
     install(...data: any): Promise<void>;
