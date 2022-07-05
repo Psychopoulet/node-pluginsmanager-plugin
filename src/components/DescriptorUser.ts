@@ -102,20 +102,20 @@ export default class DescriptorUser extends Events {
 
 	// public
 
-		getPluginName (): string {
+		public getPluginName (): string {
 			return this._Descriptor && this._Descriptor.info && this._Descriptor.info.title ? this._Descriptor.info.title : "";
 		}
 
-		getPluginVersion (): string {
+		public getPluginVersion (): string {
 			return this._Descriptor && this._Descriptor.info && this._Descriptor.info.version ? this._Descriptor.info.version : "";
 		}
 
-		getPluginDescription (): string {
+		public getPluginDescription (): string {
 			return this._Descriptor && this._Descriptor.info && this._Descriptor.info.description ? this._Descriptor.info.description : "";
 		}
 
 		// must be inherited
-		init (...data: any): Promise<void> {
+		public init (...data: any): Promise<void> {
 
 			console.log("DescriptorUser", "init", ...data);
 
@@ -124,7 +124,7 @@ export default class DescriptorUser extends Events {
 		}
 
 		// must be inherited
-		release (...data: any): Promise<void> {
+		public release (...data: any): Promise<void> {
 
 			console.log("DescriptorUser", "release", ...data);
 
@@ -133,7 +133,7 @@ export default class DescriptorUser extends Events {
 		}
 
 		// must be inherited
-		checkDescriptor (): Promise<void> {
+		public checkDescriptor (): Promise<void> {
 
 			// check Descriptor object
 			return this._descriptorValidated ? Promise.resolve() : checkNonEmptyObject("Descriptor", this._Descriptor).then((): Promise<void> => {
