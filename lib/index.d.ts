@@ -35,7 +35,7 @@ declare module "node-pluginsmanager-plugin" {
 		// load
 
 		public load(): Promise<void>;
-		public unload(): Promise<void>;
+		public unload(destroy?: boolean = false): Promise<void>;
 
 		// write
 
