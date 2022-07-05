@@ -2,7 +2,9 @@
 
 declare module "node-pluginsmanager-plugin" {
 
-	class Plugin {
+	import Events from "events";
+
+	class Plugin extends Events {
 
 		// params
 		public directory: string;
