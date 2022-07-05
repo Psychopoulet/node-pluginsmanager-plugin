@@ -20,10 +20,10 @@
 // types & interfaces
 
 	export interface iUrlParameters {
-		"path": object;
-		"query": object;
-		"headers": object;
-		"cookies": object;
+		"path": { [key:string]: any };
+		"query": { [key:string]: any };
+		"headers": { [key:string]: any };
+		"cookies": { [key:string]: any };
 	}
 
 	export interface iBodyParameters {
