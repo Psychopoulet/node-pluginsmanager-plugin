@@ -16,7 +16,7 @@ declare module "node-pluginsmanager-plugin" {
 		public license: string;
 		public main: string;
 		public scripts: string;
-		public name: object;
+		public name: string;
 		public version: string;
 
 		// specifics
@@ -28,7 +28,7 @@ declare module "node-pluginsmanager-plugin" {
 
 		// read
 
-		public loadDataFromPackageFile(): Promise<Plugin>;
+		public loadDataFromPackageFile(): Promise<void>;
 
 		// load
 
