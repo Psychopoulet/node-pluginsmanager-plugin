@@ -36,13 +36,13 @@ export default class MediatorUser extends DescriptorUser {
 
 	// protected
 
-		public _initWorkSpace (...data: any): Promise<void> {
+		protected _initWorkSpace (...data: any): Promise<void> {
 
 			return Promise.resolve();
 
 		}
 
-		public _releaseWorkSpace (...data: any): Promise<void> {
+		protected _releaseWorkSpace (...data: any): Promise<void> {
 
 			return Promise.resolve();
 
