@@ -3,7 +3,7 @@
 //  deps
 
 	// natives
-	import Events from "events";
+	import { EventEmitter } from "events";
 
 	// locals
 	import { checkObject } from "../checkers/TypeError/checkObject";
@@ -34,7 +34,7 @@
 
 // Please note the fact that "_initWorkSpace" and "_releaseWorkSpace" method MUST be re-writted in Mediator class, and not in MediatorUser childs.
 // Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic.
-export default class DescriptorUser extends Events {
+export default class DescriptorUser extends EventEmitter {
 
 	// attributes
 

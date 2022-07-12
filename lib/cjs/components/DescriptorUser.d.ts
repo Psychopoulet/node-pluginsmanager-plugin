@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import Events from "events";
+import { EventEmitter } from "events";
 import { OpenApiDocument } from "express-openapi-validate";
 export declare type tLogType = "data" | "debug" | "log" | "info" | "success" | "warning" | "error";
 export declare type tLogger = (type: tLogType, message: string | Error, bold?: boolean, pluginName?: string) => void;
@@ -8,7 +8,7 @@ export interface iDescriptorUserOptions {
     "descriptor"?: OpenApiDocument;
     "logger"?: tLogger;
 }
-export default class DescriptorUser extends Events {
+export default class DescriptorUser extends EventEmitter {
     initialized: boolean;
     protected _descriptorValidated: boolean;
     protected _externalRessourcesDirectory: string;
