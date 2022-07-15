@@ -1,6 +1,6 @@
 {
   "name": "node-pluginsmanager-plugin",
-  "version": "5.0.9",
+  "version": "5.0.10",
   "description": "An abstract parent plugin for node-pluginsmanager",
 
   "type": "commonjs",
@@ -58,7 +58,7 @@
   },
   "devDependencies": {
     "@types/express": "4.17.13",
-    "@types/node": "18.0.3",
+    "@types/node": "18.0.4",
     "@types/socket.io": "3.0.2",
     "@types/uniqid": "5.3.2",
     "@types/ws": "8.5.3",
