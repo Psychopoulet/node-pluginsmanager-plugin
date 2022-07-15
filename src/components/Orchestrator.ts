@@ -526,7 +526,19 @@ export default class Orchestrator extends MediatorUser {
 						return new Promise((resolve: (value: typeof Mediator) => void, reject: (err: Error) => void): void => {
 
 							try {
-								resolve(require(this._mediatorFile) as typeof Mediator);
+
+								const val: any = require(this._mediatorFile);
+
+								if ("object" === typeof val && "function" === typeof val.default) {
+									resolve(val.default as typeof Mediator);
+								}
+								else if ("function" === typeof val) {
+									resolve(val as typeof Mediator);
+								}
+								else {
+									reject(new Error("Mediator file loaded (\"" + this._mediatorFile + "\") does not contain a valid Mediator"));
+								}
+
 							}
 							catch (e) {
 								reject(e as Error);
@@ -562,7 +574,19 @@ export default class Orchestrator extends MediatorUser {
 						return new Promise((resolve: (value: typeof Server) => void, reject: (err: Error) => void) => {
 
 							try {
-								resolve(require(this._serverFile) as typeof Server);
+
+								const val: any = require(this._serverFile);
+
+								if ("object" === typeof val && "function" === typeof val.default) {
+									resolve(val.default as typeof Server);
+								}
+								else if ("function" === typeof val) {
+									resolve(val as typeof Server);
+								}
+								else {
+									reject(new Error("Server file loaded (\"" + this._serverFile + "\") does not contain a valid Server"));
+								}
+
 							}
 							catch (e) {
 								reject(e as Error);
