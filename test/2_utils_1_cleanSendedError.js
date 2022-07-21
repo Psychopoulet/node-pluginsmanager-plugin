@@ -27,12 +27,18 @@ describe("utils / cleanSendedError", () => {
 		deepStrictEqual(cleanSendedError.default({
 			"code": "AADZAZDAZ",
 			"message": "ceci est une string"
-		}), "ceci est une string", "generated data is not as expected");
+		}), {
+			"code": "AADZAZDAZ",
+			"message": "ceci est une string"
+		}, "generated data is not as expected");
 
 		deepStrictEqual(cleanSendedError.default({
 			"code": "AADZAZDAZ",
 			"message": new Error("ceci est une Error")
-		}), "ceci est une Error", "generated data is not as expected");
+		}), {
+			"code": "AADZAZDAZ",
+			"message": "ceci est une Error"
+		}, "generated data is not as expected");
 
 	});
 
@@ -43,21 +49,48 @@ describe("utils / cleanSendedError", () => {
 				"code": "AADZAZDAZ",
 				"message": "ceci est une string"
 			}
-		}), "ceci est une string", "generated data is not as expected");
+		}), {
+			"error": {
+				"code": "AADZAZDAZ",
+				"message": "ceci est une string"
+			}
+		}, "generated data is not as expected");
 
 		deepStrictEqual(cleanSendedError.default({
 			"error": {
 				"code": "AADZAZDAZ",
 				"message": new Error("ceci est une Error")
 			}
-		}), "ceci est une Error", "generated data is not as expected");
+		}), {
+			"error": {
+				"code": "AADZAZDAZ",
+				"message": "ceci est une Error"
+			}
+		}, "generated data is not as expected");
 
 		deepStrictEqual(cleanSendedError.default({
 			"err": {
 				"code": "AADZAZDAZ",
 				"message": "ceci est une string"
 			}
-		}), "ceci est une string", "generated data is not as expected");
+		}), {
+			"err": {
+				"code": "AADZAZDAZ",
+				"message": "ceci est une string"
+			}
+		}, "generated data is not as expected");
+
+		deepStrictEqual(cleanSendedError.default({
+			"err": {
+				"code": "AADZAZDAZ",
+				"message": new Error("ceci est une Error")
+			}
+		}), {
+			"err": {
+				"code": "AADZAZDAZ",
+				"message": "ceci est une Error"
+			}
+		}, "generated data is not as expected");
 
 	});
 
