@@ -1,8 +1,8 @@
 /// <reference types="node" />
 import { EventEmitter } from "events";
 import { OpenApiDocument } from "express-openapi-validate";
-export declare type tLogType = "data" | "debug" | "log" | "info" | "success" | "warning" | "error";
-export declare type tLogger = (type: tLogType, message: string | Error, bold?: boolean, pluginName?: string) => void;
+export type tLogType = "data" | "debug" | "log" | "info" | "success" | "warning" | "error";
+export type tLogger = (type: tLogType, message: string | Error, bold?: boolean, pluginName?: string) => void;
 export interface iDescriptorUserOptions {
     "externalRessourcesDirectory": string;
     "descriptor"?: OpenApiDocument;
