@@ -679,7 +679,7 @@ export default class Server extends MediatorUser {
 
 			switch (this._serverType()) {
 
-				case "WEBSOCKET":
+				case "WEBSOCKET": {
 
 					const result: Array<iClient> = [];
 
@@ -698,24 +698,45 @@ export default class Server extends MediatorUser {
 
 					return result;
 
+				}
+
 				case "SOCKETIO": {
 
 					const result: Array<iClient> = [];
 
-						(this._socketServer as SocketIOServer).sockets.sockets.forEach((s): void => {
+						if ("function" !== typeof (this._socketServer as SocketIOServer).sockets?.sockets?.has) { // SocketIO V2
 
-							result.push({
-								"id": s.id,
-								"status": s.connected ? "CONNECTED" : "DISCONNECTED"
+							for (const key in (this._socketServer as SocketIOServer).sockets.sockets) {
+
+								const s: any = ((this._socketServer as SocketIOServer).sockets.sockets as { [key:string]: any })[key];
+
+								result.push({
+									"id": s.id,
+									"status": s.connected ? "CONNECTED" : "DISCONNECTED"
+								});
+
+							}
+
+						}
+						else {
+
+							(this._socketServer as SocketIOServer).sockets.sockets.forEach((s: any): void => { // SocketIO V3&4
+
+								result.push({
+									"id": s.id,
+									"status": s.connected ? "CONNECTED" : "DISCONNECTED"
+								});
+
 							});
 
-						});
+						}
 
 					return result;
 
 				}
 
 				default:
+
 					return [];
 
 			}
@@ -771,25 +792,40 @@ export default class Server extends MediatorUser {
 
 					break;
 
-					case "SOCKETIO":
+					case "SOCKETIO": {
 
-						if ((this._socketServer as SocketIOServer).sockets.sockets.has(clientId)) {
+						let socket: any | null = null;
 
-							const socket = (this._socketServer as SocketIOServer).sockets.sockets.get(clientId);
+							if ("function" !== typeof (this._socketServer as SocketIOServer).sockets?.sockets?.has) { // SocketIO V2
 
-							if (socket && socket.connected) {
+								for (const key in (this._socketServer as SocketIOServer).sockets.sockets) {
 
-								if (log) {
-									this._log("info", "<= [PUSH|" + clientId + "] " + result);
+									if (key === clientId) {
+
+										socket = ((this._socketServer as SocketIOServer).sockets.sockets as { [key:string]: any })[key];
+
+										break;
+
+									}
+
 								}
 
-								socket.emit("message", result);
-
 							}
+							else if ((this._socketServer as SocketIOServer).sockets.sockets.has(clientId)) { // SocketIO V3&4
+								socket = (this._socketServer as SocketIOServer).sockets.sockets.get(clientId);
+							}
+
+						if (socket && socket.connected) {
+
+							if (log) {
+								this._log("info", "<= [PUSH|" + clientId + "] " + result);
+							}
+
+							socket.emit("message", result);
 
 						}
 
-					break;
+					} break;
 
 					default:
 						// nothing to do here
