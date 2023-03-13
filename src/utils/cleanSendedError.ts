@@ -6,7 +6,10 @@ export default function cleanSendedError (data: any): string {
 
 	if ("object" === typeof data) {
 
-		if (data instanceof Error) {
+		if (null === data) {
+			return data;
+		}
+		else if (data instanceof Error) {
 			return data.message;
 		}
 		else {
@@ -16,7 +19,7 @@ export default function cleanSendedError (data: any): string {
 			});
 
 			return data;
-		
+
 		}
 
 	}
