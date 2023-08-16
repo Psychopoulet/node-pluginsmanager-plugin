@@ -65,11 +65,12 @@ describe("Orchestrator / load & destroy", () => {
 					"typings",
 					"exports",
 					"files",
+					"optionalDependencies",
 					"husky",
-					"repository",
 					"keywords",
-					"bugs",
-					"homepage"
+					"homepage",
+					"repository",
+					"bugs"
 				], "Generated orchestrator extended is not as expected");
 
 				return readJSONFile.default(GOOD_OPTIONS.packageFile);
