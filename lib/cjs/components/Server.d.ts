@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import MediatorUser from "./MediatorUser";
-import { IncomingMessage, ServerResponse } from "http";
+import { IncomingMessage, ServerResponse } from "node:http";
 import { Server as WebSocketServer } from "ws";
 import { Server as SocketIOServer } from "socket.io";
 import { iMediatorUserOptions } from "./MediatorUser";
