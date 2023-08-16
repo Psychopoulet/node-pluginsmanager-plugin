@@ -100,15 +100,6 @@ module.exports = function httpRequestTest (urlpath, method, params, returnCode, 
 
 				}
 				catch (e) {
-
-					console.log("");
-					console.log("");
-					console.log("statusCode", res.statusCode);
-					console.log("statusMessage", res.statusMessage);
-					console.log(e);
-					console.log("");
-					console.log("");
-
 					reject(e);
 				}
 
