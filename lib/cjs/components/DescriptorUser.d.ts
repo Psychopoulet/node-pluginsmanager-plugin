@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { EventEmitter } from "events";
+import { EventEmitter } from "node:events";
 import { OpenApiDocument } from "express-openapi-validate";
 export type tLogType = "data" | "debug" | "log" | "info" | "success" | "warning" | "error";
 export type tLogger = (type: tLogType, message: string | Error, bold?: boolean, pluginName?: string) => void;

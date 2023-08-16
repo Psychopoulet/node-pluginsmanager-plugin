@@ -3,9 +3,9 @@
 // deps
 
 	// natives
-	import { parse } from "url";
-	import { EOL } from "os";
-	import { AddressInfo } from "net";
+	import { parse } from "node:url";
+	import { EOL } from "node:os";
+	import { AddressInfo } from "node:net";
 
 	// externals
 	import uniqid from "uniqid";
@@ -34,7 +34,7 @@
 // types & interfaces
 
 	// natives
-	import { IncomingMessage, ServerResponse } from "http";
+	import { IncomingMessage, ServerResponse } from "node:http";
 
 	// externals
 

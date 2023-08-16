@@ -3,7 +3,7 @@
 // deps
 
 	// natives
-	import { lstat } from "fs";
+	import { lstat } from "node:fs";
 
 	// locals
 	import { checkNonEmptyString } from "../../checkers/RangeError/checkNonEmptyString";

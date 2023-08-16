@@ -3,7 +3,7 @@
 // deps
 
 	// natives
-	import { readFile } from "fs";
+	import { readFile } from "node:fs/promises";
 
 	// locals
 	import checkFile from "./checkFile";
@@ -13,15 +13,7 @@
 export default function readJSONFile (file: string): Promise<any> {
 
 	return checkFile(file).then((): Promise<string> => {
-
-		return new Promise((resolve: (content: any) => void, reject: (err: Error) => void): void => {
-
-			readFile(file, "utf8", (err: Error | null, content: string): void => {
-				return err ? reject(err) : resolve(content);
-			});
-
-		});
-
+		return readFile(file, "utf8");
 	}).then((content: string): Promise<any> => {
 		return Promise.resolve(JSON.parse(content));
 	});
