@@ -1,6 +1,6 @@
-import { OpenApiValidator } from "express-openapi-validate";
 import { iServerResponse } from "./Server";
 import DescriptorUser, { iDescriptorUserOptions } from "./DescriptorUser";
+import { OpenApiValidator } from "express-openapi-validate";
 export interface iUrlParameters {
     "path": {
         [key: string]: any;

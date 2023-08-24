@@ -34,7 +34,6 @@ export default class Orchestrator extends MediatorUser {
     scripts: object | null;
     version: string;
     constructor(options: iOrchestratorOptions);
-    checkDescriptor(): Promise<void>;
     checkConf(): Promise<void>;
     isEnable(): Promise<void>;
     checkFiles(): Promise<void>;
