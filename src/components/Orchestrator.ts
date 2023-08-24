@@ -2,10 +2,8 @@
 
 // deps
 
-	// externals
+	// natives
 	import { join } from "node:path";
-
-	import SwaggerParser from "@apidevtools/swagger-parser";
 
 	// locals
 
@@ -119,16 +117,6 @@ export default class Orchestrator extends MediatorUser {
 	}
 
 	// public
-
-		public checkDescriptor (): Promise<void> {
-
-			return super.checkDescriptor().then((): Promise<OpenAPI.Document> => {
-				return SwaggerParser.validate(this._descriptorFile);
-			}).then((): Promise<void> => {
-				return Promise.resolve();
-			});
-
-		}
 
 		// checkers
 
@@ -484,12 +472,23 @@ export default class Orchestrator extends MediatorUser {
 
 					return !this.enabled ? Promise.resolve() : Promise.resolve().then((): Promise<void> => {
 
-						// create Descriptor
-						return SwaggerParser.bundle(this._descriptorFile).then((content: OpenAPI.Document): Promise<OpenApiDocument> => {
-							return Promise.resolve(content as OpenApiDocument);
-						}).then((content: OpenApiDocument): Promise<void> => {
+						const SwaggerParser = require("@apidevtools/swagger-parser");
 
-							this._Descriptor = content;
+						// generate descriptor
+						return SwaggerParser.bundle(this._descriptorFile).then((bundledDescriptor: OpenAPI.Document): Promise<OpenApiDocument> => {
+
+							// force validate because of stupid malformatted references
+							return SwaggerParser.validate(bundledDescriptor).then((validatedDescriptor: OpenApiDocument): void => {
+
+								this._Descriptor = validatedDescriptor;
+
+								if (!(this._Descriptor as OpenApiDocument).servers) {
+									(this._Descriptor as OpenApiDocument).servers = [];
+								}
+
+							});
+
+						}).then((): Promise<void> => {
 
 							return this.checkDescriptor().catch((err: Error): Promise<void> => {
 

@@ -2,9 +2,6 @@
 
 // deps
 
-	// externals
-	import { OpenApiValidator, ValidationError, OpenApiDocument } from "express-openapi-validate";
-
 	// locals
 
 	import { iServerResponse } from "./Server";
@@ -18,6 +15,11 @@
 	import DescriptorUser, { iDescriptorUserOptions } from "./DescriptorUser";
 
 // types & interfaces
+
+	// externals
+	import { OpenApiValidator, ValidationError, OpenApiDocument } from "express-openapi-validate";
+
+	// locals
 
 	export interface iUrlParameters {
 		"path": { [key:string]: any };

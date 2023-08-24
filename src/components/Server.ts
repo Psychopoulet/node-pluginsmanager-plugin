@@ -38,7 +38,6 @@
 
 	// externals
 
-	import { OpenAPI } from "openapi-types";
 	import { OpenApiDocument } from "express-openapi-validate";
 
 	import { Server as WebSocketServer, WebSocket } from "ws";
@@ -224,40 +223,20 @@ export default class Server extends MediatorUser {
 				// get descriptor
 				if ("/" + (this._Descriptor as OpenApiDocument).info.title + "/api/descriptor" === req.pattern && "get" === req.method) {
 
-					return Promise.resolve().then((): Promise<OpenApiDocument> => {
-
-						// cannot extract only validate because of stupid malformatted references
-						const SwaggerParser = require("@apidevtools/swagger-parser");
-
-						return SwaggerParser.validate(this._Descriptor as OpenAPI.Document).then((api: OpenAPI.Document): Promise<OpenApiDocument> => {
-
-							// force compatibility
-							return Promise.resolve(api as OpenApiDocument);
-
-						});
-
 					// add current server
-					}).then((api: OpenApiDocument): Promise<OpenApiDocument> => {
 
-						if (!api.servers) {
-							api.servers = [];
-						}
+					const port: number = res.socket && res.socket.localPort ? res.socket.localPort : (res.socket?.address() as AddressInfo).port;
 
-						const port: number = res.socket && res.socket.localPort ? res.socket.localPort : (res.socket?.address() as AddressInfo).port;
+					((this._Descriptor as OpenApiDocument).servers as Array<{
+						"url": string;
+						"description": string;
+					}>).push({
+						"url":  req.validatedIp + ":" + port,
+						"description": "Actual current server"
+					});
 
-						api.servers.push({
-							"url":  req.validatedIp + ":" + port,
-							"description": "Actual current server"
-						});
-
-						return Promise.resolve(api);
-
-					}).then((api: OpenApiDocument): Promise<void> => {
-
-						this._log("info", "<= [" + req.validatedIp + "] " + JSON.stringify(api));
-						return send(req, res, SERVER_CODES.OK, api, (this._Descriptor as OpenApiDocument).info.version, this._cors);
-
-					}).catch((err: Error): Promise<void> => {
+					this._log("info", "<= [" + req.validatedIp + "] " + JSON.stringify(this._Descriptor as OpenApiDocument));
+					return send(req, res, SERVER_CODES.OK, this._Descriptor as OpenApiDocument, (this._Descriptor as OpenApiDocument).info.version, this._cors).catch((err: Error): Promise<void> => {
 
 						this._log("error", err);
 
