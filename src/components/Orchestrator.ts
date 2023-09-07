@@ -625,11 +625,7 @@ export default class Orchestrator extends MediatorUser {
 						return (this._Server as Server).init(...data).then((): void => {
 
 							if (this._socketServer) { // delayed socketMiddleware
-
 								(this._Server as Server).socketMiddleware(this._socketServer);
-
-								this._socketServer = null;
-
 							}
 
 							if (!this._checkParameters) { // delayed checkParameters
@@ -663,18 +659,13 @@ export default class Orchestrator extends MediatorUser {
 				return Promise.resolve().then((): Promise<void> => {
 
 					return this._Mediator ? this._Mediator.release(...data).then((): void => {
-
 						this._Mediator = null;
-
 					}) : Promise.resolve();
 
 				}).then((): Promise<void> => {
 
 					return this._Server ? this._Server.release(...data).then((): void => {
-
-						this._socketServer = null;
 						this._Server = null;
-
 					}) : Promise.resolve();
 
 				}).then((): Promise<void> => {
