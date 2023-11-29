@@ -176,7 +176,7 @@ export default class Mediator extends DescriptorUser {
 							if ("undefined" === typeof res.body) {
 								res.body = null;
 							}
-							else {
+							else if (res.headers.includes("Content-Type") && res.headers.includes("Content-Type").includes("application/json")) {
 								res.body = "string" === typeof res.body ? JSON.parse(res.body) : res.body;
 							}
 

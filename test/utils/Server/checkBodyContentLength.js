@@ -23,7 +23,7 @@ module.exports = function checkBodyContentType (URL_API) {
 			httpRequestWithWrongHeader(URL_API + "/create?url-param=ok", "put", {
 				"body-param": "test"
 			}, {
-				"Content-Type": "application/json",
+				"Content-Type": "application/json; charset=utf-8",
 				"Content-Length": "test"
 			}, 411, "Length Required").then(() => {
 				done(new Error("There is no generated error"));
@@ -44,7 +44,7 @@ module.exports = function checkBodyContentType (URL_API) {
 			httpRequestWithWrongHeader(URL_API + "/create?url-param=ok", "put", {
 				"body-param": "test"
 			}, {
-				"Content-Type": "application/json",
+				"Content-Type": "application/json; charset=utf-8",
 				"Content-Length": 2
 			}, 411, "Length Required").then(() => {
 				done(new Error("There is no generated error"));
@@ -66,7 +66,7 @@ module.exports = function checkBodyContentType (URL_API) {
 			};
 
 			return httpRequestWithWrongHeader(URL_API + "/create?url-param=ok", "put", params, {
-				"Content-Type": "application/json",
+				"Content-Type": "application/json; charset=utf-8",
 				"Content-Length": Buffer.byteLength(JSON.stringify(params))
 			}, 201, "Created");
 

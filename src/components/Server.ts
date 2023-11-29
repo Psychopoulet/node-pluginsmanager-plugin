@@ -22,6 +22,7 @@
 	import extractBody from "../utils/request/extractBody";
 	import extractIp from "../utils/request/extractIp";
 	import extractCookies from "../utils/request/extractCookies";
+	import extractMime from "../utils/request/extractMime";
 	import send from "../utils/send";
 	import cleanSendedError from "../utils/cleanSendedError";
 
@@ -199,21 +200,18 @@ export default class Server extends MediatorUser {
 					req.headers["content-length"] = parseInt(req.headers["content-length"], 10);
 				}
 
-				// set default content-type
-				if ("string" !== typeof req.headers["content-type"]) {
-					req.headers["content-type"] = "application/json";
-				}
-
 				if (!req.pattern || !(this._Descriptor as OpenApiDocument).paths[req.pattern] || !((this._Descriptor as OpenApiDocument).paths[req.pattern] as { [key:string]: any })[req.method]) {
 					return next();
 				}
 
 				const { operationId }: { "operationId": string; } = ((this._Descriptor as OpenApiDocument).paths[req.pattern] as { [key:string]: any })[req.method];
+				const apiVersion: string = (this._Descriptor as OpenApiDocument).info.version;
+				const responses = ((this._Descriptor as OpenApiDocument).paths[req.pattern] as { [key:string]: any })[req.method].responses;
 
 				this._log("info", "" +
 					"=> [" + req.validatedIp + "] " + req.url + " (" + req.method.toUpperCase() + ")" +
-					(operationId ? EOL + "operationId    : " + operationId : "") +
-					EOL + "content-type   : " + req.headers["content-type"] +
+					(operationId                 ? EOL + "operationId    : " + operationId : "") +
+					(req.headers["content-type"] ? EOL + "content-type   : " + req.headers["content-type"] : "") +
 					(
 						"get" !== req.method && req.headers["content-length"] && 4 < req.headers["content-length"] ?
 							EOL + "content-length : " + req.headers["content-length"] : ""
@@ -236,7 +234,11 @@ export default class Server extends MediatorUser {
 					});
 
 					this._log("info", "<= [" + req.validatedIp + "] " + JSON.stringify(this._Descriptor as OpenApiDocument));
-					return send(req, res, SERVER_CODES.OK, this._Descriptor as OpenApiDocument, (this._Descriptor as OpenApiDocument).info.version, this._cors).catch((err: Error): Promise<void> => {
+					return send(req, res, SERVER_CODES.OK, this._Descriptor as OpenApiDocument, {
+						"apiVersion": apiVersion,
+						"cors": this._cors,
+						"mime": "application/json; charset=utf-8"
+					}).catch((err: Error): Promise<void> => {
 
 						this._log("error", err);
 
@@ -246,7 +248,11 @@ export default class Server extends MediatorUser {
 						};
 
 						this._log("error", "<= [" + req.validatedIp + "] " + JSON.stringify(result));
-						return send(req, res, SERVER_CODES.INTERNAL_SERVER_ERROR, result, (this._Descriptor as OpenApiDocument).info.version, this._cors);
+						return send(req, res, SERVER_CODES.INTERNAL_SERVER_ERROR, result, {
+							"apiVersion": apiVersion,
+							"cors": this._cors,
+							"mime": "application/json; charset=utf-8"
+						});
 
 					});
 
@@ -259,7 +265,11 @@ export default class Server extends MediatorUser {
 					const status: "INITIALIZED" | "ENABLED"  = initialized ? "INITIALIZED" : "ENABLED";
 
 					this._log("info", "<= [" + req.validatedIp + "] " + status);
-					return send(req, res, SERVER_CODES.OK, status, (this._Descriptor as OpenApiDocument).info.version, this._cors);
+					return send(req, res, SERVER_CODES.OK, status, {
+						"apiVersion": apiVersion,
+						"cors": this._cors,
+						"mime": "application/json; charset=utf-8"
+					});
 
 				}
 
@@ -272,7 +282,11 @@ export default class Server extends MediatorUser {
 					};
 
 					this._log("error", "<= [" + req.validatedIp + "] " + JSON.stringify(result));
-					return send(req, res, SERVER_CODES.NOT_IMPLEMENTED, result, (this._Descriptor as OpenApiDocument).info.version, this._cors);
+					return send(req, res, SERVER_CODES.NOT_IMPLEMENTED, result, {
+						"apiVersion": apiVersion,
+						"cors": this._cors,
+						"mime": "application/json; charset=utf-8"
+					});
 
 				}
 
@@ -285,7 +299,11 @@ export default class Server extends MediatorUser {
 					};
 
 					this._log("error", "<= [" + req.validatedIp + "] " + JSON.stringify(result));
-					return send(req, res, SERVER_CODES.NOT_IMPLEMENTED, result, (this._Descriptor as OpenApiDocument).info.version, this._cors);
+					return send(req, res, SERVER_CODES.NOT_IMPLEMENTED, result, {
+						"apiVersion": apiVersion,
+						"cors": this._cors,
+						"mime": "application/json; charset=utf-8"
+					});
 
 				}
 
@@ -300,7 +318,11 @@ export default class Server extends MediatorUser {
 					};
 
 					this._log("error", "<= [" + req.validatedIp + "] " + JSON.stringify(result));
-					return send(req, res, SERVER_CODES.MISSING_HEADER, result, (this._Descriptor as OpenApiDocument).info.version, this._cors);
+					return send(req, res, SERVER_CODES.MISSING_HEADER, result, {
+						"apiVersion": apiVersion,
+						"cors": this._cors,
+						"mime": "application/json; charset=utf-8"
+					});
 
 				}
 
@@ -467,30 +489,56 @@ export default class Server extends MediatorUser {
 					// send response
 					}).then((content: any): Promise<void> => {
 
+						const mime: string = extractMime(req, SERVER_CODES.OK_PUT, responses);
+
 						// created
 						if ("put" === req.method) {
 
 							if ("undefined" === typeof content || null === content) {
+
 								this._log("success", "<= [" + req.validatedIp + "] no content");
-								return send(req, res, SERVER_CODES.OK_PUT, undefined, (this._Descriptor as OpenApiDocument).info.version, this._cors);
+								return send(req, res, SERVER_CODES.OK_PUT, undefined, {
+									"apiVersion": apiVersion,
+									"cors": this._cors,
+									"mime": mime
+								});
+
 							}
 
 							else {
+
 								this._log("success", "<= [" + req.validatedIp + "] " + JSON.stringify(content));
-								return send(req, res, SERVER_CODES.OK_PUT, content, (this._Descriptor as OpenApiDocument).info.version, this._cors);
+								return send(req, res, SERVER_CODES.OK_PUT, content, {
+									"apiVersion": apiVersion,
+									"cors": this._cors,
+									"mime": mime
+								});
+
 							}
 
 						}
 
 						// no content
 						else if ("undefined" === typeof content || null === content) {
+
 							this._log("warning", "<= [" + req.validatedIp + "] no content");
-							return send(req, res, SERVER_CODES.OK_NO_CONTENT, undefined, (this._Descriptor as OpenApiDocument).info.version, this._cors);
+							return send(req, res, SERVER_CODES.OK_NO_CONTENT, undefined, {
+								"apiVersion": apiVersion,
+								"cors": this._cors,
+								"mime": mime
+							});
+
 						}
 
 						else {
+
 							this._log("success", "<= [" + req.validatedIp + "] " + JSON.stringify(content));
-							return send(req, res, SERVER_CODES.OK, content, (this._Descriptor as OpenApiDocument).info.version, this._cors);
+							return send(req, res, SERVER_CODES.OK, content, {
+								"apiVersion": apiVersion,
+								"cors": this._cors,
+								"mime": mime
+							});
+
 						}
 
 					}).catch((err: Error): Promise<void> => {
@@ -503,7 +551,11 @@ export default class Server extends MediatorUser {
 							};
 
 							this._log("error", "<= [" + req.validatedIp + "] " + JSON.stringify(result));
-							return send(req, res, SERVER_CODES.MISSING_PARAMETER, result, (this._Descriptor as OpenApiDocument).info.version, this._cors);
+							return send(req, res, SERVER_CODES.MISSING_PARAMETER, result, {
+								"apiVersion": apiVersion,
+								"cors": this._cors,
+								"mime": "application/json; charset=utf-8"
+							});
 
 						}
 						else if (err instanceof TypeError) {
@@ -514,7 +566,11 @@ export default class Server extends MediatorUser {
 							};
 
 							this._log("error", "<= [" + req.validatedIp + "] " + JSON.stringify(result));
-							return send(req, res, SERVER_CODES.WRONG_TYPE_PARAMETER, result, (this._Descriptor as OpenApiDocument).info.version, this._cors);
+							return send(req, res, SERVER_CODES.WRONG_TYPE_PARAMETER, result, {
+								"apiVersion": apiVersion,
+								"cors": this._cors,
+								"mime": "application/json; charset=utf-8"
+							});
 
 						}
 						else if (err instanceof RangeError) {
@@ -525,7 +581,11 @@ export default class Server extends MediatorUser {
 							};
 
 							this._log("error", "<= [" + req.validatedIp + "] " + JSON.stringify(result));
-							return send(req, res, SERVER_CODES.EMPTY_OR_RANGE_OR_ENUM_PARAMETER, result, (this._Descriptor as OpenApiDocument).info.version, this._cors);
+							return send(req, res, SERVER_CODES.EMPTY_OR_RANGE_OR_ENUM_PARAMETER, result, {
+								"apiVersion": apiVersion,
+								"cors": this._cors,
+								"mime": "application/json; charset=utf-8"
+							});
 
 						}
 						else if (err instanceof SyntaxError) {
@@ -536,7 +596,11 @@ export default class Server extends MediatorUser {
 							};
 
 							this._log("error", "<= [" + req.validatedIp + "] " + JSON.stringify(result));
-							return send(req, res, SERVER_CODES.JSON_PARSE, result, (this._Descriptor as OpenApiDocument).info.version, this._cors);
+							return send(req, res, SERVER_CODES.JSON_PARSE, result, {
+								"apiVersion": apiVersion,
+								"cors": this._cors,
+								"mime": "application/json; charset=utf-8"
+							});
 
 						}
 						else if (err instanceof NotFoundError) {
@@ -547,7 +611,11 @@ export default class Server extends MediatorUser {
 							};
 
 							this._log("error", "<= [" + req.validatedIp + "] " + JSON.stringify(result));
-							return send(req, res, SERVER_CODES.NOT_FOUND, result, (this._Descriptor as OpenApiDocument).info.version, this._cors);
+							return send(req, res, SERVER_CODES.NOT_FOUND, result, {
+								"apiVersion": apiVersion,
+								"cors": this._cors,
+								"mime": "application/json; charset=utf-8"
+							});
 
 						}
 						else {
@@ -560,7 +628,11 @@ export default class Server extends MediatorUser {
 							};
 
 							this._log("error", "<= [" + req.validatedIp + "] " + JSON.stringify(result));
-							return send(req, res, SERVER_CODES.INTERNAL_SERVER_ERROR, result, (this._Descriptor as OpenApiDocument).info.version, this._cors);
+							return send(req, res, SERVER_CODES.INTERNAL_SERVER_ERROR, result, {
+								"apiVersion": apiVersion,
+								"cors": this._cors,
+								"mime": "application/json; charset=utf-8"
+							});
 
 						}
 

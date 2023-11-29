@@ -182,11 +182,41 @@ module.exports = class HeritedMediator extends LocalMediator {
 
 	}
 
+	emptyResult (urlParams) {
+
+		return this.checkParameters("emptyResult", urlParams, {}).then(() => {
+
+			return Promise.resolve("test");
+
+		});
+
+	}
+
 	wrongResult (urlParams) {
 
 		return this.checkParameters("wrongResult", urlParams, {}).then(() => {
 
 			return Promise.resolve("test");
+
+		});
+
+	}
+
+	sendText (urlParams) {
+
+		return this.checkParameters("sendText", urlParams, {}).then(() => {
+
+			return Promise.resolve("test");
+
+		});
+
+	}
+
+	sendHTML (urlParams) {
+
+		return this.checkParameters("sendHTML", urlParams, {}).then(() => {
+
+			return Promise.resolve("<!DOCTYPE html><html><body><h1>test</h1></body></html>");
 
 		});
 
