@@ -1,13 +1,19 @@
 "use strict";
 
-// types & interfaces
+// deps
 
 	// locals
-	import { iIncomingMessage } from "../../components/Server";
+	import { checkStringSync } from "../../checkers/TypeError/checkString";
+	import { checkNonEmptyNumberSync } from "../../checkers/RangeError/checkNonEmptyNumber";
+	import { checkObjectSync } from "../../checkers/TypeError/checkObject";
+
+// consts
+
+	const DEFAULT_MIME: string = "text/plain";
 
 // module
 
-export default function send (req: iIncomingMessage, code: number, responses: {
+export default function extractMime (contentType: string, code: number, responses: {
 	[key:string]: {
 		"description": string;
 		"content"?: {
@@ -16,54 +22,77 @@ export default function send (req: iIncomingMessage, code: number, responses: {
 	}
 }): string {
 
-	const stringifiedCode: string = String(code);
+	const err = checkStringSync("contentType", contentType) ||
+		checkNonEmptyNumberSync("code", code) ||
+		checkObjectSync("responses", responses);
 
-	let descriptorContent: { [key:string]: any } | undefined;
-
-	if (responses[stringifiedCode]) {
-
-		if (responses[stringifiedCode].content) {
-			descriptorContent = responses[stringifiedCode].content;
-		}
-
-	}
-	else if (responses.default && responses.default.content) {
-		descriptorContent = responses.default.content;
-	}
-	else {
-		throw new ReferenceError("No \"response\" detected in Descriptor");
-	}
-
-	// 201 (put) => may be without content
-	// 204 => no content
-	if (!descriptorContent && ![ "201", "204" ].includes(stringifiedCode)) {
-		throw new TypeError("No valid \"response\" detected in Descriptor");
+	if (err) {
+		throw err;
 	}
 	else {
 
-		const [ mimeRequest, charsetRequest ] = req.headers["content-type"].split(";").map((content: string): string => {
-			return content.trim().toLowerCase();
-		});
+		const stringifiedCode: string = String(code);
 
-		let mime: string = "";
-
-		if (descriptorContent && Object.keys(descriptorContent).includes(mimeRequest)) {
-			mime = mimeRequest;
+		if (!responses[stringifiedCode] && !responses.default && "" !== contentType.trim()) {
+			return contentType;
 		}
+		else {
 
-		if (!mime) {
-			mime = mimeRequest || "text/plain";
+			let descriptorContent: { [key:string]: any } | undefined;
+
+			if (responses[stringifiedCode]) {
+
+				if (responses[stringifiedCode].content) {
+					descriptorContent = responses[stringifiedCode].content;
+				}
+
+			}
+			else if (responses.default && responses.default.content) {
+				descriptorContent = responses.default.content;
+			}
+			else {
+				return DEFAULT_MIME;
+			}
+
+			const possibleMimes: Array<string> = descriptorContent ? Object.keys(descriptorContent) : [];
+
+			if (!possibleMimes.length) {
+
+				if (contentType) {
+					return contentType;
+				}
+				else {
+					return DEFAULT_MIME;
+				}
+
+			}
+			else if (1 === possibleMimes.length) { // only one possible option
+				return possibleMimes[0];
+			}
+			else {
+
+				let result: string = DEFAULT_MIME; // default mime
+
+					const [ mimeRequest, charsetRequest ] = contentType.split(";").map((content: string): string => {
+						return content.trim().toLowerCase();
+					});
+
+					if (mimeRequest && possibleMimes.includes(mimeRequest)) {
+						result = mimeRequest;
+					}
+					else {
+						result = DEFAULT_MIME;
+					}
+
+					if (charsetRequest) {
+						result = mimeRequest + "; " + charsetRequest;
+					}
+
+				return result;
+
+			}
+
 		}
-
-		if (mimeRequest && mimeRequest !== mime) {
-			throw new RangeError("Mime detected in request (" + mimeRequest + ") is not the same than actually returned (" + mime + ")");
-		}
-
-		if (charsetRequest) {
-			mime = mimeRequest + "; " + charsetRequest;
-		}
-
-		return mime;
 
 	}
 

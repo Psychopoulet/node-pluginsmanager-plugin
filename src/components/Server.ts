@@ -488,7 +488,7 @@ export default class Server extends MediatorUser {
 					// send response
 					}).then((content: string): Promise<void> => {
 
-						const mime: string = extractMime(req, SERVER_CODES.OK_PUT, responses);
+						const mime: string = extractMime(req.headers["content-type"] || req.headers["Content-Type"] || "", SERVER_CODES.OK_PUT, responses);
 
 						// created
 						if ("put" === req.method) {
