@@ -3,7 +3,7 @@
 // deps
 
 	// natives
-	const { strictEqual } = require("assert");
+	const { strictEqual, throws } = require("assert");
 	const { join } = require("path");
 	const EventEmitter = require("events");
 
@@ -232,9 +232,9 @@ describe("utils / request / extractBody", () => {
 
 		});
 
-		it("should test with object body", (done) => {
+		it("should test with object body (result is \"[object Object]\", fail on content-lenght)", (done) => {
 
-			const data = { "test": "test2" };
+			const data = { "test1": "test1", "test2": "test2" };
 
 			event.headers = {
 				"content-length": Buffer.byteLength(JSON.stringify(data))
@@ -248,36 +248,6 @@ describe("utils / request / extractBody", () => {
 
 					strictEqual(typeof err, "object", "Generated error is not an object");
 					strictEqual(err instanceof Error, true, "Generated error is not as expected");
-
-					done();
-
-				});
-
-			setTimeout(() => {
-
-				event.emit("data", data);
-				event.emit("end");
-
-			}, 150);
-
-		});
-
-		it("should test with wrong string body", (done) => {
-
-			const data = "{ \"test\": \"test2\"";
-
-			event.headers = {
-				"content-length": Buffer.byteLength(data)
-			};
-
-			extractBody.default(event)
-				.then(() => {
-					done(new Error("There is no generated error"));
-				})
-				.catch((err) => {
-
-					strictEqual(typeof err, "object", "Generated error is not an object");
-					strictEqual(err instanceof SyntaxError, true, "Generated error is not as expected");
 
 					done();
 

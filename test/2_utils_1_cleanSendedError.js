@@ -13,13 +13,17 @@
 
 describe("utils / cleanSendedError", () => {
 
+	it("should test null", () => {
+		strictEqual(cleanSendedError.default(null), null);
+	});
+
 	it("should test string", () => {
-		strictEqual(cleanSendedError.default("ceci est une string"), "ceci est une string", "generated data is not as expected");
+		strictEqual(cleanSendedError.default("ceci est une string"), "ceci est une string");
 	});
 
 	it("should test pure error", () => {
-		strictEqual(cleanSendedError.default(new Error("ceci est une Error")), "ceci est une Error", "generated data is not as expected");
-		strictEqual(cleanSendedError.default(new Error("ceci est une RangeError")), "ceci est une RangeError", "generated data is not as expected");
+		strictEqual(cleanSendedError.default(new Error("ceci est une Error")), "ceci est une Error");
+		strictEqual(cleanSendedError.default(new Error("ceci est une RangeError")), "ceci est une RangeError");
 	});
 
 	it("should test code/message", () => {
@@ -30,7 +34,7 @@ describe("utils / cleanSendedError", () => {
 		}), {
 			"code": "AADZAZDAZ",
 			"message": "ceci est une string"
-		}, "generated data is not as expected");
+		});
 
 		deepStrictEqual(cleanSendedError.default({
 			"code": "AADZAZDAZ",
@@ -38,7 +42,7 @@ describe("utils / cleanSendedError", () => {
 		}), {
 			"code": "AADZAZDAZ",
 			"message": "ceci est une Error"
-		}, "generated data is not as expected");
+		});
 
 	});
 
@@ -54,7 +58,7 @@ describe("utils / cleanSendedError", () => {
 				"code": "AADZAZDAZ",
 				"message": "ceci est une string"
 			}
-		}, "generated data is not as expected");
+		});
 
 		deepStrictEqual(cleanSendedError.default({
 			"error": {
@@ -66,7 +70,7 @@ describe("utils / cleanSendedError", () => {
 				"code": "AADZAZDAZ",
 				"message": "ceci est une Error"
 			}
-		}, "generated data is not as expected");
+		});
 
 		deepStrictEqual(cleanSendedError.default({
 			"err": {
@@ -78,7 +82,7 @@ describe("utils / cleanSendedError", () => {
 				"code": "AADZAZDAZ",
 				"message": "ceci est une string"
 			}
-		}, "generated data is not as expected");
+		});
 
 		deepStrictEqual(cleanSendedError.default({
 			"err": {
@@ -90,7 +94,7 @@ describe("utils / cleanSendedError", () => {
 				"code": "AADZAZDAZ",
 				"message": "ceci est une Error"
 			}
-		}, "generated data is not as expected");
+		});
 
 	});
 

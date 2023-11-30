@@ -28,7 +28,7 @@ export default function extractBody (req: iIncomingMessage): Promise<string> {
 
 			let queryData: string = "";
 			req.on("data", (data): void => {
-				queryData += data.toString("utf8");
+				queryData += data.toString("utf-8");
 			}).on("end", (): void => {
 
 				if ("" === queryData || "null" === queryData) {
