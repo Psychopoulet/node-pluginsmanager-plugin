@@ -38,9 +38,9 @@ describe("Mediator / checkParameters / inheritance", () => {
 			"query": {},
 			"headers": {},
 			"cookies": {}
-		}, {
+		}, JSON.stringify({
 			"test": "test2"
-		}).then(() => {
+		})).then(() => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
@@ -60,12 +60,12 @@ describe("Mediator / checkParameters / inheritance", () => {
 			"query": {},
 			"headers": {},
 			"cookies": {}
-		}, {
+		}, JSON.stringify({
 			"doors": "test",
 			"wheels": {
 				"count": 4
 			}
-		}).then(() => {
+		})).then(() => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
@@ -85,14 +85,14 @@ describe("Mediator / checkParameters / inheritance", () => {
 			"query": {},
 			"headers": {},
 			"cookies": {}
-		}, {
+		}, JSON.stringify({
 			"doors": {
 				"count": 6
 			},
 			"wheels": {
 				"count": 4
 			}
-		}).then(() => {
+		})).then(() => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
@@ -112,14 +112,14 @@ describe("Mediator / checkParameters / inheritance", () => {
 			"query": {},
 			"headers": {},
 			"cookies": {}
-		}, {
+		}, JSON.stringify({
 			"doors": {
 				"count": 4
 			},
 			"wheels": {
 				"count": 4
 			}
-		});
+		}));
 
 	});
 

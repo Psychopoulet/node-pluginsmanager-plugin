@@ -38,11 +38,13 @@ describe("Mediator / checkParameters / object", () => {
 			"query": {},
 			"headers": {},
 			"cookies": {}
-		}, {
+		}, JSON.stringify({
 			"test": "test2"
-		}).then(() => {
+		})).then(() => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
+
+			(0, console).log(err);
 
 			strictEqual(typeof err, "object", "Generated error is not as expected");
 			strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
@@ -60,9 +62,9 @@ describe("Mediator / checkParameters / object", () => {
 			"query": {},
 			"headers": {},
 			"cookies": {}
-		}, {
+		}, JSON.stringify({
 			"body-param-object": "test2"
-		}).then(() => {
+		})).then(() => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
@@ -82,11 +84,11 @@ describe("Mediator / checkParameters / object", () => {
 			"query": {},
 			"headers": {},
 			"cookies": {}
-		}, {
+		}, JSON.stringify({
 			"body-param-object": {
 				"test": "test2"
 			}
-		}).then(() => {
+		})).then(() => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
@@ -106,11 +108,11 @@ describe("Mediator / checkParameters / object", () => {
 			"query": {},
 			"headers": {},
 			"cookies": {}
-		}, {
+		}, JSON.stringify({
 			"body-param-object": {
 				"body-param-object-test": "test2"
 			}
-		});
+		}));
 
 	});
 

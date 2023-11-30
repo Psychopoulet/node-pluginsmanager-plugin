@@ -38,9 +38,9 @@ describe("Mediator / checkParameters / array", () => {
 			"query": {},
 			"headers": {},
 			"cookies": {}
-		}, {
+		}, JSON.stringify({
 			"test": "test2"
-		}).then(() => {
+		})).then(() => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
@@ -60,9 +60,9 @@ describe("Mediator / checkParameters / array", () => {
 			"query": {},
 			"headers": {},
 			"cookies": {}
-		}, {
+		}, JSON.stringify({
 			"body-param-array": "test2"
-		}).then(() => {
+		})).then(() => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
@@ -82,9 +82,9 @@ describe("Mediator / checkParameters / array", () => {
 			"query": {},
 			"headers": {},
 			"cookies": {}
-		}, {
+		}, JSON.stringify({
 			"body-param-array": []
-		}).then(() => {
+		})).then(() => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
@@ -104,9 +104,9 @@ describe("Mediator / checkParameters / array", () => {
 			"query": {},
 			"headers": {},
 			"cookies": {}
-		}, {
+		}, JSON.stringify({
 			"body-param-array": [ "test", "test", "test", "test", "test", "test" ]
-		}).then(() => {
+		})).then(() => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
@@ -126,9 +126,9 @@ describe("Mediator / checkParameters / array", () => {
 			"query": {},
 			"headers": {},
 			"cookies": {}
-		}, {
+		}, JSON.stringify({
 			"body-param-array": [ 3 ]
-		}).then(() => {
+		})).then(() => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
@@ -148,9 +148,9 @@ describe("Mediator / checkParameters / array", () => {
 			"query": {},
 			"headers": {},
 			"cookies": {}
-		}, {
+		}, JSON.stringify({
 			"body-param-array": [ "test", 3 ]
-		}).then(() => {
+		})).then(() => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
@@ -170,9 +170,9 @@ describe("Mediator / checkParameters / array", () => {
 			"query": {},
 			"headers": {},
 			"cookies": {}
-		}, {
+		}, JSON.stringify({
 			"body-param-array": [ "test", "test", "test" ]
-		});
+		}));
 
 	});
 

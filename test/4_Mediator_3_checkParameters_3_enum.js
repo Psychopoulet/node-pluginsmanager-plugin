@@ -40,7 +40,7 @@ describe("Mediator / checkParameters / enum", () => {
 			"query": {},
 			"headers": {},
 			"cookies": {}
-		}, {}).then(() => {
+		}, "").then(() => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
@@ -62,7 +62,7 @@ describe("Mediator / checkParameters / enum", () => {
 			"query": {},
 			"headers": {},
 			"cookies": {}
-		}, {}).then(() => {
+		}, "").then(() => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
@@ -84,7 +84,7 @@ describe("Mediator / checkParameters / enum", () => {
 			"query": {},
 			"headers": {},
 			"cookies": {}
-		}, {}).then(() => {
+		}, "").then(() => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
@@ -106,7 +106,7 @@ describe("Mediator / checkParameters / enum", () => {
 			"query": {},
 			"headers": {},
 			"cookies": {}
-		}, {});
+		}, "");
 
 	});
 
