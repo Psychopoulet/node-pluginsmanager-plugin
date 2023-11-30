@@ -7,6 +7,7 @@
 	import { iServerResponse } from "./Server";
 
 	import { checkObject } from "../checkers/TypeError/checkObject";
+	import { checkString } from "../checkers/TypeError/checkString";
 	import { checkNonEmptyString } from "../checkers/RangeError/checkNonEmptyString";
 	import { checkNonEmptyObject } from "../checkers/RangeError/checkNonEmptyObject";
 
@@ -55,7 +56,7 @@ export default class Mediator extends DescriptorUser {
 	// public
 
 		 // Check sended parameters by method name (used by the Server)
-		public checkParameters (operationId: string, urlParams: iUrlParameters, bodyParams: iBodyParameters): Promise<void> {
+		public checkParameters (operationId: string, urlParams: iUrlParameters, bodyParams: string): Promise<void> {
 
 			// parameters validation
 			return this.checkDescriptor().then((): Promise<void> => {
@@ -73,7 +74,7 @@ export default class Mediator extends DescriptorUser {
 				});
 
 			}).then(() => {
-				return checkObject("bodyParams", bodyParams);
+				return checkString("bodyParams", bodyParams);
 			}).then((): Promise<void> => {
 
 				// search wanted operation
@@ -171,17 +172,19 @@ export default class Mediator extends DescriptorUser {
 
 						try {
 
-							res.headers = res.getHeaders();
+							const mutedRes = { ...res };
+
+							mutedRes.headers = res.getHeaders();
 
 							if ("undefined" === typeof res.body) {
-								res.body = null;
+								mutedRes.body = "";
 							}
 							else if (res.headers.includes("Content-Type") && res.headers.includes("Content-Type").includes("application/json")) {
-								res.body = "string" === typeof res.body ? JSON.parse(res.body) : res.body;
+								mutedRes.body = "string" === typeof res.body ? JSON.parse(res.body) : res.body;
 							}
 
 							const validateResponse = (this._validator as OpenApiValidator).validateResponse(foundPathMethod.method, foundPathMethod.path);
-							validateResponse(res);
+							validateResponse(mutedRes);
 
 							return resolve();
 

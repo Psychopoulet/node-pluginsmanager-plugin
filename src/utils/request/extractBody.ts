@@ -12,15 +12,9 @@
 	// externals
 	import { iIncomingMessage } from "../../components/Server";
 
-	// locals
-	interface iResult {
-		"value": string;
-		"parsed": any;
-	}
-
 // module
 
-export default function extractBody (req: iIncomingMessage): Promise<iResult> {
+export default function extractBody (req: iIncomingMessage): Promise<string> {
 
 	return checkNonEmptyObject("req", req).then((): Promise<void> => {
 		return checkFunction("req.on", req.on);
@@ -28,9 +22,9 @@ export default function extractBody (req: iIncomingMessage): Promise<iResult> {
 		return checkNonEmptyObject("req.headers", req.headers);
 	}).then((): Promise<void> => {
 		return checkInteger("req.headers[\"content-length\"]", req.headers["content-length"]);
-	}).then((): Promise<iResult> => {
+	}).then((): Promise<string> => {
 
-		return new Promise((resolve: (res: iResult) => void, reject: (err: Error) => void): void => {
+		return new Promise((resolve: (res: string) => void, reject: (err: Error) => void): void => {
 
 			let queryData: string = "";
 			req.on("data", (data): void => {
@@ -39,10 +33,7 @@ export default function extractBody (req: iIncomingMessage): Promise<iResult> {
 
 				if ("" === queryData || "null" === queryData) {
 
-					resolve({
-						"value": "",
-						"parsed": {}
-					});
+					resolve("");
 
 				}
 				else {
@@ -60,17 +51,7 @@ export default function extractBody (req: iIncomingMessage): Promise<iResult> {
 					}
 					else {
 
-						try {
-
-							resolve({
-								"value": queryData,
-								"parsed": JSON.parse(queryData)
-							});
-
-						}
-						catch (e) {
-							reject(e as Error);
-						}
+						resolve(queryData);
 
 					}
 

@@ -48,11 +48,6 @@
 
 	import { iMediatorUserOptions } from "./MediatorUser";
 
-	interface iSendedError {
-		"code": string;
-		"message": string;
-	}
-
 	interface iPush {
 		"id": string;
 		"plugin": string;
@@ -225,7 +220,9 @@ export default class Server extends MediatorUser {
 
 					const port: number = res.socket && res.socket.localPort ? res.socket.localPort : (res.socket?.address() as AddressInfo).port;
 
-					((this._Descriptor as OpenApiDocument).servers as Array<{
+					const descriptor: OpenApiDocument = { ...(this._Descriptor as OpenApiDocument) };
+
+					(descriptor.servers as Array<{
 						"url": string;
 						"description": string;
 					}>).push({
@@ -233,8 +230,10 @@ export default class Server extends MediatorUser {
 						"description": "Actual current server"
 					});
 
-					this._log("info", "<= [" + req.validatedIp + "] " + JSON.stringify(this._Descriptor as OpenApiDocument));
-					return send(req, res, SERVER_CODES.OK, this._Descriptor as OpenApiDocument, {
+					const content: string = JSON.stringify(descriptor);
+
+					this._log("info", "<= [" + req.validatedIp + "] " + content);
+					return send(req, res, SERVER_CODES.OK, content, {
 						"apiVersion": apiVersion,
 						"cors": this._cors,
 						"mime": "application/json; charset=utf-8"
@@ -242,12 +241,12 @@ export default class Server extends MediatorUser {
 
 						this._log("error", err);
 
-						const result: { "code": string; "message": string; } = {
+						const result: string = JSON.stringify({
 							"code": "INTERNAL_SERVER_ERROR",
 							"message": cleanSendedError(err)
-						};
+						});
 
-						this._log("error", "<= [" + req.validatedIp + "] " + JSON.stringify(result));
+						this._log("error", "<= [" + req.validatedIp + "] " + result);
 						return send(req, res, SERVER_CODES.INTERNAL_SERVER_ERROR, result, {
 							"apiVersion": apiVersion,
 							"cors": this._cors,
@@ -276,12 +275,12 @@ export default class Server extends MediatorUser {
 				// missing operationId
 				else if (!operationId) {
 
-					const result: { "code": string; "message": string; } = {
+					const result: string = JSON.stringify({
 						"code": "NOT_IMPLEMENTED",
 						"message": "Missing \"operationId\" in the Descriptor for this request"
-					};
+					});
 
-					this._log("error", "<= [" + req.validatedIp + "] " + JSON.stringify(result));
+					this._log("error", "<= [" + req.validatedIp + "] " + result);
 					return send(req, res, SERVER_CODES.NOT_IMPLEMENTED, result, {
 						"apiVersion": apiVersion,
 						"cors": this._cors,
@@ -293,12 +292,12 @@ export default class Server extends MediatorUser {
 				// not implemented operationId
 				else if ("function" !== typeof (this._Mediator as { [key:string]: any })[operationId]) {
 
-					const result: { "code": string; "message": string; } = {
+					const result: string = JSON.stringify({
 						"code": "NOT_IMPLEMENTED",
 						"message": "Unknown Mediator's \"operationId\" method for this request"
-					};
+					});
 
-					this._log("error", "<= [" + req.validatedIp + "] " + JSON.stringify(result));
+					this._log("error", "<= [" + req.validatedIp + "] " + result);
 					return send(req, res, SERVER_CODES.NOT_IMPLEMENTED, result, {
 						"apiVersion": apiVersion,
 						"cors": this._cors,
@@ -312,12 +311,12 @@ export default class Server extends MediatorUser {
 					"headers[\"content-length\"]", req.headers["content-length"]
 				)) {
 
-					const result: { "code": string; "message": string; } = {
+					const result: string = JSON.stringify({
 						"code": "MISSING_HEADER",
 						"message": "No valid \"Content-Length\" header found"
-					};
+					});
 
-					this._log("error", "<= [" + req.validatedIp + "] " + JSON.stringify(result));
+					this._log("error", "<= [" + req.validatedIp + "] " + result);
 					return send(req, res, SERVER_CODES.MISSING_HEADER, result, {
 						"apiVersion": apiVersion,
 						"cors": this._cors,
@@ -435,23 +434,23 @@ export default class Server extends MediatorUser {
 						});
 
 					// extract body
-					}).then((): Promise<{ [key:string]: string }> => {
+					}).then((): Promise<string> => {
 
 						if ("get" === req.method.toLowerCase()) {
-							return Promise.resolve({});
+							return Promise.resolve("");
 						}
-						else if (!checkNonEmptyObjectSync("body", req.body)) {
+						else if (!checkNonEmptyStringSync("body", req.body)) {
 							return Promise.resolve(req.body);
 						}
 						else {
 
-							return extractBody(req).then((body): Promise<{ [key:string]: string }> => {
+							return extractBody(req).then((body: string): Promise<string> => {
 
-								req.body = body.parsed;
-
-								if (body.value.length) {
-									this._log("log", body.value);
+								if (body.length) {
+									this._log("log", body);
 								}
+
+								req.body = body;
 
 								return Promise.resolve(req.body);
 
@@ -460,7 +459,7 @@ export default class Server extends MediatorUser {
 						}
 
 					// formate data
-					}).then((body: { [key:string]: string }): Promise<void> => {
+					}).then((body: string): Promise<string> => {
 
 						const parsed = {
 							"url": {
@@ -480,14 +479,14 @@ export default class Server extends MediatorUser {
 							) : Promise.resolve();
 
 						// execute Mediator method
-						}).then(() => {
+						}).then((): Promise<string> => {
 
 							return (this._Mediator as { [key:string]: any })[operationId](parsed.url, parsed.body);
 
 						});
 
 					// send response
-					}).then((content: any): Promise<void> => {
+					}).then((content: string): Promise<void> => {
 
 						const mime: string = extractMime(req, SERVER_CODES.OK_PUT, responses);
 
@@ -497,7 +496,7 @@ export default class Server extends MediatorUser {
 							if ("undefined" === typeof content || null === content) {
 
 								this._log("success", "<= [" + req.validatedIp + "] no content");
-								return send(req, res, SERVER_CODES.OK_PUT, undefined, {
+								return send(req, res, SERVER_CODES.OK_PUT, "", {
 									"apiVersion": apiVersion,
 									"cors": this._cors,
 									"mime": mime
@@ -507,7 +506,7 @@ export default class Server extends MediatorUser {
 
 							else {
 
-								this._log("success", "<= [" + req.validatedIp + "] " + JSON.stringify(content));
+								this._log("success", "<= [" + req.validatedIp + "] " + content);
 								return send(req, res, SERVER_CODES.OK_PUT, content, {
 									"apiVersion": apiVersion,
 									"cors": this._cors,
@@ -522,7 +521,7 @@ export default class Server extends MediatorUser {
 						else if ("undefined" === typeof content || null === content) {
 
 							this._log("warning", "<= [" + req.validatedIp + "] no content");
-							return send(req, res, SERVER_CODES.OK_NO_CONTENT, undefined, {
+							return send(req, res, SERVER_CODES.OK_NO_CONTENT, "", {
 								"apiVersion": apiVersion,
 								"cors": this._cors,
 								"mime": mime
@@ -532,7 +531,7 @@ export default class Server extends MediatorUser {
 
 						else {
 
-							this._log("success", "<= [" + req.validatedIp + "] " + JSON.stringify(content));
+							this._log("success", "<= [" + req.validatedIp + "] " + content);
 							return send(req, res, SERVER_CODES.OK, content, {
 								"apiVersion": apiVersion,
 								"cors": this._cors,
@@ -545,12 +544,12 @@ export default class Server extends MediatorUser {
 
 						if (err instanceof ReferenceError) {
 
-							const result: iSendedError = {
+							const result: string = JSON.stringify({
 								"code": "MISSING_PARAMETER",
 								"message": cleanSendedError(err)
-							};
+							});
 
-							this._log("error", "<= [" + req.validatedIp + "] " + JSON.stringify(result));
+							this._log("error", "<= [" + req.validatedIp + "] " + result);
 							return send(req, res, SERVER_CODES.MISSING_PARAMETER, result, {
 								"apiVersion": apiVersion,
 								"cors": this._cors,
@@ -560,12 +559,12 @@ export default class Server extends MediatorUser {
 						}
 						else if (err instanceof TypeError) {
 
-							const result: iSendedError = {
+							const result: string = JSON.stringify({
 								"code": "WRONG_TYPE_PARAMETER",
 								"message": cleanSendedError(err)
-							};
+							});
 
-							this._log("error", "<= [" + req.validatedIp + "] " + JSON.stringify(result));
+							this._log("error", "<= [" + req.validatedIp + "] " + result);
 							return send(req, res, SERVER_CODES.WRONG_TYPE_PARAMETER, result, {
 								"apiVersion": apiVersion,
 								"cors": this._cors,
@@ -575,12 +574,12 @@ export default class Server extends MediatorUser {
 						}
 						else if (err instanceof RangeError) {
 
-							const result: iSendedError = {
+							const result: string = JSON.stringify({
 								"code": "EMPTY_OR_RANGE_OR_ENUM_PARAMETER",
 								"message": cleanSendedError(err)
-							};
+							});
 
-							this._log("error", "<= [" + req.validatedIp + "] " + JSON.stringify(result));
+							this._log("error", "<= [" + req.validatedIp + "] " + result);
 							return send(req, res, SERVER_CODES.EMPTY_OR_RANGE_OR_ENUM_PARAMETER, result, {
 								"apiVersion": apiVersion,
 								"cors": this._cors,
@@ -590,12 +589,12 @@ export default class Server extends MediatorUser {
 						}
 						else if (err instanceof SyntaxError) {
 
-							const result: iSendedError = {
+							const result: string = JSON.stringify({
 								"code": "JSON_PARSE",
 								"message": cleanSendedError(err)
-							};
+							});
 
-							this._log("error", "<= [" + req.validatedIp + "] " + JSON.stringify(result));
+							this._log("error", "<= [" + req.validatedIp + "] " + result);
 							return send(req, res, SERVER_CODES.JSON_PARSE, result, {
 								"apiVersion": apiVersion,
 								"cors": this._cors,
@@ -605,12 +604,12 @@ export default class Server extends MediatorUser {
 						}
 						else if (err instanceof NotFoundError) {
 
-							const result: iSendedError = {
+							const result: string = JSON.stringify({
 								"code": "NOT_FOUND",
 								"message": cleanSendedError(err)
-							};
+							});
 
-							this._log("error", "<= [" + req.validatedIp + "] " + JSON.stringify(result));
+							this._log("error", "<= [" + req.validatedIp + "] " + result);
 							return send(req, res, SERVER_CODES.NOT_FOUND, result, {
 								"apiVersion": apiVersion,
 								"cors": this._cors,
@@ -622,12 +621,12 @@ export default class Server extends MediatorUser {
 
 							this._log("error", err);
 
-							const result: iSendedError = {
+							const result: string = JSON.stringify({
 								"code": "INTERNAL_SERVER_ERROR",
 								"message": cleanSendedError(err)
-							};
+							});
 
-							this._log("error", "<= [" + req.validatedIp + "] " + JSON.stringify(result));
+							this._log("error", "<= [" + req.validatedIp + "] " + result);
 							return send(req, res, SERVER_CODES.INTERNAL_SERVER_ERROR, result, {
 								"apiVersion": apiVersion,
 								"cors": this._cors,

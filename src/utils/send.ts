@@ -7,7 +7,7 @@
 
 // module
 
-export default function send (req: iIncomingMessage, res: iServerResponse, code: number, content: any, options: {
+export default function send (req: iIncomingMessage, res: iServerResponse, code: number, content: string, options: {
 	"apiVersion": string,
 	"cors": boolean,
 	"mime": string
@@ -15,14 +15,7 @@ export default function send (req: iIncomingMessage, res: iServerResponse, code:
 
 	return new Promise((resolve: () => void): void => {
 
-		// formate content
-
-		if ("undefined" !== typeof content && options.mime.includes("application/json")) {
-			res.body = JSON.stringify(content);
-		}
-		else if ("string" === typeof content) {
-			res.body = content;
-		}
+		res.body = content;
 
 		// force data for checking
 
