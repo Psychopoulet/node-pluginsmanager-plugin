@@ -94,6 +94,13 @@ export default class Mediator extends DescriptorUser {
 						"body": bodyParams
 					};
 
+					try {
+						req.body = JSON.parse(req.body);
+					}
+					catch (e) {
+						// nothing to do here
+					}
+
 					const validateRequest: any = (this._validator as OpenApiValidator).validate(req.method, req.path); // set to "any" for ts validation
 
 					validateRequest(req, null, (err: Error): void => {
@@ -176,11 +183,18 @@ export default class Mediator extends DescriptorUser {
 
 							mutedRes.headers = res.getHeaders();
 
-							if ("undefined" === typeof res.body) {
+							if ("undefined" === typeof mutedRes.body) {
 								mutedRes.body = "";
 							}
-							else if (res.headers.includes("Content-Type") && res.headers.includes("Content-Type").includes("application/json")) {
-								mutedRes.body = "string" === typeof res.body ? JSON.parse(res.body) : res.body;
+							else {
+
+								try {
+									mutedRes.body = JSON.parse(mutedRes.body);
+								}
+								catch (e) {
+									// nothing to do here
+								}
+
 							}
 
 							const validateResponse = (this._validator as OpenApiValidator).validateResponse(foundPathMethod.method, foundPathMethod.path);
