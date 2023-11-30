@@ -80,7 +80,7 @@ describe("Mediator / checkParameters", () => {
 
 		it("should test unknown operationId", (done) => {
 
-			const descriptor = JSON.parse(JSON.stringify(DESCRIPTOR_ONLY_URL));
+			const descriptor = { ...DESCRIPTOR_ONLY_URL };
 
 			new LocalMediator({
 				descriptor
@@ -89,7 +89,7 @@ describe("Mediator / checkParameters", () => {
 				"query": {},
 				"headers": {},
 				"cookies": {}
-			}, {}).then(() => {
+			}, "").then(() => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
@@ -478,7 +478,7 @@ describe("Mediator / checkParameters", () => {
 				"query": {},
 				"headers": {},
 				"cookies": {}
-			}, {});
+			}, "");
 
 		});
 

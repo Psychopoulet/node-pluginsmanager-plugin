@@ -73,7 +73,7 @@ export default class Mediator extends DescriptorUser {
 					return checkObject("urlParams.cookies", urlParams.cookies);
 				});
 
-			}).then(() => {
+			}).then((): Promise<void> => {
 				return checkString("bodyParams", bodyParams);
 			}).then((): Promise<void> => {
 
