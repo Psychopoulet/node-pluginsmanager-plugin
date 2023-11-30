@@ -27,7 +27,7 @@ export default function extractBody (req: iIncomingMessage): Promise<string> {
 		return new Promise((resolve: (res: string) => void, reject: (err: Error) => void): void => {
 
 			let queryData: string = "";
-			req.on("data", (data): void => {
+			req.on("data", (data: Buffer | string): void => {
 				queryData += data.toString("utf-8");
 			}).on("end", (): void => {
 

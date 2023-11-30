@@ -21,45 +21,45 @@ module.exports = class HeritedMediator extends LocalMediator {
 	}
 
 	valid () {
-		return Promise.resolve([ "test" ]);
+		return Promise.resolve(JSON.stringify([ "test" ]));
 	}
 
-	urlParamBoolean (urlParams, bodyParams) {
+	urlParamBoolean (urlParams) {
 
-		return this.checkParameters("urlParamBoolean", urlParams, bodyParams).then(() => {
-			return Promise.resolve(urlParams.path["path-param-boolean"]);
+		return this.checkParameters("urlParamBoolean", urlParams, "").then(() => {
+			return Promise.resolve(JSON.stringify(urlParams.path["path-param-boolean"]));
 		});
 
 	}
 
-	urlParamInteger (urlParams, bodyParams) {
+	urlParamInteger (urlParams) {
 
-		return this.checkParameters("urlParamInteger", urlParams, bodyParams).then(() => {
-			return Promise.resolve(urlParams.path["path-param-integer"]);
+		return this.checkParameters("urlParamInteger", urlParams, "").then(() => {
+			return Promise.resolve(JSON.stringify(urlParams.path["path-param-integer"]));
 		});
 
 	}
 
-	urlParamNumber (urlParams, bodyParams) {
+	urlParamNumber (urlParams) {
 
-		return this.checkParameters("urlParamNumber", urlParams, bodyParams).then(() => {
-			return Promise.resolve(urlParams.path["path-param-number"]);
+		return this.checkParameters("urlParamNumber", urlParams, "").then(() => {
+			return Promise.resolve(JSON.stringify(urlParams.path["path-param-number"]));
 		});
 
 	}
 
-	urlParamString (urlParams, bodyParams) {
+	urlParamString (urlParams) {
 
-		return this.checkParameters("urlParamString", urlParams, bodyParams).then(() => {
-			return Promise.resolve(urlParams.path["path-param-string"]);
+		return this.checkParameters("urlParamString", urlParams, "").then(() => {
+			return Promise.resolve(JSON.stringify(urlParams.path["path-param-string"]));
 		});
 
 	}
 
-	urlParamFacultative (urlParams, bodyParams) {
+	urlParamFacultative (urlParams) {
 
-		return this.checkParameters("urlParamFacultative", urlParams, bodyParams).then(() => {
-			return Promise.resolve(urlParams.query["path-param-facultative"] ? urlParams.query["path-param-facultative"] : "ok");
+		return this.checkParameters("urlParamFacultative", urlParams, "").then(() => {
+			return Promise.resolve(JSON.stringify(urlParams.query["path-param-facultative"] ? urlParams.query["path-param-facultative"] : "ok"));
 		});
 
 	}
@@ -67,7 +67,7 @@ module.exports = class HeritedMediator extends LocalMediator {
 	bodyParamBoolean (urlParams, bodyParams) {
 
 		return this.checkParameters("bodyParamBoolean", urlParams, bodyParams).then(() => {
-			return Promise.resolve(bodyParams["body-param-boolean"]);
+			return Promise.resolve(JSON.stringify(JSON.parse(bodyParams)["body-param-boolean"]));
 		});
 
 	}
@@ -75,7 +75,7 @@ module.exports = class HeritedMediator extends LocalMediator {
 	bodyParamInteger (urlParams, bodyParams) {
 
 		return this.checkParameters("bodyParamInteger", urlParams, bodyParams).then(() => {
-			return Promise.resolve(bodyParams["body-param-integer"]);
+			return Promise.resolve(JSON.stringify(JSON.parse(bodyParams)["body-param-integer"]));
 		});
 
 	}
@@ -83,7 +83,7 @@ module.exports = class HeritedMediator extends LocalMediator {
 	bodyParamNumber (urlParams, bodyParams) {
 
 		return this.checkParameters("bodyParamNumber", urlParams, bodyParams).then(() => {
-			return Promise.resolve(bodyParams["body-param-number"]);
+			return Promise.resolve(JSON.stringify(JSON.parse(bodyParams)["body-param-number"]));
 		});
 
 	}
@@ -91,7 +91,7 @@ module.exports = class HeritedMediator extends LocalMediator {
 	bodyParamString (urlParams, bodyParams) {
 
 		return this.checkParameters("bodyParamString", urlParams, bodyParams).then(() => {
-			return Promise.resolve(bodyParams["body-param-string"]);
+			return Promise.resolve(JSON.stringify(JSON.parse(bodyParams)["body-param-string"]));
 		});
 
 	}
@@ -99,7 +99,7 @@ module.exports = class HeritedMediator extends LocalMediator {
 	bodyParamObject (urlParams, bodyParams) {
 
 		return this.checkParameters("bodyParamObject", urlParams, bodyParams).then(() => {
-			return Promise.resolve(bodyParams["body-param-object"]);
+			return Promise.resolve(JSON.stringify(JSON.parse(bodyParams)["body-param-object"]));
 		});
 
 	}
@@ -107,16 +107,18 @@ module.exports = class HeritedMediator extends LocalMediator {
 	bodyParamArray (urlParams, bodyParams) {
 
 		return this.checkParameters("bodyParamArray", urlParams, bodyParams).then(() => {
-			return Promise.resolve(bodyParams["body-param-array"]);
+			return Promise.resolve(JSON.stringify(JSON.parse(bodyParams)["body-param-array"]));
 		});
 
 	}
 
 	create (urlParams, bodyParams) {
 
+		const params = JSON.parse(bodyParams);
+
 		return this.checkParameters("create", urlParams, bodyParams).then(() => {
 
-			if ("generate-fail" === bodyParams["body-param"]) {
+			if ("generate-fail" === params["body-param"]) {
 				return Promise.reject(new Error("Generate artificial error"));
 			}
 
@@ -127,10 +129,10 @@ module.exports = class HeritedMediator extends LocalMediator {
 					return Promise.reject(new RangeError("\"query.url-param\" url path parameter is empty"));
 				}
 
-			else if ("string" !== typeof bodyParams["body-param"]) {
+			else if ("string" !== typeof params["body-param"]) {
 				return Promise.reject(new TypeError("\"body-param\" body parameter is not a string"));
 			}
-				else if ("" === bodyParams["body-param"].trim()) {
+				else if ("" === params["body-param"].trim()) {
 					return Promise.reject(new RangeError("\"body-param\" body parameter is empty"));
 				}
 
@@ -144,9 +146,9 @@ module.exports = class HeritedMediator extends LocalMediator {
 
 	pathPath (urlParams) {
 
-		return this.checkParameters("pathPath", urlParams, {}).then(() => {
+		return this.checkParameters("pathPath", urlParams, "").then(() => {
 
-			return Promise.resolve(urlParams.path["path-param"]);
+			return Promise.resolve(JSON.stringify(urlParams.path["path-param"]));
 
 		});
 
@@ -154,9 +156,9 @@ module.exports = class HeritedMediator extends LocalMediator {
 
 	pathQuery (urlParams) {
 
-		return this.checkParameters("pathQuery", urlParams, {}).then(() => {
+		return this.checkParameters("pathQuery", urlParams, "").then(() => {
 
-			return Promise.resolve(urlParams.query["query-param"]);
+			return Promise.resolve(JSON.stringify(urlParams.query["query-param"]));
 
 		});
 
@@ -164,9 +166,9 @@ module.exports = class HeritedMediator extends LocalMediator {
 
 	pathCookie (urlParams) {
 
-		return this.checkParameters("pathCookie", urlParams, {}).then(() => {
+		return this.checkParameters("pathCookie", urlParams, "").then(() => {
 
-			return Promise.resolve(urlParams.cookies["cookie-param"]);
+			return Promise.resolve(JSON.stringify(urlParams.cookies["cookie-param"]));
 
 		});
 
@@ -174,9 +176,9 @@ module.exports = class HeritedMediator extends LocalMediator {
 
 	pathHeader (urlParams) {
 
-		return this.checkParameters("pathHeader", urlParams, {}).then(() => {
+		return this.checkParameters("pathHeader", urlParams, "").then(() => {
 
-			return Promise.resolve(urlParams.headers["header-param"]);
+			return Promise.resolve(JSON.stringify(urlParams.headers["header-param"]));
 
 		});
 
@@ -184,9 +186,9 @@ module.exports = class HeritedMediator extends LocalMediator {
 
 	emptyResult (urlParams) {
 
-		return this.checkParameters("emptyResult", urlParams, {}).then(() => {
+		return this.checkParameters("emptyResult", urlParams, "").then(() => {
 
-			return Promise.resolve("test");
+			return Promise.resolve(JSON.stringify("test"));
 
 		});
 
@@ -194,9 +196,9 @@ module.exports = class HeritedMediator extends LocalMediator {
 
 	wrongResult (urlParams) {
 
-		return this.checkParameters("wrongResult", urlParams, {}).then(() => {
+		return this.checkParameters("wrongResult", urlParams, "").then(() => {
 
-			return Promise.resolve("test");
+			return Promise.resolve(JSON.stringify("test"));
 
 		});
 
@@ -204,8 +206,9 @@ module.exports = class HeritedMediator extends LocalMediator {
 
 	sendText (urlParams) {
 
-		return this.checkParameters("sendText", urlParams, {}).then(() => {
+		return this.checkParameters("sendText", urlParams, "").then(() => {
 
+			// DO NOT FORMATE INTO JSON
 			return Promise.resolve("test");
 
 		});
@@ -214,8 +217,9 @@ module.exports = class HeritedMediator extends LocalMediator {
 
 	sendHTML (urlParams) {
 
-		return this.checkParameters("sendHTML", urlParams, {}).then(() => {
+		return this.checkParameters("sendHTML", urlParams, "").then(() => {
 
+			// DO NOT FORMATE INTO JSON
 			return Promise.resolve("<!DOCTYPE html><html><body><h1>test</h1></body></html>");
 
 		});

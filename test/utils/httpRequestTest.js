@@ -68,7 +68,7 @@ module.exports = function httpRequestTest (
 
 					}
 
-					res.setEncoding("utf8");
+					res.setEncoding("utf-8");
 
 					let rawData = "";
 					res.on("data", (chunk) => {

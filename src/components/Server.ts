@@ -266,7 +266,7 @@ export default class Server extends MediatorUser {
 					const status: "INITIALIZED" | "ENABLED"  = initialized ? "INITIALIZED" : "ENABLED";
 
 					this._log("info", "<= [" + req.validatedIp + "] " + status);
-					return send(req, res, SERVER_CODES.OK, status, {
+					return send(req, res, SERVER_CODES.OK, JSON.stringify(status), {
 						"apiVersion": apiVersion,
 						"cors": this._cors,
 						"mime": extractMime(contentType, SERVER_CODES.OK, responses)

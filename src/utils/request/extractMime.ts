@@ -56,26 +56,26 @@ export default function extractMime (contentType: string, code: number, response
 
 			const possibleMimes: Array<string> = descriptorContent ? Object.keys(descriptorContent) : [];
 
-			if (!possibleMimes.length) {
+			const [ mimeRequest, charsetRequest ] = contentType.split(";").map((content: string): string => {
+				return content.trim().toLowerCase();
+			});
 
-				if (contentType) {
-					return contentType;
+			let result: string = DEFAULT_MIME; // default mime
+
+				if (!possibleMimes.length) {
+
+					if (mimeRequest) {
+						result = mimeRequest;
+					}
+					else {
+						result = DEFAULT_MIME;
+					}
+
+				}
+				else if (1 === possibleMimes.length) { // only one possible option
+					result = possibleMimes[0];
 				}
 				else {
-					return DEFAULT_MIME;
-				}
-
-			}
-			else if (1 === possibleMimes.length) { // only one possible option
-				return possibleMimes[0];
-			}
-			else {
-
-				let result: string = DEFAULT_MIME; // default mime
-
-					const [ mimeRequest, charsetRequest ] = contentType.split(";").map((content: string): string => {
-						return content.trim().toLowerCase();
-					});
 
 					if (mimeRequest && possibleMimes.includes(mimeRequest)) {
 						result = mimeRequest;
@@ -84,13 +84,13 @@ export default function extractMime (contentType: string, code: number, response
 						result = DEFAULT_MIME;
 					}
 
-					if (charsetRequest) {
-						result = mimeRequest + "; " + charsetRequest;
-					}
+				}
 
-				return result;
+				if (charsetRequest) {
+					result = mimeRequest + "; " + charsetRequest;
+				}
 
-			}
+			return result;
 
 		}
 
