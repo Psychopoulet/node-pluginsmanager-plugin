@@ -201,6 +201,8 @@ export default class Server extends MediatorUser {
 
 				const { operationId }: { "operationId": string; } = ((this._Descriptor as OpenApiDocument).paths[req.pattern] as { [key:string]: any })[req.method];
 				const apiVersion: string = (this._Descriptor as OpenApiDocument).info.version;
+
+				const contentType: string = req.headers["content-type"] || req.headers["Content-Type"] || "";
 				const responses = ((this._Descriptor as OpenApiDocument).paths[req.pattern] as { [key:string]: any })[req.method].responses;
 
 				this._log("info", "" +
@@ -236,7 +238,7 @@ export default class Server extends MediatorUser {
 					return send(req, res, SERVER_CODES.OK, content, {
 						"apiVersion": apiVersion,
 						"cors": this._cors,
-						"mime": "application/json; charset=utf-8"
+						"mime": extractMime(contentType, SERVER_CODES.OK, responses)
 					}).catch((err: Error): Promise<void> => {
 
 						this._log("error", err);
@@ -250,7 +252,7 @@ export default class Server extends MediatorUser {
 						return send(req, res, SERVER_CODES.INTERNAL_SERVER_ERROR, result, {
 							"apiVersion": apiVersion,
 							"cors": this._cors,
-							"mime": "application/json; charset=utf-8"
+							"mime": extractMime(contentType, SERVER_CODES.INTERNAL_SERVER_ERROR, responses)
 						});
 
 					});
@@ -267,7 +269,7 @@ export default class Server extends MediatorUser {
 					return send(req, res, SERVER_CODES.OK, status, {
 						"apiVersion": apiVersion,
 						"cors": this._cors,
-						"mime": "application/json; charset=utf-8"
+						"mime": extractMime(contentType, SERVER_CODES.OK, responses)
 					});
 
 				}
@@ -284,7 +286,7 @@ export default class Server extends MediatorUser {
 					return send(req, res, SERVER_CODES.NOT_IMPLEMENTED, result, {
 						"apiVersion": apiVersion,
 						"cors": this._cors,
-						"mime": "application/json; charset=utf-8"
+						"mime": extractMime(contentType, SERVER_CODES.NOT_IMPLEMENTED, responses)
 					});
 
 				}
@@ -301,7 +303,7 @@ export default class Server extends MediatorUser {
 					return send(req, res, SERVER_CODES.NOT_IMPLEMENTED, result, {
 						"apiVersion": apiVersion,
 						"cors": this._cors,
-						"mime": "application/json; charset=utf-8"
+						"mime": extractMime(contentType, SERVER_CODES.NOT_IMPLEMENTED, responses)
 					});
 
 				}
@@ -320,7 +322,7 @@ export default class Server extends MediatorUser {
 					return send(req, res, SERVER_CODES.MISSING_HEADER, result, {
 						"apiVersion": apiVersion,
 						"cors": this._cors,
-						"mime": "application/json; charset=utf-8"
+						"mime": extractMime(contentType, SERVER_CODES.MISSING_HEADER, responses)
 					});
 
 				}
@@ -488,8 +490,6 @@ export default class Server extends MediatorUser {
 					// send response
 					}).then((content: string): Promise<void> => {
 
-						const mime: string = extractMime(req.headers["content-type"] || req.headers["Content-Type"] || "", SERVER_CODES.OK_PUT, responses);
-
 						// created
 						if ("put" === req.method) {
 
@@ -499,7 +499,7 @@ export default class Server extends MediatorUser {
 								return send(req, res, SERVER_CODES.OK_PUT, "", {
 									"apiVersion": apiVersion,
 									"cors": this._cors,
-									"mime": mime
+									"mime": extractMime(contentType, SERVER_CODES.OK_PUT, responses)
 								});
 
 							}
@@ -510,7 +510,7 @@ export default class Server extends MediatorUser {
 								return send(req, res, SERVER_CODES.OK_PUT, content, {
 									"apiVersion": apiVersion,
 									"cors": this._cors,
-									"mime": mime
+									"mime": extractMime(contentType, SERVER_CODES.OK_PUT, responses)
 								});
 
 							}
@@ -524,7 +524,7 @@ export default class Server extends MediatorUser {
 							return send(req, res, SERVER_CODES.OK_NO_CONTENT, "", {
 								"apiVersion": apiVersion,
 								"cors": this._cors,
-								"mime": mime
+								"mime": extractMime(contentType, SERVER_CODES.OK_NO_CONTENT, responses)
 							});
 
 						}
@@ -535,7 +535,7 @@ export default class Server extends MediatorUser {
 							return send(req, res, SERVER_CODES.OK, content, {
 								"apiVersion": apiVersion,
 								"cors": this._cors,
-								"mime": mime
+								"mime": extractMime(contentType, SERVER_CODES.OK, responses)
 							});
 
 						}
@@ -553,7 +553,7 @@ export default class Server extends MediatorUser {
 							return send(req, res, SERVER_CODES.MISSING_PARAMETER, result, {
 								"apiVersion": apiVersion,
 								"cors": this._cors,
-								"mime": "application/json; charset=utf-8"
+								"mime": extractMime(contentType, SERVER_CODES.MISSING_PARAMETER, responses)
 							});
 
 						}
@@ -568,7 +568,7 @@ export default class Server extends MediatorUser {
 							return send(req, res, SERVER_CODES.WRONG_TYPE_PARAMETER, result, {
 								"apiVersion": apiVersion,
 								"cors": this._cors,
-								"mime": "application/json; charset=utf-8"
+								"mime": extractMime(contentType, SERVER_CODES.WRONG_TYPE_PARAMETER, responses)
 							});
 
 						}
@@ -583,7 +583,7 @@ export default class Server extends MediatorUser {
 							return send(req, res, SERVER_CODES.EMPTY_OR_RANGE_OR_ENUM_PARAMETER, result, {
 								"apiVersion": apiVersion,
 								"cors": this._cors,
-								"mime": "application/json; charset=utf-8"
+								"mime": extractMime(contentType, SERVER_CODES.EMPTY_OR_RANGE_OR_ENUM_PARAMETER, responses)
 							});
 
 						}
@@ -598,7 +598,7 @@ export default class Server extends MediatorUser {
 							return send(req, res, SERVER_CODES.JSON_PARSE, result, {
 								"apiVersion": apiVersion,
 								"cors": this._cors,
-								"mime": "application/json; charset=utf-8"
+								"mime": extractMime(contentType, SERVER_CODES.JSON_PARSE, responses)
 							});
 
 						}
@@ -613,7 +613,7 @@ export default class Server extends MediatorUser {
 							return send(req, res, SERVER_CODES.NOT_FOUND, result, {
 								"apiVersion": apiVersion,
 								"cors": this._cors,
-								"mime": "application/json; charset=utf-8"
+								"mime": extractMime(contentType, SERVER_CODES.NOT_FOUND, responses)
 							});
 
 						}
@@ -630,7 +630,7 @@ export default class Server extends MediatorUser {
 							return send(req, res, SERVER_CODES.INTERNAL_SERVER_ERROR, result, {
 								"apiVersion": apiVersion,
 								"cors": this._cors,
-								"mime": "application/json; charset=utf-8"
+								"mime": extractMime(contentType, SERVER_CODES.INTERNAL_SERVER_ERROR, responses)
 							});
 
 						}
