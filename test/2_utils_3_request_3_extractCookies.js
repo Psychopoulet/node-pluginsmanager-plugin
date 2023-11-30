@@ -14,15 +14,15 @@
 describe("utils / request / extractCookies", () => {
 
 	it("should test with missing data", () => {
-		deepStrictEqual(extractCookies.default(), {}, "generated data is not as expected");
+		deepStrictEqual(extractCookies.default(), {});
 	});
 
 	it("should test with wrong data", () => {
-		deepStrictEqual(extractCookies.default("test"), {}, "generated data is not as expected");
+		deepStrictEqual(extractCookies.default("test"), {});
 	});
 
 	it("should test with empty data", () => {
-		deepStrictEqual(extractCookies.default({}), {}, "generated data is not as expected");
+		deepStrictEqual(extractCookies.default({}), {});
 	});
 
 	describe("cookies", () => {
@@ -31,7 +31,7 @@ describe("utils / request / extractCookies", () => {
 
 			deepStrictEqual(extractCookies.default({
 				"test": "test"
-			}), {}, "generated data is not as expected");
+			}), {});
 
 		});
 
@@ -39,7 +39,7 @@ describe("utils / request / extractCookies", () => {
 
 			deepStrictEqual(extractCookies.default({
 				"cookies": "test"
-			}), {}, "generated data is not as expected");
+			}), {});
 
 		});
 
@@ -47,7 +47,7 @@ describe("utils / request / extractCookies", () => {
 
 			deepStrictEqual(extractCookies.default({
 				"cookies": {}
-			}), {}, "generated data is not as expected");
+			}), {});
 
 		});
 
@@ -59,7 +59,7 @@ describe("utils / request / extractCookies", () => {
 				}
 			}), {
 				"test": "test2"
-			}, "generated data is not as expected");
+			});
 
 		});
 
@@ -71,7 +71,7 @@ describe("utils / request / extractCookies", () => {
 
 			deepStrictEqual(extractCookies.default({
 				"test": "test"
-			}), {}, "generated data is not as expected");
+			}), {});
 
 		});
 
@@ -79,7 +79,7 @@ describe("utils / request / extractCookies", () => {
 
 			deepStrictEqual(extractCookies.default({
 				"headers": "test"
-			}), {}, "generated data is not as expected");
+			}), {});
 
 		});
 
@@ -87,7 +87,7 @@ describe("utils / request / extractCookies", () => {
 
 			deepStrictEqual(extractCookies.default({
 				"headers": {}
-			}), {}, "generated data is not as expected");
+			}), {});
 
 		});
 
@@ -97,7 +97,7 @@ describe("utils / request / extractCookies", () => {
 				"headers": {
 					"cookie": true
 				}
-			}), {}, "generated data is not as expected");
+			}), {});
 
 		});
 
@@ -109,7 +109,7 @@ describe("utils / request / extractCookies", () => {
 				}
 			}), {
 				"test1": "test1"
-			}, "generated data is not as expected");
+			});
 
 		});
 
@@ -122,7 +122,7 @@ describe("utils / request / extractCookies", () => {
 			}), {
 				"test1": "test1",
 				"test2": "test2"
-			}, "generated data is not as expected");
+			});
 
 		});
 
@@ -135,7 +135,7 @@ describe("utils / request / extractCookies", () => {
 			}), {
 				"test1": "test1",
 				"test2": "test2"
-			}, "generated data is not as expected");
+			});
 
 		});
 
@@ -148,7 +148,7 @@ describe("utils / request / extractCookies", () => {
 			}), {
 				"test1": "test1",
 				"test2": "test2"
-			}, "generated data is not as expected");
+			});
 
 		});
 
@@ -161,7 +161,7 @@ describe("utils / request / extractCookies", () => {
 			}), {
 				"test1": "test1",
 				"test2": "test2"
-			}, "generated data is not as expected");
+			});
 
 		});
 

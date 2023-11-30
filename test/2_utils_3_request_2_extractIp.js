@@ -14,22 +14,22 @@
 describe("utils / request / extractIp", () => {
 
 	it("should test with missing data", () => {
-		strictEqual(extractIp.default(), "", "generated data is not as expected");
+		strictEqual(extractIp.default(), "");
 	});
 
 	it("should test with missing data", () => {
-		strictEqual(extractIp.default({}), "", "generated data is not as expected");
+		strictEqual(extractIp.default({}), "");
 	});
 
 	it("should test with wrong data", () => {
-		strictEqual(extractIp.default("test"), "", "generated data is not as expected");
+		strictEqual(extractIp.default("test"), "");
 	});
 
 	it("should test with valid ip", () => {
 
 		strictEqual(extractIp.default({
 			"ip": "192.168.0.1"
-		}), "192.168.0.1", "generated data is not as expected");
+		}), "192.168.0.1");
 
 	});
 
@@ -39,7 +39,7 @@ describe("utils / request / extractIp", () => {
 			"headers": {
 				"x-forwarded-for": "192.168.0.1"
 			}
-		}), "192.168.0.1", "generated data is not as expected");
+		}), "192.168.0.1");
 
 	});
 
@@ -49,7 +49,7 @@ describe("utils / request / extractIp", () => {
 			"socket": {
 				"remoteAddress": "192.168.0.1"
 			}
-		}), "192.168.0.1", "generated data is not as expected");
+		}), "192.168.0.1");
 
 	});
 
@@ -57,7 +57,7 @@ describe("utils / request / extractIp", () => {
 
 		strictEqual(extractIp.default({
 			"connection": {}
-		}), "", "generated data is not as expected");
+		}), "");
 
 	});
 
@@ -67,7 +67,7 @@ describe("utils / request / extractIp", () => {
 			"connection": {
 				"remoteAddress": "192.168.0.1"
 			}
-		}), "192.168.0.1", "generated data is not as expected");
+		}), "192.168.0.1");
 
 	});
 
@@ -79,7 +79,7 @@ describe("utils / request / extractIp", () => {
 					"remoteAddress": "192.168.0.1"
 				}
 			}
-		}), "192.168.0.1", "generated data is not as expected");
+		}), "192.168.0.1");
 
 	});
 
@@ -87,7 +87,7 @@ describe("utils / request / extractIp", () => {
 
 		strictEqual(extractIp.default({
 			"ip": "::ffff:127.0.0.1"
-		}), "127.0.0.1", "generated data is not as expected");
+		}), "127.0.0.1");
 
 	});
 
@@ -95,7 +95,7 @@ describe("utils / request / extractIp", () => {
 
 		strictEqual(extractIp.default({
 			"ip": "localhost"
-		}), "127.0.0.1", "generated data is not as expected");
+		}), "127.0.0.1");
 
 	});
 
@@ -103,7 +103,7 @@ describe("utils / request / extractIp", () => {
 
 		strictEqual(extractIp.default({
 			"ip": "::1"
-		}), "127.0.0.1", "generated data is not as expected");
+		}), "127.0.0.1");
 
 	});
 
