@@ -21,10 +21,10 @@ import { checkArrayLength, checkArrayLengthSync } from "./checkers/RangeError/ch
 import { checkArrayLengthBetween, checkArrayLengthBetweenSync } from "./checkers/RangeError/checkArrayLengthBetween";
 export { checkExists, checkExistsSync, checkBoolean, checkBooleanSync, checkFunction, checkFunctionSync, checkNumber, checkNumberSync, checkObject, checkObjectSync, checkString, checkStringSync, checkArray, checkArraySync, checkInteger, checkIntegerSync, checkNonEmptyArray, checkNonEmptyArraySync, checkNonEmptyInteger, checkNonEmptyIntegerSync, checkNonEmptyNumber, checkNonEmptyNumberSync, checkNonEmptyObject, checkNonEmptyObjectSync, checkNonEmptyString, checkNonEmptyStringSync, checkNumberBetween, checkNumberBetweenSync, checkObjectLength, checkObjectLengthSync, checkObjectLengthBetween, checkObjectLengthBetweenSync, checkStringLength, checkStringLengthSync, checkStringLengthBetween, checkStringLengthBetweenSync, checkIntegerBetween, checkIntegerBetweenSync, checkArrayLength, checkArrayLengthSync, checkArrayLengthBetween, checkArrayLengthBetweenSync };
 import DescriptorUser, { iDescriptorUserOptions, tLogType, tLogger } from "./components/DescriptorUser";
-import Mediator, { iUrlParameters, iBodyParameters } from "./components/Mediator";
+import Mediator, { iUrlParameters } from "./components/Mediator";
 import MediatorUser, { iMediatorUserOptions } from "./components/MediatorUser";
 import NotFoundError from "./components/NotFoundError";
 import Orchestrator, { iOrchestratorOptions } from "./components/Orchestrator";
 import Server, { iClient, iIncomingMessage, iServerResponse } from "./components/Server";
-export { tLogType, tLogger, iUrlParameters, iBodyParameters, iClient, iIncomingMessage, iServerResponse };
+export { tLogType, tLogger, iUrlParameters, iClient, iIncomingMessage, iServerResponse };
 export { DescriptorUser, iDescriptorUserOptions, Mediator, MediatorUser, iMediatorUserOptions, NotFoundError, Orchestrator, iOrchestratorOptions, Server };

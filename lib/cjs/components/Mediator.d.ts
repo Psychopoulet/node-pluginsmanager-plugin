@@ -1,6 +1,12 @@
-import { iServerResponse } from "./Server";
+import { iIncomingMessage, iServerResponse } from "./Server";
 import DescriptorUser, { iDescriptorUserOptions } from "./DescriptorUser";
 import { OpenApiValidator } from "express-openapi-validate";
+export interface iIncomingMessageForMediatorValidation extends iIncomingMessage {
+    "body": any;
+}
+export interface iServerResponseForMediatorValidation extends iServerResponse {
+    "body": any;
+}
 export interface iUrlParameters {
     "path": {
         [key: string]: any;
@@ -15,14 +21,11 @@ export interface iUrlParameters {
         [key: string]: any;
     };
 }
-export interface iBodyParameters {
-    [key: string]: any;
-}
 export default class Mediator extends DescriptorUser {
     protected _validator: OpenApiValidator | null;
     constructor(options: iDescriptorUserOptions);
     checkParameters(operationId: string, urlParams: iUrlParameters, bodyParams: string): Promise<void>;
-    checkResponse(operationId: string, res: iServerResponse): Promise<void>;
+    checkResponse(operationId: string, res: iServerResponseForMediatorValidation): Promise<void>;
     init(...data: any): Promise<void>;
     release(...data: any): Promise<void>;
 }
