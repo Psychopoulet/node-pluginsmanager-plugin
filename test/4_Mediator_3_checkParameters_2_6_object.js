@@ -44,6 +44,8 @@ describe("Mediator / checkParameters / object", () => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
+			(0, console).log(err);
+
 			strictEqual(typeof err, "object", "Generated error is not as expected");
 			strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
 

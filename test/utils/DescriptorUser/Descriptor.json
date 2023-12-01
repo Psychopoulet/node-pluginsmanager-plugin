@@ -2,7 +2,7 @@
 	"openapi": "3.0.2",
 	"info": {
 		"title": "node-pluginsmanager-plugin",
-		"version": "5.1.1",
+		"version": "6.0.0",
 		"description": "An abstract parent plugin for node-pluginsmanager",
 		"contact": {
 			"name": "Sébastien VIDAL",
@@ -86,7 +86,14 @@
 				"summary": "Simple API test for Server class",
 				"responses": {
 					"501": {
-						"description": "Everything is fine"
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
 					},
 					"default": {
 						"description": "An error occured",
@@ -108,7 +115,14 @@
 				"operationId": "wrgnezmgnzmoifgnzmgz",
 				"responses": {
 					"501": {
-						"description": "Everything is fine"
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
 					},
 					"default": {
 						"description": "An error occured",
@@ -129,7 +143,7 @@
 				"summary": "Simple API test for Server class",
 				"operationId": "emptyGet",
 				"responses": {
-					"404": {
+					"204": {
 						"description": "Everything is fine"
 					},
 					"default": {
@@ -215,10 +229,24 @@
 				],
 				"responses": {
 					"200": {
-						"description": "Everything is fine"
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "boolean"
+								}
+							}
+						}
 					},
 					"400": {
-						"description": "Missing parameter"
+						"description": "Missing parameter",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
 					},
 					"default": {
 						"description": "An error occured",
@@ -251,10 +279,24 @@
 				],
 				"responses": {
 					"200": {
-						"description": "Everything is fine"
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TestInteger"
+								}
+							}
+						}
 					},
 					"400": {
-						"description": "Missing parameter"
+						"description": "Missing parameter",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
 					},
 					"default": {
 						"description": "An error occured",
@@ -287,10 +329,24 @@
 				],
 				"responses": {
 					"200": {
-						"description": "Everything is fine"
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TestNumber"
+								}
+							}
+						}
 					},
 					"400": {
-						"description": "Missing parameter"
+						"description": "Missing parameter",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
 					},
 					"default": {
 						"description": "An error occured",
@@ -317,7 +373,14 @@
 				],
 				"responses": {
 					"200": {
-						"description": "Everything is fine"
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TestString"
+								}
+							}
+						}
 					},
 					"default": {
 						"description": "An error occured",
@@ -344,13 +407,20 @@
 						"description": "Entity name",
 						"required": false,
 						"schema": {
-							"type": "string"
+							"$ref": "#/components/schemas/TestString"
 						}
 					}
 				],
 				"responses": {
 					"200": {
-						"description": "Everything is fine"
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TestString"
+								}
+							}
+						}
 					},
 					"default": {
 						"description": "An error occured",
@@ -397,7 +467,14 @@
 						}
 					},
 					"400": {
-						"description": "Missing parameter"
+						"description": "Missing parameter",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
 					},
 					"default": {
 						"description": "An error occured",
@@ -434,10 +511,24 @@
 				},
 				"responses": {
 					"200": {
-						"description": "Everything is fine"
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TestInteger"
+								}
+							}
+						}
 					},
 					"400": {
-						"description": "Missing parameter"
+						"description": "Missing parameter",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
 					},
 					"default": {
 						"description": "An error occured",
@@ -474,10 +565,24 @@
 				},
 				"responses": {
 					"200": {
-						"description": "Everything is fine"
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TestNumber"
+								}
+							}
+						}
 					},
 					"400": {
-						"description": "Missing parameter"
+						"description": "Missing parameter",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
 					},
 					"default": {
 						"description": "An error occured",
@@ -514,10 +619,24 @@
 				},
 				"responses": {
 					"200": {
-						"description": "Everything is fine"
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TestString"
+								}
+							}
+						}
 					},
 					"400": {
-						"description": "Missing parameter"
+						"description": "Missing parameter",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
 					},
 					"default": {
 						"description": "An error occured",
@@ -554,10 +673,24 @@
 				},
 				"responses": {
 					"200": {
-						"description": "Everything is fine"
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TestObject"
+								}
+							}
+						}
 					},
 					"400": {
-						"description": "Missing parameter"
+						"description": "Missing parameter",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
 					},
 					"default": {
 						"description": "An error occured",
@@ -599,10 +732,24 @@
 				},
 				"responses": {
 					"200": {
-						"description": "Everything is fine"
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TestString"
+								}
+							}
+						}
 					},
 					"400": {
-						"description": "Missing parameter"
+						"description": "Missing parameter",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
 					},
 					"default": {
 						"description": "An error occured",
@@ -629,7 +776,7 @@
 								"type": "object",
 								"properties": {
 									"body-param-facultative": {
-										"type": "string"
+										"$ref": "#/components/schemas/TestString"
 									}
 								},
 								"required": [ "body-param-facultative" ]
@@ -639,7 +786,14 @@
 				},
 				"responses": {
 					"200": {
-						"description": "Everything is fine"
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TestString"
+								}
+							}
+						}
 					},
 					"default": {
 						"description": "An error occured",
@@ -680,7 +834,14 @@
 						"description": "Everything is fine"
 					},
 					"400": {
-						"description": "Missing parameter"
+						"description": "Missing parameter",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
 					},
 					"default": {
 						"description": "An error occured",
@@ -713,13 +874,34 @@
 				],
 				"responses": {
 					"200": {
-						"description": "Everything is fine"
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TestString"
+								}
+							}
+						}
 					},
 					"404": {
-						"description": "Everything is fine (with no data)"
+						"description": "Everything is fine (with no data)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
 					},
 					"400": {
-						"description": "Missing parameter"
+						"description": "Missing parameter",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
 					},
 					"default": {
 						"description": "An error occured",
@@ -752,10 +934,24 @@
 				],
 				"responses": {
 					"200": {
-						"description": "Everything is fine"
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TestString"
+								}
+							}
+						}
 					},
 					"400": {
-						"description": "Missing parameter"
+						"description": "Missing parameter",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
 					},
 					"default": {
 						"description": "An error occured",
@@ -788,10 +984,24 @@
 				],
 				"responses": {
 					"200": {
-						"description": "Everything is fine"
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TestString"
+								}
+							}
+						}
 					},
 					"400": {
-						"description": "Missing parameter"
+						"description": "Missing parameter",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
 					},
 					"default": {
 						"description": "An error occured",
@@ -824,10 +1034,46 @@
 				],
 				"responses": {
 					"200": {
-						"description": "Everything is fine"
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TestString"
+								}
+							}
+						}
 					},
 					"400": {
-						"description": "Missing parameter"
+						"description": "Missing parameter",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occured",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/empty-result": {
+			"post": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "emptyResult",
+				"responses": {
+					"200": {
+						"description": "Everything is fine"
 					},
 					"default": {
 						"description": "An error occured",
@@ -848,8 +1094,73 @@
 				"summary": "Simple API test for Server class",
 				"operationId": "wrongResult",
 				"responses": {
-					"201": {
-						"description": "Everything is fine"
+					"200": {
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TestString"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occured",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/mime/text-plain": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "sendText",
+				"responses": {
+					"200": {
+						"description": "Everything is fine",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"$ref": "#/components/schemas/TestString"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occured",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/mime/text-html": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "sendHTML",
+				"responses": {
+					"200": {
+						"description": "Everything is fine",
+						"content": {
+							"text/html": {
+								"schema": {
+									"$ref": "#/components/schemas/TestString"
+								}
+							}
+						}
 					},
 					"default": {
 						"description": "An error occured",

@@ -21,7 +21,7 @@ export interface iBodyParameters {
 export default class Mediator extends DescriptorUser {
     protected _validator: OpenApiValidator | null;
     constructor(options: iDescriptorUserOptions);
-    checkParameters(operationId: string, urlParams: iUrlParameters, bodyParams: iBodyParameters): Promise<void>;
+    checkParameters(operationId: string, urlParams: iUrlParameters, bodyParams: string): Promise<void>;
     checkResponse(operationId: string, res: iServerResponse): Promise<void>;
     init(...data: any): Promise<void>;
     release(...data: any): Promise<void>;

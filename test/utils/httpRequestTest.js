@@ -17,7 +17,11 @@
 
 // module
 
-module.exports = function httpRequestTest (urlpath, method, params, returnCode, returnResponse, returnContent) {
+module.exports = function httpRequestTest (
+	urlpath, method, params,
+	returnCode, returnResponse, returnContent,
+	contentType = "application/json; charset=utf-8"
+) {
 
 	return readJSONFile.default(join(__dirname, "DescriptorUser", "Descriptor.json")).then((content) => {
 
@@ -35,7 +39,7 @@ module.exports = function httpRequestTest (urlpath, method, params, returnCode, 
 				"query": url.query,
 				"method": method.toUpperCase(),
 				"headers": {
-					"Content-Type": "application/json; charset=utf-8",
+					"Content-Type": contentType,
 					"Content-Length": Buffer.byteLength(bodyParams)
 				}
 			};
@@ -50,7 +54,7 @@ module.exports = function httpRequestTest (urlpath, method, params, returnCode, 
 					strictEqual(typeof res.headers, "object", "The headers are not an object");
 					strictEqual(
 						res.headers["content-type"].toLowerCase(),
-						"application/json; charset=utf-8",
+						contentType,
 						"The content-type header is not as expected"
 					);
 
@@ -64,7 +68,7 @@ module.exports = function httpRequestTest (urlpath, method, params, returnCode, 
 
 					}
 
-					res.setEncoding("utf8");
+					res.setEncoding("utf-8");
 
 					let rawData = "";
 					res.on("data", (chunk) => {
@@ -86,7 +90,14 @@ module.exports = function httpRequestTest (urlpath, method, params, returnCode, 
 							}
 
 							if ("undefined" !== typeof returnContent) {
-								strictEqual(rawData, JSON.stringify(returnContent), "The returned content is not as expected");
+
+								if (contentType.includes("application/json")) {
+									strictEqual(rawData, JSON.stringify(returnContent), "The returned content is not as expected");
+								}
+								else {
+									strictEqual(rawData, returnContent, "The returned content is not as expected");
+								}
+
 							}
 
 							resolve();

@@ -16,9 +16,18 @@ module.exports = function checkBodyBasics (URL_API) {
 
 	describe("check body basics features", () => {
 
+		it("should test request without body parameter", () => {
+
+			return httpRequestTest(URL_API + "/create?url-param=ok", "put", "", 400, "Bad Request", {
+				"code": "WRONG_TYPE_PARAMETER",
+				"message": "Error while validating request: request/body must be object"
+			});
+
+		});
+
 		it("should test request with missing body parameter", () => {
 
-			return httpRequestTest(URL_API + "/create?url-param=ok", "put", null, 400, "Bad Request", {
+			return httpRequestTest(URL_API + "/create?url-param=ok", "put", "{}", 400, "Bad Request", {
 				"code": "MISSING_PARAMETER",
 				"message": "Error while validating request: request/body must have required property 'body-param'"
 			});

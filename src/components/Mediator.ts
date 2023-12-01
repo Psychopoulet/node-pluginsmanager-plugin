@@ -6,11 +6,13 @@
 
 	import { iServerResponse } from "./Server";
 
+	import { checkExists } from "../checkers/ReferenceError/checkExists";
 	import { checkObject } from "../checkers/TypeError/checkObject";
 	import { checkNonEmptyString } from "../checkers/RangeError/checkNonEmptyString";
 	import { checkNonEmptyObject } from "../checkers/RangeError/checkNonEmptyObject";
 
 	import extractPathMethodByOperationId, { iPathMethod } from "../utils/descriptor/extractPathMethodByOperationId";
+	import jsonParser from "../utils/jsonParser";
 
 	import DescriptorUser, { iDescriptorUserOptions } from "./DescriptorUser";
 
@@ -55,7 +57,7 @@ export default class Mediator extends DescriptorUser {
 	// public
 
 		 // Check sended parameters by method name (used by the Server)
-		public checkParameters (operationId: string, urlParams: iUrlParameters, bodyParams: iBodyParameters): Promise<void> {
+		public checkParameters (operationId: string, urlParams: iUrlParameters, bodyParams: string): Promise<void> {
 
 			// parameters validation
 			return this.checkDescriptor().then((): Promise<void> => {
@@ -72,8 +74,8 @@ export default class Mediator extends DescriptorUser {
 					return checkObject("urlParams.cookies", urlParams.cookies);
 				});
 
-			}).then(() => {
-				return checkObject("bodyParams", bodyParams);
+			}).then((): Promise<void> => {
+				return checkExists("bodyParams", bodyParams);
 			}).then((): Promise<void> => {
 
 				// search wanted operation
@@ -171,17 +173,19 @@ export default class Mediator extends DescriptorUser {
 
 						try {
 
-							res.headers = res.getHeaders();
+							const mutedRes = { ...res };
 
-							if ("undefined" === typeof res.body) {
-								res.body = null;
+							mutedRes.headers = res.getHeaders();
+
+							if ("undefined" === typeof mutedRes.body || "" === mutedRes.body) {
+								mutedRes.body = {};
 							}
 							else {
-								res.body = "string" === typeof res.body ? JSON.parse(res.body) : res.body;
+								mutedRes.body = jsonParser(mutedRes.body);
 							}
 
 							const validateResponse = (this._validator as OpenApiValidator).validateResponse(foundPathMethod.method, foundPathMethod.path);
-							validateResponse(res);
+							validateResponse(mutedRes);
 
 							return resolve();
 

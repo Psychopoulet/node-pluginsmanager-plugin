@@ -20,8 +20,8 @@ describe("utils / request / extractBody", () => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
-			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+			strictEqual(typeof err, "object");
+			strictEqual(err instanceof ReferenceError, true);
 
 			done();
 
@@ -35,8 +35,8 @@ describe("utils / request / extractBody", () => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
-			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+			strictEqual(typeof err, "object");
+			strictEqual(err instanceof TypeError, true);
 
 			done();
 
@@ -50,8 +50,8 @@ describe("utils / request / extractBody", () => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
-			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
+			strictEqual(typeof err, "object");
+			strictEqual(err instanceof RangeError, true);
 
 			done();
 
@@ -69,8 +69,8 @@ describe("utils / request / extractBody", () => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
-				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+				strictEqual(typeof err, "object");
+				strictEqual(err instanceof ReferenceError, true);
 
 				done();
 
@@ -86,8 +86,8 @@ describe("utils / request / extractBody", () => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
-				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+				strictEqual(typeof err, "object");
+				strictEqual(err instanceof TypeError, true);
 
 				done();
 
@@ -109,8 +109,8 @@ describe("utils / request / extractBody", () => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
-				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+				strictEqual(typeof err, "object");
+				strictEqual(err instanceof ReferenceError, true);
 
 				done();
 
@@ -129,8 +129,8 @@ describe("utils / request / extractBody", () => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
-				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+				strictEqual(typeof err, "object");
+				strictEqual(err instanceof TypeError, true);
 
 				done();
 
@@ -149,8 +149,8 @@ describe("utils / request / extractBody", () => {
 				done(new Error("There is no generated error"));
 			}).catch((err) => {
 
-				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
+				strictEqual(typeof err, "object");
+				strictEqual(err instanceof RangeError, true);
 
 				done();
 
@@ -173,8 +173,8 @@ describe("utils / request / extractBody", () => {
 					done(new Error("There is no generated error"));
 				}).catch((err) => {
 
-					strictEqual(typeof err, "object", "Generated error is not an object");
-					strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+					strictEqual(typeof err, "object");
+					strictEqual(err instanceof ReferenceError, true);
 
 					done();
 
@@ -195,8 +195,8 @@ describe("utils / request / extractBody", () => {
 					done(new Error("There is no generated error"));
 				}).catch((err) => {
 
-					strictEqual(typeof err, "object", "Generated error is not an object");
-					strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+					strictEqual(typeof err, "object");
+					strictEqual(err instanceof TypeError, true);
 
 					done();
 
@@ -232,9 +232,12 @@ describe("utils / request / extractBody", () => {
 
 		});
 
-		it("should test with object body", (done) => {
+		it("should test with object body (result is \"[object Object]\", fail on content-lenght)", (done) => {
 
-			const data = { "test": "test2" };
+			const data = {
+				"test1": "test1",
+				"test2": "test2"
+			};
 
 			event.headers = {
 				"content-length": Buffer.byteLength(JSON.stringify(data))
@@ -246,38 +249,8 @@ describe("utils / request / extractBody", () => {
 				})
 				.catch((err) => {
 
-					strictEqual(typeof err, "object", "Generated error is not an object");
-					strictEqual(err instanceof Error, true, "Generated error is not as expected");
-
-					done();
-
-				});
-
-			setTimeout(() => {
-
-				event.emit("data", data);
-				event.emit("end");
-
-			}, 150);
-
-		});
-
-		it("should test with wrong string body", (done) => {
-
-			const data = "{ \"test\": \"test2\"";
-
-			event.headers = {
-				"content-length": Buffer.byteLength(data)
-			};
-
-			extractBody.default(event)
-				.then(() => {
-					done(new Error("There is no generated error"));
-				})
-				.catch((err) => {
-
-					strictEqual(typeof err, "object", "Generated error is not an object");
-					strictEqual(err instanceof SyntaxError, true, "Generated error is not as expected");
+					strictEqual(typeof err, "object");
+					strictEqual(err instanceof Error, true);
 
 					done();
 

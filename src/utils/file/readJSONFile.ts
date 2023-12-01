@@ -13,7 +13,7 @@
 export default function readJSONFile (file: string): Promise<any> {
 
 	return checkFile(file).then((): Promise<string> => {
-		return readFile(file, "utf8");
+		return readFile(file, "utf-8");
 	}).then((content: string): Promise<any> => {
 		return Promise.resolve(JSON.parse(content));
 	});
