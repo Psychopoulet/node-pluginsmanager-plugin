@@ -67,7 +67,7 @@ module.exports = class HeritedMediator extends LocalMediator {
 	bodyParamBoolean (urlParams, bodyParams) {
 
 		return this.checkParameters("bodyParamBoolean", urlParams, bodyParams).then(() => {
-			return Promise.resolve(JSON.stringify(JSON.parse(bodyParams)["body-param-boolean"]));
+			return Promise.resolve(JSON.stringify(bodyParams["body-param-boolean"]));
 		});
 
 	}
@@ -75,7 +75,7 @@ module.exports = class HeritedMediator extends LocalMediator {
 	bodyParamInteger (urlParams, bodyParams) {
 
 		return this.checkParameters("bodyParamInteger", urlParams, bodyParams).then(() => {
-			return Promise.resolve(JSON.stringify(JSON.parse(bodyParams)["body-param-integer"]));
+			return Promise.resolve(JSON.stringify(bodyParams["body-param-integer"]));
 		});
 
 	}
@@ -83,7 +83,7 @@ module.exports = class HeritedMediator extends LocalMediator {
 	bodyParamNumber (urlParams, bodyParams) {
 
 		return this.checkParameters("bodyParamNumber", urlParams, bodyParams).then(() => {
-			return Promise.resolve(JSON.stringify(JSON.parse(bodyParams)["body-param-number"]));
+			return Promise.resolve(JSON.stringify(bodyParams["body-param-number"]));
 		});
 
 	}
@@ -91,7 +91,7 @@ module.exports = class HeritedMediator extends LocalMediator {
 	bodyParamString (urlParams, bodyParams) {
 
 		return this.checkParameters("bodyParamString", urlParams, bodyParams).then(() => {
-			return Promise.resolve(JSON.stringify(JSON.parse(bodyParams)["body-param-string"]));
+			return Promise.resolve(JSON.stringify(bodyParams["body-param-string"]));
 		});
 
 	}
@@ -99,7 +99,7 @@ module.exports = class HeritedMediator extends LocalMediator {
 	bodyParamObject (urlParams, bodyParams) {
 
 		return this.checkParameters("bodyParamObject", urlParams, bodyParams).then(() => {
-			return Promise.resolve(JSON.stringify(JSON.parse(bodyParams)["body-param-object"]));
+			return Promise.resolve(JSON.stringify(bodyParams["body-param-object"]));
 		});
 
 	}
@@ -107,33 +107,31 @@ module.exports = class HeritedMediator extends LocalMediator {
 	bodyParamArray (urlParams, bodyParams) {
 
 		return this.checkParameters("bodyParamArray", urlParams, bodyParams).then(() => {
-			return Promise.resolve(JSON.stringify(JSON.parse(bodyParams)["body-param-array"]));
+			return Promise.resolve(JSON.stringify(bodyParams["body-param-array"]));
 		});
 
 	}
 
 	create (urlParams, bodyParams) {
 
-		const params = JSON.parse(bodyParams);
-
 		return this.checkParameters("create", urlParams, bodyParams).then(() => {
 
-			if ("generate-fail" === params["body-param"]) {
-				return Promise.reject(new Error("Generate artificial error"));
-			}
-
-			else if ("string" !== typeof urlParams.query["url-param"]) {
+			if ("string" !== typeof urlParams.query["url-param"]) {
 				return Promise.reject(new TypeError("\"query.url-param\" url path parameter is not a string"));
 			}
 				else if ("" === urlParams.query["url-param"].trim()) {
 					return Promise.reject(new RangeError("\"query.url-param\" url path parameter is empty"));
 				}
 
-			else if ("string" !== typeof params["body-param"]) {
+			else if ("string" !== typeof bodyParams["body-param"]) {
 				return Promise.reject(new TypeError("\"body-param\" body parameter is not a string"));
 			}
-				else if ("" === params["body-param"].trim()) {
+				else if ("" === bodyParams["body-param"].trim()) {
 					return Promise.reject(new RangeError("\"body-param\" body parameter is empty"));
+				}
+
+				else if ("generate-fail" === bodyParams["body-param"]) {
+					return Promise.reject(new Error("Generate artificial error"));
 				}
 
 			else {

@@ -15,15 +15,13 @@ export default function send (req: iIncomingMessage, res: iServerResponse, code:
 
 	return new Promise((resolve: () => void): void => {
 
-		res.body = content;
-
 		// force data for checking
 
 		res.statusCode = code;
 
 		res.headers = Object.assign({
 			"Content-Type": options.mime,
-			"Content-Length": res.body ? Buffer.byteLength(res.body) : 0,
+			"Content-Length": content ? Buffer.byteLength(content) : 0,
 			"Status-Code-Url-Cat": "https://http.cat/" + code,
 			"API-Version": options.apiVersion
 		}, options.cors ? {
@@ -56,9 +54,11 @@ export default function send (req: iIncomingMessage, res: iServerResponse, code:
 
 		res.writeHead(res.statusCode, res.headers);
 
-		if (res.body) {
+		if (content) {
 
-			res.end(res.body, "utf-8", (): void => {
+			res.body = content; // for Mediator response validator
+
+			res.end(content, "utf-8", (): void => {
 				resolve();
 			});
 

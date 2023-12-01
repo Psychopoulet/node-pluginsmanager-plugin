@@ -19,19 +19,19 @@
 
 describe("Mediator / checkParameters", () => {
 
-	const mediator = new LocalMediator({
-		"descriptor": DESCRIPTOR_ONLY_URL
-	});
-
-	before(() => {
-		return mediator.init();
-	});
-
-	after(() => {
-		return mediator.release();
-	});
-
 	describe("operationId", () => {
+
+		const mediator = new LocalMediator({
+			"descriptor": DESCRIPTOR_ONLY_URL
+		});
+
+		before(() => {
+			return mediator.init();
+		});
+
+		after(() => {
+			return mediator.release();
+		});
 
 		it("should test missing operationId", (done) => {
 
@@ -105,6 +105,18 @@ describe("Mediator / checkParameters", () => {
 	});
 
 	describe("url parameters", () => {
+
+		const mediator = new LocalMediator({
+			"descriptor": require(join(__dirname, "utils", "DescriptorUser", "Descriptor.json"))
+		});
+
+		before(() => {
+			return mediator.init();
+		});
+
+		after(() => {
+			return mediator.release();
+		});
 
 		it("should test missing parameters", (done) => {
 
@@ -405,6 +417,18 @@ describe("Mediator / checkParameters", () => {
 
 	describe("body parameters", () => {
 
+		const mediator = new LocalMediator({
+			"descriptor": require(join(__dirname, "utils", "DescriptorUser", "Descriptor.json"))
+		});
+
+		before(() => {
+			return mediator.init();
+		});
+
+		after(() => {
+			return mediator.release();
+		});
+
 		it("should test missing parameters", (done) => {
 
 			mediator.checkParameters("create", {
@@ -468,6 +492,18 @@ describe("Mediator / checkParameters", () => {
 	});
 
 	describe("valid", () => {
+
+		const mediator = new LocalMediator({
+			"descriptor": DESCRIPTOR_ONLY_URL
+		});
+
+		before(() => {
+			return mediator.init();
+		});
+
+		after(() => {
+			return mediator.release();
+		});
 
 		it("should test valid url request", () => {
 

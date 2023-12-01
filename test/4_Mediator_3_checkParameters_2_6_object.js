@@ -38,9 +38,9 @@ describe("Mediator / checkParameters / object", () => {
 			"query": {},
 			"headers": {},
 			"cookies": {}
-		}, JSON.stringify({
+		}, {
 			"test": "test2"
-		})).then(() => {
+		}).then(() => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
@@ -62,9 +62,9 @@ describe("Mediator / checkParameters / object", () => {
 			"query": {},
 			"headers": {},
 			"cookies": {}
-		}, JSON.stringify({
+		}, {
 			"body-param-object": "test2"
-		})).then(() => {
+		}).then(() => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
@@ -84,11 +84,11 @@ describe("Mediator / checkParameters / object", () => {
 			"query": {},
 			"headers": {},
 			"cookies": {}
-		}, JSON.stringify({
+		}, {
 			"body-param-object": {
 				"test": "test2"
 			}
-		})).then(() => {
+		}).then(() => {
 			done(new Error("There is no generated error"));
 		}).catch((err) => {
 
@@ -108,11 +108,11 @@ describe("Mediator / checkParameters / object", () => {
 			"query": {},
 			"headers": {},
 			"cookies": {}
-		}, JSON.stringify({
+		}, {
 			"body-param-object": {
 				"body-param-object-test": "test2"
 			}
-		}));
+		});
 
 	});
 

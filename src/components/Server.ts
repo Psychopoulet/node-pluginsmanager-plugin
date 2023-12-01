@@ -23,6 +23,7 @@
 	import extractIp from "../utils/request/extractIp";
 	import extractCookies from "../utils/request/extractCookies";
 	import extractMime from "../utils/request/extractMime";
+	import jsonParser from "../utils/jsonParser";
 	import send from "../utils/send";
 	import cleanSendedError from "../utils/cleanSendedError";
 
@@ -436,7 +437,7 @@ export default class Server extends MediatorUser {
 						});
 
 					// extract body
-					}).then((): Promise<string> => {
+					}).then((): Promise<any> => {
 
 						if ("get" === req.method.toLowerCase()) {
 							return Promise.resolve("");
@@ -446,13 +447,18 @@ export default class Server extends MediatorUser {
 						}
 						else {
 
-							return extractBody(req).then((body: string): Promise<string> => {
+							return extractBody(req).then((body: string): Promise<any> => {
 
 								if (body.length) {
-									this._log("log", body);
-								}
 
-								req.body = body;
+									this._log("log", body);
+
+									req.body = jsonParser(body);
+
+								}
+								else {
+									req.body = "";
+								}
 
 								return Promise.resolve(req.body);
 
@@ -461,7 +467,7 @@ export default class Server extends MediatorUser {
 						}
 
 					// formate data
-					}).then((body: string): Promise<string> => {
+					}).then((body: any): Promise<string> => {
 
 						const parsed = {
 							"url": {

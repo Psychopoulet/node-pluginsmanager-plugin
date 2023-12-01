@@ -6,12 +6,13 @@
 
 	import { iServerResponse } from "./Server";
 
+	import { checkExists } from "../checkers/ReferenceError/checkExists";
 	import { checkObject } from "../checkers/TypeError/checkObject";
-	import { checkString } from "../checkers/TypeError/checkString";
 	import { checkNonEmptyString } from "../checkers/RangeError/checkNonEmptyString";
 	import { checkNonEmptyObject } from "../checkers/RangeError/checkNonEmptyObject";
 
 	import extractPathMethodByOperationId, { iPathMethod } from "../utils/descriptor/extractPathMethodByOperationId";
+	import jsonParser from "../utils/jsonParser";
 
 	import DescriptorUser, { iDescriptorUserOptions } from "./DescriptorUser";
 
@@ -74,7 +75,7 @@ export default class Mediator extends DescriptorUser {
 				});
 
 			}).then((): Promise<void> => {
-				return checkString("bodyParams", bodyParams);
+				return checkExists("bodyParams", bodyParams);
 			}).then((): Promise<void> => {
 
 				// search wanted operation
@@ -93,13 +94,6 @@ export default class Mediator extends DescriptorUser {
 						"cookies": urlParams.cookies,
 						"body": bodyParams
 					};
-
-					try {
-						req.body = JSON.parse(req.body);
-					}
-					catch (e) {
-						// nothing to do here
-					}
 
 					const validateRequest: any = (this._validator as OpenApiValidator).validate(req.method, req.path); // set to "any" for ts validation
 
@@ -183,18 +177,11 @@ export default class Mediator extends DescriptorUser {
 
 							mutedRes.headers = res.getHeaders();
 
-							if ("undefined" === typeof mutedRes.body) {
-								mutedRes.body = "";
+							if ("undefined" === typeof mutedRes.body || "" === mutedRes.body) {
+								mutedRes.body = {};
 							}
 							else {
-
-								try {
-									mutedRes.body = JSON.parse(mutedRes.body);
-								}
-								catch (e) {
-									// nothing to do here
-								}
-
+								mutedRes.body = jsonParser(mutedRes.body);
 							}
 
 							const validateResponse = (this._validator as OpenApiValidator).validateResponse(foundPathMethod.method, foundPathMethod.path);
