@@ -73,7 +73,7 @@
 	}
 
 	export interface iServerResponse extends ServerResponse {
-		"body": any; // string, any for Mediator checkResponse
+		"body": string;
 		"headers": { [key:string]: any; };
 	}
 

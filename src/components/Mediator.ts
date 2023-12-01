@@ -4,7 +4,7 @@
 
 	// locals
 
-	import { iServerResponse } from "./Server";
+	import { iIncomingMessage, iServerResponse } from "./Server";
 
 	import { checkExists } from "../checkers/ReferenceError/checkExists";
 	import { checkObject } from "../checkers/TypeError/checkObject";
@@ -23,12 +23,20 @@
 
 	// locals
 
+	export interface iIncomingMessageForMediatorValidation extends iIncomingMessage {
+		"body": any;
+	};
+
+	export interface iServerResponseForMediatorValidation extends iServerResponse {
+		"body": any;
+	};
+
 	export interface iUrlParameters {
 		"path": { [key:string]: any };
 		"query": { [key:string]: any };
 		"headers": { [key:string]: any };
 		"cookies": { [key:string]: any };
-	}
+	};
 
 // module
 
@@ -132,7 +140,7 @@ export default class Mediator extends DescriptorUser {
 		}
 
 		// Check sended parameters by method name (used by the Server)
-		public checkResponse (operationId: string, res: iServerResponse): Promise<void> {
+		public checkResponse (operationId: string, res: iServerResponseForMediatorValidation): Promise<void> {
 
 			// parameters validation
 			return this.checkDescriptor().then((): Promise<void> => {
