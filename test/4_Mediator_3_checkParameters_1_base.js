@@ -1,3 +1,7 @@
+/*
+	eslint max-lines: 0
+*/
+
 "use strict";
 
 // deps
