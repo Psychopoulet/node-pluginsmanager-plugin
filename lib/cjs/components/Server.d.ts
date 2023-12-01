@@ -24,7 +24,7 @@ export interface iIncomingMessage extends IncomingMessage {
     "params": {
         [key: string]: any;
     };
-    "body": any;
+    "body": string;
 }
 export interface iServerResponse extends ServerResponse {
     "body": any;

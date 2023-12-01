@@ -15,9 +15,6 @@ export interface iUrlParameters {
         [key: string]: any;
     };
 }
-export interface iBodyParameters {
-    [key: string]: any;
-}
 export default class Mediator extends DescriptorUser {
     protected _validator: OpenApiValidator | null;
     constructor(options: iDescriptorUserOptions);

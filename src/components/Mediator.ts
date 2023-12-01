@@ -30,10 +30,6 @@
 		"cookies": { [key:string]: any };
 	}
 
-	export interface iBodyParameters {
-		[key:string]: any
-	}
-
 // module
 
 export default class Mediator extends DescriptorUser {

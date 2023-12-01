@@ -79,7 +79,7 @@
 // components
 
 	import DescriptorUser, { iDescriptorUserOptions, tLogType, tLogger } from "./components/DescriptorUser";
-	import Mediator, { iUrlParameters, iBodyParameters } from "./components/Mediator";
+	import Mediator, { iUrlParameters } from "./components/Mediator";
 	import MediatorUser, { iMediatorUserOptions } from "./components/MediatorUser";
 	import NotFoundError from "./components/NotFoundError";
 	import Orchestrator, { iOrchestratorOptions } from "./components/Orchestrator";
@@ -87,7 +87,7 @@
 
 	export {
 		tLogType, tLogger,
-		iUrlParameters, iBodyParameters,
+		iUrlParameters,
 		iClient, iIncomingMessage, iServerResponse
 	};
 

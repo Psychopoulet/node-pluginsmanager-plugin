@@ -69,11 +69,11 @@
 		"cookies": { [key:string]: any; };
 		"query": { [key:string]: any; };
 		"params": { [key:string]: any; };
-		"body": any;
+		"body": string;
 	}
 
 	export interface iServerResponse extends ServerResponse {
-		"body": any;
+		"body": any; // string, any for Mediator checkResponse
 		"headers": { [key:string]: any; };
 	}
 
