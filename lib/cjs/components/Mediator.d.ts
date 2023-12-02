@@ -24,7 +24,7 @@ export interface iUrlParameters {
 export default class Mediator extends DescriptorUser {
     protected _validator: OpenApiValidator | null;
     constructor(options: iDescriptorUserOptions);
-    checkParameters(operationId: string, urlParams: iUrlParameters, bodyParams: string): Promise<void>;
+    checkParameters(operationId: string, urlParams: iUrlParameters, bodyParams: any): Promise<void>;
     checkResponse(operationId: string, res: iServerResponseForMediatorValidation): Promise<void>;
     init(...data: any): Promise<void>;
     release(...data: any): Promise<void>;
