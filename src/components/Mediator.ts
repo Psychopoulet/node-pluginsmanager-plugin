@@ -61,7 +61,7 @@ export default class Mediator extends DescriptorUser {
 	// public
 
 		 // Check sended parameters by method name (used by the Server)
-		public checkParameters (operationId: string, urlParams: iUrlParameters, bodyParams: string): Promise<void> {
+		public checkParameters (operationId: string, urlParams: iUrlParameters, bodyParams: any): Promise<void> {
 
 			// parameters validation
 			return this.checkDescriptor().then((): Promise<void> => {
