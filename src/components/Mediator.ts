@@ -12,7 +12,6 @@
 	import { checkNonEmptyObject } from "../checkers/RangeError/checkNonEmptyObject";
 
 	import extractPathMethodByOperationId, { iPathMethod } from "../utils/descriptor/extractPathMethodByOperationId";
-	import jsonParser from "../utils/jsonParser";
 
 	import DescriptorUser, { iDescriptorUserOptions } from "./DescriptorUser";
 
@@ -183,9 +182,6 @@ export default class Mediator extends DescriptorUser {
 
 							if ("undefined" === typeof mutedRes.body || "" === mutedRes.body) {
 								mutedRes.body = {};
-							}
-							else {
-								mutedRes.body = jsonParser(mutedRes.body);
 							}
 
 							const validateResponse = (this._validator as OpenApiValidator).validateResponse(foundPathMethod.method, foundPathMethod.path);
