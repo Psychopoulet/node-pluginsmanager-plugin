@@ -494,7 +494,7 @@ export default class Server extends MediatorUser {
 						});
 
 					// send response
-					}).then((content: string): Promise<void> => {
+					}).then((content: any): Promise<void> => {
 
 						// created
 						if ("put" === req.method) {
@@ -512,7 +512,7 @@ export default class Server extends MediatorUser {
 
 							else {
 
-								this._log("success", "<= [" + req.validatedIp + "] " + content);
+								this._log("success", "<= [" + req.validatedIp + "] " + JSON.stringify(content));
 								return send(req, res, SERVER_CODES.OK_PUT, content, {
 									"apiVersion": apiVersion,
 									"cors": this._cors,
@@ -537,7 +537,7 @@ export default class Server extends MediatorUser {
 
 						else {
 
-							this._log("success", "<= [" + req.validatedIp + "] " + content);
+							this._log("success", "<= [" + req.validatedIp + "] " + JSON.stringify(content));
 							return send(req, res, SERVER_CODES.OK, content, {
 								"apiVersion": apiVersion,
 								"cors": this._cors,
