@@ -21,7 +21,7 @@ module.exports = class HeritedMediator extends LocalMediator {
 	}
 
 	valid () {
-		return Promise.resolve(JSON.stringify([ "test" ]));
+		return Promise.resolve([ "test" ]);
 	}
 
 	urlParamBoolean (urlParams) {
@@ -51,7 +51,7 @@ module.exports = class HeritedMediator extends LocalMediator {
 	urlParamString (urlParams) {
 
 		return this.checkParameters("urlParamString", urlParams, "").then(() => {
-			return Promise.resolve(JSON.stringify(urlParams.path["path-param-string"]));
+			return Promise.resolve(urlParams.path["path-param-string"]);
 		});
 
 	}
