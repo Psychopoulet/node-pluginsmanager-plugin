@@ -1,5 +1,3 @@
-"use strict";
-
 // deps
 
     // natives
@@ -27,7 +25,7 @@
     import send from "../utils/send";
     import cleanSendedError from "../utils/cleanSendedError";
 
-    import MediatorUser from "./MediatorUser";
+    import MediatorUser, { type iMediatorUserOptions } from "./MediatorUser";
     import Mediator from "./Mediator";
     import NotFoundError from "./NotFoundError";
 
@@ -46,8 +44,6 @@
     import { Server as SocketIOServer } from "socket.io";
 
     // locals
-
-    import { iMediatorUserOptions } from "./MediatorUser";
 
     interface iPush {
         "id": string;
@@ -941,4 +937,4 @@ export default class Server extends MediatorUser {
 
             }
 
-};
+}

@@ -1,5 +1,3 @@
-"use strict";
-
 // module
 
 export default function cleanSendedError (data: any): string {
@@ -27,4 +25,4 @@ export default function cleanSendedError (data: any): string {
         return data;
     }
 
-};
+}

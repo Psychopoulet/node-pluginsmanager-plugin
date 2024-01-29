@@ -1,5 +1,3 @@
-"use strict";
-
 // module
 
 export default function jsonParser (content: string): any {
@@ -19,4 +17,4 @@ export default function jsonParser (content: string): any {
         return content;
     }
 
-};
+}

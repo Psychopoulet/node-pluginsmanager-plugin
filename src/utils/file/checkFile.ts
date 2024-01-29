@@ -9,9 +9,10 @@ export default function checkFile (filename: string): Promise<void> {
 
     return isFile(filename).then((exists: boolean): Promise<void> => {
 
-        return exists ? Promise.resolve() :
-            Promise.reject(new Error("\"" + filename + "\" does not exist."));
+        return exists
+            ? Promise.resolve()
+            : Promise.reject(new Error("\"" + filename + "\" does not exist."));
 
     });
 
-};
+}

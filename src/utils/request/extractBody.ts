@@ -8,14 +8,14 @@
 // types & interfaces
 
     // externals
-    import { iIncomingMessage } from "../../components/Server";
+    import type { iIncomingMessage } from "../../components/Server";
 
 // module
 
 export default function extractBody (req: iIncomingMessage): Promise<string> {
 
     return checkNonEmptyObject("req", req).then((): Promise<void> => {
-        return checkFunction("req.on", req.on);
+        return checkFunction("req.on", req.on.bind(req));
     }).then((): Promise<void> => {
         return checkNonEmptyObject("req.headers", req.headers);
     }).then((): Promise<void> => {
@@ -36,14 +36,13 @@ export default function extractBody (req: iIncomingMessage): Promise<string> {
                 }
                 else {
 
-                    req.headers["content-length"] = parseInt(req.headers["content-length"], 10);
+                    req.headers["content-length"] = parseInt(req.headers["content-length"] as string, 10);
 
                     if (req.headers["content-length"] !== Buffer.byteLength(queryData)) {
 
-                        reject(new Error(
-                            "\"Content-Length\" header (" + Buffer.byteLength(queryData) + ")" +
-                            " is not as expected (" + req.headers["content-length"] + ")." +
-                            " Do not forget the fact that it is a 8-bit bytes number."
+                        reject(new Error("\"Content-Length\" header (" + Buffer.byteLength(queryData) + ")"
+                            + " is not as expected (" + req.headers["content-length"] + ")."
+                            + " Do not forget the fact that it is a 8-bit bytes number."
                         ));
 
                     }
