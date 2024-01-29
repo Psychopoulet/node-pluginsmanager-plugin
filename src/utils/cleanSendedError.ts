@@ -4,27 +4,27 @@
 
 export default function cleanSendedError (data: any): string {
 
-	if ("object" === typeof data) {
+    if ("object" === typeof data) {
 
-		if (null === data) {
-			return data;
-		}
-		else if (data instanceof Error) {
-			return data.message;
-		}
-		else {
+        if (null === data) {
+            return data;
+        }
+        else if (data instanceof Error) {
+            return data.message;
+        }
+        else {
 
-			Object.keys(data).forEach((key): void => {
-				data[key] = cleanSendedError(data[key]);
-			});
+            Object.keys(data).forEach((key): void => {
+                data[key] = cleanSendedError(data[key]);
+            });
 
-			return data;
+            return data;
 
-		}
+        }
 
-	}
-	else {
-		return data;
-	}
+    }
+    else {
+        return data;
+    }
 
 };

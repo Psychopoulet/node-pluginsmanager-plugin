@@ -4,19 +4,19 @@
 
 export default function jsonParser (content: string): any {
 
-	try {
+    try {
 
-		let parsed: any = JSON.parse(content);
+        let parsed: any = JSON.parse(content);
 
-		if ("string" === typeof parsed) {
-			parsed = jsonParser(parsed);
-		}
+        if ("string" === typeof parsed) {
+            parsed = jsonParser(parsed);
+        }
 
-		return parsed;
+        return parsed;
 
-	}
-	catch (e) {
-		return content;
-	}
+    }
+    catch (e) {
+        return content;
+    }
 
 };
