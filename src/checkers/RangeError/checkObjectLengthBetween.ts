@@ -9,19 +9,19 @@
 
 export function checkObjectLengthBetweenSync (dataName: string, data: any, min: number, max: number): ReferenceError | TypeError | RangeError | null {
 
-    let err: ReferenceError | TypeError | RangeError | null = checkObjectSync(dataName, data) as ReferenceError | TypeError | null;
+    let err: ReferenceError | TypeError | RangeError | null = checkObjectSync(dataName, data);
 
         if (!err) {
-            err = checkIntegerSync(dataName + "/min", min) as ReferenceError | TypeError | null;
+            err = checkIntegerSync(dataName + "/min", min);
         }
 
         if (!err) {
-            err = checkNonEmptyIntegerSync(dataName + "/max", max) as ReferenceError | TypeError | RangeError | null;
+            err = checkNonEmptyIntegerSync(dataName + "/max", max);
         }
 
         if (!err) {
 
-            const { length }: { "length": number; } = Object.keys(data);
+            const { length }: { "length": number; } = Object.keys(data as Record<string, any>);
 
             if (min > length) {
 
@@ -43,7 +43,7 @@ export function checkObjectLengthBetweenSync (dataName: string, data: any, min: 
 
     return err;
 
-};
+}
 
 export function checkObjectLengthBetween (dataName: string, data: any, min: number, max: number): Promise<void> {
 

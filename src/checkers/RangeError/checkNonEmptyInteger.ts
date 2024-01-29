@@ -7,7 +7,7 @@
 
 export function checkNonEmptyIntegerSync (dataName: string, data: any): ReferenceError | TypeError | RangeError | null {
 
-    let err: ReferenceError | TypeError | RangeError | null = checkIntegerSync(dataName, data) as ReferenceError | TypeError | null;
+    let err: ReferenceError | TypeError | RangeError | null = checkIntegerSync(dataName, data);
 
         if (!err && 0 >= (data as number)) {
 
@@ -19,7 +19,7 @@ export function checkNonEmptyIntegerSync (dataName: string, data: any): Referenc
 
     return err;
 
-};
+}
 
 export function checkNonEmptyInteger (dataName: string, data: any): Promise<void> {
 

@@ -13,15 +13,15 @@
 
 export function checkObjectLengthSync (dataName: string, data: any, _length: number): ReferenceError | TypeError | RangeError | null {
 
-    let err: ReferenceError | TypeError | RangeError | null = checkObjectSync(dataName, data) as ReferenceError | TypeError | null;
+    let err: ReferenceError | TypeError | RangeError | null = checkObjectSync(dataName, data);
 
         if (!err) {
-            err = checkIntegerSync(dataName + "/length", _length) as ReferenceError | TypeError | null;
+            err = checkIntegerSync(dataName + "/length", _length);
         }
 
         if (!err) {
 
-            const { length }: { "length": number; } = Object.keys(data);
+            const { length }: { "length": number; } = Object.keys(data as Record<string, any>);
 
             if (_length !== length) {
 
@@ -35,7 +35,7 @@ export function checkObjectLengthSync (dataName: string, data: any, _length: num
 
     return err;
 
-};
+}
 
 export function checkObjectLength (dataName: string, data: any, length: number): Promise<void> {
 

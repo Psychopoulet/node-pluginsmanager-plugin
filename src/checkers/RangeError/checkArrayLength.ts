@@ -8,13 +8,13 @@
 
 export function checkArrayLengthSync (dataName: string, data: any, length: number): ReferenceError | TypeError | RangeError | null {
 
-    let err: ReferenceError | TypeError | RangeError | null = checkArraySync(dataName, data) as ReferenceError | TypeError | null;
+    let err: ReferenceError | TypeError | RangeError | null = checkArraySync(dataName, data);
 
         if (!err) {
-            err = checkIntegerSync(dataName + "/length", length) as ReferenceError | TypeError | null;
+            err = checkIntegerSync(dataName + "/length", length);
         }
 
-        if (!err && length !== (data as Array<any>).length) {
+        if (!err && length !== (data as any[]).length) {
 
             err = new RangeError(
                 "\"" + dataName + "\" length must be equal to " + length
@@ -24,7 +24,7 @@ export function checkArrayLengthSync (dataName: string, data: any, length: numbe
 
     return err;
 
-};
+}
 
 export function checkArrayLength (dataName: string, data: any, length: number): Promise<void> {
 

@@ -7,9 +7,9 @@
 
 export function checkNonEmptyObjectSync (dataName: string, data: any): ReferenceError | TypeError | RangeError | null {
 
-    let err: ReferenceError | TypeError | RangeError | null = checkObjectSync(dataName, data) as ReferenceError | TypeError | null;
+    let err: ReferenceError | TypeError | RangeError | null = checkObjectSync(dataName, data);
 
-        if (!err && 1 > Object.keys(data).length) {
+        if (!err && 1 > Object.keys(data as Record<string, any>).length) {
 
             err = new RangeError(
                 "\"" + dataName + "\" must have keys"
@@ -19,7 +19,7 @@ export function checkNonEmptyObjectSync (dataName: string, data: any): Reference
 
     return err;
 
-};
+}
 
 export function checkNonEmptyObject (dataName: string, data: any): Promise<void> {
 

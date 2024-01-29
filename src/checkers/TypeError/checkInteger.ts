@@ -7,7 +7,7 @@
 
 export function checkIntegerSync (dataName: string, data: any): ReferenceError | TypeError | null {
 
-    let err: ReferenceError | null = checkExistsSync(dataName, data) as ReferenceError | null;
+    let err: ReferenceError | null = checkExistsSync(dataName, data);
 
         if (!err && !Number.isInteger(data)) {
 
@@ -19,7 +19,7 @@ export function checkIntegerSync (dataName: string, data: any): ReferenceError |
 
     return err;
 
-};
+}
 
 export function checkInteger (dataName: string, data: any): Promise<void> {
 

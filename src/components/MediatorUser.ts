@@ -1,9 +1,7 @@
-"use strict";
-
 //  deps
 
     // locals
-    import DescriptorUser, { iDescriptorUserOptions } from "./DescriptorUser";
+    import DescriptorUser, { type iDescriptorUserOptions } from "./DescriptorUser";
     import Mediator from "./Mediator";
 
 // types & interfaces
@@ -29,8 +27,9 @@ export default class MediatorUser extends DescriptorUser {
 
         super(options);
 
-        this._Mediator = options && "undefined" !== typeof options.mediator ?
-            options.mediator : null;
+        this._Mediator = options && "undefined" !== typeof options.mediator
+            ? options.mediator
+            : null;
 
     }
 
@@ -72,4 +71,4 @@ export default class MediatorUser extends DescriptorUser {
 
         }
 
-};
+}

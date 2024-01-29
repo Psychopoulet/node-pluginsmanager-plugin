@@ -34,14 +34,14 @@
 // types & interfaces
 
     // natives
-    import { IncomingMessage, ServerResponse } from "node:http";
+    import type { IncomingMessage, ServerResponse } from "node:http";
 
     // externals
 
-    import { OpenApiDocument } from "express-openapi-validate";
+    import type { OpenApiDocument } from "express-openapi-validate";
 
-    import { Server as WebSocketServer, WebSocket } from "ws";
-    import { Server as SocketIOServer } from "socket.io";
+    import type { Server as WebSocketServer, WebSocket } from "ws";
+    import type { Server as SocketIOServer } from "socket.io";
 
     // locals
 
@@ -61,16 +61,16 @@
         "method": string;
         "pattern": string;
         "validatedIp": string;
-        "headers": { [key:string]: any; };
-        "cookies": { [key:string]: any; };
-        "query": { [key:string]: any; };
-        "params": { [key:string]: any; };
+        "headers": Record<string, any>;
+        "cookies": Record<string, any>;
+        "query": Record<string, any>;
+        "params": Record<string, any>;
         "body": string;
     }
 
     export interface iServerResponse extends ServerResponse {
         "body": string;
-        "headers": { [key:string]: any; };
+        "headers": Record<string, any>;
     }
 
     interface iWebSocketWithId extends WebSocket {
@@ -153,7 +153,7 @@ export default class Server extends MediatorUser {
             this._cors = true; return this;
         }
 
-        public appMiddleware (req: iIncomingMessage, res: iServerResponse, next: Function): void { // req, res, next : void
+        public appMiddleware (req: iIncomingMessage, res: iServerResponse, next: () => void): void { // req, res, next : void
 
             if (!this._Descriptor) {
                 return next();
@@ -192,23 +192,24 @@ export default class Server extends MediatorUser {
                     req.headers["content-length"] = parseInt(req.headers["content-length"], 10);
                 }
 
-                if (!req.pattern || !(this._Descriptor as OpenApiDocument).paths[req.pattern] || !((this._Descriptor as OpenApiDocument).paths[req.pattern] as { [key:string]: any })[req.method]) {
+                if (!req.pattern || !(this._Descriptor as OpenApiDocument).paths[req.pattern] || !((this._Descriptor as OpenApiDocument).paths[req.pattern] as Record<string, any>)[req.method]) {
                     return next();
                 }
 
-                const { operationId }: { "operationId": string; } = ((this._Descriptor as OpenApiDocument).paths[req.pattern] as { [key:string]: any })[req.method];
+                const { operationId }: { "operationId": string; } = ((this._Descriptor as OpenApiDocument).paths[req.pattern] as Record<string, any>)[req.method];
                 const apiVersion: string = (this._Descriptor as OpenApiDocument).info.version;
 
                 const contentType: string = req.headers["content-type"] ?? req.headers["Content-Type"] ?? "";
-                const responses = ((this._Descriptor as OpenApiDocument).paths[req.pattern] as { [key:string]: any })[req.method].responses;
+                const responses = ((this._Descriptor as OpenApiDocument).paths[req.pattern] as Record<string, any>)[req.method].responses;
 
-                this._log("info", "" +
-                    "=> [" + req.validatedIp + "] " + req.url + " (" + req.method.toUpperCase() + ")" +
-                    (operationId                 ? EOL + "operationId    : " + operationId : "") +
-                    (req.headers["content-type"] ? EOL + "content-type   : " + req.headers["content-type"] : "") +
-                    (
-                        "get" !== req.method && req.headers["content-length"] && 4 < req.headers["content-length"] ?
-                            EOL + "content-length : " + req.headers["content-length"] : ""
+                this._log("info", ""
+                    + "=> [" + req.validatedIp + "] " + req.url + " (" + req.method.toUpperCase() + ")"
+                    + (operationId ? EOL + "operationId    : " + operationId : "")
+                    + (req.headers["content-type"] ? EOL + "content-type   : " + req.headers["content-type"] : "")
+                    + (
+                        "get" !== req.method && req.headers["content-length"] && 4 < req.headers["content-length"]
+                            ? EOL + "content-length : " + req.headers["content-length"]
+                            : ""
                     )
                 );
 
@@ -221,10 +222,10 @@ export default class Server extends MediatorUser {
 
                     const descriptor: OpenApiDocument = { ...(this._Descriptor as OpenApiDocument) };
 
-                    (descriptor.servers as Array<{
+                    (descriptor.servers as {
                         "url": string;
                         "description": string;
-                    }>).push({
+                    }[]).push({
                         "url":  req.validatedIp + ":" + port,
                         "description": "Actual current server"
                     });
@@ -260,7 +261,7 @@ export default class Server extends MediatorUser {
                 else if ("/" + (this._Descriptor as OpenApiDocument).info.title + "/api/status" === req.pattern && "get" === req.method) {
 
                     const initialized: boolean = this.initialized && (this._Mediator as Mediator).initialized;
-                    const status: "INITIALIZED" | "ENABLED"  = initialized ? "INITIALIZED" : "ENABLED";
+                    const status: "INITIALIZED" | "ENABLED" = initialized ? "INITIALIZED" : "ENABLED";
 
                     this._log("info", "<= [" + req.validatedIp + "] " + status);
                     return send(req, res, SERVER_CODES.OK, JSON.stringify(status), {
@@ -289,7 +290,7 @@ export default class Server extends MediatorUser {
                 }
 
                 // not implemented operationId
-                else if ("function" !== typeof (this._Mediator as { [key:string]: any })[operationId]) {
+                else if ("function" !== typeof (this._Mediator as Record<string, any>)[operationId]) {
 
                     const result: string = JSON.stringify({
                         "code": "NOT_IMPLEMENTED",
@@ -329,10 +330,10 @@ export default class Server extends MediatorUser {
                     // force formate for path parameters
                     return Promise.resolve().then((): Promise<void> => {
 
-                        const keys: Array<string> = Object.keys(req.params);
+                        const keys: string[] = Object.keys(req.params);
                         return !keys.length ? Promise.resolve() : Promise.resolve().then((): Promise<void> => {
 
-                            const docParameters: Array<{ [key:string]: any }> = ((this._Descriptor as OpenApiDocument).paths[req.pattern] as { [key:string]: any })[req.method].parameters.filter((p: { [key:string]: any }): boolean => {
+                            const docParameters: Record<string, any>[] = ((this._Descriptor as OpenApiDocument).paths[req.pattern] as Record<string, any>)[req.method].parameters.filter((p: Record<string, any>): boolean => {
                                 return "path" === p.in;
                             });
 
@@ -343,7 +344,7 @@ export default class Server extends MediatorUser {
 
                                     const key: string = keys[i];
 
-                                    const schema = docParameters.find((dp: { [key:string]: any }): boolean => {
+                                    const schema = docParameters.find((dp: Record<string, any>): boolean => {
                                         return dp.name === key;
                                     })?.schema ?? null;
 
@@ -351,7 +352,7 @@ export default class Server extends MediatorUser {
                                         err = new ReferenceError("Unknown parameter: request.params['" + key + "']"); break;
                                     }
 
-                                    switch (extractSchemaType(schema, ((this._Descriptor as OpenApiDocument).components as { [key:string]: any }).schemas)) {
+                                    switch (extractSchemaType(schema, ((this._Descriptor as OpenApiDocument).components as Record<string, any>).schemas)) {
 
                                         case "boolean":
 
@@ -485,7 +486,7 @@ export default class Server extends MediatorUser {
                         // execute Mediator method
                         }).then((): Promise<string> => {
 
-                            return (this._Mediator as { [key:string]: any })[operationId](parsed.url, parsed.body);
+                            return (this._Mediator as Record<string, any>)[operationId](parsed.url, parsed.body);
 
                         });
 
@@ -727,13 +728,13 @@ export default class Server extends MediatorUser {
 
         }
 
-        public getClients (): Array<iClient> {
+        public getClients (): iClient[] {
 
             switch (this._serverType()) {
 
                 case "WEBSOCKET": {
 
-                    const result: Array<iClient> = [];
+                    const result: iClient[] = [];
 
                         (this._socketServer as WebSocketServer).clients.forEach((s: { "id"?: string; "readyState": number; }): iClient => {
 
@@ -754,13 +755,13 @@ export default class Server extends MediatorUser {
 
                 case "SOCKETIO": {
 
-                    const result: Array<iClient> = [];
+                    const result: iClient[] = [];
 
                         if ("function" !== typeof (this._socketServer as SocketIOServer).sockets?.sockets?.has) { // SocketIO V2
 
                             for (const key in (this._socketServer as SocketIOServer).sockets.sockets) {
 
-                                const s: any = ((this._socketServer as SocketIOServer).sockets.sockets as { [key:string]: any })[key];
+                                const s: any = ((this._socketServer as SocketIOServer).sockets.sockets as Record<string, any>)[key];
 
                                 result.push({
                                     "id": s.id,
@@ -854,7 +855,7 @@ export default class Server extends MediatorUser {
 
                                     if (key === clientId) {
 
-                                        socket = ((this._socketServer as SocketIOServer).sockets.sockets as { [key:string]: any })[key];
+                                        socket = ((this._socketServer as SocketIOServer).sockets.sockets as Record<string, any>)[key];
 
                                         break;
 

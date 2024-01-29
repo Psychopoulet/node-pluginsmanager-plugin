@@ -9,14 +9,14 @@
 
 export function checkStringLengthBetweenSync (dataName: string, data: any, min: number, max: number): ReferenceError | TypeError | RangeError | null {
 
-    let err: ReferenceError | TypeError | RangeError | null = checkStringSync(dataName, data) as ReferenceError | TypeError | null;
+    let err: ReferenceError | TypeError | RangeError | null = checkStringSync(dataName, data);
 
         if (!err) {
-            err = checkIntegerSync(dataName + "/min", min) as ReferenceError | TypeError | null;
+            err = checkIntegerSync(dataName + "/min", min);
         }
 
         if (!err) {
-            err = checkNonEmptyIntegerSync(dataName + "/max", max) as ReferenceError | TypeError | RangeError | null;
+            err = checkNonEmptyIntegerSync(dataName + "/max", max);
         }
 
         if (!err && min > (data as string).length) {
@@ -37,7 +37,7 @@ export function checkStringLengthBetweenSync (dataName: string, data: any, min: 
 
     return err;
 
-};
+}
 
 export function checkStringLengthBetween (dataName: string, data: any, min: number, max: number): Promise<void> {
 

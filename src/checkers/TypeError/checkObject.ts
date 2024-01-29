@@ -7,7 +7,7 @@
 
 export function checkObjectSync (dataName: string, data: any): ReferenceError | TypeError | null {
 
-    let err: ReferenceError | null = checkExistsSync(dataName, data) as ReferenceError | null;
+    let err: ReferenceError | null = checkExistsSync(dataName, data);
 
         if (!err && ("object" !== typeof data || null === data)) {
 
@@ -19,7 +19,7 @@ export function checkObjectSync (dataName: string, data: any): ReferenceError | 
 
     return err;
 
-};
+}
 
 export function checkObject (dataName: string, data: any): Promise<void> {
 

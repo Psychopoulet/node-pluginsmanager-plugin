@@ -7,7 +7,7 @@
 
 export function checkNumberSync (dataName: string, data: any): ReferenceError | TypeError | null {
 
-    let err: ReferenceError | null = checkExistsSync(dataName, data) as ReferenceError | null;
+    let err: ReferenceError | null = checkExistsSync(dataName, data);
 
         if (!err && "number" !== typeof data) {
 
@@ -19,7 +19,7 @@ export function checkNumberSync (dataName: string, data: any): ReferenceError | 
 
     return err;
 
-};
+}
 
 export function checkNumber (dataName: string, data: any): Promise<void> {
 

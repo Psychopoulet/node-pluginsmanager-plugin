@@ -7,7 +7,7 @@
 
 export function checkArraySync (dataName: string, data: any): ReferenceError | TypeError | null {
 
-    let err: ReferenceError | TypeError | null = checkObjectSync(dataName, data) as ReferenceError | TypeError | null;
+    let err: ReferenceError | TypeError | null = checkObjectSync(dataName, data);
 
         if (!err && !(data instanceof Array)) {
 
@@ -19,7 +19,7 @@ export function checkArraySync (dataName: string, data: any): ReferenceError | T
 
     return err;
 
-};
+}
 
 export function checkArray (dataName: string, data: any): Promise<void> {
 

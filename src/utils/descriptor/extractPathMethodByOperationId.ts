@@ -11,7 +11,7 @@
         "path": string;
         "method": tMethod;
         "operationId": string;
-    };
+    }
 
 // module
 
@@ -35,8 +35,8 @@ export default function extractPathMethodByOperationId (paths: OpenApiDocument["
 
                 const pathname: string = pathnames[i];
 
-                const method: tMethod = (Object.keys(paths[pathname]) as Array<tMethod>).find((m: tMethod): boolean => {
-                    return Boolean(paths[pathname][m]) && (paths[pathname][m] as { [key:string]: any }).operationId === operationId;
+                const method: tMethod = (Object.keys(paths[pathname]) as tMethod[]).find((m: tMethod): boolean => {
+                    return Boolean(paths[pathname][m]) && (paths[pathname][m] as Record<string, any>).operationId === operationId;
                 }) as tMethod;
 
                 if ("undefined" !== typeof method) {

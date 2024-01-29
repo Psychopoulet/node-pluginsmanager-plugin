@@ -7,9 +7,9 @@
 
 export function checkNonEmptyArraySync (dataName: string, data: any): ReferenceError | TypeError | RangeError | null {
 
-    let err: ReferenceError | TypeError | RangeError | null = checkArraySync(dataName, data) as ReferenceError | TypeError | null;
+    let err: ReferenceError | TypeError | RangeError | null = checkArraySync(dataName, data);
 
-        if (!err && 1 > (data as Array<any>).length) {
+        if (!err && 1 > (data as any[]).length) {
 
             err = new RangeError(
                 "\"" + dataName + "\" length must be higher than 0"
@@ -19,7 +19,7 @@ export function checkNonEmptyArraySync (dataName: string, data: any): ReferenceE
 
     return err;
 
-};
+}
 
 export function checkNonEmptyArray (dataName: string, data: any): Promise<void> {
 

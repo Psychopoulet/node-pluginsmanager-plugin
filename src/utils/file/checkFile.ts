@@ -1,7 +1,7 @@
 // deps
 
     // locals
-    import isFile from "./isFile"
+    import isFile from "./isFile";
 
 // module
 

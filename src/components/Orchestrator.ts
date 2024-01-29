@@ -1,5 +1,3 @@
-"use strict";
-
 // deps
 
     // natives
@@ -11,7 +9,7 @@
 
     import MediatorUser from "./MediatorUser";
     import Mediator from "./Mediator";
-    import Server from "./Server";
+    import Server, { type iIncomingMessage, type iServerResponse } from "./Server";
 
     import checkFile from "../utils/file/checkFile";
     import readJSONFile from "../utils/file/readJSONFile";
@@ -19,16 +17,15 @@
 // types & interfaces
 
     // externals
-    import { OpenApiDocument } from "express-openapi-validate";
-    import { OpenAPI } from "openapi-types";
+    import type { OpenApiDocument } from "express-openapi-validate";
+    import type { OpenAPI } from "openapi-types";
 
     // locals
 
-    import { Server as WebSocketServer } from "ws";
-    import { Server as SocketIOServer } from "socket.io";
+    import type { Server as WebSocketServer } from "ws";
+    import type { Server as SocketIOServer } from "socket.io";
 
-    import { tLogger } from "./DescriptorUser";
-    import { iIncomingMessage, iServerResponse } from "./Server";
+    import type { tLogger } from "./DescriptorUser";
 
     export interface iOrchestratorOptions {
         "externalRessourcesDirectory": string; // used to write local data like sqlite database, json files, pictures, etc...
@@ -37,7 +34,7 @@
         "mediatorFile": string; // mediator file used by the plugin (absolute path)
         "serverFile": string; // server file used by the plugin (absolute path)
         "logger"?: tLogger;
-    };
+    }
 
 // module
 
@@ -58,14 +55,14 @@ export default class Orchestrator extends MediatorUser {
             protected _mediatorFile: string;
             protected _serverFile: string;
 
-            protected _extended: Array<string>;
+            protected _extended: string[];
 
         // public
 
             public enabled: boolean;
 
             // native
-            public authors: Array<string>;
+            public authors: string[];
             public description: string;
             public dependencies: object | null;
             public devDependencies: object | null;
@@ -288,7 +285,7 @@ export default class Orchestrator extends MediatorUser {
 
             }
 
-            public appMiddleware (req: iIncomingMessage, res: iServerResponse, next: Function): void {
+            public appMiddleware (req: iIncomingMessage, res: iServerResponse, next: () => void): void {
 
                 if (!this.enabled) {
 
@@ -362,7 +359,7 @@ export default class Orchestrator extends MediatorUser {
                     return readJSONFile(this._packageFile);
 
                 // formate authors
-                }).then((data: { [key:string]: any }): Promise<{ [key:string]: any }> => {
+                }).then((data: Record<string, any>): Promise<Record<string, any>> => {
 
                     if (data.authors) {
 
@@ -382,7 +379,7 @@ export default class Orchestrator extends MediatorUser {
                     }
                     else if (data.author) {
 
-                        this.authors = [ data.author ];
+                        this.authors = [ data.author as string ];
                         delete data.author;
 
                     }
@@ -390,9 +387,9 @@ export default class Orchestrator extends MediatorUser {
                     return Promise.resolve(data);
 
                 // formate other data
-                }).then((data: { [key:string]: any }): void => {
+                }).then((data: Record<string, any>): void => {
 
-                    const self: { [key:string]: any } = this;
+                    const self: Record<string, any> = this;
 
                     Object.keys(data).forEach((key: string): void => {
 
@@ -427,7 +424,7 @@ export default class Orchestrator extends MediatorUser {
                         // extended
 
                         this._extended.forEach((key: string): void => {
-                            delete (this as { [key:string]: any })[key];
+                            delete (this as Record<string, any>)[key];
                         });
 
                         this._extended = [];
@@ -502,18 +499,18 @@ export default class Orchestrator extends MediatorUser {
                         }).then((): Promise<void> => {
 
                             return (this._Descriptor as OpenApiDocument).info.title !== this.name ? Promise.reject(new Error(
-                                "The descriptor's title (\"" + (this._Descriptor as OpenApiDocument).info.title + "\") " +
-                                "is not equals to " +
-                                "the package's name (\"" + this.name + "\")"
+                                "The descriptor's title (\"" + (this._Descriptor as OpenApiDocument).info.title + "\") "
+                                + "is not equals to "
+                                + "the package's name (\"" + this.name + "\")"
                             )) : Promise.resolve();
 
                         // compare version to package version
                         }).then((): Promise<void> => {
 
                             return (this._Descriptor as OpenApiDocument).info.version !== this.version ? Promise.reject(new Error(
-                                "The descriptor's version (\"" + (this._Descriptor as OpenApiDocument).info.version + "\") " +
-                                "is not equals to " +
-                                "the package's version (\"" + this.version + "\")"
+                                "The descriptor's version (\"" + (this._Descriptor as OpenApiDocument).info.version + "\") "
+                                + "is not equals to "
+                                + "the package's version (\"" + this.version + "\")"
                             )) : Promise.resolve();
 
                         });
@@ -703,4 +700,4 @@ export default class Orchestrator extends MediatorUser {
 
             }
 
-};
+}

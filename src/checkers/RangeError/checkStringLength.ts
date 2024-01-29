@@ -8,10 +8,10 @@
 
 export function checkStringLengthSync (dataName: string, data: any, length: number): ReferenceError | TypeError | RangeError | null {
 
-    let err: ReferenceError | TypeError | RangeError | null = checkStringSync(dataName, data) as ReferenceError | TypeError | null;
+    let err: ReferenceError | TypeError | RangeError | null = checkStringSync(dataName, data);
 
         if (!err) {
-            err = checkIntegerSync(dataName + "/length", length) as ReferenceError | TypeError | null;
+            err = checkIntegerSync(dataName + "/length", length);
         }
 
         if (!err && length !== (data as string).length) {
@@ -24,7 +24,7 @@ export function checkStringLengthSync (dataName: string, data: any, length: numb
 
     return err;
 
-};
+}
 
 export function checkStringLength (dataName: string, data: any, length: number): Promise<void> {
 

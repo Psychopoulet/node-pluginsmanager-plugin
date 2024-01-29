@@ -1,5 +1,3 @@
-"use strict";
-
 //  deps
 
     // natives
@@ -13,7 +11,7 @@
 // types & interfaces
 
     // externals
-    import { OpenApiDocument } from "express-openapi-validate";
+    import type { OpenApiDocument } from "express-openapi-validate";
 
     // locals
 
@@ -24,11 +22,17 @@
         "externalRessourcesDirectory": string; // used to write local data like sqlite database, json files, pictures, etc...
         "descriptor"?: OpenApiDocument; // not sended by Orchestrator
         "logger"?: tLogger;
-    };
+    }
 
 // consts
 
-    const LOG_TYPES_ALLOWED: Array<tLogType> = [ "log", "info", "success", "warning", "error" ];
+    const LOG_TYPES_ALLOWED: tLogType[] = [
+        "log",
+        "info",
+        "success",
+        "warning",
+        "error"
+    ];
 
 // module
 
@@ -63,14 +67,17 @@ export default class DescriptorUser extends EventEmitter {
 
             this._descriptorValidated = false;
 
-            this._externalRessourcesDirectory = options && "string" === typeof options.externalRessourcesDirectory ?
-                options.externalRessourcesDirectory : "";
+            this._externalRessourcesDirectory = "string" === typeof options?.externalRessourcesDirectory
+                ? options.externalRessourcesDirectory
+                : "";
 
-            this._Descriptor = options && "object" === typeof options.descriptor ?
-                options.descriptor : null;
+            this._Descriptor = "object" === typeof options?.descriptor
+                ? options.descriptor
+                : null;
 
-            this._Logger = options && "function" === typeof options.logger ?
-                options.logger : null;
+            this._Logger = "function" === typeof options?.logger
+                ? options.logger
+                : null;
 
     }
 
@@ -90,9 +97,9 @@ export default class DescriptorUser extends EventEmitter {
 
         }
 
-        protected _log(type: tLogType, message: string | Error, bold?: boolean): this {
+        protected _log (type: tLogType, message: string | Error, bold?: boolean): this {
 
-            if (message && "function" === typeof this._Logger && LOG_TYPES_ALLOWED.includes(type)) {
+            if (Boolean(message) && "function" === typeof this._Logger && LOG_TYPES_ALLOWED.includes(type)) {
                 (this._Logger as tLogger)(type, message, bold, this.getPluginName());
             }
 
@@ -144,11 +151,12 @@ export default class DescriptorUser extends EventEmitter {
                     // check title
                     return checkNonEmptyString("Descriptor.info.title", (this._Descriptor as OpenApiDocument).info.title).then((): Promise<void> => {
 
-                        return (this._Descriptor as OpenApiDocument).info.title !== (this._Descriptor as OpenApiDocument).info.title.toLowerCase() ?
-                        Promise.reject(new Error(
-                            "The descriptor's title (\"" + (this._Descriptor as OpenApiDocument).info.title + "\") " +
-                            "is not equals in lower case (package.json convention)"
-                        )) : Promise.resolve();
+                        return (this._Descriptor as OpenApiDocument).info.title !== (this._Descriptor as OpenApiDocument).info.title.toLowerCase()
+                            ? Promise.reject(new Error(
+                                "The descriptor's title (\"" + (this._Descriptor as OpenApiDocument).info.title + "\") "
+                                + "is not equals in lower case (package.json convention)"
+                            ))
+                            : Promise.resolve();
 
                     // check version
                     }).then((): Promise<void> => {
@@ -165,12 +173,12 @@ export default class DescriptorUser extends EventEmitter {
                     // check multiple operationIds
                     return Promise.resolve().then((): Promise<void> => {
 
-                        const operationIds: Array<string> = [];
+                        const operationIds: string[] = [];
                         Object.keys((this._Descriptor as OpenApiDocument).paths).forEach((p: string): void => {
 
                             Object.keys((this._Descriptor as OpenApiDocument).paths[p]).forEach((m: string): void => {
 
-                                const path: { [key:string]: any } = (this._Descriptor as OpenApiDocument).paths[p];
+                                const path: Record<string, any> = (this._Descriptor as OpenApiDocument).paths[p];
 
                                 if (path[m].operationId) {
                                     operationIds.push(path[m].operationId);
@@ -211,4 +219,4 @@ export default class DescriptorUser extends EventEmitter {
 
         }
 
-};
+}

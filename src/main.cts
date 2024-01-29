@@ -76,24 +76,24 @@
 
 // components
 
-    import DescriptorUser, { iDescriptorUserOptions, tLogType, tLogger } from "./components/DescriptorUser";
-    import Mediator, { iUrlParameters } from "./components/Mediator";
-    import MediatorUser, { iMediatorUserOptions } from "./components/MediatorUser";
+    import DescriptorUser, { type iDescriptorUserOptions, type tLogType, type tLogger } from "./components/DescriptorUser";
+    import Mediator, { type iUrlParameters } from "./components/Mediator";
+    import MediatorUser, { type iMediatorUserOptions } from "./components/MediatorUser";
     import NotFoundError from "./components/NotFoundError";
-    import Orchestrator, { iOrchestratorOptions } from "./components/Orchestrator";
-    import Server, { iClient, iIncomingMessage, iServerResponse } from "./components/Server";
+    import Orchestrator, { type iOrchestratorOptions } from "./components/Orchestrator";
+    import Server, { type iClient, type iIncomingMessage, type iServerResponse } from "./components/Server";
 
-    export {
+    export type {
         tLogType, tLogger,
         iUrlParameters,
         iClient, iIncomingMessage, iServerResponse
     };
 
     export {
-        DescriptorUser, iDescriptorUserOptions,
+        DescriptorUser, type iDescriptorUserOptions,
         Mediator,
-        MediatorUser, iMediatorUserOptions,
+        MediatorUser, type iMediatorUserOptions,
         NotFoundError,
-        Orchestrator, iOrchestratorOptions,
+        Orchestrator, type iOrchestratorOptions,
         Server
     };

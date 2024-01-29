@@ -5,7 +5,7 @@
 
 // module
 
-export default function extractSchemaType (schema: OpenAPIV3_1.SchemaObject | OpenAPIV3_1.ReferenceObject, schemas: { [key:string]: any }): "boolean" | "object" | "number" | "string" | "integer" | "array" {
+export default function extractSchemaType (schema: OpenAPIV3_1.SchemaObject | OpenAPIV3_1.ReferenceObject, schemas: Record<string, any>): "boolean" | "object" | "number" | "string" | "integer" | "array" {
 
     let result: "boolean" | "object" | "number" | "string" | "integer" = "string";
 

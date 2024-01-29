@@ -1,41 +1,39 @@
-"use strict";
-
 // deps
 
-    // locals
+    // externals
+    import { OpenApiValidator, ValidationError, type OpenApiDocument } from "express-openapi-validate";
 
-    import { iIncomingMessage, iServerResponse } from "./Server";
+    // locals
 
     import { checkExists } from "../checkers/ReferenceError/checkExists";
     import { checkObject } from "../checkers/TypeError/checkObject";
     import { checkNonEmptyString } from "../checkers/RangeError/checkNonEmptyString";
     import { checkNonEmptyObject } from "../checkers/RangeError/checkNonEmptyObject";
 
-    import extractPathMethodByOperationId, { iPathMethod } from "../utils/descriptor/extractPathMethodByOperationId";
+    import extractPathMethodByOperationId, { type iPathMethod } from "../utils/descriptor/extractPathMethodByOperationId";
 
-    import DescriptorUser, { iDescriptorUserOptions } from "./DescriptorUser";
+    import DescriptorUser, { type iDescriptorUserOptions } from "./DescriptorUser";
 
 // types & interfaces
 
-    // externals
-    import { OpenApiValidator, ValidationError, OpenApiDocument } from "express-openapi-validate";
-
     // locals
+
+    import type { iIncomingMessage, iServerResponse } from "./Server";
 
     export interface iIncomingMessageForMediatorValidation extends iIncomingMessage {
         "body": any;
-    };
+    }
 
     export interface iServerResponseForMediatorValidation extends iServerResponse {
         "body": any;
-    };
+    }
 
     export interface iUrlParameters {
-        "path": { [key:string]: any };
-        "query": { [key:string]: any };
-        "headers": { [key:string]: any };
-        "cookies": { [key:string]: any };
-    };
+        "path": Record<string, any>;
+        "query": Record<string, any>;
+        "headers": Record<string, any>;
+        "cookies": Record<string, any>;
+    }
 
 // module
 
@@ -192,13 +190,12 @@ export default class Mediator extends DescriptorUser {
                         }
                         catch (e) {
 
-                            return reject(new Error(
-                                "[" + foundPathMethod.method + "]" +
-                                foundPathMethod.path +
-                                " (" + foundPathMethod.operationId + ") => " +
-                                res.statusCode +
-                                "\r\n" +
-                                ((e as Error).message ? (e as Error).message : e)
+                            return reject(new Error("[" + foundPathMethod.method + "]"
+                                + foundPathMethod.path
+                                + " (" + foundPathMethod.operationId + ") => "
+                                + res.statusCode
+                                + "\r\n"
+                                + ((e as Error).message ? (e as Error).message : e) as string
                             ));
 
                         }
@@ -245,4 +242,4 @@ export default class Mediator extends DescriptorUser {
 
         }
 
-};
+}

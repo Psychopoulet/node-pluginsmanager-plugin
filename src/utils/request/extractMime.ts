@@ -11,18 +11,16 @@
 
 // module
 
-export default function extractMime (contentType: string, code: number, responses: {
-    [key:string]: {
-        "description": string;
-        "content"?: {
-            [key:string]: any
-        }
+export default function extractMime (contentType: string, code: number, responses: Record<string, {
+    "description": string;
+    "content"?: {
+        [key:string]: any
     }
-}): string {
+}>): string {
 
-    const err = checkStringSync("contentType", contentType) ??
-        checkNonEmptyNumberSync("code", code) ??
-        checkObjectSync("responses", responses);
+    const err = checkStringSync("contentType", contentType)
+        ?? checkNonEmptyNumberSync("code", code)
+        ?? checkObjectSync("responses", responses);
 
     if (err) {
         throw err;
@@ -36,7 +34,7 @@ export default function extractMime (contentType: string, code: number, response
         }
         else {
 
-            let descriptorContent: { [key:string]: any } | undefined;
+            let descriptorContent: Record<string, any> | undefined;
 
             if (responses[stringifiedCode]) {
 
@@ -52,7 +50,7 @@ export default function extractMime (contentType: string, code: number, response
                 return DEFAULT_MIME;
             }
 
-            const possibleMimes: Array<string> = descriptorContent ? Object.keys(descriptorContent) : [];
+            const possibleMimes: string[] = descriptorContent ? Object.keys(descriptorContent) : [];
 
             const [ mimeRequest, charsetRequest ] = contentType.split(";").map((content: string): string => {
                 return content.trim().toLowerCase();

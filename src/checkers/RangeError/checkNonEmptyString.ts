@@ -7,7 +7,7 @@
 
 export function checkNonEmptyStringSync (dataName: string, data: any): ReferenceError | TypeError | RangeError | null {
 
-    let err: ReferenceError | TypeError | RangeError | null = checkStringSync(dataName, data) as ReferenceError | TypeError | null;
+    let err: ReferenceError | TypeError | RangeError | null = checkStringSync(dataName, data);
 
         if (!err && "" === (data as string).trim()) {
 
@@ -19,7 +19,7 @@ export function checkNonEmptyStringSync (dataName: string, data: any): Reference
 
     return err;
 
-};
+}
 
 export function checkNonEmptyString (dataName: string, data: any): Promise<void> {
 

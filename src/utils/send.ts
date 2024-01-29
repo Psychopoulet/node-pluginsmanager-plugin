@@ -1,7 +1,7 @@
 // types & interfaces
 
     // locals
-    import { iIncomingMessage, iServerResponse } from "../components/Server";
+    import type { iIncomingMessage, iServerResponse } from "../components/Server";
 
 // module
 

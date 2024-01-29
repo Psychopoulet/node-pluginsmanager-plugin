@@ -14,7 +14,7 @@ export function checkExistsSync (dataName: string, data: any): ReferenceError | 
 
     return err;
 
-};
+}
 
 export function checkExists (dataName: string, data: any): Promise<void> {
 

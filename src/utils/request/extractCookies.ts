@@ -12,14 +12,14 @@
         * @param {string} cookies: data string to parse
         * @returns {object} Parsed data
         */
-        function _parseCookies (cookies: string): { [key:string]: string } {
+        function _parseCookies (cookies: string): Record<string, string> {
 
             if ("string" !== typeof cookies) {
                 return {};
             }
             else {
 
-                const result: { [key:string]: string } = {};
+                const result: Record<string, string> = {};
 
                     cookies.split(";").forEach((cookie: string): void => {
 
@@ -37,7 +37,7 @@
 
 // module
 
-export default function extractCookies (req: iIncomingMessage): { [key:string]: string } {
+export default function extractCookies (req: iIncomingMessage): Record<string, string> {
 
     if ("object" !== typeof req) {
         return {};
