@@ -127,6 +127,43 @@ export default class Server extends MediatorUser {
 
         }
 
+        protected _getUsableSocketIOClient (clientId: string): {
+            "emit": (event: string, data: any) => void
+        } | undefined {
+
+            if ("SOCKETIO" === this._serverType()) {
+
+                let socket: any | null = null;
+
+                if ("function" !== typeof (this._socketServer as SocketIOServer).sockets?.sockets?.has) { // SocketIO V2
+
+                    for (const key in (this._socketServer as SocketIOServer).sockets.sockets) {
+
+                        if (key === clientId) {
+
+                            socket = ((this._socketServer as SocketIOServer).sockets.sockets as Record<string, any>)[key];
+
+                            break;
+
+                        }
+
+                    }
+
+                }
+                else if ((this._socketServer as SocketIOServer).sockets.sockets.has(clientId)) { // SocketIO V3&4
+                    socket = (this._socketServer as SocketIOServer).sockets.sockets.get(clientId);
+                }
+
+                if (socket && socket.connected) {
+                    return socket;
+                }
+
+            }
+
+            return undefined;
+
+        }
+
     // public
 
         public disableCheckParameters (): this {
@@ -847,28 +884,9 @@ export default class Server extends MediatorUser {
 
                     case "SOCKETIO": {
 
-                        let socket: any | null = null;
+                        const socket = this._getUsableSocketIOClient(clientId);
 
-                            if ("function" !== typeof (this._socketServer as SocketIOServer).sockets?.sockets?.has) { // SocketIO V2
-
-                                for (const key in (this._socketServer as SocketIOServer).sockets.sockets) {
-
-                                    if (key === clientId) {
-
-                                        socket = ((this._socketServer as SocketIOServer).sockets.sockets as Record<string, any>)[key];
-
-                                        break;
-
-                                    }
-
-                                }
-
-                            }
-                            else if ((this._socketServer as SocketIOServer).sockets.sockets.has(clientId)) { // SocketIO V3&4
-                                socket = (this._socketServer as SocketIOServer).sockets.sockets.get(clientId);
-                            }
-
-                        if (socket && socket.connected) {
+                        if (socket) {
 
                             if (log) {
                                 this._log("info", "<= [PUSH|" + clientId + "] " + result);

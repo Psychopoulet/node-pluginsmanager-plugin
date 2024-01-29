@@ -33,6 +33,6 @@ export default function extractPattern (paths: OpenApiDocument["paths"], pathnam
 
         return true;
 
-    }) || "";
+    }) ?? "";
 
 }
