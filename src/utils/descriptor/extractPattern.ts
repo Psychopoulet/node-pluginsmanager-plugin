@@ -6,7 +6,7 @@
 // types & interfaces
 
     // externals
-    import { OpenApiDocument } from    "express-openapi-validate";
+    import type { OpenApiDocument } from "express-openapi-validate";
 
 // module
 

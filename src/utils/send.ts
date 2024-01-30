@@ -11,7 +11,7 @@ export default function send (req: iIncomingMessage, res: iServerResponse, code:
     "mime": string
 }): Promise<void> {
 
-    return Promise.resolve().then((): string => {
+    return Promise.resolve().then((): string | Buffer => {
 
         if (!content) {
             return "";
@@ -55,7 +55,7 @@ export default function send (req: iIncomingMessage, res: iServerResponse, code:
 
         }
 
-    }).then((stringifiedContent: string): Promise<void> => {
+    }).then((formattedContent: string | Buffer): Promise<void> => {
 
         return new Promise((resolve: () => void): void => {
 
@@ -65,7 +65,7 @@ export default function send (req: iIncomingMessage, res: iServerResponse, code:
 
             res.headers = Object.assign({
                 "Content-Type": options.mime,
-                "Content-Length": stringifiedContent ? Buffer.byteLength(stringifiedContent) : 0,
+                "Content-Length": formattedContent ? Buffer.byteLength(formattedContent) : 0,
                 "Status-Code-Url-Cat": "https://http.cat/" + code,
                 "API-Version": options.apiVersion
             }, options.cors ? {
@@ -102,11 +102,18 @@ export default function send (req: iIncomingMessage, res: iServerResponse, code:
 
             res.writeHead(res.statusCode, res.headers);
 
-            if ("" !== stringifiedContent) {
+            if ("string" === typeof formattedContent) {
 
                 res.body = content as string; // for Mediator response validator
 
-                res.end(stringifiedContent, "utf-8", (): void => {
+                res.end(formattedContent, "utf-8", (): void => {
+                    resolve();
+                });
+
+            }
+            else if (Buffer.isBuffer(formattedContent)) {
+
+                res.end(formattedContent, (): void => {
                     resolve();
                 });
 

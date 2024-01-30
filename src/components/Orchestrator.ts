@@ -8,7 +8,6 @@
     import { checkObject } from "../checkers/TypeError/checkObject";
 
     import MediatorUser from "./MediatorUser";
-    import Mediator from "./Mediator";
     import Server, { type iIncomingMessage, type iServerResponse } from "./Server";
 
     import checkFile from "../utils/file/checkFile";
@@ -17,14 +16,16 @@
 // types & interfaces
 
     // externals
+
     import type { OpenApiDocument } from "express-openapi-validate";
     import type { OpenAPI } from "openapi-types";
-
-    // locals
 
     import type { Server as WebSocketServer } from "ws";
     import type { Server as SocketIOServer } from "socket.io";
 
+    // locals
+
+    import type Mediator from "./Mediator";
     import type { tLogger } from "./DescriptorUser";
 
     export interface iOrchestratorOptions {

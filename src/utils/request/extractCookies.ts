@@ -23,7 +23,7 @@
 
                     cookies.split(";").forEach((cookie: string): void => {
 
-                        const parts: Array<string> = cookie.split("=");
+                        const parts: string[] = cookie.split("=");
 
                         result[parts[0]] = decodeURI(parts[1]);
 
@@ -48,16 +48,16 @@ export default function extractCookies (req: iIncomingMessage): Record<string, s
     else if (req.headers) {
 
         if (req.headers.cookie) {
-            return _parseCookies(req.headers.cookie);
+            return _parseCookies(req.headers.cookie as string);
         }
         else if (req.headers.Cookie) {
-            return _parseCookies(req.headers.Cookie);
+            return _parseCookies(req.headers.Cookie as string);
         }
         else if (req.headers.cookies) {
-            return _parseCookies(req.headers.cookies);
+            return _parseCookies(req.headers.cookies as string);
         }
         else if (req.headers.Cookies) {
-            return _parseCookies(req.headers.Cookies);
+            return _parseCookies(req.headers.Cookies as string);
         }
         else {
             return {};
