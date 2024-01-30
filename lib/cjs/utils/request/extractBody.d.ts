@@ -1,2 +1,2 @@
-import { iIncomingMessage } from "../../components/Server";
+import type { iIncomingMessage } from "../../components/Server";
 export default function extractBody(req: iIncomingMessage): Promise<string>;

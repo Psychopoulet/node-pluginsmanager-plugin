@@ -1,6 +1,6 @@
-import { iIncomingMessage, iServerResponse } from "./Server";
-import DescriptorUser, { iDescriptorUserOptions } from "./DescriptorUser";
 import { OpenApiValidator } from "express-openapi-validate";
+import DescriptorUser, { type iDescriptorUserOptions } from "./DescriptorUser";
+import type { iIncomingMessage, iServerResponse } from "./Server";
 export interface iIncomingMessageForMediatorValidation extends iIncomingMessage {
     "body": any;
 }
@@ -8,18 +8,10 @@ export interface iServerResponseForMediatorValidation extends iServerResponse {
     "body": any;
 }
 export interface iUrlParameters {
-    "path": {
-        [key: string]: any;
-    };
-    "query": {
-        [key: string]: any;
-    };
-    "headers": {
-        [key: string]: any;
-    };
-    "cookies": {
-        [key: string]: any;
-    };
+    "path": Record<string, any>;
+    "query": Record<string, any>;
+    "headers": Record<string, any>;
+    "cookies": Record<string, any>;
 }
 export default class Mediator extends DescriptorUser {
     protected _validator: OpenApiValidator | null;

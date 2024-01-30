@@ -1,4 +1,4 @@
-import DescriptorUser, { iDescriptorUserOptions } from "./DescriptorUser";
+import DescriptorUser, { type iDescriptorUserOptions } from "./DescriptorUser";
 import Mediator from "./Mediator";
 export interface iMediatorUserOptions extends iDescriptorUserOptions {
     "mediator"?: Mediator;
