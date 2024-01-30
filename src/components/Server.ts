@@ -1,944 +1,959 @@
-"use strict";
-
 // deps
 
-	// natives
-	import { parse } from "node:url";
-	import { EOL } from "node:os";
-	import { AddressInfo } from "node:net";
+    // natives
+    import { parse } from "node:url";
+    import { EOL } from "node:os";
+    import { AddressInfo } from "node:net";
 
-	// externals
-	import uniqid from "uniqid";
+    // externals
+    import uniqid from "uniqid";
 
-	// locals
+    // locals
 
-	import { checkIntegerSync } from "../checkers/TypeError/checkInteger";
-	import { checkNonEmptyObjectSync } from "../checkers/RangeError/checkNonEmptyObject";
-	import { checkNonEmptyStringSync } from "../checkers/RangeError/checkNonEmptyString";
+    import { checkIntegerSync } from "../checkers/TypeError/checkInteger";
+    import { checkNonEmptyObjectSync } from "../checkers/RangeError/checkNonEmptyObject";
+    import { checkNonEmptyStringSync } from "../checkers/RangeError/checkNonEmptyString";
 
-	import extractPattern from "../utils/descriptor/extractPattern";
-	import extractParams from "../utils/descriptor/extractParams";
-	import extractSchemaType from "../utils/descriptor/extractSchemaType";
-	import extractBody from "../utils/request/extractBody";
-	import extractIp from "../utils/request/extractIp";
-	import extractCookies from "../utils/request/extractCookies";
-	import extractMime from "../utils/request/extractMime";
-	import jsonParser from "../utils/jsonParser";
-	import send from "../utils/send";
-	import cleanSendedError from "../utils/cleanSendedError";
+    import extractPattern from "../utils/descriptor/extractPattern";
+    import extractParams from "../utils/descriptor/extractParams";
+    import extractSchemaType from "../utils/descriptor/extractSchemaType";
+    import extractBody from "../utils/request/extractBody";
+    import extractIp from "../utils/request/extractIp";
+    import extractCookies from "../utils/request/extractCookies";
+    import extractMime from "../utils/request/extractMime";
+    import jsonParser from "../utils/jsonParser";
+    import send from "../utils/send";
+    import cleanSendedError from "../utils/cleanSendedError";
 
-	import MediatorUser from "./MediatorUser";
-	import Mediator from "./Mediator";
-	import NotFoundError from "./NotFoundError";
+    import MediatorUser, { type iMediatorUserOptions } from "./MediatorUser";
+    import Mediator from "./Mediator";
+    import NotFoundError from "./NotFoundError";
 
-	import SERVER_CODES from "../utils/serverCodes";
+    import SERVER_CODES from "../utils/serverCodes";
 
 // types & interfaces
 
-	// natives
-	import { IncomingMessage, ServerResponse } from "node:http";
+    // natives
+    import type { IncomingMessage, ServerResponse } from "node:http";
 
-	// externals
+    // externals
 
-	import { OpenApiDocument } from "express-openapi-validate";
+    import type { OpenApiDocument } from "express-openapi-validate";
 
-	import { Server as WebSocketServer, WebSocket } from "ws";
-	import { Server as SocketIOServer } from "socket.io";
+    import type { Server as WebSocketServer, WebSocket } from "ws";
+    import type { Server as SocketIOServer } from "socket.io";
 
-	// locals
+    // locals
 
-	import { iMediatorUserOptions } from "./MediatorUser";
+    interface iPush {
+        "id": string;
+        "plugin": string;
+        "command": string;
+        "data"?: any;
+    }
 
-	interface iPush {
-		"id": string;
-		"plugin": string;
-		"command": string;
-		"data"?: any;
-	}
+    export interface iClient {
+        "id": string;
+        "status": "CONNECTED" | "DISCONNECTED";
+    }
 
-	export interface iClient {
-		"id": string;
-		"status": "CONNECTED" | "DISCONNECTED";
-	}
+    export interface iIncomingMessage extends IncomingMessage {
+        "method": string;
+        "pattern": string;
+        "validatedIp": string;
+        "headers": Record<string, any>;
+        "cookies": Record<string, any>;
+        "query": Record<string, any>;
+        "params": Record<string, any>;
+        "body": string;
+    }
 
-	export interface iIncomingMessage extends IncomingMessage {
-		"method": string;
-		"pattern": string;
-		"validatedIp": string;
-		"headers": { [key:string]: any; };
-		"cookies": { [key:string]: any; };
-		"query": { [key:string]: any; };
-		"params": { [key:string]: any; };
-		"body": string;
-	}
+    export interface iServerResponse extends ServerResponse {
+        "body": string;
+        "headers": Record<string, any>;
+    }
 
-	export interface iServerResponse extends ServerResponse {
-		"body": string;
-		"headers": { [key:string]: any; };
-	}
-
-	interface iWebSocketWithId extends WebSocket {
-		"id"?: string;
-	}
+    interface iWebSocketWithId extends WebSocket {
+        "id"?: string;
+    }
 
 // consts
 
-	const WEBSOCKET_STATE_OPEN: number = 1;
+    const WEBSOCKET_STATE_OPEN: number = 1;
 
 // module
 
 // Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic.
 export default class Server extends MediatorUser {
 
-	// attributes
+    // attributes
 
-		// protected
+        // protected
 
-			protected _socketServer: WebSocketServer | SocketIOServer | null;
-			protected _checkParameters: boolean;
-			protected _checkResponse: boolean;
-			protected _cors: boolean;
+            protected _socketServer: WebSocketServer | SocketIOServer | null;
+            protected _checkParameters: boolean;
+            protected _checkResponse: boolean;
+            protected _cors: boolean;
 
-	// constructor
+    // constructor
 
-	public constructor (opt: iMediatorUserOptions) {
+    public constructor (opt: iMediatorUserOptions) {
 
-		super(opt);
+        super(opt);
 
-		this._socketServer = null;
-		this._checkParameters = true;
-		this._checkResponse = false;
-		this._cors = false;
+        this._socketServer = null;
+        this._checkParameters = true;
+        this._checkResponse = false;
+        this._cors = false;
 
-	}
+    }
 
-	// protected
+    // protected
 
-		protected _serverType (): "NO_SERVER" | "WEBSOCKET" | "SOCKETIO" | "UNKNOWN" {
-
-			if (!this._socketServer) {
-				return "NO_SERVER";
-			}
-			else if ((this._socketServer as WebSocketServer).clients && "function" === typeof (this._socketServer as WebSocketServer).clients.forEach) {
-				return "WEBSOCKET";
-			}
-			else if ((this._socketServer as SocketIOServer).sockets && "function" === typeof (this._socketServer as SocketIOServer).sockets.emit) {
-				return "SOCKETIO";
-			}
-			else {
-				return "UNKNOWN";
-			}
+        protected _serverType (): "NO_SERVER" | "WEBSOCKET" | "SOCKETIO" | "UNKNOWN" {
 
-		}
+            if (!this._socketServer) {
+                return "NO_SERVER";
+            }
+            else if ((this._socketServer as WebSocketServer).clients && "function" === typeof (this._socketServer as WebSocketServer).clients.forEach) {
+                return "WEBSOCKET";
+            }
+            else if ((this._socketServer as SocketIOServer).sockets && "function" === typeof (this._socketServer as SocketIOServer).sockets.emit) {
+                return "SOCKETIO";
+            }
+            else {
+                return "UNKNOWN";
+            }
 
-	// public
+        }
 
-		public disableCheckParameters (): this {
-			this._checkParameters = false; return this;
-		}
+        protected _getUsableSocketIOClient (clientId: string): {
+            "emit": (event: string, data: any) => void
+        } | undefined {
 
-		public enableCheckParameters (): this {
-			this._checkParameters = true; return this;
-		}
+            if ("SOCKETIO" === this._serverType()) {
 
-		public disableCheckResponse (): this {
-			this._checkResponse = false; return this;
-		}
+                let socket: any | null = null;
 
-		public enableCheckResponse (): this {
-			this._checkResponse = true; return this;
-		}
+                if ("function" !== typeof (this._socketServer as SocketIOServer).sockets?.sockets?.has) { // SocketIO V2
 
-		public disableCors (): this {
-			this._cors = false; return this;
-		}
+                    for (const key in (this._socketServer as SocketIOServer).sockets.sockets) {
 
-		public enableCors (): this {
-			this._cors = true; return this;
-		}
+                        if (key === clientId) {
 
-		public appMiddleware (req: iIncomingMessage, res: iServerResponse, next: Function): void { // req, res, next : void
+                            socket = ((this._socketServer as SocketIOServer).sockets.sockets as Record<string, any>)[key];
 
-			if (!this._Descriptor) {
-				return next();
-			}
+                            break;
 
-			if (!(this._Descriptor as OpenApiDocument).paths) {
-				return next();
-			}
+                        }
 
-			this.checkDescriptor().then(() => {
+                    }
 
-				// parse
-				const { pathname, query }: { "pathname": string | null; "query": any; } = parse((req.url as string), true);
-				req.method = req.method ? req.method.toLowerCase() : "get";
-				req.pattern = null === checkNonEmptyStringSync("pattern", req.pattern) ? req.pattern : extractPattern(
-					(this._Descriptor as OpenApiDocument).paths, pathname as string, req.method
-				);
+                }
+                else if ((this._socketServer as SocketIOServer).sockets.sockets.has(clientId)) { // SocketIO V3&4
+                    socket = (this._socketServer as SocketIOServer).sockets.sockets.get(clientId);
+                }
 
-				if (!req.pattern) {
-					return next();
-				}
+                if (socket && socket.connected) {
+                    return socket;
+                }
 
-				req.validatedIp = null === checkNonEmptyStringSync("ip", req.validatedIp) ? req.validatedIp : extractIp(req);
+            }
 
-				// url
-				req.headers = null === checkNonEmptyObjectSync("headers", req.headers) ? req.headers : {};
-				req.cookies = null === checkNonEmptyObjectSync("cookies", req.cookies) ? req.cookies : extractCookies(req);
-				req.query = null === checkNonEmptyObjectSync("query", req.query) ? req.query : query || {};
-				req.params = null === checkNonEmptyObjectSync("params", req.params) ? req.params : extractParams(req.pattern, pathname as string);
+            return undefined;
 
-				// ensure content length formate
-				if ("undefined" === typeof req.headers["content-length"]) {
-					req.headers["content-length"] = 0;
-				}
-				else if ("string" === typeof req.headers["content-length"]) {
-					req.headers["content-length"] = parseInt(req.headers["content-length"], 10);
-				}
-
-				if (!req.pattern || !(this._Descriptor as OpenApiDocument).paths[req.pattern] || !((this._Descriptor as OpenApiDocument).paths[req.pattern] as { [key:string]: any })[req.method]) {
-					return next();
-				}
-
-				const { operationId }: { "operationId": string; } = ((this._Descriptor as OpenApiDocument).paths[req.pattern] as { [key:string]: any })[req.method];
-				const apiVersion: string = (this._Descriptor as OpenApiDocument).info.version;
-
-				const contentType: string = req.headers["content-type"] || req.headers["Content-Type"] || "";
-				const responses = ((this._Descriptor as OpenApiDocument).paths[req.pattern] as { [key:string]: any })[req.method].responses;
-
-				this._log("info", "" +
-					"=> [" + req.validatedIp + "] " + req.url + " (" + req.method.toUpperCase() + ")" +
-					(operationId                 ? EOL + "operationId    : " + operationId : "") +
-					(req.headers["content-type"] ? EOL + "content-type   : " + req.headers["content-type"] : "") +
-					(
-						"get" !== req.method && req.headers["content-length"] && 4 < req.headers["content-length"] ?
-							EOL + "content-length : " + req.headers["content-length"] : ""
-					)
-				);
-
-				// get descriptor
-				if ("/" + (this._Descriptor as OpenApiDocument).info.title + "/api/descriptor" === req.pattern && "get" === req.method) {
-
-					// add current server
-
-					const port: number = res.socket && res.socket.localPort ? res.socket.localPort : (res.socket?.address() as AddressInfo).port;
-
-					const descriptor: OpenApiDocument = { ...(this._Descriptor as OpenApiDocument) };
-
-					(descriptor.servers as Array<{
-						"url": string;
-						"description": string;
-					}>).push({
-						"url":  req.validatedIp + ":" + port,
-						"description": "Actual current server"
-					});
-
-					const content: string = JSON.stringify(descriptor);
-
-					this._log("info", "<= [" + req.validatedIp + "] " + content);
-					return send(req, res, SERVER_CODES.OK, content, {
-						"apiVersion": apiVersion,
-						"cors": this._cors,
-						"mime": extractMime(contentType, SERVER_CODES.OK, responses)
-					}).catch((err: Error): Promise<void> => {
-
-						this._log("error", err);
-
-						const result: string = JSON.stringify({
-							"code": "INTERNAL_SERVER_ERROR",
-							"message": cleanSendedError(err)
-						});
+        }
 
-						this._log("error", "<= [" + req.validatedIp + "] " + result);
-						return send(req, res, SERVER_CODES.INTERNAL_SERVER_ERROR, result, {
-							"apiVersion": apiVersion,
-							"cors": this._cors,
-							"mime": extractMime(contentType, SERVER_CODES.INTERNAL_SERVER_ERROR, responses)
-						});
+    // public
 
-					});
+        public disableCheckParameters (): this {
+            this._checkParameters = false; return this;
+        }
 
-				}
+        public enableCheckParameters (): this {
+            this._checkParameters = true; return this;
+        }
 
-				// get plugin status
-				else if ("/" + (this._Descriptor as OpenApiDocument).info.title + "/api/status" === req.pattern && "get" === req.method) {
+        public disableCheckResponse (): this {
+            this._checkResponse = false; return this;
+        }
 
-					const initialized: boolean = this.initialized && (this._Mediator as Mediator).initialized;
-					const status: "INITIALIZED" | "ENABLED"  = initialized ? "INITIALIZED" : "ENABLED";
+        public enableCheckResponse (): this {
+            this._checkResponse = true; return this;
+        }
 
-					this._log("info", "<= [" + req.validatedIp + "] " + status);
-					return send(req, res, SERVER_CODES.OK, JSON.stringify(status), {
-						"apiVersion": apiVersion,
-						"cors": this._cors,
-						"mime": extractMime(contentType, SERVER_CODES.OK, responses)
-					});
+        public disableCors (): this {
+            this._cors = false; return this;
+        }
 
-				}
+        public enableCors (): this {
+            this._cors = true; return this;
+        }
+
+        public appMiddleware (req: iIncomingMessage, res: iServerResponse, next: () => void): void { // req, res, next : void
+
+            if (!this._Descriptor) {
+                return next();
+            }
+
+            if (!(this._Descriptor as OpenApiDocument).paths) {
+                return next();
+            }
+
+            this.checkDescriptor().then(() => {
+
+                // parse
+                const { pathname, query }: { "pathname": string | null; "query": any; } = parse((req.url as string), true);
+                req.method = req.method ? req.method.toLowerCase() : "get";
+                req.pattern = null === checkNonEmptyStringSync("pattern", req.pattern) ? req.pattern : extractPattern(
+                    (this._Descriptor as OpenApiDocument).paths, pathname as string, req.method
+                );
+
+                if (!req.pattern) {
+                    return next();
+                }
+
+                req.validatedIp = null === checkNonEmptyStringSync("ip", req.validatedIp) ? req.validatedIp : extractIp(req);
+
+                // url
+                req.headers = null === checkNonEmptyObjectSync("headers", req.headers) ? req.headers : {};
+                req.cookies = null === checkNonEmptyObjectSync("cookies", req.cookies) ? req.cookies : extractCookies(req);
+                req.query = null === checkNonEmptyObjectSync("query", req.query) ? req.query : query ?? {};
+                req.params = null === checkNonEmptyObjectSync("params", req.params) ? req.params : extractParams(req.pattern, pathname as string);
+
+                // ensure content length formate
+                if ("undefined" === typeof req.headers["content-length"]) {
+                    req.headers["content-length"] = 0;
+                }
+                else if ("string" === typeof req.headers["content-length"]) {
+                    req.headers["content-length"] = parseInt(req.headers["content-length"], 10);
+                }
+
+                if (!req.pattern || !(this._Descriptor as OpenApiDocument).paths[req.pattern] || !((this._Descriptor as OpenApiDocument).paths[req.pattern] as Record<string, any>)[req.method]) {
+                    return next();
+                }
+
+                const { operationId }: { "operationId": string; } = ((this._Descriptor as OpenApiDocument).paths[req.pattern] as Record<string, any>)[req.method];
+                const apiVersion: string = (this._Descriptor as OpenApiDocument).info.version;
+
+                const contentType: string = req.headers["content-type"] ?? req.headers["Content-Type"] ?? "";
+                const responses = ((this._Descriptor as OpenApiDocument).paths[req.pattern] as Record<string, any>)[req.method].responses;
+
+                this._log("info", ""
+                    + "=> [" + req.validatedIp + "] " + req.url + " (" + req.method.toUpperCase() + ")"
+                    + (operationId ? EOL + "operationId    : " + operationId : "")
+                    + (req.headers["content-type"] ? EOL + "content-type   : " + req.headers["content-type"] : "")
+                    + (
+                        "get" !== req.method && req.headers["content-length"] && 4 < req.headers["content-length"]
+                            ? EOL + "content-length : " + req.headers["content-length"]
+                            : ""
+                    )
+                );
+
+                // get descriptor
+                if ("/" + (this._Descriptor as OpenApiDocument).info.title + "/api/descriptor" === req.pattern && "get" === req.method) {
+
+                    // add current server
+
+                    const port: number = res.socket && res.socket.localPort ? res.socket.localPort : (res.socket?.address() as AddressInfo).port;
+
+                    const descriptor: OpenApiDocument = { ...(this._Descriptor as OpenApiDocument) };
+
+                    (descriptor.servers as {
+                        "url": string;
+                        "description": string;
+                    }[]).push({
+                        "url":  req.validatedIp + ":" + port,
+                        "description": "Actual current server"
+                    });
+
+                    const content: string = JSON.stringify(descriptor);
+
+                    this._log("info", "<= [" + req.validatedIp + "] " + content);
+                    return send(req, res, SERVER_CODES.OK, content, {
+                        "apiVersion": apiVersion,
+                        "cors": this._cors,
+                        "mime": extractMime(contentType, SERVER_CODES.OK, responses)
+                    }).catch((err: Error): Promise<void> => {
+
+                        this._log("error", err);
+
+                        const result: string = JSON.stringify({
+                            "code": "INTERNAL_SERVER_ERROR",
+                            "message": cleanSendedError(err)
+                        });
 
-				// missing operationId
-				else if (!operationId) {
+                        this._log("error", "<= [" + req.validatedIp + "] " + result);
+                        return send(req, res, SERVER_CODES.INTERNAL_SERVER_ERROR, result, {
+                            "apiVersion": apiVersion,
+                            "cors": this._cors,
+                            "mime": extractMime(contentType, SERVER_CODES.INTERNAL_SERVER_ERROR, responses)
+                        });
 
-					const result: string = JSON.stringify({
-						"code": "NOT_IMPLEMENTED",
-						"message": "Missing \"operationId\" in the Descriptor for this request"
-					});
+                    });
 
-					this._log("error", "<= [" + req.validatedIp + "] " + result);
-					return send(req, res, SERVER_CODES.NOT_IMPLEMENTED, result, {
-						"apiVersion": apiVersion,
-						"cors": this._cors,
-						"mime": extractMime(contentType, SERVER_CODES.NOT_IMPLEMENTED, responses)
-					});
+                }
 
-				}
+                // get plugin status
+                else if ("/" + (this._Descriptor as OpenApiDocument).info.title + "/api/status" === req.pattern && "get" === req.method) {
 
-				// not implemented operationId
-				else if ("function" !== typeof (this._Mediator as { [key:string]: any })[operationId]) {
+                    const initialized: boolean = this.initialized && (this._Mediator as Mediator).initialized;
+                    const status: "INITIALIZED" | "ENABLED" = initialized ? "INITIALIZED" : "ENABLED";
 
-					const result: string = JSON.stringify({
-						"code": "NOT_IMPLEMENTED",
-						"message": "Unknown Mediator's \"operationId\" method for this request"
-					});
+                    this._log("info", "<= [" + req.validatedIp + "] " + status);
+                    return send(req, res, SERVER_CODES.OK, JSON.stringify(status), {
+                        "apiVersion": apiVersion,
+                        "cors": this._cors,
+                        "mime": extractMime(contentType, SERVER_CODES.OK, responses)
+                    });
 
-					this._log("error", "<= [" + req.validatedIp + "] " + result);
-					return send(req, res, SERVER_CODES.NOT_IMPLEMENTED, result, {
-						"apiVersion": apiVersion,
-						"cors": this._cors,
-						"mime": extractMime(contentType, SERVER_CODES.NOT_IMPLEMENTED, responses)
-					});
+                }
 
-				}
+                // missing operationId
+                else if (!operationId) {
 
-				// no "Content-Length" header found
-				else if ("get" !== req.method && null !== checkIntegerSync(
-					"headers[\"content-length\"]", req.headers["content-length"]
-				)) {
+                    const result: string = JSON.stringify({
+                        "code": "NOT_IMPLEMENTED",
+                        "message": "Missing \"operationId\" in the Descriptor for this request"
+                    });
 
-					const result: string = JSON.stringify({
-						"code": "MISSING_HEADER",
-						"message": "No valid \"Content-Length\" header found"
-					});
+                    this._log("error", "<= [" + req.validatedIp + "] " + result);
+                    return send(req, res, SERVER_CODES.NOT_IMPLEMENTED, result, {
+                        "apiVersion": apiVersion,
+                        "cors": this._cors,
+                        "mime": extractMime(contentType, SERVER_CODES.NOT_IMPLEMENTED, responses)
+                    });
 
-					this._log("error", "<= [" + req.validatedIp + "] " + result);
-					return send(req, res, SERVER_CODES.MISSING_HEADER, result, {
-						"apiVersion": apiVersion,
-						"cors": this._cors,
-						"mime": extractMime(contentType, SERVER_CODES.MISSING_HEADER, responses)
-					});
+                }
 
-				}
+                // not implemented operationId
+                else if ("function" !== typeof (this._Mediator as Record<string, any>)[operationId]) {
 
-				else {
+                    const result: string = JSON.stringify({
+                        "code": "NOT_IMPLEMENTED",
+                        "message": "Unknown Mediator's \"operationId\" method for this request"
+                    });
 
-					// force formate for path parameters
-					return Promise.resolve().then((): Promise<void> => {
+                    this._log("error", "<= [" + req.validatedIp + "] " + result);
+                    return send(req, res, SERVER_CODES.NOT_IMPLEMENTED, result, {
+                        "apiVersion": apiVersion,
+                        "cors": this._cors,
+                        "mime": extractMime(contentType, SERVER_CODES.NOT_IMPLEMENTED, responses)
+                    });
 
-						const keys: Array<string> = Object.keys(req.params);
-						return !keys.length ? Promise.resolve() : Promise.resolve().then((): Promise<void> => {
+                }
 
-							const docParameters: Array<{ [key:string]: any }> = ((this._Descriptor as OpenApiDocument).paths[req.pattern] as { [key:string]: any })[req.method].parameters.filter((p: { [key:string]: any }): boolean => {
-								return "path" === p.in;
-							});
+                // no "Content-Length" header found
+                else if ("get" !== req.method && null !== checkIntegerSync(
+                    "headers[\"content-length\"]", req.headers["content-length"]
+                )) {
 
-							return !docParameters.length ? Promise.resolve() : Promise.resolve().then((): Promise<void> => {
+                    const result: string = JSON.stringify({
+                        "code": "MISSING_HEADER",
+                        "message": "No valid \"Content-Length\" header found"
+                    });
 
-								let err: Error | null = null;
-								for (let i: number = 0; i < keys.length; ++i) {
+                    this._log("error", "<= [" + req.validatedIp + "] " + result);
+                    return send(req, res, SERVER_CODES.MISSING_HEADER, result, {
+                        "apiVersion": apiVersion,
+                        "cors": this._cors,
+                        "mime": extractMime(contentType, SERVER_CODES.MISSING_HEADER, responses)
+                    });
 
-									const key: string = keys[i];
+                }
 
-									const schema = docParameters.find((dp: { [key:string]: any }): boolean => {
-										return dp.name === key;
-									})?.schema || null;
+                else {
 
-									if (!schema) {
-										err = new ReferenceError("Unknown parameter: request.params['" + key + "']"); break;
-									}
+                    // force formate for path parameters
+                    return Promise.resolve().then((): Promise<void> => {
 
-									switch (extractSchemaType(schema, ((this._Descriptor as OpenApiDocument).components as { [key:string]: any }).schemas)) {
+                        const keys: string[] = Object.keys(req.params);
+                        return !keys.length ? Promise.resolve() : Promise.resolve().then((): Promise<void> => {
 
-										case "boolean":
+                            const docParameters: Record<string, any>[] = ((this._Descriptor as OpenApiDocument).paths[req.pattern] as Record<string, any>)[req.method].parameters.filter((p: Record<string, any>): boolean => {
+                                return "path" === p.in;
+                            });
 
-											if ("boolean" !== typeof req.params[key]) {
+                            return !docParameters.length ? Promise.resolve() : Promise.resolve().then((): Promise<void> => {
 
-												if ("true" === req.params[key]) {
-													req.params[key] = true;
-												}
-												else if ("false" === req.params[key]) {
-													req.params[key] = false;
-												}
-												else {
+                                let err: Error | null = null;
+                                for (let i: number = 0; i < keys.length; ++i) {
 
-													err = new TypeError(
-														"Error while validating request: request.params['" + key + "'] should be boolean"
-													); break;
+                                    const key: string = keys[i];
 
-												}
+                                    const schema = docParameters.find((dp: Record<string, any>): boolean => {
+                                        return dp.name === key;
+                                    })?.schema ?? null;
 
-											}
+                                    if (!schema) {
+                                        err = new ReferenceError("Unknown parameter: request.params['" + key + "']"); break;
+                                    }
 
-										break;
+                                    switch (extractSchemaType(schema, ((this._Descriptor as OpenApiDocument).components as Record<string, any>).schemas)) {
 
-										case "integer":
+                                        case "boolean":
 
-											// error returned, not an integer
-											if (null !== checkIntegerSync("request.params['" + key + "']", req.params[key])) {
+                                            if ("boolean" !== typeof req.params[key]) {
 
-												const value: number = parseInt(req.params[key], 10);
+                                                if ("true" === req.params[key]) {
+                                                    req.params[key] = true;
+                                                }
+                                                else if ("false" === req.params[key]) {
+                                                    req.params[key] = false;
+                                                }
+                                                else {
 
-												if (!Number.isNaN(value)) {
-													req.params[key] = value;
-												}
-												else {
+                                                    err = new TypeError(
+                                                        "Error while validating request: request.params['" + key + "'] should be boolean"
+                                                    ); break;
 
-													err = new TypeError(
-														"Error while validating request: request.params['" + key + "'] should be integer"
-													); break;
+                                                }
 
-												}
+                                            }
 
-											}
+                                        break;
 
-										break;
+                                        case "integer":
 
-										case "number":
+                                            // error returned, not an integer
+                                            if (null !== checkIntegerSync("request.params['" + key + "']", req.params[key])) {
 
-											if ("number" !== typeof req.params[key]) {
+                                                const value: number = parseInt(req.params[key], 10);
 
-												const value: number = parseFloat(req.params[key]);
+                                                if (!Number.isNaN(value)) {
+                                                    req.params[key] = value;
+                                                }
+                                                else {
 
-												if (!Number.isNaN(value)) {
-													req.params[key] = value;
-												}
-												else {
+                                                    err = new TypeError(
+                                                        "Error while validating request: request.params['" + key + "'] should be integer"
+                                                    ); break;
 
-													err = new TypeError(
-														"Error while validating request: request.params['" + key + "'] should be number"
-													); break;
+                                                }
 
-												}
+                                            }
 
-											}
+                                        break;
 
-										break;
+                                        case "number":
 
-										default:
-											// nothing to do here
-										break;
+                                            if ("number" !== typeof req.params[key]) {
 
-									}
+                                                const value: number = parseFloat(req.params[key]);
 
-								}
+                                                if (!Number.isNaN(value)) {
+                                                    req.params[key] = value;
+                                                }
+                                                else {
 
-								return err ? Promise.reject(err) : Promise.resolve();
+                                                    err = new TypeError(
+                                                        "Error while validating request: request.params['" + key + "'] should be number"
+                                                    ); break;
 
-							});
+                                                }
 
-						});
+                                            }
 
-					// extract body
-					}).then((): Promise<any> => {
+                                        break;
 
-						if ("get" === req.method.toLowerCase()) {
-							return Promise.resolve("");
-						}
-						else if (!checkNonEmptyStringSync("body", req.body)) {
-							return Promise.resolve(req.body);
-						}
-						else {
+                                        default:
+                                            // nothing to do here
+                                        break;
 
-							return extractBody(req).then((body: string): Promise<any> => {
+                                    }
 
-								if (body.length) {
+                                }
 
-									this._log("log", body);
+                                return err ? Promise.reject(err) : Promise.resolve();
 
-									req.body = jsonParser(body);
+                            });
 
-								}
-								else {
-									req.body = "";
-								}
+                        });
 
-								return Promise.resolve(req.body);
+                    // extract body
+                    }).then((): Promise<any> => {
 
-							});
+                        if ("get" === req.method.toLowerCase()) {
+                            return Promise.resolve("");
+                        }
+                        else if (!checkNonEmptyStringSync("body", req.body)) {
+                            return Promise.resolve(req.body);
+                        }
+                        else {
 
-						}
+                            return extractBody(req).then((body: string): Promise<any> => {
 
-					// formate data
-					}).then((body: any): Promise<string> => {
+                                if (body.length) {
 
-						const parsed = {
-							"url": {
-								"path": req.params,
-								"query": req.query,
-								"headers": req.headers,
-								"cookies": req.cookies
-							},
-							body
-						};
+                                    this._log("log", body);
 
-						// check parameters
-						return Promise.resolve().then((): Promise<void> => {
+                                    req.body = jsonParser(body);
 
-							return this._checkParameters ? (this._Mediator as Mediator).checkParameters(
-								operationId, parsed.url, parsed.body
-							) : Promise.resolve();
+                                }
+                                else {
+                                    req.body = "";
+                                }
 
-						// execute Mediator method
-						}).then((): Promise<string> => {
+                                return Promise.resolve(req.body);
 
-							return (this._Mediator as { [key:string]: any })[operationId](parsed.url, parsed.body);
+                            });
 
-						});
+                        }
 
-					// send response
-					}).then((content: any): Promise<void> => {
+                    // formate data
+                    }).then((body: any): Promise<string> => {
 
-						// created
-						if ("put" === req.method) {
+                        const parsed = {
+                            "url": {
+                                "path": req.params,
+                                "query": req.query,
+                                "headers": req.headers,
+                                "cookies": req.cookies
+                            },
+                            body
+                        };
 
-							if ("undefined" === typeof content || null === content) {
+                        // check parameters
+                        return Promise.resolve().then((): Promise<void> => {
 
-								this._log("success", "<= [" + req.validatedIp + "] no content");
-								return send(req, res, SERVER_CODES.OK_PUT, "", {
-									"apiVersion": apiVersion,
-									"cors": this._cors,
-									"mime": extractMime(contentType, SERVER_CODES.OK_PUT, responses)
-								});
+                            return this._checkParameters ? (this._Mediator as Mediator).checkParameters(
+                                operationId, parsed.url, parsed.body
+                            ) : Promise.resolve();
 
-							}
+                        // execute Mediator method
+                        }).then((): Promise<string> => {
 
-							else {
+                            return (this._Mediator as Record<string, any>)[operationId](parsed.url, parsed.body);
 
-								this._log("success", "<= [" + req.validatedIp + "] " + JSON.stringify(content));
-								return send(req, res, SERVER_CODES.OK_PUT, content, {
-									"apiVersion": apiVersion,
-									"cors": this._cors,
-									"mime": extractMime(contentType, SERVER_CODES.OK_PUT, responses)
-								});
+                        });
 
-							}
+                    // send response
+                    }).then((content: any): Promise<void> => {
 
-						}
+                        // created
+                        if ("put" === req.method) {
 
-						// no content
-						else if ("undefined" === typeof content || null === content) {
+                            if ("undefined" === typeof content || null === content) {
 
-							this._log("warning", "<= [" + req.validatedIp + "] no content");
-							return send(req, res, SERVER_CODES.OK_NO_CONTENT, "", {
-								"apiVersion": apiVersion,
-								"cors": this._cors,
-								"mime": extractMime(contentType, SERVER_CODES.OK_NO_CONTENT, responses)
-							});
+                                this._log("success", "<= [" + req.validatedIp + "] no content");
+                                return send(req, res, SERVER_CODES.OK_PUT, "", {
+                                    "apiVersion": apiVersion,
+                                    "cors": this._cors,
+                                    "mime": extractMime(contentType, SERVER_CODES.OK_PUT, responses)
+                                });
 
-						}
+                            }
 
-						else {
+                            else {
 
-							this._log("success", "<= [" + req.validatedIp + "] " + JSON.stringify(content));
-							return send(req, res, SERVER_CODES.OK, content, {
-								"apiVersion": apiVersion,
-								"cors": this._cors,
-								"mime": extractMime(contentType, SERVER_CODES.OK, responses)
-							});
+                                this._log("success", "<= [" + req.validatedIp + "] " + JSON.stringify(content));
+                                return send(req, res, SERVER_CODES.OK_PUT, content, {
+                                    "apiVersion": apiVersion,
+                                    "cors": this._cors,
+                                    "mime": extractMime(contentType, SERVER_CODES.OK_PUT, responses)
+                                });
 
-						}
+                            }
 
-					}).catch((err: Error): Promise<void> => {
+                        }
 
-						if (err instanceof ReferenceError) {
+                        // no content
+                        else if ("undefined" === typeof content || null === content) {
 
-							const result: string = JSON.stringify({
-								"code": "MISSING_PARAMETER",
-								"message": cleanSendedError(err)
-							});
+                            this._log("warning", "<= [" + req.validatedIp + "] no content");
+                            return send(req, res, SERVER_CODES.OK_NO_CONTENT, "", {
+                                "apiVersion": apiVersion,
+                                "cors": this._cors,
+                                "mime": extractMime(contentType, SERVER_CODES.OK_NO_CONTENT, responses)
+                            });
 
-							this._log("error", "<= [" + req.validatedIp + "] " + result);
-							return send(req, res, SERVER_CODES.MISSING_PARAMETER, result, {
-								"apiVersion": apiVersion,
-								"cors": this._cors,
-								"mime": extractMime(contentType, SERVER_CODES.MISSING_PARAMETER, responses)
-							});
+                        }
 
-						}
-						else if (err instanceof TypeError) {
+                        else {
 
-							const result: string = JSON.stringify({
-								"code": "WRONG_TYPE_PARAMETER",
-								"message": cleanSendedError(err)
-							});
+                            this._log("success", "<= [" + req.validatedIp + "] " + JSON.stringify(content));
+                            return send(req, res, SERVER_CODES.OK, content, {
+                                "apiVersion": apiVersion,
+                                "cors": this._cors,
+                                "mime": extractMime(contentType, SERVER_CODES.OK, responses)
+                            });
 
-							this._log("error", "<= [" + req.validatedIp + "] " + result);
-							return send(req, res, SERVER_CODES.WRONG_TYPE_PARAMETER, result, {
-								"apiVersion": apiVersion,
-								"cors": this._cors,
-								"mime": extractMime(contentType, SERVER_CODES.WRONG_TYPE_PARAMETER, responses)
-							});
+                        }
 
-						}
-						else if (err instanceof RangeError) {
+                    }).catch((err: Error): Promise<void> => {
 
-							const result: string = JSON.stringify({
-								"code": "EMPTY_OR_RANGE_OR_ENUM_PARAMETER",
-								"message": cleanSendedError(err)
-							});
+                        if (err instanceof ReferenceError) {
 
-							this._log("error", "<= [" + req.validatedIp + "] " + result);
-							return send(req, res, SERVER_CODES.EMPTY_OR_RANGE_OR_ENUM_PARAMETER, result, {
-								"apiVersion": apiVersion,
-								"cors": this._cors,
-								"mime": extractMime(contentType, SERVER_CODES.EMPTY_OR_RANGE_OR_ENUM_PARAMETER, responses)
-							});
+                            const result: string = JSON.stringify({
+                                "code": "MISSING_PARAMETER",
+                                "message": cleanSendedError(err)
+                            });
 
-						}
-						else if (err instanceof SyntaxError) {
+                            this._log("error", "<= [" + req.validatedIp + "] " + result);
+                            return send(req, res, SERVER_CODES.MISSING_PARAMETER, result, {
+                                "apiVersion": apiVersion,
+                                "cors": this._cors,
+                                "mime": extractMime(contentType, SERVER_CODES.MISSING_PARAMETER, responses)
+                            });
 
-							const result: string = JSON.stringify({
-								"code": "JSON_PARSE",
-								"message": cleanSendedError(err)
-							});
+                        }
+                        else if (err instanceof TypeError) {
 
-							this._log("error", "<= [" + req.validatedIp + "] " + result);
-							return send(req, res, SERVER_CODES.JSON_PARSE, result, {
-								"apiVersion": apiVersion,
-								"cors": this._cors,
-								"mime": extractMime(contentType, SERVER_CODES.JSON_PARSE, responses)
-							});
+                            const result: string = JSON.stringify({
+                                "code": "WRONG_TYPE_PARAMETER",
+                                "message": cleanSendedError(err)
+                            });
 
-						}
-						else if (err instanceof NotFoundError) {
+                            this._log("error", "<= [" + req.validatedIp + "] " + result);
+                            return send(req, res, SERVER_CODES.WRONG_TYPE_PARAMETER, result, {
+                                "apiVersion": apiVersion,
+                                "cors": this._cors,
+                                "mime": extractMime(contentType, SERVER_CODES.WRONG_TYPE_PARAMETER, responses)
+                            });
 
-							const result: string = JSON.stringify({
-								"code": "NOT_FOUND",
-								"message": cleanSendedError(err)
-							});
+                        }
+                        else if (err instanceof RangeError) {
 
-							this._log("error", "<= [" + req.validatedIp + "] " + result);
-							return send(req, res, SERVER_CODES.NOT_FOUND, result, {
-								"apiVersion": apiVersion,
-								"cors": this._cors,
-								"mime": extractMime(contentType, SERVER_CODES.NOT_FOUND, responses)
-							});
+                            const result: string = JSON.stringify({
+                                "code": "EMPTY_OR_RANGE_OR_ENUM_PARAMETER",
+                                "message": cleanSendedError(err)
+                            });
 
-						}
-						else {
+                            this._log("error", "<= [" + req.validatedIp + "] " + result);
+                            return send(req, res, SERVER_CODES.EMPTY_OR_RANGE_OR_ENUM_PARAMETER, result, {
+                                "apiVersion": apiVersion,
+                                "cors": this._cors,
+                                "mime": extractMime(contentType, SERVER_CODES.EMPTY_OR_RANGE_OR_ENUM_PARAMETER, responses)
+                            });
 
-							this._log("error", err);
+                        }
+                        else if (err instanceof SyntaxError) {
 
-							const result: string = JSON.stringify({
-								"code": "INTERNAL_SERVER_ERROR",
-								"message": cleanSendedError(err)
-							});
+                            const result: string = JSON.stringify({
+                                "code": "JSON_PARSE",
+                                "message": cleanSendedError(err)
+                            });
 
-							this._log("error", "<= [" + req.validatedIp + "] " + result);
-							return send(req, res, SERVER_CODES.INTERNAL_SERVER_ERROR, result, {
-								"apiVersion": apiVersion,
-								"cors": this._cors,
-								"mime": extractMime(contentType, SERVER_CODES.INTERNAL_SERVER_ERROR, responses)
-							});
+                            this._log("error", "<= [" + req.validatedIp + "] " + result);
+                            return send(req, res, SERVER_CODES.JSON_PARSE, result, {
+                                "apiVersion": apiVersion,
+                                "cors": this._cors,
+                                "mime": extractMime(contentType, SERVER_CODES.JSON_PARSE, responses)
+                            });
 
-						}
+                        }
+                        else if (err instanceof NotFoundError) {
 
-					// check response
-					}).then((): Promise<void> => {
+                            const result: string = JSON.stringify({
+                                "code": "NOT_FOUND",
+                                "message": cleanSendedError(err)
+                            });
 
-						return this._checkResponse ? (this._Mediator as Mediator).checkResponse(operationId, res) : Promise.resolve();
+                            this._log("error", "<= [" + req.validatedIp + "] " + result);
+                            return send(req, res, SERVER_CODES.NOT_FOUND, result, {
+                                "apiVersion": apiVersion,
+                                "cors": this._cors,
+                                "mime": extractMime(contentType, SERVER_CODES.NOT_FOUND, responses)
+                            });
 
-					});
+                        }
+                        else {
 
-				}
+                            this._log("error", err);
 
-			}).then((): void => {
+                            const result: string = JSON.stringify({
+                                "code": "INTERNAL_SERVER_ERROR",
+                                "message": cleanSendedError(err)
+                            });
 
-				// nothing to do here
-				// must not be blocking in http server or express app
+                            this._log("error", "<= [" + req.validatedIp + "] " + result);
+                            return send(req, res, SERVER_CODES.INTERNAL_SERVER_ERROR, result, {
+                                "apiVersion": apiVersion,
+                                "cors": this._cors,
+                                "mime": extractMime(contentType, SERVER_CODES.INTERNAL_SERVER_ERROR, responses)
+                            });
 
-			}).catch((err: Error): void => {
-				this._log("error", err);
-			});
+                        }
 
-		}
+                    // check response
+                    }).then((): Promise<void> => {
 
-		public socketMiddleware (socketServer: WebSocketServer | SocketIOServer): void {
-			this._socketServer = socketServer;
-		}
+                        return this._checkResponse ? (this._Mediator as Mediator).checkResponse(operationId, res) : Promise.resolve();
 
-		public push (command: string, data?: any, log: boolean = true): this {
+                    });
 
-			const serverType: "NO_SERVER" | "WEBSOCKET" | "SOCKETIO" | "UNKNOWN" = this._serverType();
+                }
 
-			if (![ "WEBSOCKET", "SOCKETIO" ].includes(serverType)) {
-				return this;
-			}
+            }).then((): void => {
 
-			// valid descriptor && formate data
-			this.checkDescriptor().then((): Promise<string> => {
+                // nothing to do here
+                // must not be blocking in http server or express app
 
-				const result: iPush = {
-					"id": uniqid(),
-					"plugin": (this._Descriptor as OpenApiDocument).info.title,
-					command
-				};
+            }).catch((err: Error): void => {
+                this._log("error", err);
+            });
 
-					if ("undefined" !== typeof data) {
-						result.data = cleanSendedError(data);
-					}
+        }
 
-				return Promise.resolve(JSON.stringify(result));
+        public socketMiddleware (socketServer: WebSocketServer | SocketIOServer): void {
+            this._socketServer = socketServer;
+        }
 
-			// log & send data
-			}).then((result: string): void => {
+        public push (command: string, data?: any, log: boolean = true): this {
 
-				if (log) {
-					this._log("info", "<= [PUSH] " + result, true);
-				}
+            const serverType: "NO_SERVER" | "WEBSOCKET" | "SOCKETIO" | "UNKNOWN" = this._serverType();
 
-				switch (serverType) {
+            if (![ "WEBSOCKET", "SOCKETIO" ].includes(serverType)) {
+                return this;
+            }
 
-					case "WEBSOCKET":
+            // valid descriptor && formate data
+            this.checkDescriptor().then((): Promise<string> => {
 
-						(this._socketServer as WebSocketServer).clients.forEach((client: iWebSocketWithId): void => {
+                const result: iPush = {
+                    "id": uniqid(),
+                    "plugin": (this._Descriptor as OpenApiDocument).info.title,
+                    command
+                };
 
-							if (!client.id) {
-								client.id = uniqid();
-							}
+                    if ("undefined" !== typeof data) {
+                        result.data = cleanSendedError(data);
+                    }
 
-							if (WEBSOCKET_STATE_OPEN === client.readyState) {
-								client.send(result);
-							}
+                return Promise.resolve(JSON.stringify(result));
 
-						});
+            // log & send data
+            }).then((result: string): void => {
 
-					break;
+                if (log) {
+                    this._log("info", "<= [PUSH] " + result, true);
+                }
 
-					case "SOCKETIO":
-						(this._socketServer as SocketIOServer).sockets.emit("message", result);
-					break;
+                switch (serverType) {
 
-					default:
-						// nothing to do here
-					break;
+                    case "WEBSOCKET":
 
-				}
+                        (this._socketServer as WebSocketServer).clients.forEach((client: iWebSocketWithId): void => {
 
-			}).catch((err: Error): void => {
-				this._log("error", err);
-			});
+                            if (!client.id) {
+                                client.id = uniqid();
+                            }
 
-			return this;
+                            if (WEBSOCKET_STATE_OPEN === client.readyState) {
+                                client.send(result);
+                            }
 
-		}
+                        });
 
-		public getClients (): Array<iClient> {
+                    break;
 
-			switch (this._serverType()) {
+                    case "SOCKETIO":
+                        (this._socketServer as SocketIOServer).sockets.emit("message", result);
+                    break;
 
-				case "WEBSOCKET": {
+                    default:
+                        // nothing to do here
+                    break;
 
-					const result: Array<iClient> = [];
+                }
 
-						(this._socketServer as WebSocketServer).clients.forEach((s: { "id"?: string; "readyState": number; }): iClient => {
+            }).catch((err: Error): void => {
+                this._log("error", err);
+            });
 
-							if (!s.id) {
-								s.id = uniqid();
-							}
+            return this;
 
-							return {
-								"id": s.id as string,
-								"status": WEBSOCKET_STATE_OPEN === s.readyState ? "CONNECTED" : "DISCONNECTED"
-							};
+        }
 
-						});
+        public getClients (): iClient[] {
 
-					return result;
+            switch (this._serverType()) {
 
-				}
+                case "WEBSOCKET": {
 
-				case "SOCKETIO": {
+                    const result: iClient[] = [];
 
-					const result: Array<iClient> = [];
+                        (this._socketServer as WebSocketServer).clients.forEach((s: { "id"?: string; "readyState": number; }): iClient => {
 
-						if ("function" !== typeof (this._socketServer as SocketIOServer).sockets?.sockets?.has) { // SocketIO V2
+                            if (!s.id) {
+                                s.id = uniqid();
+                            }
 
-							for (const key in (this._socketServer as SocketIOServer).sockets.sockets) {
+                            return {
+                                "id": s.id as string,
+                                "status": WEBSOCKET_STATE_OPEN === s.readyState ? "CONNECTED" : "DISCONNECTED"
+                            };
 
-								const s: any = ((this._socketServer as SocketIOServer).sockets.sockets as { [key:string]: any })[key];
+                        });
 
-								result.push({
-									"id": s.id,
-									"status": s.connected ? "CONNECTED" : "DISCONNECTED"
-								});
+                    return result;
 
-							}
+                }
 
-						}
-						else {
+                case "SOCKETIO": {
 
-							(this._socketServer as SocketIOServer).sockets.sockets.forEach((s: any): void => { // SocketIO V3&4
+                    const result: iClient[] = [];
 
-								result.push({
-									"id": s.id,
-									"status": s.connected ? "CONNECTED" : "DISCONNECTED"
-								});
+                        if ("function" !== typeof (this._socketServer as SocketIOServer).sockets?.sockets?.has) { // SocketIO V2
 
-							});
+                            for (const key in (this._socketServer as SocketIOServer).sockets.sockets) {
 
-						}
+                                const s: any = ((this._socketServer as SocketIOServer).sockets.sockets as Record<string, any>)[key];
 
-					return result;
+                                result.push({
+                                    "id": s.id,
+                                    "status": s.connected ? "CONNECTED" : "DISCONNECTED"
+                                });
 
-				}
+                            }
 
-				default:
+                        }
+                        else {
 
-					return [];
+                            (this._socketServer as SocketIOServer).sockets.sockets.forEach((s: any): void => { // SocketIO V3&4
 
-			}
+                                result.push({
+                                    "id": s.id,
+                                    "status": s.connected ? "CONNECTED" : "DISCONNECTED"
+                                });
 
-		}
+                            });
 
-		public pushClient (clientId: string, command: string, data: any, log: boolean = true): this {
+                        }
 
-			const serverType = this._serverType();
+                    return result;
 
-			if (![ "WEBSOCKET", "SOCKETIO" ].includes(serverType)) {
-				return this;
-			}
+                }
 
-			// valid descriptor && formate data
-			this.checkDescriptor().then((): Promise<string> => {
+                default:
 
-				const result: iPush = {
-					"id": uniqid(),
-					"plugin": (this._Descriptor as OpenApiDocument).info.title,
-					command
-				};
+                    return [];
 
-					if ("undefined" !== typeof data) {
-						result.data = cleanSendedError(data);
-					}
+            }
 
-				return Promise.resolve(JSON.stringify(result));
+        }
 
-			// log & send data
-			}).then((result: string): void => {
+        public pushClient (clientId: string, command: string, data: any, log: boolean = true): this {
 
-				switch (serverType) {
+            const serverType = this._serverType();
 
-					case "WEBSOCKET":
+            if (![ "WEBSOCKET", "SOCKETIO" ].includes(serverType)) {
+                return this;
+            }
 
-						(this._socketServer as WebSocketServer).clients.forEach((client: iWebSocketWithId): void => {
+            // valid descriptor && formate data
+            this.checkDescriptor().then((): Promise<string> => {
 
-							if (!client.id) {
-								client.id = uniqid();
-							}
-							else if (client.id === clientId && WEBSOCKET_STATE_OPEN === client.readyState) {
+                const result: iPush = {
+                    "id": uniqid(),
+                    "plugin": (this._Descriptor as OpenApiDocument).info.title,
+                    command
+                };
 
-								if (log) {
-									this._log("info", "<= [PUSH|" + clientId + "] " + result);
-								}
+                    if ("undefined" !== typeof data) {
+                        result.data = cleanSendedError(data);
+                    }
 
-								client.send(result);
+                return Promise.resolve(JSON.stringify(result));
 
-							}
+            // log & send data
+            }).then((result: string): void => {
 
-						});
+                switch (serverType) {
 
-					break;
+                    case "WEBSOCKET":
 
-					case "SOCKETIO": {
+                        (this._socketServer as WebSocketServer).clients.forEach((client: iWebSocketWithId): void => {
 
-						let socket: any | null = null;
+                            if (!client.id) {
+                                client.id = uniqid();
+                            }
+                            else if (client.id === clientId && WEBSOCKET_STATE_OPEN === client.readyState) {
 
-							if ("function" !== typeof (this._socketServer as SocketIOServer).sockets?.sockets?.has) { // SocketIO V2
+                                if (log) {
+                                    this._log("info", "<= [PUSH|" + clientId + "] " + result);
+                                }
 
-								for (const key in (this._socketServer as SocketIOServer).sockets.sockets) {
+                                client.send(result);
 
-									if (key === clientId) {
+                            }
 
-										socket = ((this._socketServer as SocketIOServer).sockets.sockets as { [key:string]: any })[key];
+                        });
 
-										break;
+                    break;
 
-									}
+                    case "SOCKETIO": {
 
-								}
+                        const socket = this._getUsableSocketIOClient(clientId);
 
-							}
-							else if ((this._socketServer as SocketIOServer).sockets.sockets.has(clientId)) { // SocketIO V3&4
-								socket = (this._socketServer as SocketIOServer).sockets.sockets.get(clientId);
-							}
+                        if (socket) {
 
-						if (socket && socket.connected) {
+                            if (log) {
+                                this._log("info", "<= [PUSH|" + clientId + "] " + result);
+                            }
 
-							if (log) {
-								this._log("info", "<= [PUSH|" + clientId + "] " + result);
-							}
+                            socket.emit("message", result);
 
-							socket.emit("message", result);
+                        }
 
-						}
+                    } break;
 
-					} break;
+                    default:
+                        // nothing to do here
+                    break;
 
-					default:
-						// nothing to do here
-					break;
+                }
+            }).catch((err: Error): void => {
+                this._log("error", err);
+            });
 
-				}
-			}).catch((err: Error): void => {
-				this._log("error", err);
-			});
+            return this;
 
-			return this;
+        }
 
-		}
+        // init / release
 
-		// init / release
+            public init (...data: any): Promise<void> {
 
-			public init (...data: any): Promise<void> {
+                return this.checkDescriptor().then((): Promise<void> => {
+                    return this.checkMediator();
+                }).then((): Promise<void> => {
+                    return this._initWorkSpace(...data);
+                }).then((): void => {
 
-				return this.checkDescriptor().then((): Promise<void> => {
-					return this.checkMediator();
-				}).then((): Promise<void> => {
-					return this._initWorkSpace(...data);
-				}).then((): void => {
+                    this.initialized = true;
+                    this.emit("initialized", ...data);
 
-					this.initialized = true;
-					this.emit("initialized", ...data);
+                });
 
-				});
+            }
 
-			}
+            public release (...data: any): Promise<void> {
 
-			public release (...data: any): Promise<void> {
+                return this._releaseWorkSpace(...data).then((): void => {
 
-				return this._releaseWorkSpace(...data).then((): void => {
+                    // can only be released by Orchestrator
+                    if (this._Descriptor) {
+                        this._Descriptor = null;
+                    }
 
-					// can only be released by Orchestrator
-					if (this._Descriptor) {
-						this._Descriptor = null;
-					}
+                    // can only be released by Orchestrator
+                    if (this._Mediator) {
+                        this._Mediator = null;
+                    }
 
-					// can only be released by Orchestrator
-					if (this._Mediator) {
-						this._Mediator = null;
-					}
+                    this._externalRessourcesDirectory = "";
+                    this._socketServer = null;
 
-					this._externalRessourcesDirectory = "";
-					this._socketServer = null;
+                    this.initialized = false;
+                    this.emit("released", ...data);
 
-					this.initialized = false;
-					this.emit("released", ...data);
+                }).then((): void => {
 
-				}).then((): void => {
+                    this.removeAllListeners();
 
-					this.removeAllListeners();
+                });
 
-				});
+            }
 
-			}
-
-};
+}

@@ -1,706 +1,703 @@
-"use strict";
-
 // deps
 
-	// natives
-	import { join } from "node:path";
+    // natives
+    import { join } from "node:path";
 
-	// locals
+    // locals
 
-	import { checkObject } from "../checkers/TypeError/checkObject";
+    import { checkObject } from "../checkers/TypeError/checkObject";
 
-	import MediatorUser from "./MediatorUser";
-	import Mediator from "./Mediator";
-	import Server from "./Server";
+    import MediatorUser from "./MediatorUser";
+    import Mediator from "./Mediator";
+    import Server, { type iIncomingMessage, type iServerResponse } from "./Server";
 
-	import checkFile from "../utils/file/checkFile";
-	import readJSONFile from "../utils/file/readJSONFile";
+    import checkFile from "../utils/file/checkFile";
+    import readJSONFile from "../utils/file/readJSONFile";
 
 // types & interfaces
 
-	// externals
-	import { OpenApiDocument } from "express-openapi-validate";
-	import { OpenAPI } from "openapi-types";
+    // externals
+    import type { OpenApiDocument } from "express-openapi-validate";
+    import type { OpenAPI } from "openapi-types";
 
-	// locals
+    // locals
 
-	import { Server as WebSocketServer } from "ws";
-	import { Server as SocketIOServer } from "socket.io";
+    import type { Server as WebSocketServer } from "ws";
+    import type { Server as SocketIOServer } from "socket.io";
 
-	import { tLogger } from "./DescriptorUser";
-	import { iIncomingMessage, iServerResponse } from "./Server";
+    import type { tLogger } from "./DescriptorUser";
 
-	export interface iOrchestratorOptions {
-		"externalRessourcesDirectory": string; // used to write local data like sqlite database, json files, pictures, etc...
-		"packageFile": string; // package file used by the plugin (absolute path)
-		"descriptorFile": string; // descriptor file used by the plugin (absolute path)
-		"mediatorFile": string; // mediator file used by the plugin (absolute path)
-		"serverFile": string; // server file used by the plugin (absolute path)
-		"logger"?: tLogger;
-	};
+    export interface iOrchestratorOptions {
+        "externalRessourcesDirectory": string; // used to write local data like sqlite database, json files, pictures, etc...
+        "packageFile": string; // package file used by the plugin (absolute path)
+        "descriptorFile": string; // descriptor file used by the plugin (absolute path)
+        "mediatorFile": string; // mediator file used by the plugin (absolute path)
+        "serverFile": string; // server file used by the plugin (absolute path)
+        "logger"?: tLogger;
+    }
 
 // module
 
 export default class Orchestrator extends MediatorUser {
 
-	// attributes
+    // attributes
 
-		// protected
+        // protected
 
-			protected _Server: Server | null;
-			protected _socketServer: WebSocketServer | SocketIOServer | null;
-			protected _checkParameters: boolean;
-			protected _checkResponse: boolean;
+            protected _Server: Server | null;
+            protected _socketServer: WebSocketServer | SocketIOServer | null;
+            protected _checkParameters: boolean;
+            protected _checkResponse: boolean;
 
-			// params
-			protected _packageFile: string;
-			protected _descriptorFile: string;
-			protected _mediatorFile: string;
-			protected _serverFile: string;
+            // params
+            protected _packageFile: string;
+            protected _descriptorFile: string;
+            protected _mediatorFile: string;
+            protected _serverFile: string;
 
-			protected _extended: Array<string>;
+            protected _extended: string[];
 
-		// public
+        // public
 
-			public enabled: boolean;
+            public enabled: boolean;
 
-			// native
-			public authors: Array<string>;
-			public description: string;
-			public dependencies: object | null;
-			public devDependencies: object | null;
-			public engines: object | null;
-			public license: string;
-			public main: string;
-			public name: string;
-			public scripts: object | null;
-			public version: string;
+            // native
+            public authors: string[];
+            public description: string;
+            public dependencies: object | null;
+            public devDependencies: object | null;
+            public engines: object | null;
+            public license: string;
+            public main: string;
+            public name: string;
+            public scripts: object | null;
+            public version: string;
 
-	// constructor
+    // constructor
 
-	public constructor (options: iOrchestratorOptions) {
+    public constructor (options: iOrchestratorOptions) {
 
-		super(options);
+        super(options);
 
-		// protected
+        // protected
 
-			this._Server = null;
-			this._socketServer = null; // to delay socketMiddleware if necessary
-			this._checkParameters = true; // to delay checkParameters if necessary
-			this._checkResponse = true; // to delay checkResponse if necessary
+            this._Server = null;
+            this._socketServer = null; // to delay socketMiddleware if necessary
+            this._checkParameters = true; // to delay checkParameters if necessary
+            this._checkResponse = true; // to delay checkResponse if necessary
 
-			// params
-			this._packageFile = options && "string" === typeof options.packageFile ? options.packageFile : "";
-			this._descriptorFile = options && "string" === typeof options.descriptorFile ? options.descriptorFile : "";
-			this._mediatorFile = options && "string" === typeof options.mediatorFile ? options.mediatorFile : "";
-			this._serverFile = options && "string" === typeof options.serverFile ? options.serverFile : "";
+            // params
+            this._packageFile = options && "string" === typeof options.packageFile ? options.packageFile : "";
+            this._descriptorFile = options && "string" === typeof options.descriptorFile ? options.descriptorFile : "";
+            this._mediatorFile = options && "string" === typeof options.mediatorFile ? options.mediatorFile : "";
+            this._serverFile = options && "string" === typeof options.serverFile ? options.serverFile : "";
 
-			// extended
-			this._extended = [];
+            // extended
+            this._extended = [];
 
-		// public
+        // public
 
-			this.enabled = true;
+            this.enabled = true;
 
-			// native
-			this.authors = [];
-			this.description = "";
-			this.dependencies = null;
-			this.devDependencies = null;
-			this.engines = null;
-			this.license = "";
-			this.main = "";
-			this.name = "";
-			this.scripts = null;
-			this.version = "";
+            // native
+            this.authors = [];
+            this.description = "";
+            this.dependencies = null;
+            this.devDependencies = null;
+            this.engines = null;
+            this.license = "";
+            this.main = "";
+            this.name = "";
+            this.scripts = null;
+            this.version = "";
 
-	}
+    }
 
-	// public
+    // public
 
-		// checkers
+        // checkers
 
-			public checkConf (): Promise<void> {
-				return Promise.resolve();
-			}
+            public checkConf (): Promise<void> {
+                return Promise.resolve();
+            }
 
-			public isEnable (): Promise<void> {
+            public isEnable (): Promise<void> {
 
-				this.enabled = true;
+                this.enabled = true;
 
-				return Promise.resolve();
+                return Promise.resolve();
 
-			}
+            }
 
-			public checkFiles (): Promise<void> {
+            public checkFiles (): Promise<void> {
 
-				// check package
-				return Promise.resolve().then((): Promise<void> => {
+                // check package
+                return Promise.resolve().then((): Promise<void> => {
 
-					return checkFile(this._packageFile).catch((err: Error): Promise<void> => {
+                    return checkFile(this._packageFile).catch((err: Error): Promise<void> => {
 
-						err.message = "package : " + err.message;
+                        err.message = "package : " + err.message;
 
-						return Promise.reject(err);
+                        return Promise.reject(err);
 
-					});
+                    });
 
-				// check Descriptor
-				}).then((): Promise<void> => {
+                // check Descriptor
+                }).then((): Promise<void> => {
 
-					return checkFile(this._descriptorFile).catch((err: Error): Promise<void> => {
+                    return checkFile(this._descriptorFile).catch((err: Error): Promise<void> => {
 
-						err.message = "descriptor : " + err.message;
+                        err.message = "descriptor : " + err.message;
 
-						return Promise.reject(err);
+                        return Promise.reject(err);
 
-					});
+                    });
 
-				// check Mediator
-				}).then((): Promise<void> => {
+                // check Mediator
+                }).then((): Promise<void> => {
 
-					return checkFile(this._mediatorFile).catch((err: Error): Promise<void> => {
+                    return checkFile(this._mediatorFile).catch((err: Error): Promise<void> => {
 
-						err.message = "mediator : " + err.message;
+                        err.message = "mediator : " + err.message;
 
-						return Promise.reject(err);
+                        return Promise.reject(err);
 
-					});
+                    });
 
-				// check Server
-				}).then((): Promise<void> => {
+                // check Server
+                }).then((): Promise<void> => {
 
-					return checkFile(this._serverFile).catch((err: Error): Promise<void> => {
+                    return checkFile(this._serverFile).catch((err: Error): Promise<void> => {
 
-						err.message = "server : " + err.message;
+                        err.message = "server : " + err.message;
 
-						return Promise.reject(err);
+                        return Promise.reject(err);
 
-					});
+                    });
 
-				});
+                });
 
-			}
+            }
 
-			public checkServer (): Promise<void> {
+            public checkServer (): Promise<void> {
 
-				return checkObject("Server", this._Server).then((): Promise<void> => {
+                return checkObject("Server", this._Server).then((): Promise<void> => {
 
-					return this._Server instanceof Server ? Promise.resolve() : Promise.reject(new TypeError(
-						"The plugin has an invalid Server which is not an instance (or a child) of the official Server class"
-					));
+                    return this._Server instanceof Server ? Promise.resolve() : Promise.reject(new TypeError(
+                        "The plugin has an invalid Server which is not an instance (or a child) of the official Server class"
+                    ));
 
-				});
+                });
 
-			}
+            }
 
-		// middlewares
+        // middlewares
 
-			public disableCheckParameters (): this {
+            public disableCheckParameters (): this {
 
-				this.checkServer().then((): void => {
+                this.checkServer().then((): void => {
 
-					(this._Server as Server).disableCheckParameters();
+                    (this._Server as Server).disableCheckParameters();
 
-				}).catch((): void => {
+                }).catch((): void => {
 
-					this._checkParameters = false; // delay checkParameters if necessary
+                    this._checkParameters = false; // delay checkParameters if necessary
 
-				});
+                });
 
-				return this;
+                return this;
 
-			}
+            }
 
-			public enableCheckParameters (): this {
+            public enableCheckParameters (): this {
 
-				this.checkServer().then((): void => {
+                this.checkServer().then((): void => {
 
-					(this._Server as Server).enableCheckParameters();
+                    (this._Server as Server).enableCheckParameters();
 
-				}).catch((): void => {
+                }).catch((): void => {
 
-					this._checkParameters = true; // delay checkParameters if necessary
+                    this._checkParameters = true; // delay checkParameters if necessary
 
-				});
+                });
 
-				return this;
+                return this;
 
-			}
+            }
 
-			public disableCheckResponse (): this {
+            public disableCheckResponse (): this {
 
-				this.checkServer().then((): void => {
+                this.checkServer().then((): void => {
 
-					(this._Server as Server).disableCheckResponse();
+                    (this._Server as Server).disableCheckResponse();
 
-				}).catch((): void => {
+                }).catch((): void => {
 
-					this._checkResponse = false; // delay checkResponse if necessary
+                    this._checkResponse = false; // delay checkResponse if necessary
 
-				});
+                });
 
-				return this;
+                return this;
 
-			}
+            }
 
-			public enableCheckResponse (): this {
+            public enableCheckResponse (): this {
 
-				this.checkServer().then((): void => {
+                this.checkServer().then((): void => {
 
-					(this._Server as Server).enableCheckResponse();
+                    (this._Server as Server).enableCheckResponse();
 
-				}).catch((): void => {
+                }).catch((): void => {
 
-					this._checkResponse = true; // delay checkResponse if necessary
+                    this._checkResponse = true; // delay checkResponse if necessary
 
-				});
+                });
 
-				return this;
+                return this;
 
-			}
+            }
 
-			public disableCors (): this {
+            public disableCors (): this {
 
-				this.checkServer().then((): void => {
+                this.checkServer().then((): void => {
 
-					(this._Server as Server).disableCors();
+                    (this._Server as Server).disableCors();
 
-				}).catch((err: Error): void => {
-					this.emit("error", err);
-				});
+                }).catch((err: Error): void => {
+                    this.emit("error", err);
+                });
 
-				return this;
+                return this;
 
-			}
+            }
 
-			public enableCors (): this {
+            public enableCors (): this {
 
-				this.checkServer().then((): void => {
+                this.checkServer().then((): void => {
 
-					(this._Server as Server).enableCors();
+                    (this._Server as Server).enableCors();
 
-				}).catch((err: Error): void => {
-					this.emit("error", err);
-				});
+                }).catch((err: Error): void => {
+                    this.emit("error", err);
+                });
 
-				return this;
+                return this;
 
-			}
+            }
 
-			public appMiddleware (req: iIncomingMessage, res: iServerResponse, next: Function): void {
+            public appMiddleware (req: iIncomingMessage, res: iServerResponse, next: () => void): void {
 
-				if (!this.enabled) {
+                if (!this.enabled) {
 
-					next();
+                    next();
 
-				}
-				else if (!this.initialized) {
+                }
+                else if (!this.initialized) {
 
-					next();
+                    next();
 
-				}
-				else {
+                }
+                else {
 
-					this.checkServer().then((): void => {
+                    this.checkServer().then((): void => {
 
-						(this._Server as Server).appMiddleware(req, res, next);
+                        (this._Server as Server).appMiddleware(req, res, next);
 
-					}).catch((): void => {
+                    }).catch((): void => {
 
-						next();
+                        next();
 
-					});
+                    });
 
-				}
+                }
 
-			}
+            }
 
-			public socketMiddleware (server: WebSocketServer | SocketIOServer): void {
+            public socketMiddleware (server: WebSocketServer | SocketIOServer): void {
 
-				if (!this.enabled) {
+                if (!this.enabled) {
 
-					this._socketServer = server; // delay socketMiddleware if necessary
+                    this._socketServer = server; // delay socketMiddleware if necessary
 
-				}
-				else {
+                }
+                else {
 
-					this.checkServer().then((): void => {
+                    this.checkServer().then((): void => {
 
-						(this._Server as Server).socketMiddleware(server);
+                        (this._Server as Server).socketMiddleware(server);
 
-					}).catch((): void => {
+                    }).catch((): void => {
 
-						this._socketServer = server; // delay socketMiddleware if necessary
+                        this._socketServer = server; // delay socketMiddleware if necessary
 
-					});
+                    });
 
-				}
+                }
 
-			}
+            }
 
-		// load / destroy
+        // load / destroy
 
-			public load (...data: any): Promise<void> {
+            public load (...data: any): Promise<void> {
 
-				return this.checkFiles().then((): Promise<any> => {
-					return readJSONFile(join(__dirname, "..", "..", "..", "package.json"));
-				}).then(({ engines }: { "engines": { "node": string; }; }): Promise<any> => {
+                return this.checkFiles().then((): Promise<any> => {
+                    return readJSONFile(join(__dirname, "..", "..", "..", "package.json"));
+                }).then(({ engines }: { "engines": { "node": string; }; }): Promise<any> => {
 
-					// native
-					this.authors = [];
-					this.description = "";
-					this.dependencies = {};
-					this.devDependencies = {};
-					this.engines = engines;
-					this.license = "MIT";
-					this.main = "lib/main.js";
-					this.name = "";
-					this.scripts = {};
-					this.version = "";
+                    // native
+                    this.authors = [];
+                    this.description = "";
+                    this.dependencies = {};
+                    this.devDependencies = {};
+                    this.engines = engines;
+                    this.license = "MIT";
+                    this.main = "lib/main.js";
+                    this.name = "";
+                    this.scripts = {};
+                    this.version = "";
 
-					return readJSONFile(this._packageFile);
+                    return readJSONFile(this._packageFile);
 
-				// formate authors
-				}).then((data: { [key:string]: any }): Promise<{ [key:string]: any }> => {
+                // formate authors
+                }).then((data: Record<string, any>): Promise<Record<string, any>> => {
 
-					if (data.authors) {
+                    if (data.authors) {
 
-						this.authors = data.authors;
-						delete data.authors;
+                        this.authors = data.authors;
+                        delete data.authors;
 
-						if (data.author) {
+                        if (data.author) {
 
-							if (!this.authors.includes(data.author)) {
-								this.authors.push(data.author);
-							}
+                            if (!this.authors.includes(data.author)) {
+                                this.authors.push(data.author);
+                            }
 
-							delete data.author;
+                            delete data.author;
 
-						}
+                        }
 
-					}
-					else if (data.author) {
+                    }
+                    else if (data.author) {
 
-						this.authors = [ data.author ];
-						delete data.author;
+                        this.authors = [ data.author as string ];
+                        delete data.author;
 
-					}
+                    }
 
-					return Promise.resolve(data);
+                    return Promise.resolve(data);
 
-				// formate other data
-				}).then((data: { [key:string]: any }): void => {
+                // formate other data
+                }).then((data: Record<string, any>): void => {
 
-					const self: { [key:string]: any } = this;
+                    const self: Record<string, any> = this;
 
-					Object.keys(data).forEach((key: string): void => {
+                    Object.keys(data).forEach((key: string): void => {
 
-						if ("function" !== typeof self[key]) {
+                        if ("function" !== typeof self[key]) {
 
-							if ("undefined" === typeof self[key]) {
-								this._extended.push(key);
-							}
+                            if ("undefined" === typeof self[key]) {
+                                this._extended.push(key);
+                            }
 
-							self[key] = data[key];
+                            self[key] = data[key];
 
-						}
+                        }
 
-					});
+                    });
 
-				});
+                });
 
-			}
+            }
 
-			public destroy (...data: any): Promise<void> {
+            public destroy (...data: any): Promise<void> {
 
-				return Promise.resolve().then((): void => {
+                return Promise.resolve().then((): void => {
 
-					// protected
+                    // protected
 
-						// params
-						this._packageFile = "";
-						this._descriptorFile = "";
-						this._mediatorFile = "";
-						this._serverFile = "";
+                        // params
+                        this._packageFile = "";
+                        this._descriptorFile = "";
+                        this._mediatorFile = "";
+                        this._serverFile = "";
 
-						// extended
+                        // extended
 
-						this._extended.forEach((key: string): void => {
-							delete (this as { [key:string]: any })[key];
-						});
+                        this._extended.forEach((key: string): void => {
+                            delete (this as Record<string, any>)[key];
+                        });
 
-						this._extended = [];
+                        this._extended = [];
 
-					// public
+                    // public
 
-						// native
-						this.authors = [];
-						this.description = "";
-						this.dependencies = null;
-						this.devDependencies = null;
-						this.engines = null;
-						this.license = "";
-						this.main = "";
-						this.name = "";
-						this.scripts = null;
-						this.version = "";
+                        // native
+                        this.authors = [];
+                        this.description = "";
+                        this.dependencies = null;
+                        this.devDependencies = null;
+                        this.engines = null;
+                        this.license = "";
+                        this.main = "";
+                        this.name = "";
+                        this.scripts = null;
+                        this.version = "";
 
-				}).then((): void => {
+                }).then((): void => {
 
-					this.removeAllListeners();
+                    this.removeAllListeners();
 
-				});
+                });
 
-			}
+            }
 
-		// init / release
+        // init / release
 
-			public init (...data: any): Promise<void> {
+            public init (...data: any): Promise<void> {
 
-				// ensure conf validity
-				return Promise.resolve().then((): Promise<void> => {
+                // ensure conf validity
+                return Promise.resolve().then((): Promise<void> => {
 
-					return this.checkConf();
+                    return this.checkConf();
 
-				// get enable status
-				}).then((): Promise<void> => {
+                // get enable status
+                }).then((): Promise<void> => {
 
-					return this.isEnable();
+                    return this.isEnable();
 
-				}).then((): Promise<void> => {
+                }).then((): Promise<void> => {
 
-					return !this.enabled ? Promise.resolve() : Promise.resolve().then((): Promise<void> => {
+                    return !this.enabled ? Promise.resolve() : Promise.resolve().then((): Promise<void> => {
 
-						const SwaggerParser = require("@apidevtools/swagger-parser");
+                        const SwaggerParser = require("@apidevtools/swagger-parser");
 
-						// generate descriptor
-						return SwaggerParser.bundle(this._descriptorFile).then((bundledDescriptor: OpenAPI.Document): Promise<OpenApiDocument> => {
+                        // generate descriptor
+                        return SwaggerParser.bundle(this._descriptorFile).then((bundledDescriptor: OpenAPI.Document): Promise<OpenApiDocument> => {
 
-							// force validate because of stupid malformatted references
-							return SwaggerParser.validate(bundledDescriptor).then((validatedDescriptor: OpenApiDocument): void => {
+                            // force validate because of stupid malformatted references
+                            return SwaggerParser.validate(bundledDescriptor).then((validatedDescriptor: OpenApiDocument): void => {
 
-								this._Descriptor = validatedDescriptor;
+                                this._Descriptor = validatedDescriptor;
 
-								if (!(this._Descriptor as OpenApiDocument).servers) {
-									(this._Descriptor as OpenApiDocument).servers = [];
-								}
+                                if (!(this._Descriptor as OpenApiDocument).servers) {
+                                    (this._Descriptor as OpenApiDocument).servers = [];
+                                }
 
-							});
+                            });
 
-						}).then((): Promise<void> => {
+                        }).then((): Promise<void> => {
 
-							return this.checkDescriptor().catch((err: Error): Promise<void> => {
+                            return this.checkDescriptor().catch((err: Error): Promise<void> => {
 
-								this._Descriptor = null;
+                                this._Descriptor = null;
 
-								return Promise.reject(err);
+                                return Promise.reject(err);
 
-							});
+                            });
 
-						// compare title to package name
-						}).then((): Promise<void> => {
+                        // compare title to package name
+                        }).then((): Promise<void> => {
 
-							return (this._Descriptor as OpenApiDocument).info.title !== this.name ? Promise.reject(new Error(
-								"The descriptor's title (\"" + (this._Descriptor as OpenApiDocument).info.title + "\") " +
-								"is not equals to " +
-								"the package's name (\"" + this.name + "\")"
-							)) : Promise.resolve();
+                            return (this._Descriptor as OpenApiDocument).info.title !== this.name ? Promise.reject(new Error(
+                                "The descriptor's title (\"" + (this._Descriptor as OpenApiDocument).info.title + "\") "
+                                + "is not equals to "
+                                + "the package's name (\"" + this.name + "\")"
+                            )) : Promise.resolve();
 
-						// compare version to package version
-						}).then((): Promise<void> => {
+                        // compare version to package version
+                        }).then((): Promise<void> => {
 
-							return (this._Descriptor as OpenApiDocument).info.version !== this.version ? Promise.reject(new Error(
-								"The descriptor's version (\"" + (this._Descriptor as OpenApiDocument).info.version + "\") " +
-								"is not equals to " +
-								"the package's version (\"" + this.version + "\")"
-							)) : Promise.resolve();
+                            return (this._Descriptor as OpenApiDocument).info.version !== this.version ? Promise.reject(new Error(
+                                "The descriptor's version (\"" + (this._Descriptor as OpenApiDocument).info.version + "\") "
+                                + "is not equals to "
+                                + "the package's version (\"" + this.version + "\")"
+                            )) : Promise.resolve();
 
-						});
+                        });
 
-					// create Mediator
-					}).then((): Promise<void> => {
+                    // create Mediator
+                    }).then((): Promise<void> => {
 
-						// load
-						return new Promise((resolve: (value: typeof Mediator) => void, reject: (err: Error) => void): void => {
+                        // load
+                        return new Promise((resolve: (value: typeof Mediator) => void, reject: (err: Error) => void): void => {
 
-							try {
+                            try {
 
-								const val: any = require(this._mediatorFile);
+                                const val: any = require(this._mediatorFile);
 
-								if ("object" === typeof val && "function" === typeof val.default) {
-									resolve(val.default as typeof Mediator);
-								}
-								else if ("function" === typeof val) {
-									resolve(val as typeof Mediator);
-								}
-								else {
-									reject(new Error("Mediator file loaded (\"" + this._mediatorFile + "\") does not contain a valid Mediator"));
-								}
+                                if ("object" === typeof val && "function" === typeof val.default) {
+                                    resolve(val.default as typeof Mediator);
+                                }
+                                else if ("function" === typeof val) {
+                                    resolve(val as typeof Mediator);
+                                }
+                                else {
+                                    reject(new Error("Mediator file loaded (\"" + this._mediatorFile + "\") does not contain a valid Mediator"));
+                                }
 
-							}
-							catch (e) {
-								reject(e as Error);
-							}
+                            }
+                            catch (e) {
+                                reject(e as Error);
+                            }
 
-						// init
-						}).then((PluginMediator: typeof Mediator): void => {
+                        // init
+                        }).then((PluginMediator: typeof Mediator): void => {
 
-							this._Mediator = new PluginMediator({
-								"descriptor": this._Descriptor as OpenApiDocument,
-								"externalRessourcesDirectory": this._externalRessourcesDirectory,
-								"logger": this._Logger as tLogger
-							});
+                            this._Mediator = new PluginMediator({
+                                "descriptor": this._Descriptor as OpenApiDocument,
+                                "externalRessourcesDirectory": this._externalRessourcesDirectory,
+                                "logger": this._Logger as tLogger
+                            });
 
-						// check
-						}).then((): Promise<void> => {
+                        // check
+                        }).then((): Promise<void> => {
 
-							return this.checkMediator().then((): void => {
+                            return this.checkMediator().then((): void => {
 
-								// intercept errors to avoid non-catched ones
-								(this._Mediator as Mediator).on("error", (err: Error): void => {
-									this.emit("error", err);
-								});
+                                // intercept errors to avoid non-catched ones
+                                (this._Mediator as Mediator).on("error", (err: Error): void => {
+                                    this.emit("error", err);
+                                });
 
-							});
+                            });
 
-						});
+                        });
 
-					// create Server
-					}).then((): Promise<void> => {
+                    // create Server
+                    }).then((): Promise<void> => {
 
-						// load
-						return new Promise((resolve: (value: typeof Server) => void, reject: (err: Error) => void) => {
+                        // load
+                        return new Promise((resolve: (value: typeof Server) => void, reject: (err: Error) => void) => {
 
-							try {
+                            try {
 
-								const val: any = require(this._serverFile);
+                                const val: any = require(this._serverFile);
 
-								if ("object" === typeof val && "function" === typeof val.default) {
-									resolve(val.default as typeof Server);
-								}
-								else if ("function" === typeof val) {
-									resolve(val as typeof Server);
-								}
-								else {
-									reject(new Error("Server file loaded (\"" + this._serverFile + "\") does not contain a valid Server"));
-								}
+                                if ("object" === typeof val && "function" === typeof val.default) {
+                                    resolve(val.default as typeof Server);
+                                }
+                                else if ("function" === typeof val) {
+                                    resolve(val as typeof Server);
+                                }
+                                else {
+                                    reject(new Error("Server file loaded (\"" + this._serverFile + "\") does not contain a valid Server"));
+                                }
 
-							}
-							catch (e) {
-								reject(e as Error);
-							}
+                            }
+                            catch (e) {
+                                reject(e as Error);
+                            }
 
-						// init
-						}).then((PluginServer: typeof Server): void => {
+                        // init
+                        }).then((PluginServer: typeof Server): void => {
 
-							this._Server = new PluginServer({
-								"descriptor": this._Descriptor as OpenApiDocument,
-								"mediator": this._Mediator as Mediator,
-								"externalRessourcesDirectory": this._externalRessourcesDirectory,
-								"logger": this._Logger as tLogger
-							});
+                            this._Server = new PluginServer({
+                                "descriptor": this._Descriptor as OpenApiDocument,
+                                "mediator": this._Mediator as Mediator,
+                                "externalRessourcesDirectory": this._externalRessourcesDirectory,
+                                "logger": this._Logger as tLogger
+                            });
 
-						// check
-						}).then((): Promise<void> => {
+                        // check
+                        }).then((): Promise<void> => {
 
-							return this.checkServer().then((): void => {
+                            return this.checkServer().then((): void => {
 
-								// intercept errors to avoid non-catched ones
-								(this._Server as Server).on("error", (err: Error): void => {
-									this.emit("error", err);
-								});
+                                // intercept errors to avoid non-catched ones
+                                (this._Server as Server).on("error", (err: Error): void => {
+                                    this.emit("error", err);
+                                });
 
-							});
+                            });
 
-						});
+                        });
 
-					}).then((): Promise<void> => {
+                    }).then((): Promise<void> => {
 
-						return this._initWorkSpace(...data);
+                        return this._initWorkSpace(...data);
 
-					// init Server (before Mediator)
-					}).then((): Promise<void> => {
+                    // init Server (before Mediator)
+                    }).then((): Promise<void> => {
 
-						return (this._Server as Server).init(...data).then((): void => {
+                        return (this._Server as Server).init(...data).then((): void => {
 
-							if (this._socketServer) { // delayed socketMiddleware
-								(this._Server as Server).socketMiddleware(this._socketServer);
-							}
+                            if (this._socketServer) { // delayed socketMiddleware
+                                (this._Server as Server).socketMiddleware(this._socketServer);
+                            }
 
-							if (!this._checkParameters) { // delayed checkParameters
-								(this._Server as Server).disableCheckParameters();
-							}
+                            if (!this._checkParameters) { // delayed checkParameters
+                                (this._Server as Server).disableCheckParameters();
+                            }
 
-							if (!this._checkResponse) { // delayed checkResponse
-								(this._Server as Server).disableCheckResponse();
-							}
+                            if (!this._checkResponse) { // delayed checkResponse
+                                (this._Server as Server).disableCheckResponse();
+                            }
 
-						});
+                        });
 
-					// init Mediator
-					}).then((): Promise<void> => {
+                    // init Mediator
+                    }).then((): Promise<void> => {
 
-						return (this._Mediator as Mediator).init(...data);
+                        return (this._Mediator as Mediator).init(...data);
 
-					}).then((): void => {
+                    }).then((): void => {
 
-						this.initialized = true;
-						this.emit("initialized", ...data);
+                        this.initialized = true;
+                        this.emit("initialized", ...data);
 
-					});
+                    });
 
-				});
+                });
 
-			}
+            }
 
-			public release (...data: any): Promise<void> {
+            public release (...data: any): Promise<void> {
 
-				return Promise.resolve().then((): Promise<void> => {
+                return Promise.resolve().then((): Promise<void> => {
 
-					return this._Mediator ? this._Mediator.release(...data).then((): void => {
-						this._Mediator = null;
-					}) : Promise.resolve();
+                    return this._Mediator ? this._Mediator.release(...data).then((): void => {
+                        this._Mediator = null;
+                    }) : Promise.resolve();
 
-				}).then((): Promise<void> => {
+                }).then((): Promise<void> => {
 
-					return this._Server ? this._Server.release(...data).then((): void => {
-						this._Server = null;
-					}) : Promise.resolve();
+                    return this._Server ? this._Server.release(...data).then((): void => {
+                        this._Server = null;
+                    }) : Promise.resolve();
 
-				}).then((): Promise<void> => {
+                }).then((): Promise<void> => {
 
-					return this._releaseWorkSpace(...data);
+                    return this._releaseWorkSpace(...data);
 
-				}).then((): void => {
+                }).then((): void => {
 
-					this._Descriptor = null;
+                    this._Descriptor = null;
 
-					this.initialized = false;
-					this.emit("released", ...data);
+                    this.initialized = false;
+                    this.emit("released", ...data);
 
-				});
+                });
 
-			}
+            }
 
-		// write
+        // write
 
-			public install (...data: any): Promise<void> {
+            public install (...data: any): Promise<void> {
 
-				return Promise.resolve();
+                return Promise.resolve();
 
-			}
+            }
 
-			public update (...data: any): Promise<void> {
+            public update (...data: any): Promise<void> {
 
-				return Promise.resolve();
+                return Promise.resolve();
 
-			}
+            }
 
-			public uninstall (...data: any): Promise<void> {
+            public uninstall (...data: any): Promise<void> {
 
-				return Promise.resolve();
+                return Promise.resolve();
 
-			}
+            }
 
-};
+}

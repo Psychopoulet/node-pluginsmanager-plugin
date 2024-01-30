@@ -1,9 +1,8 @@
 import MediatorUser from "./MediatorUser";
-import Server from "./Server";
-import { Server as WebSocketServer } from "ws";
-import { Server as SocketIOServer } from "socket.io";
-import { tLogger } from "./DescriptorUser";
-import { iIncomingMessage, iServerResponse } from "./Server";
+import Server, { type iIncomingMessage, type iServerResponse } from "./Server";
+import type { Server as WebSocketServer } from "ws";
+import type { Server as SocketIOServer } from "socket.io";
+import type { tLogger } from "./DescriptorUser";
 export interface iOrchestratorOptions {
     "externalRessourcesDirectory": string;
     "packageFile": string;
@@ -21,9 +20,9 @@ export default class Orchestrator extends MediatorUser {
     protected _descriptorFile: string;
     protected _mediatorFile: string;
     protected _serverFile: string;
-    protected _extended: Array<string>;
+    protected _extended: string[];
     enabled: boolean;
-    authors: Array<string>;
+    authors: string[];
     description: string;
     dependencies: object | null;
     devDependencies: object | null;
@@ -44,7 +43,7 @@ export default class Orchestrator extends MediatorUser {
     enableCheckResponse(): this;
     disableCors(): this;
     enableCors(): this;
-    appMiddleware(req: iIncomingMessage, res: iServerResponse, next: Function): void;
+    appMiddleware(req: iIncomingMessage, res: iServerResponse, next: () => void): void;
     socketMiddleware(server: WebSocketServer | SocketIOServer): void;
     load(...data: any): Promise<void>;
     destroy(...data: any): Promise<void>;

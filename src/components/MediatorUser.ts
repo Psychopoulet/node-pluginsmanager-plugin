@@ -1,75 +1,74 @@
-"use strict";
-
 //  deps
 
-	// locals
-	import DescriptorUser, { iDescriptorUserOptions } from "./DescriptorUser";
-	import Mediator from "./Mediator";
+    // locals
+    import DescriptorUser, { type iDescriptorUserOptions } from "./DescriptorUser";
+    import Mediator from "./Mediator";
 
 // types & interfaces
 
-	export interface iMediatorUserOptions extends iDescriptorUserOptions {
-		"mediator"?: Mediator; // not sended by Orchestrator
-	}
+    export interface iMediatorUserOptions extends iDescriptorUserOptions {
+        "mediator"?: Mediator; // not sended by Orchestrator
+    }
 
 // module
 
 // Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic
 export default class MediatorUser extends DescriptorUser {
 
-	// attributes
+    // attributes
 
-		// protected
+        // protected
 
-			protected _Mediator: Mediator | null; // provided by "mediator" option, sent by the [Orchestrator](./Orchestrator.md)
+            protected _Mediator: Mediator | null; // provided by "mediator" option, sent by the [Orchestrator](./Orchestrator.md)
 
-	// constructor
+    // constructor
 
-	public constructor (options: iMediatorUserOptions) {
+    public constructor (options: iMediatorUserOptions) {
 
-		super(options);
+        super(options);
 
-		this._Mediator = options && "undefined" !== typeof options.mediator ?
-			options.mediator : null;
+        this._Mediator = options && "undefined" !== typeof options.mediator
+            ? options.mediator
+            : null;
 
-	}
+    }
 
-	// protected
+    // protected
 
-		protected _initWorkSpace (...data: any): Promise<void> {
+        protected _initWorkSpace (...data: any): Promise<void> {
 
-			return Promise.resolve();
+            return Promise.resolve();
 
-		}
+        }
 
-		protected _releaseWorkSpace (...data: any): Promise<void> {
+        protected _releaseWorkSpace (...data: any): Promise<void> {
 
-			return Promise.resolve();
+            return Promise.resolve();
 
-		}
+        }
 
-	// public
+    // public
 
-		public checkMediator (): Promise<void> {
+        public checkMediator (): Promise<void> {
 
-			if ("undefined" === typeof this._Mediator || null === this._Mediator) {
+            if ("undefined" === typeof this._Mediator || null === this._Mediator) {
 
-				return Promise.reject(new ReferenceError("Mediator not registered"));
+                return Promise.reject(new ReferenceError("Mediator not registered"));
 
-			}
-			else if ("object" !== typeof this._Mediator || !(this._Mediator instanceof Mediator)) {
+            }
+            else if ("object" !== typeof this._Mediator || !(this._Mediator instanceof Mediator)) {
 
-				return Promise.reject(new TypeError(
-					"The plugin has an invalid Mediator which is not an instance (or a child) of the official Mediator class"
-				));
+                return Promise.reject(new TypeError(
+                    "The plugin has an invalid Mediator which is not an instance (or a child) of the official Mediator class"
+                ));
 
-			}
-			else {
+            }
+            else {
 
-				return Promise.resolve();
+                return Promise.resolve();
 
-			}
+            }
 
-		}
+        }
 
-};
+}
