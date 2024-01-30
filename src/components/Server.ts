@@ -259,11 +259,11 @@ export default class Server extends MediatorUser {
 
                     const descriptor: OpenApiDocument = { ...(this._Descriptor as OpenApiDocument) };
 
-                    (descriptor.servers as {
+                    (descriptor.servers as Array<{
                         "url": string;
                         "description": string;
-                    }[]).push({
-                        "url":  req.validatedIp + ":" + port,
+                    }>).push({
+                        "url": req.validatedIp + ":" + port,
                         "description": "Actual current server"
                     });
 
@@ -370,7 +370,7 @@ export default class Server extends MediatorUser {
                         const keys: string[] = Object.keys(req.params);
                         return !keys.length ? Promise.resolve() : Promise.resolve().then((): Promise<void> => {
 
-                            const docParameters: Record<string, any>[] = ((this._Descriptor as OpenApiDocument).paths[req.pattern] as Record<string, any>)[req.method].parameters.filter((p: Record<string, any>): boolean => {
+                            const docParameters: Array<Record<string, any>> = ((this._Descriptor as OpenApiDocument).paths[req.pattern] as Record<string, any>)[req.method].parameters.filter((p: Record<string, any>): boolean => {
                                 return "path" === p.in;
                             });
 
@@ -546,7 +546,10 @@ export default class Server extends MediatorUser {
 
                             else {
 
-                                this._log("success", "<= [" + req.validatedIp + "] " + JSON.stringify(content));
+                                this._log("success", "<= [" + req.validatedIp + "] "
+                                    + (Buffer.isBuffer(content) ? "Buffer" : JSON.stringify(content))
+                                );
+
                                 return send(req, res, SERVER_CODES.OK_PUT, content, {
                                     "apiVersion": apiVersion,
                                     "cors": this._cors,
@@ -571,7 +574,10 @@ export default class Server extends MediatorUser {
 
                         else {
 
-                            this._log("success", "<= [" + req.validatedIp + "] " + JSON.stringify(content));
+                            this._log("success", "<= [" + req.validatedIp + "] "
+                                + (Buffer.isBuffer(content) ? "Buffer" : JSON.stringify(content))
+                            );
+
                             return send(req, res, SERVER_CODES.OK, content, {
                                 "apiVersion": apiVersion,
                                 "cors": this._cors,
