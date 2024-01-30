@@ -15,7 +15,7 @@
 export default function extractBody (req: iIncomingMessage): Promise<string> {
 
     return checkNonEmptyObject("req", req).then((): Promise<void> => {
-        return checkFunction("req.on", req.on.bind(req));
+        return checkFunction("req.on", req.on);
     }).then((): Promise<void> => {
         return checkNonEmptyObject("req.headers", req.headers);
     }).then((): Promise<void> => {
