@@ -154,7 +154,7 @@ export default class Mediator extends DescriptorUser {
                     // no content, no validation
                     if (204 === res.statusCode) {
 
-                        return "undefined" !== typeof res.body ? reject(
+                        return "undefined" !== typeof res.body && "" !== res.body.trim() ? reject(
                             new ReferenceError("You should not have content data with 204 statusCode")
                         ) : resolve();
 
@@ -166,7 +166,7 @@ export default class Mediator extends DescriptorUser {
                     }
 
                     // validator cannot correctly check pure boolean return
-                    else if ("undefined" !== typeof res.body && [ "true", "false" ].includes(res.body)) {
+                    else if ("undefined" !== typeof res.body && [ "true", "false" ].includes(res.body.trim())) {
                         return resolve();
                     }
 
