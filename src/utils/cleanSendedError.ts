@@ -1,6 +1,6 @@
 // module
 
-export default function cleanSendedError (data: any): string {
+export default function cleanSendedError (data: Error | Record<string, any> | string | null): Record<string, any> | string | null {
 
     if ("object" === typeof data) {
 
@@ -12,7 +12,7 @@ export default function cleanSendedError (data: any): string {
         }
         else {
 
-            Object.keys(data).forEach((key): void => {
+            Object.keys(data as Record<string, any>).forEach((key: string): void => {
                 data[key] = cleanSendedError(data[key]);
             });
 
