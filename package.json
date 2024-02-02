@@ -1,7 +1,7 @@
 {
 
   "name": "node-pluginsmanager-plugin",
-  "version": "6.2.2",
+  "version": "6.2.3",
   "description": "An abstract parent plugin for node-pluginsmanager",
 
   "type": "commonjs",
@@ -49,7 +49,7 @@
   },
   "devDependencies": {
     "@types/express": "4.17.21",
-    "@types/node": "20.11.10",
+    "@types/node": "20.11.16",
     "@types/socket.io": "3.0.2",
     "@types/uniqid": "5.3.4",
     "@types/ws": "8.5.10",
@@ -57,7 +57,7 @@
     "colors": "1.4.0",
     "eslint-plugin-personnallinter": "git+ssh://git@github.com/Psychopoulet/eslint-plugin-personnallinter",
     "express": "4.18.2",
-    "husky": "9.0.7",
+    "husky": "9.0.10",
     "mocha": "10.2.0",
     "nyc": "15.1.0",
     "openapi-types": "12.1.3",
