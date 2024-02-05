@@ -41,7 +41,7 @@ export default class Server extends MediatorUser {
     socketMiddleware(socketServer: WebSocketServer | SocketIOServer): void;
     push(command: string, data?: any, log?: boolean): this;
     getClients(): iClient[];
-    pushClient(clientId: string, command: string, data: any, log?: boolean): this;
+    pushClient(clientId: string, command: string, data?: any, log?: boolean): this;
     init(...data: any): Promise<void>;
     release(...data: any): Promise<void>;
 }

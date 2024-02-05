@@ -835,7 +835,7 @@ export default class Server extends MediatorUser {
 
         }
 
-        public pushClient (clientId: string, command: string, data: any, log: boolean = true): this {
+        public pushClient (clientId: string, command: string, data?: any, log: boolean = true): this {
 
             const serverType = this._serverType();
 
