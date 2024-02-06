@@ -7,6 +7,7 @@
 
 	// locals
 	const LocalMediator = require(join(__dirname, "LocalMediator.js"));
+	const { UnauthorizedError, LockedError } = require(join(__dirname, "..", "..", "..", "lib", "cjs", "main.cjs"));
 
 // module
 
@@ -14,6 +15,14 @@ module.exports = class HeritedMediator extends LocalMediator {
 
 	emptyGet () {
 		return Promise.resolve();
+	}
+
+	unauthorizedGet () {
+		return Promise.reject(new UnauthorizedError("Not authorized"));
+	}
+
+	lockedGet () {
+		return Promise.reject(new LockedError("Locked ressource"));
 	}
 
 	emptyPost () {

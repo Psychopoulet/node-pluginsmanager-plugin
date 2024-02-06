@@ -23,8 +23,10 @@ export { checkExists, checkExistsSync, checkBoolean, checkBooleanSync, checkFunc
 import DescriptorUser, { type iDescriptorUserOptions, type tLogType, type tLogger } from "./components/DescriptorUser";
 import Mediator, { type iUrlParameters } from "./components/Mediator";
 import MediatorUser, { type iMediatorUserOptions } from "./components/MediatorUser";
-import NotFoundError from "./components/NotFoundError";
 import Orchestrator, { type iOrchestratorOptions } from "./components/Orchestrator";
 import Server, { type iClient, type iIncomingMessage, type iServerResponse } from "./components/Server";
+import UnauthorizedError from "./components/errors/UnauthorizedError";
+import NotFoundError from "./components/errors/NotFoundError";
+import LockedError from "./components/errors/LockedError";
 export type { tLogType, tLogger, iUrlParameters, iClient, iIncomingMessage, iServerResponse };
-export { DescriptorUser, type iDescriptorUserOptions, Mediator, MediatorUser, type iMediatorUserOptions, NotFoundError, Orchestrator, type iOrchestratorOptions, Server };
+export { DescriptorUser, type iDescriptorUserOptions, Mediator, MediatorUser, type iMediatorUserOptions, Orchestrator, type iOrchestratorOptions, Server, UnauthorizedError, NotFoundError, LockedError };

@@ -2,7 +2,7 @@
 	"openapi": "3.0.2",
 	"info": {
 		"title": "node-pluginsmanager-plugin",
-		"version": "6.2.4",
+		"version": "6.3.0",
 		"description": "An abstract parent plugin for node-pluginsmanager",
 		"contact": {
 			"name": "Sébastien VIDAL",
@@ -165,6 +165,64 @@
 				"responses": {
 					"204": {
 						"description": "Everything is fine"
+					},
+					"default": {
+						"description": "An error occured",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/unauthorized": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "unauthorizedGet",
+				"responses": {
+					"401": {
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occured",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/locked": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "lockedGet",
+				"responses": {
+					"423": {
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
 					},
 					"default": {
 						"description": "An error occured",

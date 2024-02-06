@@ -27,7 +27,9 @@
 
     import MediatorUser, { type iMediatorUserOptions } from "./MediatorUser";
     import Mediator from "./Mediator";
-    import NotFoundError from "./NotFoundError";
+    import UnauthorizedError from "./errors/UnauthorizedError";
+    import NotFoundError from "./errors/NotFoundError";
+    import LockedError from "./errors/LockedError";
 
     import SERVER_CODES from "../utils/serverCodes";
 
@@ -642,6 +644,22 @@ export default class Server extends MediatorUser {
                             });
 
                         }
+                        else if (err instanceof UnauthorizedError) {
+
+                            const result: string = JSON.stringify({
+                                "code": "UNAUTHORIZED",
+                                "message": cleanSendedError(err)
+                            });
+
+                            this._log("error", "<= [" + req.validatedIp + "] " + result);
+
+                            return send(req, res, SERVER_CODES.UNAUTHORIZED, result, {
+                                "apiVersion": apiVersion,
+                                "cors": this._cors,
+                                "mime": extractMime(contentType, SERVER_CODES.UNAUTHORIZED, responses)
+                            });
+
+                        }
                         else if (err instanceof NotFoundError) {
 
                             const result: string = JSON.stringify({
@@ -655,6 +673,22 @@ export default class Server extends MediatorUser {
                                 "apiVersion": apiVersion,
                                 "cors": this._cors,
                                 "mime": extractMime(contentType, SERVER_CODES.NOT_FOUND, responses)
+                            });
+
+                        }
+                        else if (err instanceof LockedError) {
+
+                            const result: string = JSON.stringify({
+                                "code": "LOCKED",
+                                "message": cleanSendedError(err)
+                            });
+
+                            this._log("error", "<= [" + req.validatedIp + "] " + result);
+
+                            return send(req, res, SERVER_CODES.LOCKED, result, {
+                                "apiVersion": apiVersion,
+                                "cors": this._cors,
+                                "mime": extractMime(contentType, SERVER_CODES.LOCKED, responses)
                             });
 
                         }
