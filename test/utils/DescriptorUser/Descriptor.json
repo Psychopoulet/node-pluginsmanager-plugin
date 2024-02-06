@@ -179,6 +179,64 @@
 				}
 			}
 		},
+		"/node-pluginsmanager-plugin/api/unauthorized": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "unauthorizedGet",
+				"responses": {
+					"401": {
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occured",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin/api/locked": {
+			"get": {
+				"description": "",
+				"summary": "Simple API test for Server class",
+				"operationId": "lockedGet",
+				"responses": {
+					"423": {
+						"description": "Everything is fine",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occured",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 		"/node-pluginsmanager-plugin/api/valid": {
 			"get": {
 				"description": "",

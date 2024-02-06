@@ -55,6 +55,18 @@ module.exports = function checkUrlWrongPaths (URL_API) {
 
 		});
 
+		it("should test request with unauthorized path", () => {
+
+			return httpRequestTest(URL_API + "/unauthorized", "get", null, 401, "Unauthorized");
+
+		});
+
+		it("should test request with locked ressource", () => {
+
+			return httpRequestTest(URL_API + "/locked", "get", null, 423, "Locked");
+
+		});
+
 		it("should test request with artificial error", () => {
 
 			return httpRequestTest(URL_API + "/create?url-param=ok", "put", {
