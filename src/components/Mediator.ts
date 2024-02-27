@@ -114,6 +114,7 @@ export default class Mediator extends DescriptorUser {
                             return Promise.reject(new ReferenceError(err.message));
 
                         case "type":
+                        case "pattern":
                             return Promise.reject(new TypeError(err.message));
 
                         case "minimum":
