@@ -1,6 +1,6 @@
 /// <reference path="../../lib/index.d.ts" />
 
-import Plugin = require("../../lib/main.js");
+import Plugin from "../../lib/main.js";
 
 console.log(Plugin);
 
