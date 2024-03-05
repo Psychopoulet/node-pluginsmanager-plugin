@@ -1,6 +1,6 @@
 /// <reference types="node" />
 
-declare module "node-pluginsmanager-plugin" {
+declare module "node-pluginsmanager-plugin-v1" {
 
 	import Events from "events";
 
