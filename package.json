@@ -56,7 +56,7 @@
     "check-version-modules": "2.1.1",
     "colors": "1.4.0",
     "eslint-plugin-personnallinter": "git+ssh://git@github.com/Psychopoulet/eslint-plugin-personnallinter",
-    "express": "4.18.3",
+    "express": "4.19.2",
     "husky": "9.0.11",
     "mocha": "10.3.0",
     "nyc": "15.1.0",
