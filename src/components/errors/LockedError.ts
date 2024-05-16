@@ -1,3 +1,3 @@
 // module
 
-export default class BusyError extends Error {}
+export default class LockedError extends Error {}
