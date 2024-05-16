@@ -2,7 +2,7 @@
 	"openapi": "3.0.2",
 	"info": {
 		"title": "node-pluginsmanager-plugin",
-		"version": "6.3.1",
+		"version": "6.3.3",
 		"description": "An abstract parent plugin for node-pluginsmanager",
 		"contact": {
 			"name": "Sébastien VIDAL",
