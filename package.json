@@ -66,7 +66,7 @@
     "socket.io-client": "4.7.5",
     "typescript": "5.4.5",
     "used-deps-analyzer": "0.1.8",
-    "ws": "8.17.0"
+    "ws": "8.17.1"
   },
   "optionalDependencies": {},
 
