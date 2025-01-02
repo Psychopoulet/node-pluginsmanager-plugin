@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import MediatorUser, { type iMediatorUserOptions } from "./MediatorUser";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Server as WebSocketServer } from "ws";
@@ -11,10 +10,12 @@ export interface iIncomingMessage extends IncomingMessage {
     "method": string;
     "pattern": string;
     "validatedIp": string;
-    "headers": Record<string, any>;
-    "cookies": Record<string, any>;
-    "query": Record<string, any>;
     "params": Record<string, any>;
+    "query": Record<string, any>;
+    "headers": Record<string, any>;
+    "header"?: Record<string, any>;
+    "cookies": Record<string, any>;
+    "cookie"?: Record<string, any>;
     "body": string;
 }
 export interface iServerResponse extends ServerResponse {

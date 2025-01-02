@@ -63,10 +63,12 @@
         "method": string;
         "pattern": string;
         "validatedIp": string;
-        "headers": Record<string, any>;
-        "cookies": Record<string, any>;
-        "query": Record<string, any>;
         "params": Record<string, any>;
+        "query": Record<string, any>;
+        "headers": Record<string, any>;
+        "header"?: Record<string, any>;
+        "cookies": Record<string, any>;
+        "cookie"?: Record<string, any>;
         "body": string;
     }
 
@@ -218,10 +220,17 @@ export default class Server extends MediatorUser {
                 req.validatedIp = null === checkNonEmptyStringSync("ip", req.validatedIp) ? req.validatedIp : extractIp(req);
 
                 // url
-                req.headers = null === checkNonEmptyObjectSync("headers", req.headers) ? req.headers : {};
-                req.cookies = null === checkNonEmptyObjectSync("cookies", req.cookies) ? req.cookies : extractCookies(req);
-                req.query = null === checkNonEmptyObjectSync("query", req.query) ? req.query : query ?? {};
+
                 req.params = null === checkNonEmptyObjectSync("params", req.params) ? req.params : extractParams(req.pattern, pathname as string);
+                req.query = null === checkNonEmptyObjectSync("query", req.query) ? req.query : query ?? {};
+
+                if (null !== checkNonEmptyObjectSync("headers", req.headers)) {
+                    req.headers = null === checkNonEmptyObjectSync("header", req.header) ? req.header as Record<string, any> : {};
+                }
+
+                if (null !== checkNonEmptyObjectSync("cookies", req.cookies)) {
+                    req.cookies = null === checkNonEmptyObjectSync("header", req.cookie) ? req.cookie as Record<string, any> : extractCookies(req);
+                }
 
                 // ensure content length formate
                 if ("undefined" === typeof req.headers["content-length"]) {

@@ -77,7 +77,7 @@
 // components
 
     import DescriptorUser, { type iDescriptorUserOptions, type tLogType, type tLogger } from "./components/DescriptorUser";
-    import Mediator, { type iUrlParameters } from "./components/Mediator";
+    import Mediator, { type iUrlAllowedParameters } from "./components/Mediator";
     import MediatorUser, { type iMediatorUserOptions } from "./components/MediatorUser";
     import Orchestrator, { type iOrchestratorOptions } from "./components/Orchestrator";
     import Server, { type iClient, type iIncomingMessage, type iServerResponse } from "./components/Server";
@@ -88,7 +88,7 @@
 
     export type {
         tLogType, tLogger,
-        iUrlParameters,
+        iUrlAllowedParameters,
         iClient, iIncomingMessage, iServerResponse
     };
 

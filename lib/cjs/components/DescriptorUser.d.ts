@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { EventEmitter } from "node:events";
 import type { OpenApiDocument } from "express-openapi-validate";
 export type tLogType = "data" | "debug" | "log" | "info" | "success" | "warning" | "error";

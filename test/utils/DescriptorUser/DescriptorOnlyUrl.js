@@ -15,6 +15,146 @@ module.exports = {
 	...DESCRIPTOR_BASIC,
 	...{
 		"paths": {
+            "/test/no-param": {
+				"get": {
+					"operationId": "testNoParameter",
+					"responses": {
+						"200": {
+							"description": "Everything is fine"
+						},
+						"default": {
+							"description": "An error occured",
+							"content": {
+								"application/json": {
+									"schema": {
+										"$ref": "#/components/schemas/Error"
+									}
+								}
+							}
+						}
+					}
+				}
+            },
+            "/test/path/{needed-param}": {
+				"get": {
+					"operationId": "testPathMissingParameter",
+					"parameters": [
+						{
+                            "name": "needed-param",
+                            "in": "path",
+                            "required": true,
+                            "schema": {
+                                "type": "string"
+                            }
+						}
+					],
+					"responses": {
+						"200": {
+							"description": "Everything is fine"
+						},
+						"default": {
+							"description": "An error occured",
+							"content": {
+								"application/json": {
+									"schema": {
+										"$ref": "#/components/schemas/Error"
+									}
+								}
+							}
+						}
+					}
+				}
+            },
+            "/test/query": {
+				"get": {
+					"operationId": "testQueryMissingParameter",
+					"parameters": [
+						{
+                            "name": "needed-param",
+                            "in": "query",
+                            "required": true,
+                            "schema": {
+                                "type": "string"
+                            }
+						}
+					],
+					"responses": {
+						"200": {
+							"description": "Everything is fine"
+						},
+						"default": {
+							"description": "An error occured",
+							"content": {
+								"application/json": {
+									"schema": {
+										"$ref": "#/components/schemas/Error"
+									}
+								}
+							}
+						}
+					}
+				}
+            },
+            "/test/header": {
+				"get": {
+					"operationId": "testHeaderMissingParameter",
+					"parameters": [
+						{
+                            "name": "needed-param",
+                            "in": "header",
+                            "required": true,
+                            "schema": {
+                                "type": "string"
+                            }
+						}
+					],
+					"responses": {
+						"200": {
+							"description": "Everything is fine"
+						},
+						"default": {
+							"description": "An error occured",
+							"content": {
+								"application/json": {
+									"schema": {
+										"$ref": "#/components/schemas/Error"
+									}
+								}
+							}
+						}
+					}
+				}
+            },
+            "/test/cookie": {
+				"get": {
+					"operationId": "testCookieMissingParameter",
+					"parameters": [
+						{
+                            "name": "needed-param",
+                            "in": "cookie",
+                            "required": true,
+                            "schema": {
+                                "type": "string"
+                            }
+						}
+					],
+					"responses": {
+						"200": {
+							"description": "Everything is fine"
+						},
+						"default": {
+							"description": "An error occured",
+							"content": {
+								"application/json": {
+									"schema": {
+										"$ref": "#/components/schemas/Error"
+									}
+								}
+							}
+						}
+					}
+				}
+            },
 			"/test/component": {
 				"get": {
 					"operationId": "testComponents",

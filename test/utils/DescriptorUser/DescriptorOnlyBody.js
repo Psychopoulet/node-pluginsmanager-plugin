@@ -25,7 +25,8 @@ module.exports = {
 									"$ref": "#/components/schemas/body-param-component"
 								}
 							}
-						}
+						},
+                        "required": true
 					},
 					"responses": {
 						"200": {
@@ -62,7 +63,8 @@ module.exports = {
 									"required": [ "body-param-string" ]
 								}
 							}
-						}
+						},
+                        "required": true
 					},
 					"responses": {
 						"200": {
@@ -99,7 +101,8 @@ module.exports = {
 									"required": [ "body-param-integer" ]
 								}
 							}
-						}
+						},
+                        "required": true
 					},
 					"responses": {
 						"200": {
@@ -136,7 +139,8 @@ module.exports = {
 									"required": [ "body-param-number" ]
 								}
 							}
-						}
+						},
+                        "required": true
 					}
 				}
 			},
@@ -156,7 +160,8 @@ module.exports = {
 									"required": [ "body-param-boolean" ]
 								}
 							}
-						}
+						},
+                        "required": true
 					},
 					"responses": {
 						"200": {
@@ -191,7 +196,8 @@ module.exports = {
 									"required": [ "body-param-facultative" ]
 								}
 							}
-						}
+						},
+                        "required": true
 					},
 					"responses": {
 						"200": {
@@ -232,7 +238,8 @@ module.exports = {
 									"required": [ "body-param-object" ]
 								}
 							}
-						}
+						},
+                        "required": true
 					},
 					"responses": {
 						"200": {
@@ -272,7 +279,8 @@ module.exports = {
 									"required": [ "body-param-array" ]
 								}
 							}
-						}
+						},
+                        "required": true
 					},
 					"responses": {
 						"200": {
