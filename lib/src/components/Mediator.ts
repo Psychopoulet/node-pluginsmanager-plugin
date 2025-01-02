@@ -4,8 +4,6 @@
     import { OpenApiValidator, ValidationError, type OpenApiDocument } from "express-openapi-validate";
 
     // locals
-
-    import { checkExists } from "../checkers/ReferenceError/checkExists";
     import { checkObject } from "../checkers/TypeError/checkObject";
     import { checkNonEmptyString } from "../checkers/RangeError/checkNonEmptyString";
     import { checkNonEmptyObject } from "../checkers/RangeError/checkNonEmptyObject";
@@ -28,11 +26,20 @@
         "body": any;
     }
 
-    export interface iUrlParameters {
+    interface iUrControlledParameters {
         "path": Record<string, any>;
         "query": Record<string, any>;
         "headers": Record<string, any>;
         "cookies": Record<string, any>;
+    }
+
+    export interface iUrlAllowedParameters {
+        "path"?: Record<string, any>;
+        "query"?: Record<string, any>;
+        "headers"?: Record<string, any>;
+        "cookies"?: Record<string, any>;
+        "header"?: Record<string, any>;
+        "cookie"?: Record<string, any>;
     }
 
 // module
@@ -57,26 +64,35 @@ export default class Mediator extends DescriptorUser {
 
     // public
 
-         // Check sended parameters by method name (used by the Server)
-        public checkParameters (operationId: string, urlParams: iUrlParameters, bodyParams: any): Promise<void> {
+        // Check sended parameters by method name (used by the Server)
+        public checkParameters (operationId: string, urlParams?: iUrlAllowedParameters, bodyParams?: any): Promise<void> {
+
+            const urlControlledParameters: iUrControlledParameters = {
+                "path": urlParams ? urlParams?.path ?? {} : {},
+                "query": urlParams ? urlParams?.query ?? {} : {},
+                "headers": urlParams ? urlParams?.headers ?? urlParams?.header ?? {} : {},
+                "cookies": urlParams ? urlParams?.cookies ?? urlParams?.cookie ?? {} : {},
+            };
 
             // parameters validation
             return this.checkDescriptor().then((): Promise<void> => {
                 return checkNonEmptyString("operationId", operationId);
             }).then((): Promise<void> => {
 
-                return checkNonEmptyObject("urlParams", urlParams).then((): Promise<void> => {
-                    return checkObject("urlParams.path", urlParams.path);
-                }).then(() => {
-                    return checkObject("urlParams.query", urlParams.query);
-                }).then(() => {
-                    return checkObject("urlParams.headers", urlParams.headers);
-                }).then(() => {
-                    return checkObject("urlParams.cookies", urlParams.cookies);
-                });
+                return "undefined" === typeof urlParams ? Promise.resolve() : checkObject("urlParams", urlParams);
 
             }).then((): Promise<void> => {
-                return checkExists("bodyParams", bodyParams);
+
+                return checkNonEmptyObject("urlControlledParameters", urlControlledParameters).then((): Promise<void> => {
+                    return checkObject("urlControlledParameters.path", urlControlledParameters.path);
+                }).then(() => {
+                    return checkObject("urlControlledParameters.query", urlControlledParameters.query);
+                }).then(() => {
+                    return checkObject("urlControlledParameters.headers", urlControlledParameters.headers);
+                }).then(() => {
+                    return checkObject("urlControlledParameters.cookies", urlControlledParameters.cookies);
+                });
+
             }).then((): Promise<void> => {
 
                 // search wanted operation
@@ -89,10 +105,10 @@ export default class Mediator extends DescriptorUser {
                     const req = {
                         "path": foundPathMethod.path,
                         "method": foundPathMethod.method,
-                        "params": urlParams.path,
-                        "query": urlParams.query,
-                        "headers": urlParams.headers,
-                        "cookies": urlParams.cookies,
+                        "params": urlControlledParameters.path,
+                        "query": urlControlledParameters.query,
+                        "headers": urlControlledParameters.headers,
+                        "cookies": urlControlledParameters.cookies,
                         "body": bodyParams
                     };
 
