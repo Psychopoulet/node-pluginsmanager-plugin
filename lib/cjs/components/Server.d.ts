@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import MediatorUser, { type iMediatorUserOptions } from "./MediatorUser";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Server as WebSocketServer } from "ws";
