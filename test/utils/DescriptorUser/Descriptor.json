@@ -2,7 +2,7 @@
 	"openapi": "3.0.2",
 	"info": {
 		"title": "node-pluginsmanager-plugin",
-		"version": "6.3.3",
+		"version": "6.4.0",
 		"description": "An abstract parent plugin for node-pluginsmanager",
 		"contact": {
 			"name": "Sébastien VIDAL",
@@ -511,7 +511,8 @@
 								"required": [ "body-param-boolean" ]
 							}
 						}
-					}
+					},
+					"required": true
 				},
 				"responses": {
 					"200": {
@@ -565,7 +566,8 @@
 								"required": [ "body-param-integer" ]
 							}
 						}
-					}
+					},
+					"required": true
 				},
 				"responses": {
 					"200": {
@@ -619,7 +621,8 @@
 								"required": [ "body-param-number" ]
 							}
 						}
-					}
+					},
+					"required": true
 				},
 				"responses": {
 					"200": {
@@ -673,7 +676,8 @@
 								"required": [ "body-param-string" ]
 							}
 						}
-					}
+					},
+					"required": true
 				},
 				"responses": {
 					"200": {
@@ -727,7 +731,8 @@
 								"required": [ "body-param-object" ]
 							}
 						}
-					}
+					},
+					"required": true
 				},
 				"responses": {
 					"200": {
@@ -786,7 +791,8 @@
 								"required": [ "body-param-array" ]
 							}
 						}
-					}
+					},
+					"required": true
 				},
 				"responses": {
 					"200": {
@@ -840,7 +846,8 @@
 								"required": [ "body-param-facultative" ]
 							}
 						}
-					}
+					},
+					"required": true
 				},
 				"responses": {
 					"200": {
@@ -885,7 +892,8 @@
 								"required": [ "body-param" ]
 							}
 						}
-					}
+					},
+					"required": true
 				},
 				"responses": {
 					"201": {

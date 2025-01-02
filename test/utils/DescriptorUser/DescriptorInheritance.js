@@ -28,7 +28,8 @@ module.exports = {
 									"$ref": "#/components/schemas/TestCar"
 								}
 							}
-						}
+						},
+                        "required": true
 					},
 					"responses": {
 						"201": {
