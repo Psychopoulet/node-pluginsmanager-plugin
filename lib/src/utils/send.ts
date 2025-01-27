@@ -11,10 +11,13 @@ export default function send (req: iIncomingMessage, res: iServerResponse, code:
     "mime": string
 }): Promise<void> {
 
-    return Promise.resolve().then((): string => {
+    return Promise.resolve().then((): Buffer | string => {
 
         if ("undefined" === typeof content) {
             return "";
+        }
+        else if ("object" === typeof content && content instanceof Buffer) {
+            return content;
         }
         else if ("string" === typeof content && "" === content) {
             return "";
@@ -58,7 +61,7 @@ export default function send (req: iIncomingMessage, res: iServerResponse, code:
 
         }
 
-    }).then((formattedContent: string): Promise<void> => {
+    }).then((formattedContent: Buffer | string): Promise<void> => {
 
         return new Promise((resolve: () => void): void => {
 
