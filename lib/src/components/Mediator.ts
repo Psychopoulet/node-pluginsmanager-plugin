@@ -183,7 +183,7 @@ export default class Mediator extends DescriptorUser {
                     }
 
                     // validator cannot correctly check pure boolean return
-                    else if ("undefined" !== typeof res.body && [ "true", "false" ].includes(res.body)) {
+                    else if ("undefined" !== typeof res.body && [ "true", "false", true, false ].includes(res.body)) {
                         return resolve();
                     }
 
