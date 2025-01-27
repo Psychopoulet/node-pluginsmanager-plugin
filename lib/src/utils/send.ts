@@ -11,9 +11,12 @@ export default function send (req: iIncomingMessage, res: iServerResponse, code:
     "mime": string
 }): Promise<void> {
 
-    return Promise.resolve().then((): string | Buffer => {
+    return Promise.resolve().then((): string => {
 
-        if (!content) {
+        if ("undefined" === typeof content) {
+            return "";
+        }
+        else if ("string" === typeof content && "" === content) {
             return "";
         }
         else {
@@ -55,7 +58,7 @@ export default function send (req: iIncomingMessage, res: iServerResponse, code:
 
         }
 
-    }).then((formattedContent: string | Buffer): Promise<void> => {
+    }).then((formattedContent: string): Promise<void> => {
 
         return new Promise((resolve: () => void): void => {
 
@@ -65,7 +68,7 @@ export default function send (req: iIncomingMessage, res: iServerResponse, code:
 
             res.headers = Object.assign({
                 "Content-Type": options.mime,
-                "Content-Length": formattedContent ? Buffer.byteLength(formattedContent) : 0,
+                "Content-Length": 0 < formattedContent.length ? Buffer.byteLength(formattedContent) : 0,
                 "Status-Code-Url-Cat": "https://http.cat/" + code,
                 "API-Version": options.apiVersion
             }, options.cors ? {
