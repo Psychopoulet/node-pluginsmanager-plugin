@@ -194,7 +194,7 @@ export default class Server extends MediatorUser {
             this._cors = true; return this;
         }
 
-        public appMiddleware (req: iIncomingMessage, res: iServerResponse, next: () => void): void { // req, res, next : void
+        public appMiddleware (req: iIncomingMessage, res: iServerResponse, next: (err?: Error) => void): void { // req, res, next : void
 
             if (!this._Descriptor) {
                 return next();
@@ -213,34 +213,53 @@ export default class Server extends MediatorUser {
                     (this._Descriptor as OpenApiDocument).paths, pathname as string, req.method
                 );
 
-                if (!req.pattern) {
+                if (0 >= req.pattern.length) {
                     return next();
                 }
 
-                req.validatedIp = null === checkNonEmptyStringSync("ip", req.validatedIp) ? req.validatedIp : extractIp(req);
+                // extract specific data
+                try {
 
-                // url
+                    // workaround for express 5
+                    if (Object.getPrototypeOf(req).app) {
 
-                req.params = null === checkNonEmptyObjectSync("params", req.params) ? req.params : extractParams(req.pattern, pathname as string);
-                req.query = null === checkNonEmptyObjectSync("query", req.query) ? req.query : query ?? {};
+                        Object.defineProperty(req, "query", {
+                            ...Object.getOwnPropertyDescriptor(req, "query"),
+                            "value": req.query,
+                            "writable": true
+                        });
 
-                if (null !== checkNonEmptyObjectSync("headers", req.headers)) {
-                    req.headers = null === checkNonEmptyObjectSync("header", req.header) ? req.header as Record<string, any> : {};
+                    }
+
+                    req.validatedIp = null === checkNonEmptyStringSync("ip", req.validatedIp) ? req.validatedIp : extractIp(req);
+
+                    // url
+
+                    req.params = null === checkNonEmptyObjectSync("params", req.params) ? req.params : extractParams(req.pattern, pathname as string);
+                    req.query = null === checkNonEmptyObjectSync("query", req.query) ? req.query : query ?? {};
+
+                    if (null !== checkNonEmptyObjectSync("headers", req.headers)) {
+                        req.headers = null === checkNonEmptyObjectSync("header", req.header) ? req.header as Record<string, any> : {};
+                    }
+
+                    if (null !== checkNonEmptyObjectSync("cookies", req.cookies)) {
+                        req.cookies = null === checkNonEmptyObjectSync("header", req.cookie) ? req.cookie as Record<string, any> : extractCookies(req);
+                    }
+
+                    // ensure content length formate
+                    if ("undefined" === typeof req.headers["content-length"]) {
+                        req.headers["content-length"] = 0;
+                    }
+                    else if ("string" === typeof req.headers["content-length"]) {
+                        req.headers["content-length"] = parseInt(req.headers["content-length"], 10);
+                    }
+
+                }
+                catch (e) {
+                    return next(e as Error);
                 }
 
-                if (null !== checkNonEmptyObjectSync("cookies", req.cookies)) {
-                    req.cookies = null === checkNonEmptyObjectSync("header", req.cookie) ? req.cookie as Record<string, any> : extractCookies(req);
-                }
-
-                // ensure content length formate
-                if ("undefined" === typeof req.headers["content-length"]) {
-                    req.headers["content-length"] = 0;
-                }
-                else if ("string" === typeof req.headers["content-length"]) {
-                    req.headers["content-length"] = parseInt(req.headers["content-length"], 10);
-                }
-
-                if (!req.pattern || !(this._Descriptor as OpenApiDocument).paths[req.pattern] || !((this._Descriptor as OpenApiDocument).paths[req.pattern] as Record<string, any>)[req.method]) {
+                if (!(this._Descriptor as OpenApiDocument).paths[req.pattern] || !((this._Descriptor as OpenApiDocument).paths[req.pattern] as Record<string, any>)[req.method]) {
                     return next();
                 }
 
