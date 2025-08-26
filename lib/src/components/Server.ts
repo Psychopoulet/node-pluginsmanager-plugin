@@ -1,9 +1,9 @@
 // deps
 
     // natives
-    import { parse } from "node:url";
-    import { EOL } from "node:os";
     import { AddressInfo } from "node:net";
+    import { EOL } from "node:os";
+    import { parse } from "node:url";
 
     // externals
     import uniqid from "uniqid";
@@ -39,9 +39,7 @@
     import type { IncomingMessage, ServerResponse } from "node:http";
 
     // externals
-
     import type { OpenApiDocument } from "express-openapi-validate";
-
     import type { Server as WebSocketServer, WebSocket } from "ws";
     import type { Server as SocketIOServer } from "socket.io";
 
@@ -194,7 +192,7 @@ export default class Server extends MediatorUser {
             this._cors = true; return this;
         }
 
-        public appMiddleware (req: iIncomingMessage, res: iServerResponse, next: (err?: Error) => void): void { // req, res, next : void
+        public appMiddleware (_req: IncomingMessage, res: iServerResponse, next: (err?: Error) => void): void { // req, res, next : void
 
             if (!this._Descriptor) {
                 return next();
@@ -205,6 +203,8 @@ export default class Server extends MediatorUser {
             }
 
             this.checkDescriptor().then(() => {
+
+                const req: iIncomingMessage = Object.assign(_req);
 
                 // parse
                 const { pathname, query }: { "pathname": string | null; "query": any; } = parse((req.url as string), true);
