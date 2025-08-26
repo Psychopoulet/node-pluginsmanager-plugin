@@ -1,11 +1,14 @@
 // types & interfaces
 
+    // natives
+    import type { IncomingMessage } from "node:http";
+
     // locals
-    import type { iIncomingMessage, iServerResponse } from "../components/Server";
+    import type { iServerResponse } from "../components/Server";
 
 // module
 
-export default function send (req: iIncomingMessage, res: iServerResponse, code: number, content: any, options: {
+export default function send (req: IncomingMessage, res: iServerResponse, code: number, content: any, options: {
     "apiVersion": string,
     "cors": boolean,
     "mime": string

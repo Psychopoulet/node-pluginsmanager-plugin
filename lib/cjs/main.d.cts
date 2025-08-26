@@ -24,9 +24,9 @@ import DescriptorUser, { type iDescriptorUserOptions, type tLogType, type tLogge
 import Mediator, { type iUrlAllowedParameters } from "./components/Mediator";
 import MediatorUser, { type iMediatorUserOptions } from "./components/MediatorUser";
 import Orchestrator, { type iOrchestratorOptions } from "./components/Orchestrator";
-import Server, { type iClient, type iIncomingMessage, type iServerResponse } from "./components/Server";
+import Server, { type iClient, type iServerResponse } from "./components/Server";
 import UnauthorizedError from "./components/errors/UnauthorizedError";
 import NotFoundError from "./components/errors/NotFoundError";
 import LockedError from "./components/errors/LockedError";
-export type { tLogType, tLogger, iUrlAllowedParameters, iClient, iIncomingMessage, iServerResponse };
+export type { tLogType, tLogger, iUrlAllowedParameters, iClient, iServerResponse };
 export { DescriptorUser, type iDescriptorUserOptions, Mediator, MediatorUser, type iMediatorUserOptions, Orchestrator, type iOrchestratorOptions, Server, UnauthorizedError, NotFoundError, LockedError };

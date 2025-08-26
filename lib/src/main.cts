@@ -80,7 +80,7 @@
     import Mediator, { type iUrlAllowedParameters } from "./components/Mediator";
     import MediatorUser, { type iMediatorUserOptions } from "./components/MediatorUser";
     import Orchestrator, { type iOrchestratorOptions } from "./components/Orchestrator";
-    import Server, { type iClient, type iIncomingMessage, type iServerResponse } from "./components/Server";
+    import Server, { type iClient, type iServerResponse } from "./components/Server";
 
     import UnauthorizedError from "./components/errors/UnauthorizedError";
     import NotFoundError from "./components/errors/NotFoundError";
@@ -89,7 +89,7 @@
     export type {
         tLogType, tLogger,
         iUrlAllowedParameters,
-        iClient, iIncomingMessage, iServerResponse
+        iClient, iServerResponse
     };
 
     export {

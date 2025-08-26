@@ -8,22 +8,26 @@
     import { checkObject } from "../checkers/TypeError/checkObject";
 
     import MediatorUser from "./MediatorUser";
-    import Server, { type iIncomingMessage, type iServerResponse } from "./Server";
+    import Server from "./Server";
 
     import checkFile from "../utils/file/checkFile";
     import readJSONFile from "../utils/file/readJSONFile";
 
 // types & interfaces
 
+    // natives
+    import { IncomingMessage } from "node:http";
+
     // externals
 
     import type { OpenApiDocument } from "express-openapi-validate";
     import type { OpenAPI } from "openapi-types";
-
-    import type { Server as WebSocketServer } from "ws";
     import type { Server as SocketIOServer } from "socket.io";
+    import type { Server as WebSocketServer } from "ws";
 
     // locals
+
+    import type { iServerResponse } from "./Server";
 
     import type Mediator from "./Mediator";
     import type { tLogger } from "./DescriptorUser";
@@ -286,7 +290,7 @@ export default class Orchestrator extends MediatorUser {
 
             }
 
-            public appMiddleware (req: iIncomingMessage, res: iServerResponse, next: () => void): void {
+            public appMiddleware (req: IncomingMessage, res: iServerResponse, next: () => void): void {
 
                 if (!this.enabled) {
 
