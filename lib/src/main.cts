@@ -76,7 +76,7 @@
 
 // components
 
-    import DescriptorUser, { type iDescriptorUserOptions, type tLogType, type tLogger } from "./components/DescriptorUser";
+    import DescriptorUser, { type iDescriptorUserOptions, type tLogType, type tLogger, type iEventsMinimal } from "./components/DescriptorUser";
     import Mediator, { type iUrlAllowedParameters } from "./components/Mediator";
     import MediatorUser, { type iMediatorUserOptions } from "./components/MediatorUser";
     import Orchestrator, { type iOrchestratorOptions } from "./components/Orchestrator";
@@ -87,7 +87,7 @@
     import LockedError from "./components/errors/LockedError";
 
     export type {
-        tLogType, tLogger,
+        tLogType, tLogger, iEventsMinimal,
         iUrlAllowedParameters,
         iClient, iServerResponse
     };
