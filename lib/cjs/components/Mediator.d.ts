@@ -1,5 +1,6 @@
 import { OpenApiValidator } from "express-openapi-validate";
-import DescriptorUser, { type iDescriptorUserOptions } from "./DescriptorUser";
+import DescriptorUser from "./DescriptorUser";
+import type { iDescriptorUserOptions, tEventMap, iEventsMinimal } from "./DescriptorUser";
 import type { iIncomingMessage, iServerResponse } from "./Server";
 export interface iIncomingMessageForMediatorValidation extends iIncomingMessage {
     "body": any;
@@ -15,7 +16,7 @@ export interface iUrlAllowedParameters {
     "header"?: Record<string, any>;
     "cookie"?: Record<string, any>;
 }
-export default class Mediator extends DescriptorUser {
+export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends DescriptorUser<T> {
     protected _validator: OpenApiValidator | null;
     constructor(options: iDescriptorUserOptions);
     checkParameters(operationId: string, urlParams?: iUrlAllowedParameters, bodyParams?: any): Promise<void>;

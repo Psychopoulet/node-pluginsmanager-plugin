@@ -24,6 +24,14 @@
         "logger"?: tLogger;
     }
 
+    export type tEventMap<T> = Record<keyof T, any[]> | tEventsNoEvent;
+    export type tEventsNoEvent = [never];
+    export interface iEventsMinimal {
+        "error": [ Error ];
+        "initialized": [ any ];
+        "released": [ any ];
+    }
+
 // consts
 
     const LOG_TYPES_ALLOWED: tLogType[] = [
@@ -38,7 +46,7 @@
 
 // Please note the fact that "_initWorkSpace" and "_releaseWorkSpace" method MUST be re-writted in Mediator class, and not in MediatorUser childs.
 // Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic.
-export default class DescriptorUser extends EventEmitter {
+export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> extends EventEmitter<T> {
 
     // attributes
 
@@ -104,6 +112,13 @@ export default class DescriptorUser extends EventEmitter {
             }
 
             return this;
+
+        }
+
+        // used to faint the typing of EventEmitter for emit into a generic class (which MUST be inherited anyway) like Mediator/Server/Orchestrator
+        protected _emitEventGenericForTSPurposeDONOTUSE (event: string, ...args: any[]): boolean {
+
+            return this.emit(event as any, ...args as any);
 
         }
 

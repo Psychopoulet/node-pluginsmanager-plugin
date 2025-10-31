@@ -16,7 +16,7 @@
 // types & interfaces
 
     // natives
-    import { IncomingMessage } from "node:http";
+    import type { IncomingMessage } from "node:http";
 
     // externals
 
@@ -30,7 +30,7 @@
     import type { iServerResponse } from "./Server";
 
     import type Mediator from "./Mediator";
-    import type { tLogger } from "./DescriptorUser";
+    import type { tLogger, tEventMap, iEventsMinimal } from "./DescriptorUser";
 
     export interface iOrchestratorOptions {
         "externalRessourcesDirectory": string; // used to write local data like sqlite database, json files, pictures, etc...
@@ -43,7 +43,7 @@
 
 // module
 
-export default class Orchestrator extends MediatorUser {
+export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> extends MediatorUser<T> {
 
     // attributes
 
@@ -269,7 +269,7 @@ export default class Orchestrator extends MediatorUser {
                     (this._Server as Server).disableCors();
 
                 }).catch((err: Error): void => {
-                    this.emit("error", err);
+                    this._emitEventGenericForTSPurposeDONOTUSE("error", err);
                 });
 
                 return this;
@@ -283,7 +283,7 @@ export default class Orchestrator extends MediatorUser {
                     (this._Server as Server).enableCors();
 
                 }).catch((err: Error): void => {
-                    this.emit("error", err);
+                    this._emitEventGenericForTSPurposeDONOTUSE("error", err);
                 });
 
                 return this;
@@ -561,7 +561,7 @@ export default class Orchestrator extends MediatorUser {
 
                                 // intercept errors to avoid non-catched ones
                                 (this._Mediator as Mediator).on("error", (err: Error): void => {
-                                    this.emit("error", err);
+                                    this._emitEventGenericForTSPurposeDONOTUSE("error", err);
                                 });
 
                             });
@@ -610,7 +610,7 @@ export default class Orchestrator extends MediatorUser {
 
                                 // intercept errors to avoid non-catched ones
                                 (this._Server as Server).on("error", (err: Error): void => {
-                                    this.emit("error", err);
+                                    this._emitEventGenericForTSPurposeDONOTUSE("error", err);
                                 });
 
                             });
@@ -648,7 +648,7 @@ export default class Orchestrator extends MediatorUser {
                     }).then((): void => {
 
                         this.initialized = true;
-                        this.emit("initialized", ...data);
+                        this._emitEventGenericForTSPurposeDONOTUSE("initialized", ...data);
 
                     });
 
@@ -679,7 +679,7 @@ export default class Orchestrator extends MediatorUser {
                     this._Descriptor = null;
 
                     this.initialized = false;
-                    this.emit("released", ...data);
+                    this._emitEventGenericForTSPurposeDONOTUSE("released", ...data);
 
                 });
 

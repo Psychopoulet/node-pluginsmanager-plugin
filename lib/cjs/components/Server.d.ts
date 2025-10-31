@@ -2,6 +2,7 @@ import MediatorUser, { type iMediatorUserOptions } from "./MediatorUser";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Server as WebSocketServer } from "ws";
 import type { Server as SocketIOServer } from "socket.io";
+import type { tEventMap, iEventsMinimal } from "./DescriptorUser";
 export interface iClient {
     "id": string;
     "status": "CONNECTED" | "DISCONNECTED";
@@ -22,7 +23,7 @@ export interface iServerResponse extends ServerResponse {
     "body": string;
     "headers": Record<string, any>;
 }
-export default class Server extends MediatorUser {
+export default class Server<T extends tEventMap<T> = iEventsMinimal> extends MediatorUser<T> {
     protected _socketServer: WebSocketServer | SocketIOServer | null;
     protected _checkParameters: boolean;
     protected _checkResponse: boolean;
