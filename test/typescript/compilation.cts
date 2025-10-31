@@ -12,9 +12,12 @@
 
 // classes
 
-	class OrchestratorTest extends Orchestrator {
+	class OrchestratorTest extends Orchestrator<{
+		"test": [ string ]
+	}> {
 
 		public _initWorkspace (): Promise<void> {
+			this.emit("test", "this is a test");
 			return Promise.resolve();
 		}
 
@@ -37,6 +40,10 @@ console.log(Mediator);
 console.log(Server);
 
 console.log(orchestrator);
+
+orchestrator.on("test", (test: string): void => {
+	console.log("test emitted", test);
+});
 
 orchestrator.load().then((): Promise<void> => {
 
