@@ -45,6 +45,8 @@
 
     // locals
 
+    import type { tEventMap, iEventsMinimal } from "./DescriptorUser";
+
     interface iPush {
         "id": string;
         "plugin": string;
@@ -86,7 +88,7 @@
 // module
 
 // Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic.
-export default class Server extends MediatorUser {
+export default class Server<T extends tEventMap<T> = iEventsMinimal> extends MediatorUser<T> {
 
     // attributes
 
@@ -986,7 +988,7 @@ export default class Server extends MediatorUser {
                 }).then((): void => {
 
                     this.initialized = true;
-                    this.emit("initialized", ...data);
+                    this._emitEventGenericForTSPurposeDONOTUSE("initialized", ...data);
 
                 });
 
@@ -1010,7 +1012,7 @@ export default class Server extends MediatorUser {
                     this._socketServer = null;
 
                     this.initialized = false;
-                    this.emit("released", ...data);
+                    this._emitEventGenericForTSPurposeDONOTUSE("released", ...data);
 
                 }).then((): void => {
 

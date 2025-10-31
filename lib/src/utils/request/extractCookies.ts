@@ -1,7 +1,7 @@
 // types & interfaces
 
     // locals
-    import { iIncomingMessage } from "../../components/Server";
+    import type { iIncomingMessage } from "../../components/Server";
 
 // private
 

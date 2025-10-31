@@ -8,15 +8,16 @@
     import { checkNonEmptyString } from "../checkers/RangeError/checkNonEmptyString";
     import { checkNonEmptyObject } from "../checkers/RangeError/checkNonEmptyObject";
 
-    import extractPathMethodByOperationId, { type iPathMethod } from "../utils/descriptor/extractPathMethodByOperationId";
-
-    import DescriptorUser, { type iDescriptorUserOptions } from "./DescriptorUser";
+    import extractPathMethodByOperationId from "../utils/descriptor/extractPathMethodByOperationId";
+    import DescriptorUser from "./DescriptorUser";
 
 // types & interfaces
 
     // locals
 
+    import type { iDescriptorUserOptions, tEventMap, iEventsMinimal } from "./DescriptorUser";
     import type { iIncomingMessage, iServerResponse } from "./Server";
+    import type { iPathMethod } from "../utils/descriptor/extractPathMethodByOperationId";
 
     export interface iIncomingMessageForMediatorValidation extends iIncomingMessage {
         "body": any;
@@ -44,7 +45,7 @@
 
 // module
 
-export default class Mediator extends DescriptorUser {
+export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends DescriptorUser<T> {
 
     // attributes
 
@@ -234,7 +235,7 @@ export default class Mediator extends DescriptorUser {
                 this._validator = new OpenApiValidator(this._Descriptor as OpenApiDocument);
 
                 this.initialized = true;
-                this.emit("initialized", ...data);
+                this._emitEventGenericForTSPurposeDONOTUSE("initialized", [ ...data ]);
 
             });
 
@@ -249,7 +250,7 @@ export default class Mediator extends DescriptorUser {
                 this._validator = null;
 
                 this.initialized = false;
-                this.emit("released", ...data);
+                this._emitEventGenericForTSPurposeDONOTUSE("released", [ ...data ]);
 
             }).then((): void => {
 

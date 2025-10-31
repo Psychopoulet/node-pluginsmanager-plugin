@@ -7,7 +7,14 @@ export interface iDescriptorUserOptions {
     "descriptor"?: OpenApiDocument;
     "logger"?: tLogger;
 }
-export default class DescriptorUser extends EventEmitter {
+export type tEventMap<T> = Record<keyof T, any[]> | tEventsNoEvent;
+export type tEventsNoEvent = [never];
+export interface iEventsMinimal {
+    "error": [Error];
+    "initialized": [any];
+    "released": [any];
+}
+export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> extends EventEmitter<T> {
     initialized: boolean;
     protected _descriptorValidated: boolean;
     protected _externalRessourcesDirectory: string;
@@ -17,6 +24,7 @@ export default class DescriptorUser extends EventEmitter {
     protected _initWorkSpace(...data: any): Promise<void>;
     protected _releaseWorkSpace(...data: any): Promise<void>;
     protected _log(type: tLogType, message: string | Error, bold?: boolean): this;
+    protected _emitEventGenericForTSPurposeDONOTUSE(event: string, ...args: any[]): boolean;
     getPluginName(): string;
     getPluginVersion(): string;
     getPluginDescription(): string;

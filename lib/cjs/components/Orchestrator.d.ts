@@ -1,10 +1,10 @@
 import MediatorUser from "./MediatorUser";
 import Server from "./Server";
-import { IncomingMessage } from "node:http";
+import type { IncomingMessage } from "node:http";
 import type { Server as SocketIOServer } from "socket.io";
 import type { Server as WebSocketServer } from "ws";
 import type { iServerResponse } from "./Server";
-import type { tLogger } from "./DescriptorUser";
+import type { tLogger, tEventMap, iEventsMinimal } from "./DescriptorUser";
 export interface iOrchestratorOptions {
     "externalRessourcesDirectory": string;
     "packageFile": string;
@@ -13,7 +13,7 @@ export interface iOrchestratorOptions {
     "serverFile": string;
     "logger"?: tLogger;
 }
-export default class Orchestrator extends MediatorUser {
+export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> extends MediatorUser<T> {
     protected _Server: Server | null;
     protected _socketServer: WebSocketServer | SocketIOServer | null;
     protected _checkParameters: boolean;
