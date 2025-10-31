@@ -1,4 +1,4 @@
-import { OpenApiDocument } from "express-openapi-validate";
+import type { OpenApiDocument } from "express-openapi-validate";
 export type tMethod = "get" | "put" | "post" | "delete" | "options" | "head" | "patch" | "trace";
 export interface iPathMethod {
     "path": string;
