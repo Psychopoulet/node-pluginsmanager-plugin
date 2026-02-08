@@ -21,7 +21,6 @@
     import extractIp from "../utils/request/extractIp";
     import extractCookies from "../utils/request/extractCookies";
     import extractMime from "../utils/request/extractMime";
-    import jsonParser from "../utils/jsonParser";
     import send from "../utils/send";
     import cleanSendedError from "../utils/cleanSendedError";
 
@@ -70,6 +69,7 @@
         "cookies": Record<string, any>;
         "cookie"?: Record<string, any>;
         "body": string;
+        "ip": string;
     }
 
     export interface iServerResponse extends ServerResponse {
@@ -525,7 +525,12 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                                     this._log("log", body);
 
-                                    req.body = jsonParser(body);
+                                    try {
+                                        req.body = JSON.parse(body);
+                                    }
+                                    catch (e) {
+                                        // nothing to do here
+                                    }
 
                                 }
                                 else {
@@ -539,7 +544,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                         }
 
                     // formate data
-                    }).then((body: any): Promise<string> => {
+                    }).then((body: unknown): Promise<string> => {
 
                         const parsed = {
                             "url": {
@@ -839,16 +844,16 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                     const result: iClient[] = [];
 
-                        (this._socketServer as WebSocketServer).clients.forEach((s: { "id"?: string; "readyState": number; }): iClient => {
+                        (this._socketServer as WebSocketServer).clients.forEach((s: { "id"?: string; "readyState": number; }): void => {
 
                             if (!s.id) {
                                 s.id = uniqid();
                             }
 
-                            return {
+                            result.push({
                                 "id": s.id as string,
                                 "status": WEBSOCKET_STATE_OPEN === s.readyState ? "CONNECTED" : "DISCONNECTED"
-                            };
+                            });
 
                         });
 

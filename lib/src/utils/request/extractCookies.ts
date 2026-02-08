@@ -25,7 +25,7 @@
 
                         const parts: string[] = cookie.split("=");
 
-                        result[parts[0]] = decodeURI(parts[1]);
+                        result[parts[0]] = parts[1] ? decodeURI(parts[1]) : "";
 
                     });
 

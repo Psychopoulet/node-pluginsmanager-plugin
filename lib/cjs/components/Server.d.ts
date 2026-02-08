@@ -18,6 +18,7 @@ export interface iIncomingMessage extends IncomingMessage {
     "cookies": Record<string, any>;
     "cookie"?: Record<string, any>;
     "body": string;
+    "ip": string;
 }
 export interface iServerResponse extends ServerResponse {
     "body": string;
