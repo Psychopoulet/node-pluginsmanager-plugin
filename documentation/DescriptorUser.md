@@ -22,5 +22,5 @@ More, the class add features like external ressources directory (to create files
 
 ### Events
 
-  * ``` initialized [, data?: any ] ``` fired when mediator is initialized
-  * ``` released [, data?: any ] ``` fired when mediator is released
+  * ``` initialized [, ...data?: unknown[] ] ``` fired when mediator is initialized
+  * ``` released [, ...data?: unknown[] ] ``` fired when mediator is released

@@ -47,11 +47,11 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
     enableCors(): this;
     appMiddleware(req: IncomingMessage, res: iServerResponse, next: () => void): void;
     socketMiddleware(server: WebSocketServer | SocketIOServer): void;
-    load(...data: any): Promise<void>;
-    destroy(...data: any): Promise<void>;
-    init(...data: any): Promise<void>;
-    release(...data: any): Promise<void>;
-    install(...data: any): Promise<void>;
-    update(...data: any): Promise<void>;
-    uninstall(...data: any): Promise<void>;
+    load(...data: unknown[]): Promise<void>;
+    destroy(...data: unknown[]): Promise<void>;
+    init(...data: unknown[]): Promise<void>;
+    release(...data: unknown[]): Promise<void>;
+    install(...data: unknown[]): Promise<void>;
+    update(...data: unknown[]): Promise<void>;
+    uninstall(...data: unknown[]): Promise<void>;
 }

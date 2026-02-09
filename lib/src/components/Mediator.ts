@@ -228,7 +228,7 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
 
         // init / release
 
-        public init (...data: any): Promise<void> {
+        public init (...data: unknown[]): Promise<void> {
 
             return this._initWorkSpace(...data).then((): void => {
 
@@ -241,7 +241,7 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
 
         }
 
-        public release (...data: any): Promise<void> {
+        public release (...data: unknown[]): Promise<void> {
 
             return this._releaseWorkSpace(...data).then((): void => {
 

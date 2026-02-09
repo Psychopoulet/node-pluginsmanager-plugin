@@ -24,12 +24,12 @@
         "logger"?: tLogger;
     }
 
-    export type tEventMap<T> = Record<keyof T, any[]> | tEventsNoEvent;
+    export type tEventMap<T> = Record<keyof T, unknown[]> | tEventsNoEvent;
     export type tEventsNoEvent = [never];
     export interface iEventsMinimal {
         "error": [ Error ];
-        "initialized": [ any ];
-        "released": [ any ];
+        "initialized": [ unknown ];
+        "released": [ unknown ];
     }
 
 // consts
@@ -92,14 +92,14 @@ export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> ext
     // protected
 
         // must be inherited
-        protected _initWorkSpace (...data: any): Promise<void> {
+        protected _initWorkSpace (...data: unknown[]): Promise<void> {
 
             return Promise.reject(new Error("\"_initWorkSpace\" method must be inherited"));
 
         }
 
         // must be inherited
-        protected _releaseWorkSpace (...data: any): Promise<void> {
+        protected _releaseWorkSpace (...data: unknown[]): Promise<void> {
 
             return Promise.reject(new Error("\"_releaseWorkSpace\" method must be inherited"));
 
@@ -116,9 +116,9 @@ export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> ext
         }
 
         // used to faint the typing of EventEmitter for emit into a generic class (which MUST be inherited anyway) like Mediator/Server/Orchestrator
-        protected _emitEventGenericForTSPurposeDONOTUSE (event: string, ...args: any[]): boolean {
+        protected _emitEventGenericForTSPurposeDONOTUSE (event: string, ...args: unknown[]): boolean {
 
-            return this.emit(event as any, ...args as any);
+            return this.emit(event, ...args as any);
 
         }
 
@@ -137,7 +137,7 @@ export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> ext
         }
 
         // must be inherited
-        public init (...data: any): Promise<void> {
+        public init (...data: unknown[]): Promise<void> {
 
             console.log("DescriptorUser", "init", ...data);
 
@@ -146,7 +146,7 @@ export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> ext
         }
 
         // must be inherited
-        public release (...data: any): Promise<void> {
+        public release (...data: unknown[]): Promise<void> {
 
             console.log("DescriptorUser", "release", ...data);
 

@@ -343,7 +343,7 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
 
         // load / destroy
 
-            public load (...data: any): Promise<void> {
+            public load (...data: unknown[]): Promise<void> {
 
                 return this.checkFiles().then((): Promise<any> => {
                     return readJSONFile(join(__dirname, "..", "..", "..", "package.json"));
@@ -414,7 +414,7 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
 
             }
 
-            public destroy (...data: any): Promise<void> {
+            public destroy (...data: unknown[]): Promise<void> {
 
                 return Promise.resolve().then((): void => {
 
@@ -458,7 +458,7 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
 
         // init / release
 
-            public init (...data: any): Promise<void> {
+            public init (...data: unknown[]): Promise<void> {
 
                 // ensure conf validity
                 return Promise.resolve().then((): Promise<void> => {
@@ -656,7 +656,7 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
 
             }
 
-            public release (...data: any): Promise<void> {
+            public release (...data: unknown[]): Promise<void> {
 
                 return Promise.resolve().then((): Promise<void> => {
 
@@ -687,19 +687,19 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
 
         // write
 
-            public install (...data: any): Promise<void> {
+            public install (...data: unknown[]): Promise<void> {
 
                 return Promise.resolve();
 
             }
 
-            public update (...data: any): Promise<void> {
+            public update (...data: unknown[]): Promise<void> {
 
                 return Promise.resolve();
 
             }
 
-            public uninstall (...data: any): Promise<void> {
+            public uninstall (...data: unknown[]): Promise<void> {
 
                 return Promise.resolve();
 

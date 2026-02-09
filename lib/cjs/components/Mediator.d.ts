@@ -21,6 +21,6 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
     constructor(options: iDescriptorUserOptions);
     checkParameters(operationId: string, urlParams?: iUrlAllowedParameters, bodyParams?: any): Promise<void>;
     checkResponse(operationId: string, res: iServerResponseForMediatorValidation): Promise<void>;
-    init(...data: any): Promise<void>;
-    release(...data: any): Promise<void>;
+    init(...data: unknown[]): Promise<void>;
+    release(...data: unknown[]): Promise<void>;
 }

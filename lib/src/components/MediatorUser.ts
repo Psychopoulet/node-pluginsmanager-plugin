@@ -38,13 +38,13 @@ export default class MediatorUser<T extends tEventMap<T> = tEventsNoEvent> exten
 
     // protected
 
-        protected _initWorkSpace (...data: any): Promise<void> {
+        protected _initWorkSpace (...data: unknown[]): Promise<void> {
 
             return Promise.resolve();
 
         }
 
-        protected _releaseWorkSpace (...data: any): Promise<void> {
+        protected _releaseWorkSpace (...data: unknown[]): Promise<void> {
 
             return Promise.resolve();
 
