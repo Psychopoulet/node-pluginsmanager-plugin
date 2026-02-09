@@ -24,8 +24,8 @@
         "logger"?: tLogger;
     }
 
-    export type tEventMap<T> = Record<keyof T, unknown[]> | tEventsNoEvent;
-    export type tEventsNoEvent = [never];
+    export type tEventMap<T> = Record<keyof T, unknown[]>;
+    export type tEventsNoEvent = {};
     export interface iEventsMinimal {
         "error": [ Error ];
         "initialized": [ unknown ];
