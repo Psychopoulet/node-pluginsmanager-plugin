@@ -528,7 +528,7 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
 
                             try {
 
-                                const val: any = require(this._mediatorFile);
+                                const val: typeof Mediator | { "default": typeof Mediator } = require(this._mediatorFile);
 
                                 if ("object" === typeof val && "function" === typeof val.default) {
                                     resolve(val.default as typeof Mediator);
