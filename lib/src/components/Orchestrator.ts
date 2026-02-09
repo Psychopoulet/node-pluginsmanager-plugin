@@ -345,9 +345,9 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
 
             public load (...data: unknown[]): Promise<void> {
 
-                return this.checkFiles().then((): Promise<any> => {
+                return this.checkFiles().then((): Promise<{ "engines": { "node": string; }; }> => {
                     return readJSONFile(join(__dirname, "..", "..", "..", "package.json"));
-                }).then(({ engines }: { "engines": { "node": string; }; }): Promise<any> => {
+                }).then(({ engines }: { "engines": { "node": string; }; }): Promise<Record<string, unknown>> => {
 
                     // native
                     this.authors = [];
@@ -364,7 +364,7 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
                     return readJSONFile(this._packageFile);
 
                 // formate authors
-                }).then((data: Record<string, any>): Promise<Record<string, any>> => {
+                }).then((data: Record<string, any>): Promise<Record<string, unknown>> => {
 
                     if (data.authors) {
 
@@ -392,7 +392,7 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
                     return Promise.resolve(data);
 
                 // formate other data
-                }).then((data: Record<string, any>): void => {
+                }).then((data: Record<string, unknown>): void => {
 
                     const self: Record<string, any> = this;
 
@@ -428,7 +428,7 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
                         // extended
 
                         this._extended.forEach((key: string): void => {
-                            delete (this as Record<string, any>)[key];
+                            delete (this as Record<string, unknown>)[key];
                         });
 
                         this._extended = [];
@@ -575,7 +575,7 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
 
                             try {
 
-                                const val: any = require(this._serverFile);
+                                const val: typeof Server | { "default": typeof Server } = require(this._serverFile);
 
                                 if ("object" === typeof val && "function" === typeof val.default) {
                                     resolve(val.default as typeof Server);

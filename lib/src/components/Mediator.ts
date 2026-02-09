@@ -1,7 +1,7 @@
 // deps
 
     // externals
-    import { OpenApiValidator, ValidationError, type OpenApiDocument } from "express-openapi-validate";
+    import { OpenApiValidator, ValidationError } from "express-openapi-validate";
 
     // locals
     import { checkObject } from "../checkers/TypeError/checkObject";
@@ -12,6 +12,9 @@
     import DescriptorUser from "./DescriptorUser";
 
 // types & interfaces
+
+    // externals
+    import type { OpenApiDocument } from "express-openapi-validate";
 
     // locals
 
@@ -66,7 +69,7 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
     // public
 
         // Check sended parameters by method name (used by the Server)
-        public checkParameters (operationId: string, urlParams?: iUrlAllowedParameters, bodyParams?: any): Promise<void> {
+        public checkParameters (operationId: string, urlParams?: iUrlAllowedParameters, bodyParams?: unknown): Promise<void> {
 
             const urlControlledParameters: iUrControlledParameters = {
                 "path": urlParams ? urlParams?.path ?? {} : {},

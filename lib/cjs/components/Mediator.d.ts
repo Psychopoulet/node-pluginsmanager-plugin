@@ -19,7 +19,7 @@ export interface iUrlAllowedParameters {
 export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends DescriptorUser<T> {
     protected _validator: OpenApiValidator | null;
     constructor(options: iDescriptorUserOptions);
-    checkParameters(operationId: string, urlParams?: iUrlAllowedParameters, bodyParams?: any): Promise<void>;
+    checkParameters(operationId: string, urlParams?: iUrlAllowedParameters, bodyParams?: unknown): Promise<void>;
     checkResponse(operationId: string, res: iServerResponseForMediatorValidation): Promise<void>;
     init(...data: unknown[]): Promise<void>;
     release(...data: unknown[]): Promise<void>;

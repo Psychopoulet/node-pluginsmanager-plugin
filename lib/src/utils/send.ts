@@ -8,7 +8,7 @@
 
 // module
 
-export default function send (req: IncomingMessage, res: iServerResponse, code: number, content: any, options: {
+export default function send (req: IncomingMessage, res: iServerResponse, code: number, content: unknown, options: {
     "apiVersion": string,
     "cors": boolean,
     "mime": string
@@ -25,44 +25,39 @@ export default function send (req: IncomingMessage, res: iServerResponse, code: 
         else if ("string" === typeof content && "" === content) {
             return "";
         }
-        else {
+        else if (options.mime.includes("application/json")) {
 
             let result: string = "";
 
-                if (options.mime.includes("application/json")) {
+                if ("string" === typeof content) {
 
-                    if ("string" === typeof content) {
+                    try {
 
-                        try {
+                        JSON.parse(content); // is content json & parseable ?
 
-                            JSON.parse(content); // is content json & parseable ?
-
-                            result = content; // yes => valid JSON string, send it as it is
-
-                        }
-                        catch (e) {
-                            result = JSON.stringify(content); // no => not JSON string, send formatted one
-                        }
+                        result = content; // yes => valid JSON string, send it as it is
 
                     }
-                    else {
-
-                        const stringified: string = JSON.stringify(content);
-
-                        if (stringified !== content) {
-                            result = stringified;
-                        }
-
+                    catch (e) {
+                        result = JSON.stringify(content); // no => not JSON string, send formatted one
                     }
 
                 }
                 else {
-                    result = content;
+
+                    const stringified: string = JSON.stringify(content);
+
+                    if (stringified !== content) {
+                        result = stringified;
+                    }
+
                 }
 
             return result;
 
         }
+
+        return String(content);
 
     }).then((formattedContent: Buffer | string): Promise<void> => {
 
