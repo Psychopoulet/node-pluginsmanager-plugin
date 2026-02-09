@@ -6,7 +6,7 @@ import type { Server as WebSocketServer } from "ws";
 import type { iServerResponse } from "./Server";
 import type { tLogger, tEventMap, iEventsMinimal } from "./DescriptorUser";
 export interface iOrchestratorOptions {
-    "externalRessourcesDirectory": string;
+    "externalResourcesDirectory": string;
     "packageFile": string;
     "descriptorFile": string;
     "mediatorFile": string;

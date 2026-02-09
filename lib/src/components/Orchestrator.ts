@@ -33,7 +33,7 @@
     import type { tLogger, tEventMap, iEventsMinimal } from "./DescriptorUser";
 
     export interface iOrchestratorOptions {
-        "externalRessourcesDirectory": string; // used to write local data like sqlite database, json files, pictures, etc...
+        "externalResourcesDirectory": string; // used to write local data like sqlite database, json files, pictures, etc...
         "packageFile": string; // package file used by the plugin (absolute path)
         "descriptorFile": string; // descriptor file used by the plugin (absolute path)
         "mediatorFile": string; // mediator file used by the plugin (absolute path)
@@ -550,7 +550,7 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
 
                             this._Mediator = new PluginMediator({
                                 "descriptor": this._Descriptor as OpenApiDocument,
-                                "externalRessourcesDirectory": this._externalRessourcesDirectory,
+                                "externalResourcesDirectory": this._externalResourcesDirectory,
                                 "logger": this._Logger as tLogger
                             });
 
@@ -599,7 +599,7 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
                             this._Server = new PluginServer({
                                 "descriptor": this._Descriptor as OpenApiDocument,
                                 "mediator": this._Mediator as Mediator,
-                                "externalRessourcesDirectory": this._externalRessourcesDirectory,
+                                "externalResourcesDirectory": this._externalResourcesDirectory,
                                 "logger": this._Logger as tLogger
                             });
 

@@ -61,7 +61,7 @@ module.exports = function checkUrlWrongPaths (URL_API) {
 
 		});
 
-		it("should test request with locked ressource", () => {
+		it("should test request with locked resource", () => {
 
 			return httpRequestTest(URL_API + "/locked", "get", null, 423, "Locked");
 

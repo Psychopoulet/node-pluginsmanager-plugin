@@ -12,11 +12,11 @@ export interface iIncomingMessage extends IncomingMessage {
     "pattern": string;
     "validatedIp": string;
     "params": Record<string, any>;
-    "query": Record<string, any>;
+    "query": Record<string, unknown>;
     "headers": Record<string, any>;
-    "header"?: Record<string, any>;
+    "header"?: Record<string, unknown>;
     "cookies": Record<string, any>;
-    "cookie"?: Record<string, any>;
+    "cookie"?: Record<string, unknown>;
     "body": string;
     "ip": string;
 }
@@ -32,7 +32,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
     constructor(opt: iMediatorUserOptions);
     protected _serverType(): "NO_SERVER" | "WEBSOCKET" | "SOCKETIO" | "UNKNOWN";
     protected _getUsableSocketIOClient(clientId: string): {
-        "emit": (event: string, data: any) => void;
+        "emit": (event: string, ...data: unknown[]) => void;
     } | undefined;
     disableCheckParameters(): this;
     enableCheckParameters(): this;
@@ -44,7 +44,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
     socketMiddleware(socketServer: WebSocketServer | SocketIOServer): void;
     push(command: string, data?: any, log?: boolean): this;
     getClients(): iClient[];
-    pushClient(clientId: string, command: string, data?: any, log?: boolean): this;
-    init(...data: any): Promise<void>;
-    release(...data: any): Promise<void>;
+    pushClient(clientId: string, command: string, data?: unknown, log?: boolean): this;
+    init(...data: unknown[]): Promise<void>;
+    release(...data: unknown[]): Promise<void>;
 }

@@ -19,7 +19,7 @@
     export type tLogger = (type: tLogType, message: string | Error, bold?: boolean, pluginName?: string) => void;
 
     export interface iDescriptorUserOptions {
-        "externalRessourcesDirectory": string; // used to write local data like sqlite database, json files, pictures, etc...
+        "externalResourcesDirectory": string; // used to write local data like sqlite database, json files, pictures, etc...
         "descriptor"?: OpenApiDocument; // not sended by Orchestrator
         "logger"?: tLogger;
     }
@@ -57,7 +57,7 @@ export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> ext
         // protected
 
             protected _descriptorValidated: boolean;
-            protected _externalRessourcesDirectory: string;
+            protected _externalResourcesDirectory: string;
             protected _Descriptor: OpenApiDocument | null;
             protected _Logger: tLogger | null;
 
@@ -75,8 +75,8 @@ export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> ext
 
             this._descriptorValidated = false;
 
-            this._externalRessourcesDirectory = "string" === typeof options?.externalRessourcesDirectory
-                ? options.externalRessourcesDirectory
+            this._externalResourcesDirectory = "string" === typeof options?.externalResourcesDirectory
+                ? options.externalResourcesDirectory
                 : "";
 
             this._Descriptor = "object" === typeof options?.descriptor

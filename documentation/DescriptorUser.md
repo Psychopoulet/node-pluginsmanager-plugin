@@ -10,7 +10,7 @@
 
 All the childs classes can use the [Descriptor](./Descriptor.md) shared by the [Orchestrator](./Orchestrator.md), and check its validity with the "checkDescriptor" method
 
-More, the class add features like external ressources directory (to create files like local sqlite without impact the plugin's installation) and 4 init/release methods
+More, the class add features like external resources directory (to create files like local sqlite without impact the plugin's installation) and 4 init/release methods
 
 ## Code
 

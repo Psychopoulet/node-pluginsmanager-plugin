@@ -26,7 +26,7 @@
 // consts
 
 	const orchestrator: OrchestratorTest = new OrchestratorTest({
-		"externalRessourcesDirectory": ".",
+		"externalResourcesDirectory": ".",
 		"packageFile": join(__dirname, "..", "..", "package.json"),
 		"descriptorFile": join(__dirname, "..", "utils", "DescriptorUser", "Descriptor.json"),
 		"mediatorFile": join(__dirname, "..", "utils", "Mediator", "LocalMediator.js"),

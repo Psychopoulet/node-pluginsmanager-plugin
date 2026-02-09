@@ -57,7 +57,7 @@ class MyPluginOrchestrator extends Orchestrator {
     constructor (options) {
 
       super({
-        "externalRessourcesDirectory": join(homedir(), "MyPluginOrchestrator"),
+        "externalResourcesDirectory": join(homedir(), "MyPluginOrchestrator"),
         "packageFile": join(__dirname, "package.json"),
         "descriptorFile": join(__dirname, "Descriptor.json"),
         "mediatorFile": join(__dirname, "Mediator.js"),

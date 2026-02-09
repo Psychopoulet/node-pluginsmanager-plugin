@@ -3,7 +3,7 @@ import type { OpenApiDocument } from "express-openapi-validate";
 export type tLogType = "data" | "debug" | "log" | "info" | "success" | "warning" | "error";
 export type tLogger = (type: tLogType, message: string | Error, bold?: boolean, pluginName?: string) => void;
 export interface iDescriptorUserOptions {
-    "externalRessourcesDirectory": string;
+    "externalResourcesDirectory": string;
     "descriptor"?: OpenApiDocument;
     "logger"?: tLogger;
 }
@@ -17,7 +17,7 @@ export interface iEventsMinimal {
 export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> extends EventEmitter<T> {
     initialized: boolean;
     protected _descriptorValidated: boolean;
-    protected _externalRessourcesDirectory: string;
+    protected _externalResourcesDirectory: string;
     protected _Descriptor: OpenApiDocument | null;
     protected _Logger: tLogger | null;
     constructor(options: iDescriptorUserOptions);

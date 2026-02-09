@@ -30,12 +30,12 @@ describe("DescriptorUser / constructor", () => {
 		strictEqual(bootable._Descriptor, null, "Generated bootable _Descriptor is not as expected");
 
 		strictEqual(
-			typeof bootable._externalRessourcesDirectory, "string",
-			"Generated bootable _externalRessourcesDirectory is not a string"
+			typeof bootable._externalResourcesDirectory, "string",
+			"Generated bootable _externalResourcesDirectory is not a string"
 		);
 		strictEqual(
-			bootable._externalRessourcesDirectory, "",
-			"Generated bootable _externalRessourcesDirectory is not as expected"
+			bootable._externalResourcesDirectory, "",
+			"Generated bootable _externalResourcesDirectory is not as expected"
 		);
 
 	});
@@ -55,19 +55,19 @@ describe("DescriptorUser / constructor", () => {
 
 	});
 
-	it("should test constructor with externalRessourcesDirectory", () => {
+	it("should test constructor with externalResourcesDirectory", () => {
 
 		const bootable = new LocalDescriptorUser({
-			"externalRessourcesDirectory": __dirname
+			"externalResourcesDirectory": __dirname
 		});
 
 		strictEqual(
-			typeof bootable._externalRessourcesDirectory, "string",
-			"Generated bootable _externalRessourcesDirectory is not a string"
+			typeof bootable._externalResourcesDirectory, "string",
+			"Generated bootable _externalResourcesDirectory is not a string"
 		);
 		strictEqual(
-			bootable._externalRessourcesDirectory, __dirname,
-			"Generated bootable _externalRessourcesDirectory is not as expected"
+			bootable._externalResourcesDirectory, __dirname,
+			"Generated bootable _externalResourcesDirectory is not as expected"
 		);
 
 	});

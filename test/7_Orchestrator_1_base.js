@@ -21,14 +21,14 @@
 
 // consts
 
-	const EXTERNAL_RESSOURCES_DIRECTORY = join(__dirname, "external-ressources");
+	const EXTERNAL_RESOURCES_DIRECTORY = join(__dirname, "external-resources");
 
 	const GOOD_OPTIONS = {
 		"packageFile": join(__dirname, "..", "package.json"),
 		"descriptorFile": join(__dirname, "utils", "DescriptorUser", "Descriptor.json"),
 		"mediatorFile": join(__dirname, "utils", "Mediator", "LocalMediator.js"),
 		"serverFile": join(__dirname, "utils", "Server", "LocalServer.js"),
-		"externalRessourcesDirectory": EXTERNAL_RESSOURCES_DIRECTORY
+		"externalResourcesDirectory": EXTERNAL_RESOURCES_DIRECTORY
 	};
 
 // tests
@@ -42,7 +42,7 @@ describe("Orchestrator", () => {
 			"descriptorFile": "descriptorFile",
 			"mediatorFile": "mediatorFile",
 			"serverFile": "serverFile",
-			"externalRessourcesDirectory": "test"
+			"externalResourcesDirectory": "test"
 		});
 
 		strictEqual(typeof orchestrator, "object", "Generated orchestrator is not an object");

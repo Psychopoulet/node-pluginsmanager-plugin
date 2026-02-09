@@ -50,7 +50,7 @@
         "id": string;
         "plugin": string;
         "command": string;
-        "data"?: any;
+        "data"?: unknown;
     }
 
     export interface iClient {
@@ -63,11 +63,11 @@
         "pattern": string;
         "validatedIp": string;
         "params": Record<string, any>;
-        "query": Record<string, any>;
+        "query": Record<string, unknown>;
         "headers": Record<string, any>;
-        "header"?: Record<string, any>;
+        "header"?: Record<string, unknown>;
         "cookies": Record<string, any>;
-        "cookie"?: Record<string, any>;
+        "cookie"?: Record<string, unknown>;
         "body": string;
         "ip": string;
     }
@@ -132,7 +132,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
         }
 
         protected _getUsableSocketIOClient (clientId: string): {
-            "emit": (event: string, data: any) => void
+            "emit": (event: string, ...data: unknown[]) => void
         } | undefined {
 
             if ("SOCKETIO" === this._serverType()) {
@@ -509,7 +509,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                         });
 
                     // extract body
-                    }).then((): Promise<any> => {
+                    }).then((): Promise<unknown> => {
 
                         if ("get" === req.method.toLowerCase()) {
                             return Promise.resolve("");
@@ -519,7 +519,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                         }
                         else {
 
-                            return extractBody(req).then((body: string): Promise<any> => {
+                            return extractBody(req).then((body: string): Promise<unknown> => {
 
                                 if (body.length) {
 
@@ -571,7 +571,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                         });
 
                     // send response
-                    }).then((content: any): Promise<void> => {
+                    }).then((content: unknown): Promise<void> => {
 
                         // no content
                         if ("undefined" === typeof content || null === content) {
@@ -904,7 +904,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
         }
 
-        public pushClient (clientId: string, command: string, data?: any, log: boolean = true): this {
+        public pushClient (clientId: string, command: string, data?: unknown, log: boolean = true): this {
 
             const serverType = this._serverType();
 
@@ -974,6 +974,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                     break;
 
                 }
+
             }).catch((err: Error): void => {
                 this._log("error", err);
             });
@@ -984,7 +985,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
         // init / release
 
-            public init (...data: any): Promise<void> {
+            public init (...data: unknown[]): Promise<void> {
 
                 return this.checkDescriptor().then((): Promise<void> => {
                     return this.checkMediator();
@@ -999,7 +1000,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
             }
 
-            public release (...data: any): Promise<void> {
+            public release (...data: unknown[]): Promise<void> {
 
                 return this._releaseWorkSpace(...data).then((): void => {
 
@@ -1013,7 +1014,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                         this._Mediator = null;
                     }
 
-                    this._externalRessourcesDirectory = "";
+                    this._externalResourcesDirectory = "";
                     this._socketServer = null;
 
                     this.initialized = false;

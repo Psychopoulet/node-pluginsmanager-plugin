@@ -22,7 +22,7 @@ module.exports = class HeritedMediator extends LocalMediator {
 	}
 
 	lockedGet () {
-		return Promise.reject(new LockedError("Locked ressource"));
+		return Promise.reject(new LockedError("Locked resource"));
 	}
 
 	emptyPost () {
