@@ -10,12 +10,12 @@
     import type { iDescriptorUserOptions, tEventMap, tEventsNoEvent } from "./DescriptorUser";
 
     export interface iMediatorUserOptions extends iDescriptorUserOptions {
-        "mediator"?: Mediator; // not sended by Orchestrator
+        "mediator"?: Mediator; // not sent by Orchestrator
     }
 
 // module
 
-// Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic
+// Please note the fact that "init" and "release" method MUST NOT be re-written. Each child has its own init logic
 export default class MediatorUser<T extends tEventMap<T> = tEventsNoEvent> extends DescriptorUser<T> {
 
     // attributes

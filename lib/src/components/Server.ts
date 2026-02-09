@@ -87,7 +87,7 @@
 
 // module
 
-// Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic.
+// Please note the fact that "init" and "release" method MUST NOT be re-written. Each child has its own init logic.
 export default class Server<T extends tEventMap<T> = iEventsMinimal> extends MediatorUser<T> {
 
     // attributes

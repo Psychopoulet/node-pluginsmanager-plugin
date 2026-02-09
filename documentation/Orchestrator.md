@@ -17,7 +17,7 @@ Check, initialize (and/or release) and execute the other main classes ([Mediator
 
 ## Code
 
-> Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic.
+> Please note the fact that "init" and "release" method MUST NOT be re-written. Each child has its own init logic.
 
 > "appMiddleware" and "socketMiddleware" send data to [Server](./Server.md) class
 

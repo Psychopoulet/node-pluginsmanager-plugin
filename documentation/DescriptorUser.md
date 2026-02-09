@@ -14,9 +14,9 @@ More, the class add features like external resources directory (to create files 
 
 ## Code
 
-> Please note the fact that "_initWorkSpace" and "_releaseWorkSpace" method MUST be re-writted in Mediator class, and not in MediatorUser childs.
+> Please note the fact that "_initWorkSpace" and "_releaseWorkSpace" method MUST be re-written in Mediator class, and not in MediatorUser childs.
 
-> Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic.
+> Please note the fact that "init" and "release" method MUST NOT be re-written. Each child has its own init logic.
 
 [check the TypeScript definition file](../lib/index.d.ts)
 

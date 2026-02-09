@@ -20,7 +20,7 @@ Expose the [Mediator](./Mediator.md)'s methods with the [Descriptor](./Descripto
 
 ## Code
 
-> Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic.
+> Please note the fact that "init" and "release" method MUST NOT be re-written. Each child has its own init logic.
 
 [check the TypeScript definition file](../lib/index.d.ts)
 

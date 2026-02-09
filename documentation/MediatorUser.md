@@ -8,7 +8,7 @@
 
 ## Resume
 
-> Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic.
+> Please note the fact that "init" and "release" method MUST NOT be re-written. Each child has its own init logic.
 
 All the childs classes can use the [Mediator](./Mediator.md)
 
