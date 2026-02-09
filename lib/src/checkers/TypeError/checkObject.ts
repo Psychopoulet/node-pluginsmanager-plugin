@@ -5,7 +5,7 @@
 
 // module
 
-export function checkObjectSync (dataName: string, data: any): ReferenceError | TypeError | null {
+export function checkObjectSync (dataName: string, data: unknown): ReferenceError | TypeError | null {
 
     let err: ReferenceError | null = checkExistsSync(dataName, data);
 
@@ -21,7 +21,7 @@ export function checkObjectSync (dataName: string, data: any): ReferenceError | 
 
 }
 
-export function checkObject (dataName: string, data: any): Promise<void> {
+export function checkObject (dataName: string, data: unknown): Promise<void> {
 
     const err: ReferenceError | TypeError | null = checkObjectSync(dataName, data);
 

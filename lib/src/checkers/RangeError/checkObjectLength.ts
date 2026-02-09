@@ -11,7 +11,7 @@
 
 // module
 
-export function checkObjectLengthSync (dataName: string, data: any, _length: number): ReferenceError | TypeError | RangeError | null {
+export function checkObjectLengthSync (dataName: string, data: unknown, _length: number): ReferenceError | TypeError | RangeError | null {
 
     let err: ReferenceError | TypeError | RangeError | null = checkObjectSync(dataName, data);
 
@@ -37,7 +37,7 @@ export function checkObjectLengthSync (dataName: string, data: any, _length: num
 
 }
 
-export function checkObjectLength (dataName: string, data: any, length: number): Promise<void> {
+export function checkObjectLength (dataName: string, data: unknown, length: number): Promise<void> {
 
     const err: ReferenceError | TypeError | RangeError | null = checkObjectLengthSync(dataName, data, length);
 

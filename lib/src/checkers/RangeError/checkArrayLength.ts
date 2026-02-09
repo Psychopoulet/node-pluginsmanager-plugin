@@ -6,7 +6,7 @@
 
 // module
 
-export function checkArrayLengthSync (dataName: string, data: any, length: number): ReferenceError | TypeError | RangeError | null {
+export function checkArrayLengthSync (dataName: string, data: unknown, length: number): ReferenceError | TypeError | RangeError | null {
 
     let err: ReferenceError | TypeError | RangeError | null = checkArraySync(dataName, data);
 
@@ -26,7 +26,7 @@ export function checkArrayLengthSync (dataName: string, data: any, length: numbe
 
 }
 
-export function checkArrayLength (dataName: string, data: any, length: number): Promise<void> {
+export function checkArrayLength (dataName: string, data: unknown, length: number): Promise<void> {
 
     const err: ReferenceError | TypeError | RangeError | null = checkArrayLengthSync(dataName, data, length);
 

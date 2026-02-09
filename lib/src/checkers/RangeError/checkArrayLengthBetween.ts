@@ -7,7 +7,7 @@
 
 // module
 
-export function checkArrayLengthBetweenSync (dataName: string, data: any, min: number, max: number): ReferenceError | TypeError | RangeError | null {
+export function checkArrayLengthBetweenSync (dataName: string, data: unknown, min: number, max: number): ReferenceError | TypeError | RangeError | null {
 
     let err: ReferenceError | TypeError | RangeError | null = checkArraySync(dataName, data);
 
@@ -19,7 +19,7 @@ export function checkArrayLengthBetweenSync (dataName: string, data: any, min: n
             err = checkNonEmptyIntegerSync(dataName + "/max", max);
         }
 
-        if (!err && min > (data as any[]).length) {
+        if (!err && min > (data as unknown[]).length) {
 
             err = new RangeError(
                 "\"" + dataName + "\" length must be higher than " + min
@@ -27,7 +27,7 @@ export function checkArrayLengthBetweenSync (dataName: string, data: any, min: n
 
         }
 
-        if (!err && max < (data as any[]).length) {
+        if (!err && max < (data as unknown[]).length) {
 
             err = new RangeError(
                 "\"" + dataName + "\" length must be lower than " + max
@@ -39,7 +39,7 @@ export function checkArrayLengthBetweenSync (dataName: string, data: any, min: n
 
 }
 
-export function checkArrayLengthBetween (dataName: string, data: any, min: number, max: number): Promise<void> {
+export function checkArrayLengthBetween (dataName: string, data: unknown, min: number, max: number): Promise<void> {
 
     const err: ReferenceError | TypeError | RangeError | null = checkArrayLengthBetweenSync(dataName, data, min, max);
 

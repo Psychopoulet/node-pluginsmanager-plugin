@@ -5,7 +5,7 @@
 
 // module
 
-export function checkNonEmptyStringSync (dataName: string, data: any): ReferenceError | TypeError | RangeError | null {
+export function checkNonEmptyStringSync (dataName: string, data: unknown): ReferenceError | TypeError | RangeError | null {
 
     let err: ReferenceError | TypeError | RangeError | null = checkStringSync(dataName, data);
 
@@ -21,7 +21,7 @@ export function checkNonEmptyStringSync (dataName: string, data: any): Reference
 
 }
 
-export function checkNonEmptyString (dataName: string, data: any): Promise<void> {
+export function checkNonEmptyString (dataName: string, data: unknown): Promise<void> {
 
     const err: ReferenceError | TypeError | RangeError | null = checkNonEmptyStringSync(dataName, data);
 

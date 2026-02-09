@@ -5,7 +5,7 @@
 
 // module
 
-export function checkArraySync (dataName: string, data: any): ReferenceError | TypeError | null {
+export function checkArraySync (dataName: string, data: unknown): ReferenceError | TypeError | null {
 
     let err: ReferenceError | TypeError | null = checkObjectSync(dataName, data);
 
@@ -21,7 +21,7 @@ export function checkArraySync (dataName: string, data: any): ReferenceError | T
 
 }
 
-export function checkArray (dataName: string, data: any): Promise<void> {
+export function checkArray (dataName: string, data: unknown): Promise<void> {
 
     const err: ReferenceError | TypeError | null = checkArraySync(dataName, data);
 

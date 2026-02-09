@@ -7,7 +7,7 @@
 
 // module
 
-export function checkObjectLengthBetweenSync (dataName: string, data: any, min: number, max: number): ReferenceError | TypeError | RangeError | null {
+export function checkObjectLengthBetweenSync (dataName: string, data: unknown, min: number, max: number): ReferenceError | TypeError | RangeError | null {
 
     let err: ReferenceError | TypeError | RangeError | null = checkObjectSync(dataName, data);
 
@@ -45,7 +45,7 @@ export function checkObjectLengthBetweenSync (dataName: string, data: any, min: 
 
 }
 
-export function checkObjectLengthBetween (dataName: string, data: any, min: number, max: number): Promise<void> {
+export function checkObjectLengthBetween (dataName: string, data: unknown, min: number, max: number): Promise<void> {
 
     const err: ReferenceError | TypeError | RangeError | null = checkObjectLengthBetweenSync(dataName, data, min, max);
 

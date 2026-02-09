@@ -6,7 +6,7 @@
 
 // module
 
-export function checkIntegerBetweenSync (dataName: string, data: any, min: number, max: number): ReferenceError | TypeError | RangeError | null {
+export function checkIntegerBetweenSync (dataName: string, data: unknown, min: number, max: number): ReferenceError | TypeError | RangeError | null {
 
     let err: ReferenceError | TypeError | RangeError | null = checkIntegerSync(dataName, data);
 
@@ -38,7 +38,7 @@ export function checkIntegerBetweenSync (dataName: string, data: any, min: numbe
 
 }
 
-export function checkIntegerBetween (dataName: string, data: any, min: number, max: number): Promise<void> {
+export function checkIntegerBetween (dataName: string, data: unknown, min: number, max: number): Promise<void> {
 
     const err: ReferenceError | TypeError | RangeError | null = checkIntegerBetweenSync(dataName, data, min, max);
 

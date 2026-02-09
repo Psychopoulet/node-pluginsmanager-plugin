@@ -1,6 +1,6 @@
 // module
 
-export function checkExistsSync (dataName: string, data: any): ReferenceError | null {
+export function checkExistsSync (dataName: string, data: unknown): ReferenceError | null {
 
     let err: ReferenceError | null = null;
 
@@ -16,7 +16,7 @@ export function checkExistsSync (dataName: string, data: any): ReferenceError | 
 
 }
 
-export function checkExists (dataName: string, data: any): Promise<void> {
+export function checkExists (dataName: string, data: unknown): Promise<void> {
 
     const err: ReferenceError | null = checkExistsSync(dataName, data);
 
