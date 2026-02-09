@@ -125,15 +125,15 @@ export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> ext
     // public
 
         public getPluginName (): string {
-            return this._Descriptor && this._Descriptor.info && this._Descriptor.info.title ? this._Descriptor.info.title : "";
+            return this._Descriptor?.info?.title ?? "";
         }
 
         public getPluginVersion (): string {
-            return this._Descriptor && this._Descriptor.info && this._Descriptor.info.version ? this._Descriptor.info.version : "";
+            return this._Descriptor?.info?.version ?? "";
         }
 
         public getPluginDescription (): string {
-            return this._Descriptor && this._Descriptor.info && this._Descriptor.info.description ? this._Descriptor.info.description : "";
+            return this._Descriptor?.info?.description ?? "";
         }
 
         // must be inherited

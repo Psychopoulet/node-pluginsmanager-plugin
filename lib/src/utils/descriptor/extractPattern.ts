@@ -12,9 +12,11 @@
 
 export default function extractPattern (paths: OpenApiDocument["paths"], pathname: string, method: string): string {
 
-    return "object" !== typeof paths ? "" : Object.keys(paths).filter((p: string): boolean => {
-        return "undefined" !== typeof (paths[p] as Record<string, any>)[method];
-    }).find((p: string): boolean => {
+    return "object" !== typeof paths ? "" : Object.keys(paths).find((p: string): boolean => {
+
+        if ("undefined" === typeof (paths[p] as Record<string, any>)[method]) {
+            return false;
+        }
 
         const pathnameSplitted: string[] = removeFirstSlash(pathname).split("/");
         const pathSplitted: string[] = removeFirstSlash(p).split("/");

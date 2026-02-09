@@ -398,15 +398,14 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
 
                     Object.keys(data).forEach((key: string): void => {
 
-                        if ("function" !== typeof self[key]) {
+                        if ("__proto__" === key || "constructor" === key || "prototype" === key) return;
+                        if ("function" === typeof self[key]) return;
 
-                            if ("undefined" === typeof self[key]) {
-                                this._extended.push(key);
-                            }
-
-                            self[key] = data[key];
-
+                        if ("undefined" === typeof self[key]) {
+                            this._extended.push(key);
                         }
+
+                        self[key] = data[key];
 
                     });
 
