@@ -80,6 +80,7 @@
         "pre-push": "npm run unit-tests"
     }
   },
+
   "keywords": [
     "plugin",
     "manage",
