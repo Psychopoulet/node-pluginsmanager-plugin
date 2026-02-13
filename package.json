@@ -72,7 +72,6 @@
     "used-deps-analyzer": "0.1.8",
     "ws": "8.19.0"
   },
-  "optionalDependencies": {},
 
   "husky": {
     "hooks": {
