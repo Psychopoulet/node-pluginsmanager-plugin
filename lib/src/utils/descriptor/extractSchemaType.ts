@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/camelcase
+
 // types & interfaces
 
     // externals
