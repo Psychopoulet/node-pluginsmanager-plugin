@@ -32,7 +32,7 @@
     "build": "npm run build-back",
 
     "check-requires": "npx used-deps-analyzer ./package.json ./lib/src --no-dev",
-    "check-updates": "npx check-version-modules",
+    "check-updates": "npx check-version-modules --no-fail-at-major --fail-at-minor --fail-at-patch",
     "unit-tests": "npm run build && npx nyc --reporter=html --reporter=text mocha",
 
     "tests": "npm run lint && npm run check-requires && npm run check-updates && npm run unit-tests"
@@ -91,7 +91,7 @@
   "homepage": "https://github.com/Psychopoulet/node-pluginsmanager-plugin#readme",
   "repository": {
     "type": "git",
-    "url": "git://github.com/Psychopoulet/node-pluginsmanager-plugin"
+    "url": "git://github.com/Psychopoulet/node-pluginsmanager-plugin.git"
   },
   "bugs": {
     "url": "https://github.com/Psychopoulet/node-pluginsmanager-plugin/issues"

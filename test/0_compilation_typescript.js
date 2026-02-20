@@ -1,70 +1,87 @@
-
-"use strict";
-
 // deps
 
-	// natives
-	const { exec } = require("child_process");
-	const { join } = require("path");
-	const { unlink } = require("fs");
+    // natives
+    const { exec } = require("node:child_process");
+    const { join } = require("node:path");
+    const { unlink } = require("node:fs/promises");
+    const { lstat } = require("node:fs");
 
 // consts
 
-	const MAX_TIMEOUT = 10000;
+    const MAX_TIMEOUT = 10000;
 
 // tests
 
 describe("compilation typescript", () => {
 
-	describe("commonjs", () => {
+    const compilationSource = join(__dirname, "typescript", "compilation.cts");
+    const compilationTarget = join(__dirname, "typescript", "compilation.cjs");
 
-		after((done) => {
+    before(() => {
 
-			unlink(join(__dirname, "typescript", "compilation.cjs"), (err) => {
-				return err ? done(err) : done();
-			});
+        return new Promise((resolve) => {
 
-		});
+            lstat(compilationTarget, (err, stats) => {
+                return resolve(Boolean(!err && stats.isFile()));
+            });
 
-		it("should compile typescript file", () => {
+        }).then((exists) => {
+            return exists ? unlink(compilationTarget) : Promise.resolve();
+        });
 
-			return new Promise((resolve, reject) => {
+    });
 
-				const args = [
-					"npx tsc",
-					join(__dirname, "typescript", "compilation.cts"),
-					"--target es6",
-					"--module commonjs",
-					"--esModuleInterop"
-				];
+    after(() => {
 
-				exec(args.join(" "), {
-					"cwd": join(__dirname, ".."),
-					"windowsHide": true
-				}, (err) => {
-					return err ? reject(err) : resolve();
-				});
+        return new Promise((resolve) => {
 
-			});
+            lstat(compilationTarget, (err, stats) => {
+                return resolve(Boolean(!err && stats.isFile()));
+            });
 
-		}).timeout(MAX_TIMEOUT);
+        }).then((exists) => {
+            return exists ? unlink(compilationTarget) : Promise.resolve();
+        });
 
-		it("should exec compiled typescript file", (done) => {
+    });
 
-			const args = [
-				"node",
-				join(__dirname, "typescript", "compilation.cjs")
-			];
+    it("should compile typescript file", () => {
 
-			exec(args.join(" "), {
-				"cwd": join(__dirname, ".."),
-				"windowsHide": true
-			}, (err) => {
-				return err ? done(err) : done();
-			});
+        return new Promise((resolve, reject) => {
 
-		}).timeout(MAX_TIMEOUT);
+            const args = [
+                "npx tsc",
+                compilationSource,
+                "--target es6",
+                "--module commonjs",
+                "--esModuleInterop"
+            ];
 
-	});
+            exec(args.join(" "), {
+                "cwd": join(__dirname, ".."),
+                "windowsHide": true
+            }, (err) => {
+                return err ? reject(err) : resolve();
+            });
+
+        });
+
+    }).timeout(MAX_TIMEOUT);
+
+    it("should exec compiled typescript file", (done) => {
+
+        const args = [
+            "node",
+            compilationTarget
+        ];
+
+        exec(args.join(" "), {
+            "cwd": join(__dirname, ".."),
+            "windowsHide": true
+        }, (err) => {
+            return err ? done(err) : done();
+        });
+
+    }).timeout(MAX_TIMEOUT);
 
 });
