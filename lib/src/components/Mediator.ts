@@ -238,7 +238,7 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
                 this._validator = new OpenApiValidator(this._Descriptor as OpenApiDocument);
 
                 this.initialized = true;
-                this._emitEventGenericForTSPurposeDONOTUSE("initialized", [ ...data ]);
+                (this.emit as (event: "initialized", ...args: unknown[]) => boolean)("initialized", ...data);
 
             });
 
@@ -253,7 +253,7 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
                 this._validator = null;
 
                 this.initialized = false;
-                this._emitEventGenericForTSPurposeDONOTUSE("released", [ ...data ]);
+                (this.emit as (event: "released", ...args: unknown[]) => boolean)("released", ...data);
 
             }).then((): void => {
 

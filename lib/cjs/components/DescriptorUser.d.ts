@@ -24,7 +24,6 @@ export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> ext
     protected _initWorkSpace(...data: unknown[]): Promise<void>;
     protected _releaseWorkSpace(...data: unknown[]): Promise<void>;
     protected _log(type: tLogType, message: string | Error, bold?: boolean): this;
-    protected _emitEventGenericForTSPurposeDONOTUSE(event: string, ...args: unknown[]): boolean;
     getPluginName(): string;
     getPluginVersion(): string;
     getPluginDescription(): string;

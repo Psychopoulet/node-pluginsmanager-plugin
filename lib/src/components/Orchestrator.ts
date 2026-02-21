@@ -43,7 +43,7 @@
 
 // module
 
-export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> extends MediatorUser<T> {
+export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEventsMinimal> extends MediatorUser<T> {
 
     // attributes
 
@@ -269,7 +269,7 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
                     (this._Server as Server).disableCors();
 
                 }).catch((err: Error): void => {
-                    this._emitEventGenericForTSPurposeDONOTUSE("error", err);
+                    (this.emit as (event: "error", err: Error) => boolean)("error", err);
                 });
 
                 return this;
@@ -283,7 +283,7 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
                     (this._Server as Server).enableCors();
 
                 }).catch((err: Error): void => {
-                    this._emitEventGenericForTSPurposeDONOTUSE("error", err);
+                    (this.emit as (event: "error", err: Error) => boolean)("error", err);
                 });
 
                 return this;
@@ -560,7 +560,7 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
 
                                 // intercept errors to avoid non-catched ones
                                 (this._Mediator as Mediator).on("error", (err: Error): void => {
-                                    this._emitEventGenericForTSPurposeDONOTUSE("error", err);
+                                    (this.emit as (event: "error", err: Error) => boolean)("error", err);
                                 });
 
                             });
@@ -609,7 +609,7 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
 
                                 // intercept errors to avoid non-catched ones
                                 (this._Server as Server).on("error", (err: Error): void => {
-                                    this._emitEventGenericForTSPurposeDONOTUSE("error", err);
+                                    (this.emit as (event: "error", err: Error) => boolean)("error", err);
                                 });
 
                             });
@@ -647,7 +647,7 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
                     }).then((): void => {
 
                         this.initialized = true;
-                        this._emitEventGenericForTSPurposeDONOTUSE("initialized", ...data);
+                        (this.emit as (event: "initialized", ...args: unknown[]) => boolean)("initialized", ...data);
 
                     });
 
@@ -678,7 +678,7 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
                     this._Descriptor = null;
 
                     this.initialized = false;
-                    this._emitEventGenericForTSPurposeDONOTUSE("released", ...data);
+                    (this.emit as (event: "released", ...args: unknown[]) => boolean)("released", ...data);
 
                 });
 

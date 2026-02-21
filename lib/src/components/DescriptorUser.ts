@@ -115,13 +115,6 @@ export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> ext
 
         }
 
-        // used to faint the typing of EventEmitter for emit into a generic class (which MUST be inherited anyway) like Mediator/Server/Orchestrator
-        protected _emitEventGenericForTSPurposeDONOTUSE (event: string, ...args: unknown[]): boolean {
-
-            return this.emit(event, ...args as any);
-
-        }
-
     // public
 
         public getPluginName (): string {

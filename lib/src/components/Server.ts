@@ -994,7 +994,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                 }).then((): void => {
 
                     this.initialized = true;
-                    this._emitEventGenericForTSPurposeDONOTUSE("initialized", ...data);
+                    (this.emit as (event: "initialized", ...args: unknown[]) => boolean)("initialized", ...data);
 
                 });
 
@@ -1018,7 +1018,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                     this._socketServer = null;
 
                     this.initialized = false;
-                    this._emitEventGenericForTSPurposeDONOTUSE("released", ...data);
+                    (this.emit as (event: "released", ...args: unknown[]) => boolean)("released", ...data);
 
                 }).then((): void => {
 

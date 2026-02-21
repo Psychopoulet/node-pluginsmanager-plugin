@@ -13,7 +13,7 @@ export interface iOrchestratorOptions {
     "serverFile": string;
     "logger"?: tLogger;
 }
-export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> extends MediatorUser<T> {
+export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEventsMinimal> extends MediatorUser<T> {
     protected _Server: Server | null;
     protected _socketServer: WebSocketServer | SocketIOServer | null;
     protected _checkParameters: boolean;
