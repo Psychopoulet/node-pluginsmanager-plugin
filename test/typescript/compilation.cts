@@ -45,6 +45,8 @@ orchestrator.on("test", (test: string): void => {
 	console.log("test emitted", test);
 });
 
+orchestrator.emit("test", "this is a test");
+
 orchestrator.load().then((): Promise<void> => {
 
 	console.log(orchestrator);
