@@ -541,7 +541,7 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
 
                             }
                             catch (e) {
-                                reject(e as Error);
+                                reject(e instanceof Error ? e : new Error(String(e)));
                             }
 
                         // init
@@ -589,7 +589,7 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
 
                             }
                             catch (e) {
-                                reject(e as Error);
+                                reject(e instanceof Error ? e : new Error(String(e)));
                             }
 
                         // init
