@@ -75,7 +75,7 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
                 "path": urlParams ? urlParams?.path ?? {} : {},
                 "query": urlParams ? urlParams?.query ?? {} : {},
                 "headers": urlParams ? urlParams?.headers ?? urlParams?.header ?? {} : {},
-                "cookies": urlParams ? urlParams?.cookies ?? urlParams?.cookie ?? {} : {},
+                "cookies": urlParams ? urlParams?.cookies ?? urlParams?.cookie ?? {} : {}
             };
 
             // parameters validation

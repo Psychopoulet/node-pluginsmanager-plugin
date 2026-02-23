@@ -398,8 +398,12 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
 
                     Object.keys(data).forEach((key: string): void => {
 
-                        if ("__proto__" === key || "constructor" === key || "prototype" === key) return;
-                        if ("function" === typeof self[key]) return;
+                        if ("__proto__" === key || "constructor" === key || "prototype" === key) {
+                            return;
+                        }
+                        if ("function" === typeof self[key]) {
+                            return;
+                        }
 
                         if ("undefined" === typeof self[key]) {
                             this._extended.push(key);

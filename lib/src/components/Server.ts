@@ -851,7 +851,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                             }
 
                             result.push({
-                                "id": s.id as string,
+                                "id": s.id,
                                 "status": WEBSOCKET_STATE_OPEN === s.readyState ? "CONNECTED" : "DISCONNECTED"
                             });
 
