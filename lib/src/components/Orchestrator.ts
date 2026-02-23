@@ -483,8 +483,8 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
 
                                 this._Descriptor = validatedDescriptor;
 
-                                if (!(this._Descriptor as OpenApiDocument).servers) {
-                                    (this._Descriptor as OpenApiDocument).servers = [];
+                                if (!this._Descriptor.servers) {
+                                    this._Descriptor.servers = [];
                                 }
 
                             });
@@ -530,10 +530,10 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
                                 const val: typeof Mediator | { "default": typeof Mediator } = require(this._mediatorFile);
 
                                 if ("object" === typeof val && "function" === typeof val.default) {
-                                    resolve(val.default as typeof Mediator);
+                                    resolve(val.default);
                                 }
                                 else if ("function" === typeof val) {
-                                    resolve(val as typeof Mediator);
+                                    resolve(val);
                                 }
                                 else {
                                     reject(new Error("Mediator file loaded (\"" + this._mediatorFile + "\") does not contain a valid Mediator"));
@@ -578,10 +578,10 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
                                 const val: typeof Server | { "default": typeof Server } = require(this._serverFile);
 
                                 if ("object" === typeof val && "function" === typeof val.default) {
-                                    resolve(val.default as typeof Server);
+                                    resolve(val.default);
                                 }
                                 else if ("function" === typeof val) {
-                                    resolve(val as typeof Server);
+                                    resolve(val);
                                 }
                                 else {
                                     reject(new Error("Server file loaded (\"" + this._serverFile + "\") does not contain a valid Server"));

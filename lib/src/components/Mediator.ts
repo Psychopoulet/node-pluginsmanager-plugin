@@ -128,7 +128,7 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
 
                 return err instanceof ValidationError ? Promise.resolve().then((): Promise<void> => {
 
-                    switch ((err as ValidationError).data[0].keyword) { // extract first Error
+                    switch (err.data[0].keyword) { // extract first Error
 
                         case "required":
                             return Promise.reject(new ReferenceError(err.message));
@@ -187,7 +187,9 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
                     }
 
                     // validator cannot correctly check pure boolean return
-                    else if ("undefined" !== typeof res.body && [ "true", "false", true, false ].includes(res.body)) {
+                    else if ("undefined" !== typeof res.body && [
+                        "true", "false", true, false
+                    ].includes(res.body)) {
                         return resolve();
                     }
 
@@ -203,7 +205,9 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
                                 mutedRes.body = {};
                             }
 
-                            const validateResponse = (this._validator as OpenApiValidator).validateResponse(foundPathMethod.method, foundPathMethod.path);
+                            const validateResponse = (this._validator as OpenApiValidator)
+                                .validateResponse(foundPathMethod.method, foundPathMethod.path);
+
                             validateResponse(mutedRes);
 
                             return resolve();
@@ -216,7 +220,7 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
                                 + " (" + foundPathMethod.operationId + ") => "
                                 + res.statusCode
                                 + "\r\n"
-                                + ((e as Error).message ? (e as Error).message : e) as string
+                                + ((e as Error).message ? (e as Error).message : e)
                             ));
 
                         }
