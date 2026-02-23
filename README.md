@@ -1,12 +1,17 @@
 # node-pluginsmanager-plugin
 An abstract parent plugin for node-pluginsmanager
 
-[![Build status](https://api.travis-ci.org/Psychopoulet/node-pluginsmanager-plugin.svg?branch=master)](https://travis-ci.org/Psychopoulet/node-pluginsmanager-plugin)
-[![Coverage status](https://coveralls.io/repos/github/Psychopoulet/node-pluginsmanager-plugin/badge.svg?branch=master)](https://coveralls.io/github/Psychopoulet/node-pluginsmanager-plugin)
-[![Dependency status](https://david-dm.org/Psychopoulet/node-pluginsmanager-plugin/status.svg)](https://david-dm.org/Psychopoulet/node-pluginsmanager-plugin)
-[![Dev dependency status](https://david-dm.org/Psychopoulet/node-pluginsmanager-plugin/dev-status.svg)](https://david-dm.org/Psychopoulet/node-pluginsmanager-plugin?type=dev)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=Psychopoulet_node-pluginsmanager-plugin&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=Psychopoulet_node-pluginsmanager-plugin)
 [![Issues](https://img.shields.io/github/issues/Psychopoulet/node-pluginsmanager-plugin.svg)](https://github.com/Psychopoulet/node-pluginsmanager-plugin/issues)
 [![Pull requests](https://img.shields.io/github/issues-pr/Psychopoulet/node-pluginsmanager-plugin.svg)](https://github.com/Psychopoulet/node-pluginsmanager-plugin/pulls)
+
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=Psychopoulet_node-pluginsmanager-plugin&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=Psychopoulet_node-pluginsmanager-plugin)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Psychopoulet_node-pluginsmanager-plugin&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=Psychopoulet_node-pluginsmanager-plugin)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Psychopoulet_node-pluginsmanager-plugin&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=Psychopoulet_node-pluginsmanager-plugin)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=Psychopoulet_node-pluginsmanager-plugin&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=Psychopoulet_node-pluginsmanager-plugin)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=Psychopoulet_node-pluginsmanager-plugin&metric=bugs)](https://sonarcloud.io/summary/new_code?id=Psychopoulet_node-pluginsmanager-plugin)
+
+[![Known Vulnerabilities](https://snyk.io/test/github/Psychopoulet/node-pluginsmanager-plugin/badge.svg)](https://snyk.io/test/github/Psychopoulet/node-pluginsmanager-plugin)
 
 ## Installation
 
