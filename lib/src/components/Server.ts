@@ -1,7 +1,7 @@
 // deps
 
     // natives
-    import { AddressInfo } from "node:net";
+    import type { AddressInfo } from "node:net";
     import { EOL } from "node:os";
     import { parse } from "node:url";
 
@@ -25,7 +25,7 @@
     import cleanSendedError from "../utils/cleanSendedError";
 
     import MediatorUser, { type iMediatorUserOptions } from "./MediatorUser";
-    import Mediator from "./Mediator";
+    import type Mediator from "./Mediator";
     import UnauthorizedError from "./errors/UnauthorizedError";
     import NotFoundError from "./errors/NotFoundError";
     import LockedError from "./errors/LockedError";
@@ -158,7 +158,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                     socket = (this._socketServer as SocketIOServer).sockets.sockets.get(clientId);
                 }
 
-                if (socket && socket.connected) {
+                if (socket?.connected) {
                     return socket;
                 }
 
@@ -200,7 +200,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                 return next();
             }
 
-            if (!(this._Descriptor as OpenApiDocument).paths) {
+            if (!this._Descriptor.paths) {
                 return next();
             }
 
@@ -287,7 +287,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                     // add current server
 
-                    const port: number = res.socket && res.socket.localPort ? res.socket.localPort : (res.socket?.address() as AddressInfo).port;
+                    const port: number = res.socket?.localPort ? res.socket.localPort : (res.socket?.address() as AddressInfo).port;
 
                     const descriptor: OpenApiDocument = { ...(this._Descriptor as OpenApiDocument) };
 
