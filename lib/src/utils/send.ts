@@ -72,11 +72,11 @@ export default function send (req: IncomingMessage, res: iServerResponse, code: 
                 "Content-Length": 0 < formattedContent.length ? Buffer.byteLength(formattedContent) : 0,
                 "Status-Code-Url-Cat": "https://http.cat/" + code,
                 "API-Version": options.apiVersion,
-                ...(options.cors ? {
+                ...options.cors ? {
                     "Access-Control-Allow-Origin": "*",
                     "Access-Control-Allow-Credentials": true,
                     "Access-Control-Allow-Methods": req.headers["access-control-request-method"]
-                        ? req.headers["access-control-request-method"] as string
+                        ? req.headers["access-control-request-method"]
                         : [
                             "GET",
                             "POST",
@@ -86,7 +86,7 @@ export default function send (req: IncomingMessage, res: iServerResponse, code: 
                             "OPTIONS"
                         ].join(", "),
                     "Access-Control-Allow-Headers": req.headers["access-control-request-headers"]
-                        ? req.headers["access-control-request-headers"] as string
+                        ? req.headers["access-control-request-headers"]
                         : [
                             "Origin",
                             "Accept",
@@ -100,7 +100,7 @@ export default function send (req: IncomingMessage, res: iServerResponse, code: 
                             "X-CSRF-Token",
                             "X-Requested-With"
                         ].join(", ")
-                } : {})
+                } : {}
             };
 
             // send data

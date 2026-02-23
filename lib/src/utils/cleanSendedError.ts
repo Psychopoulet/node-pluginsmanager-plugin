@@ -12,7 +12,7 @@ export default function cleanSendedError (data: Error | Record<string, any> | st
         }
         else {
 
-            Object.keys(data as Record<string, any>).forEach((key: string): void => {
+            Object.keys(data).forEach((key: string): void => {
                 data[key] = cleanSendedError(data[key]);
             });
 

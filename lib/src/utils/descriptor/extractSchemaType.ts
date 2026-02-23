@@ -18,7 +18,7 @@ export default function extractSchemaType (schema: OpenAPIV3_1.SchemaObject | Op
 
             const ref: string = (schema as OpenAPIV3_1.ReferenceObject).$ref.replace("#/components/schemas/", "");
 
-            if (schemas[ref] && schemas[ref].type) {
+            if (schemas[ref]?.type) {
                 result = schemas[ref].type;
             }
 

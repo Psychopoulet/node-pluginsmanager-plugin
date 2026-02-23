@@ -108,7 +108,7 @@ export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> ext
         protected _log (type: tLogType, message: string | Error, bold?: boolean): this {
 
             if (Boolean(message) && "function" === typeof this._Logger && LOG_TYPES_ALLOWED.includes(type)) {
-                (this._Logger as tLogger)(type, message, bold, this.getPluginName());
+                this._Logger(type, message, bold, this.getPluginName());
             }
 
             return this;
@@ -176,7 +176,7 @@ export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> ext
             }).then((): Promise<void> => {
 
                 // check paths object
-                return (checkObject("Descriptor.paths", (this._Descriptor as OpenApiDocument).paths)).then((): Promise<void> => {
+                return checkObject("Descriptor.paths", (this._Descriptor as OpenApiDocument).paths).then((): Promise<void> => {
 
                     // check multiple operationIds
                     return Promise.resolve().then((): Promise<void> => {

@@ -41,7 +41,7 @@ export default function extractMime (contentType: string, code: number, response
                 }
 
             }
-            else if (responses.default && responses.default.content) {
+            else if (responses.default?.content) {
                 descriptorContent = responses.default.content;
             }
             else {

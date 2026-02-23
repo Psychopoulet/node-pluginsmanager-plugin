@@ -30,7 +30,7 @@ export default class MediatorUser<T extends tEventMap<T> = tEventsNoEvent> exten
 
         super(options);
 
-        this._Mediator = options && "undefined" !== typeof options.mediator
+        this._Mediator = "undefined" !== typeof options?.mediator
             ? options.mediator
             : null;
 
