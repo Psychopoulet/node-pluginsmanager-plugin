@@ -596,7 +596,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                             else if ("application/json" === contentType) {
                                 this._log("success", "<= [" + req.validatedIp + "] <" + contentType + "> " + JSON.stringify(content));
                             }
-                            else if ([ "application/xml", "text/plain" ].includes(contentType)) {
+                            else if ([ "application/xml", "text/plain" ].includes(contentType) && "string" === typeof content) {
                                 this._log("success", "<= [" + req.validatedIp + "] <" + contentType + "> " + content);
                             }
                             else {

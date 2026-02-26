@@ -220,7 +220,7 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
                                 + " (" + foundPathMethod.operationId + ") => "
                                 + res.statusCode
                                 + "\r\n"
-                                + ((e as Error).message ? (e as Error).message : e)
+                                + ((e as Error).message ? (e as Error).message : String(e))
                             ));
 
                         }

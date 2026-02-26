@@ -1,3 +1,7 @@
+/*
+    eslint-disable @typescript-eslint/no-base-to-string
+*/
+
 // types & interfaces
 
     // natives
