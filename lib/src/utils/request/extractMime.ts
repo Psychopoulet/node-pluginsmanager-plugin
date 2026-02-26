@@ -32,7 +32,7 @@ export default function extractMime (contentType: string, code: number, response
         }
         else {
 
-            let descriptorContent: Record<string, any> | undefined;
+            let descriptorContent: Record<string, any> = {};
 
             if (responses[stringifiedCode]) {
 
@@ -48,7 +48,7 @@ export default function extractMime (contentType: string, code: number, response
                 return DEFAULT_MIME;
             }
 
-            const possibleMimes: string[] = descriptorContent ? Object.keys(descriptorContent) : [];
+            const possibleMimes: string[] = Object.keys(descriptorContent);
 
             const [ mimeRequest, charsetRequest ] = contentType.split(";").map((content: string): string => {
                 return content.trim().toLowerCase();
