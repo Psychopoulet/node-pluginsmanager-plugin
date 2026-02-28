@@ -289,7 +289,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                     // add current server
 
-                    const port: number = res.socket?.localPort ? res.socket.localPort : (res.socket?.address() as AddressInfo).port;
+                    const port: number = res.socket?.localPort ?? (res.socket?.address() as AddressInfo).port;
 
                     const descriptor: OpenApiDocument = { ...(this._Descriptor as OpenApiDocument) };
 
@@ -808,9 +808,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                         (this._socketServer as WebSocketServer).clients.forEach((client: iWebSocketWithId): void => {
 
-                            if (!client.id) {
-                                client.id = uniqid();
-                            }
+                            client.id ??= uniqid();
 
                             if (WEBSOCKET_STATE_OPEN === client.readyState) {
                                 client.send(result);
@@ -848,9 +846,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                         (this._socketServer as WebSocketServer).clients.forEach((s: { "id"?: string; "readyState": number; }): void => {
 
-                            if (!s.id) {
-                                s.id = uniqid();
-                            }
+                            s.id ??= uniqid();
 
                             result.push({
                                 "id": s.id,

@@ -79,9 +79,7 @@ export default function send (req: IncomingMessage, res: iServerResponse, code: 
                 ...options.cors ? {
                     "Access-Control-Allow-Origin": "*",
                     "Access-Control-Allow-Credentials": true,
-                    "Access-Control-Allow-Methods": req.headers["access-control-request-method"]
-                        ? req.headers["access-control-request-method"]
-                        : [
+                    "Access-Control-Allow-Methods": req.headers["access-control-request-method"] ?? [
                             "GET",
                             "POST",
                             "PUT",
@@ -89,9 +87,7 @@ export default function send (req: IncomingMessage, res: iServerResponse, code: 
                             "PATCH",
                             "OPTIONS"
                         ].join(", "),
-                    "Access-Control-Allow-Headers": req.headers["access-control-request-headers"]
-                        ? req.headers["access-control-request-headers"]
-                        : [
+                    "Access-Control-Allow-Headers": req.headers["access-control-request-headers"] ?? [
                             "Origin",
                             "Accept",
                             "Accept-Version",

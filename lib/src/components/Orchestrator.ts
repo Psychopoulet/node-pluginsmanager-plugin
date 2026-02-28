@@ -486,10 +486,7 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
                             return SwaggerParser.validate(bundledDescriptor).then((validatedDescriptor: OpenApiDocument): void => {
 
                                 this._Descriptor = validatedDescriptor;
-
-                                if (!this._Descriptor.servers) {
-                                    this._Descriptor.servers = [];
-                                }
+                                this._Descriptor.servers ??= [];
 
                             });
 
