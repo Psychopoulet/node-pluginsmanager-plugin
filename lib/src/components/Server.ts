@@ -40,7 +40,7 @@
     // externals
     import type { OpenApiDocument } from "express-openapi-validate";
     import type { Server as WebSocketServer, WebSocket } from "ws";
-    import type { Server as SocketIOServer } from "socket.io";
+    import type { Server as SocketIOServer, Socket as SocketIOSocket } from "socket.io";
 
     // locals
 
@@ -137,7 +137,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
             if ("SOCKETIO" === this._serverType()) {
 
-                let socket: any | null = null;
+                let socket: SocketIOSocket | null | undefined = null;
 
                 if ("function" !== typeof (this._socketServer as SocketIOServer).sockets?.sockets?.has) { // SocketIO V2
 
@@ -145,7 +145,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                         if (key === clientId) {
 
-                            socket = ((this._socketServer as SocketIOServer).sockets.sockets as Record<string, any>)[key];
+                            socket = ((this._socketServer as SocketIOServer).sockets.sockets as Record<string, any>)[key] as SocketIOSocket;
 
                             break;
 
@@ -197,11 +197,13 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
         public appMiddleware (_req: IncomingMessage, res: iServerResponse, next: (err?: Error) => void): void { // req, res, next : void
 
             if (!this._Descriptor) {
-                return next();
+                next();
+                return;
             }
 
             if (!this._Descriptor.paths) {
-                return next();
+                next();
+                return;
             }
 
             this.checkDescriptor().then(() => {
