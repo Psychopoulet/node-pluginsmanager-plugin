@@ -1,3 +1,7 @@
+/*
+    eslint-disable @typescript-eslint/unbound-method
+*/
+
 // deps
 
     // locals
@@ -15,7 +19,7 @@
 export default function extractBody (req: iIncomingMessage): Promise<string> {
 
     return checkNonEmptyObject("req", req).then((): Promise<void> => {
-        return checkFunction("req.on", req.on.bind(req)); // bind is useless, only here for linting
+        return checkFunction("req.on", req.on);
     }).then((): Promise<void> => {
         return checkNonEmptyObject("req.headers", req.headers);
     }).then((): Promise<void> => {
