@@ -1,3 +1,7 @@
+/*
+    eslint-disable @typescript-eslint/no-dynamic-delete
+*/
+
 // deps
 
     // natives
@@ -394,22 +398,20 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
                 // formate other data
                 }).then((data: Record<string, unknown>): void => {
 
-                    const self: Record<string, any> = this;
-
                     Object.keys(data).forEach((key: string): void => {
 
                         if ("__proto__" === key || "constructor" === key || "prototype" === key) {
                             return;
                         }
-                        if ("function" === typeof self[key]) {
+                        if ("function" === typeof (this as Record<string, unknown>)[key]) {
                             return;
                         }
 
-                        if ("undefined" === typeof self[key]) {
+                        if ("undefined" === typeof (this as Record<string, unknown>)[key]) {
                             this._extended.push(key);
                         }
 
-                        self[key] = data[key];
+                        (this as Record<string, unknown>)[key] = data[key];
 
                     });
 
