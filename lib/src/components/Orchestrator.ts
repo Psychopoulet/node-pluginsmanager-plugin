@@ -297,28 +297,23 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
             public appMiddleware (req: IncomingMessage, res: iServerResponse, next: () => void): void {
 
                 if (!this.enabled) {
-
                     next();
-
+                    return;
                 }
                 else if (!this.initialized) {
+                    next();
+                    return;
+                }
+
+                this.checkServer().then((): void => {
+
+                    (this._Server as Server).appMiddleware(req, res, next);
+
+                }).catch((): void => {
 
                     next();
 
-                }
-                else {
-
-                    this.checkServer().then((): void => {
-
-                        (this._Server as Server).appMiddleware(req, res, next);
-
-                    }).catch((): void => {
-
-                        next();
-
-                    });
-
-                }
+                });
 
             }
 
@@ -368,37 +363,37 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
                     return readJSONFile(this._packageFile);
 
                 // formate authors
-                }).then((data: Record<string, any>): Promise<Record<string, unknown>> => {
+                }).then((packageData: Record<string, any>): Promise<Record<string, unknown>> => {
 
-                    if (data.authors) {
+                    if (packageData.authors) {
 
-                        this.authors = data.authors;
-                        delete data.authors;
+                        this.authors = packageData.authors;
+                        delete packageData.authors;
 
-                        if (data.author) {
+                        if (packageData.author) {
 
-                            if (!this.authors.includes(data.author)) {
-                                this.authors.push(data.author);
+                            if (!this.authors.includes(packageData.author)) {
+                                this.authors.push(packageData.author);
                             }
 
-                            delete data.author;
+                            delete packageData.author;
 
                         }
 
                     }
-                    else if (data.author) {
+                    else if (packageData.author) {
 
-                        this.authors = [ data.author as string ];
-                        delete data.author;
+                        this.authors = [ packageData.author as string ];
+                        delete packageData.author;
 
                     }
 
-                    return Promise.resolve(data);
+                    return Promise.resolve(packageData);
 
                 // formate other data
-                }).then((data: Record<string, unknown>): void => {
+                }).then((packageData: Record<string, unknown>): void => {
 
-                    Object.keys(data).forEach((key: string): void => {
+                    Object.keys(packageData).forEach((key: string): void => {
 
                         if ("__proto__" === key || "constructor" === key || "prototype" === key) {
                             return;
@@ -411,7 +406,7 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
                             this._extended.push(key);
                         }
 
-                        (this as Record<string, unknown>)[key] = data[key];
+                        (this as Record<string, unknown>)[key] = packageData[key];
 
                     });
 

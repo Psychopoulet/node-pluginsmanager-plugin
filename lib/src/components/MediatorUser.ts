@@ -7,7 +7,7 @@
 // types & interfaces
 
     // locals
-    import type { iDescriptorUserOptions, tEventMap, tEventsNoEvent } from "./DescriptorUser";
+    import type { iDescriptorUserOptions, tEventMap, iEventsNoEvent } from "./DescriptorUser";
 
     export interface iMediatorUserOptions extends iDescriptorUserOptions {
         "mediator"?: Mediator; // not sent by Orchestrator
@@ -16,7 +16,7 @@
 // module
 
 // Please note the fact that "init" and "release" method MUST NOT be re-written. Each child has its own init logic
-export default class MediatorUser<T extends tEventMap<T> = tEventsNoEvent> extends DescriptorUser<T> {
+export default class MediatorUser<T extends tEventMap<T> = iEventsNoEvent> extends DescriptorUser<T> {
 
     // attributes
 

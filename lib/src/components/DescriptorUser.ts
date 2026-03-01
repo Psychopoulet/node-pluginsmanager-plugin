@@ -25,7 +25,7 @@
     }
 
     export type tEventMap<T> = Record<keyof T, unknown[]>;
-    export type tEventsNoEvent = {};
+    export interface iEventsNoEvent {}
     export interface iEventsMinimal {
         "error": [ Error ];
         "initialized": [ unknown ];
@@ -46,7 +46,7 @@
 
 // Please note the fact that "_initWorkSpace" and "_releaseWorkSpace" method MUST be re-written in Mediator class, and not in MediatorUser childs.
 // Please note the fact that "init" and "release" method MUST NOT be re-written. Each child has its own init logic.
-export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> extends EventEmitter<T> {
+export default class DescriptorUser<T extends tEventMap<T> = iEventsNoEvent> extends EventEmitter<T> {
 
     // attributes
 
