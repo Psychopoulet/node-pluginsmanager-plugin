@@ -13,26 +13,14 @@
 
 	const CHECKER_NAMES = [
 		"checkExists", "checkExistsSync",
-		"checkBoolean", "checkBooleanSync",
 		"checkFunction", "checkFunctionSync",
 		"checkNumber", "checkNumberSync",
 		"checkObject", "checkObjectSync",
 		"checkString", "checkStringSync",
-		"checkArray", "checkArraySync",
 		"checkInteger", "checkIntegerSync",
-		"checkNonEmptyArray", "checkNonEmptyArraySync",
-		"checkNonEmptyInteger", "checkNonEmptyIntegerSync",
 		"checkNonEmptyNumber", "checkNonEmptyNumberSync",
 		"checkNonEmptyObject", "checkNonEmptyObjectSync",
-		"checkNonEmptyString", "checkNonEmptyStringSync",
-		"checkNumberBetween", "checkNumberBetweenSync",
-		"checkObjectLength", "checkObjectLengthSync",
-		"checkObjectLengthBetween", "checkObjectLengthBetweenSync",
-		"checkStringLength", "checkStringLengthSync",
-		"checkStringLengthBetween", "checkStringLengthBetweenSync",
-		"checkIntegerBetween", "checkIntegerBetweenSync",
-		"checkArrayLength", "checkArrayLengthSync",
-		"checkArrayLengthBetween", "checkArrayLengthBetweenSync"
+		"checkNonEmptyString", "checkNonEmptyStringSync"
 	];
 
 	const COMPONENT_NAMES = [

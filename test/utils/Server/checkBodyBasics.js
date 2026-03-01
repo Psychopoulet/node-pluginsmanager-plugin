@@ -28,8 +28,8 @@ module.exports = function checkBodyBasics (URL_API) {
 		it("should test request with missing body parameter", () => {
 
 			return httpRequestTest(URL_API + "/create?url-param=ok", "put", "{}", 400, "Bad Request", {
-				"code": "MISSING_PARAMETER",
-				"message": "Error while validating request: request/body must have required property 'body-param'"
+				"code": "WRONG_TYPE_PARAMETER",
+				"message": "Error while validating request: request/body must be object"
 			});
 
 		});
