@@ -3,9 +3,9 @@
 // deps
 
 	// natives
-	const { join } = require("path");
-	const { strictEqual } = require("assert");
-	const Events = require("events");
+	const { strictEqual, ok } = require("node:assert");
+	const Events = require("node:events");
+	const { join } = require("node:path");
 
 	// locals
 
@@ -29,10 +29,10 @@ describe("MediatorUser", () => {
 		const mediatorUser = new LocalMediatorUser();
 
 		strictEqual(typeof mediatorUser, "object", "Generated mediatorUser is not an object");
-		strictEqual(mediatorUser instanceof Events, true, "Generated mediatorUser is not a Events instance");
-		strictEqual(mediatorUser instanceof DescriptorUser, true, "Generated mediatorUser is not a DescriptorUser instance");
-		strictEqual(mediatorUser instanceof MediatorUser, true, "Generated mediatorUser is not a MediatorUser instance");
-		strictEqual(mediatorUser instanceof LocalMediatorUser, true, "Generated mediatorUser is not a LocalMediatorUser instance");
+		ok(mediatorUser instanceof Events, "Generated mediatorUser is not a Events instance");
+		ok(mediatorUser instanceof DescriptorUser, "Generated mediatorUser is not a DescriptorUser instance");
+		ok(mediatorUser instanceof MediatorUser, "Generated mediatorUser is not a MediatorUser instance");
+		ok(mediatorUser instanceof LocalMediatorUser, "Generated mediatorUser is not a LocalMediatorUser instance");
 
 		strictEqual(typeof mediatorUser._Mediator, "object", "Generated mediatorUser _Mediator is not an object");
 		strictEqual(mediatorUser._Mediator, null, "Generated mediatorUser _Mediator is not as expected");
@@ -82,8 +82,8 @@ describe("MediatorUser", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
-				strictEqual(err instanceof ReferenceError, true, "Generated error is not a ReferenceError instance");
+				ok(err instanceof Error, "Generated error is not a Error instance");
+				ok(err instanceof ReferenceError, "Generated error is not a ReferenceError instance");
 
 				done();
 
@@ -102,8 +102,8 @@ describe("MediatorUser", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
-				strictEqual(err instanceof ReferenceError, true, "Generated error is not a ReferenceError instance");
+				ok(err instanceof Error, "Generated error is not a Error instance");
+				ok(err instanceof ReferenceError, "Generated error is not a ReferenceError instance");
 
 				done();
 
@@ -122,8 +122,8 @@ describe("MediatorUser", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
-				strictEqual(err instanceof TypeError, true, "Generated error is not a TypeError instance");
+				ok(err instanceof Error, "Generated error is not a Error instance");
+				ok(err instanceof TypeError, "Generated error is not a TypeError instance");
 
 				done();
 
@@ -142,8 +142,8 @@ describe("MediatorUser", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
-				strictEqual(err instanceof TypeError, true, "Generated error is not a TypeError instance");
+				ok(err instanceof Error, "Generated error is not a Error instance");
+				ok(err instanceof TypeError, "Generated error is not a TypeError instance");
 
 				done();
 

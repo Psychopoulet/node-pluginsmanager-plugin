@@ -3,8 +3,8 @@
 // deps
 
 	// natives
-	const { join } = require("path");
-	const { strictEqual } = require("assert");
+	const { strictEqual, ok } = require("node:assert");
+	const { join } = require("node:path");
 
 	// locals
 
@@ -30,7 +30,7 @@ module.exports = function checkBodyContentType (URL_API) {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "generated error is not as expected");
-				strictEqual(err instanceof Error, true, "generated error is not as expected");
+				ok(err instanceof Error, "generated error is not as expected");
 
 				done();
 
@@ -51,7 +51,7 @@ module.exports = function checkBodyContentType (URL_API) {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "generated error is not as expected");
-				strictEqual(err instanceof Error, true, "generated error is not as expected");
+				ok(err instanceof Error, "generated error is not as expected");
 
 				done();
 

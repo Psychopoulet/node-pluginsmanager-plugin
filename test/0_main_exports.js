@@ -3,8 +3,8 @@
 // deps
 
 	// natives
-	const { join } = require("path");
-	const { strictEqual } = require("assert");
+	const { strictEqual, ok } = require("node:assert");
+	const { join } = require("node:path");
 
 	// locals
 	const main = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
@@ -43,7 +43,7 @@ describe("main entry exports", () => {
 
 	it("should export an object", () => {
 		strictEqual(typeof main, "object", "main must be an object");
-		strictEqual(main !== null, true, "main must not be null");
+		ok(main !== null, "main must not be null");
 	});
 
 	it("should export all checker functions", () => {
@@ -69,10 +69,10 @@ describe("main entry exports", () => {
 		const actual = new Set(Object.keys(main).filter((k) => { return "default" !== k && !k.startsWith("__"); }));
 		strictEqual(actual.size, expected.size, "export count must match expected");
 		for (const key of expected) {
-			strictEqual(actual.has(key), true, "missing export \"" + key + "\"");
+			ok(actual.has(key), "missing export \"" + key + "\"");
 		}
 		for (const key of actual) {
-			strictEqual(expected.has(key), true, "unexpected export \"" + key + "\"");
+			ok(expected.has(key), "unexpected export \"" + key + "\"");
 		}
 	});
 

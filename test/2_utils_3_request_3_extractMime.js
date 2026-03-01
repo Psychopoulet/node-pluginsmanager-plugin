@@ -3,8 +3,8 @@
 // deps
 
 	// natives
-	const { deepStrictEqual, throws } = require("assert");
-	const { join } = require("path");
+	const { deepStrictEqual, throws } = require("node:assert");
+	const { join } = require("node:path");
 
 	// locals
 	const extractMime = require(join(__dirname, "..", "lib", "cjs", "utils", "request", "extractMime.js"));

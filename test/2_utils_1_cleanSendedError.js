@@ -3,8 +3,8 @@
 // deps
 
 	// natives
-	const { strictEqual, deepStrictEqual } = require("assert");
-	const { join } = require("path");
+	const { strictEqual, deepStrictEqual } = require("node:assert");
+	const { join } = require("node:path");
 
 	// locals
 	const cleanSendedError = require(join(__dirname, "..", "lib", "cjs", "utils", "cleanSendedError.js"));

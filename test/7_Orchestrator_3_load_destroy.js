@@ -1,14 +1,10 @@
-/*
-	eslint-disable max-statements
-*/
-
 "use strict";
 
 // deps
 
 	// natives
-	const { join } = require("path");
-	const { deepStrictEqual, strictEqual } = require("assert");
+	const { deepStrictEqual, strictEqual, ok } = require("node:assert");
+	const { join } = require("node:path");
 
 	// locals
 
@@ -59,7 +55,7 @@ describe("Orchestrator / load & destroy", () => {
 				// extended
 
 				strictEqual(typeof orchestrator._extended, "object", "Generated orchestrator extended is not an object");
-				strictEqual(orchestrator._extended instanceof Array, true, "Generated orchestrator extended is not an Array");
+				ok(orchestrator._extended instanceof Array, "Generated orchestrator extended is not an Array");
 				deepStrictEqual(orchestrator._extended, [
 					"type",
 					"typings",
@@ -79,7 +75,7 @@ describe("Orchestrator / load & destroy", () => {
 				// native
 
 				strictEqual(typeof orchestrator.authors, "object", "Generated orchestrator authors is not an object");
-				strictEqual(orchestrator.authors instanceof Array, true, "Generated orchestrator authors is not an Array");
+				ok(orchestrator.authors instanceof Array, "Generated orchestrator authors is not an Array");
 				deepStrictEqual(orchestrator.authors, [ data.author ], "Generated orchestrator authors is not as expected");
 
 				strictEqual(typeof orchestrator.description, "string", "Generated orchestrator description is not a string");
@@ -124,7 +120,7 @@ describe("Orchestrator / load & destroy", () => {
 			return orchestrator.load().then(() => {
 
 				strictEqual(typeof orchestrator.authors, "object", "Generated orchestrator authors is not an object");
-				strictEqual(orchestrator.authors instanceof Array, true, "Generated orchestrator authors is not an Array");
+				ok(orchestrator.authors instanceof Array, "Generated orchestrator authors is not an Array");
 				deepStrictEqual(orchestrator.authors, [
 					"Sébastien VIDAL",
 					"Fabien VIDAL"
@@ -164,13 +160,13 @@ describe("Orchestrator / load & destroy", () => {
 				// extended
 
 				strictEqual(typeof orchestrator._extended, "object", "Generated orchestrator extended is not an object");
-				strictEqual(orchestrator._extended instanceof Array, true, "Generated orchestrator extended is not an Array");
+				ok(orchestrator._extended instanceof Array, "Generated orchestrator extended is not an Array");
 				deepStrictEqual(orchestrator._extended, [], "Generated orchestrator extended is not as expected");
 
 				// native
 
 				strictEqual(typeof orchestrator.authors, "object", "Generated orchestrator authors is not an object");
-				strictEqual(orchestrator.authors instanceof Array, true, "Generated orchestrator authors is not an Array");
+				ok(orchestrator.authors instanceof Array, "Generated orchestrator authors is not an Array");
 				deepStrictEqual(orchestrator.authors, [], "Generated orchestrator authors is not as expected");
 
 				strictEqual(typeof orchestrator.description, "string", "Generated orchestrator description is not a string");

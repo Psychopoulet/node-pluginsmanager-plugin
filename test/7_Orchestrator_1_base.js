@@ -1,15 +1,11 @@
-/*
-	eslint-disable max-statements
-*/
-
 "use strict";
 
 // deps
 
 	// natives
-	const { join } = require("path");
-	const { deepStrictEqual, strictEqual } = require("assert");
-	const Events = require("events");
+	const { deepStrictEqual, strictEqual, ok } = require("node:assert");
+	const Events = require("node:events");
+	const { join } = require("node:path");
 
 	// locals
 
@@ -46,11 +42,11 @@ describe("Orchestrator", () => {
 		});
 
 		strictEqual(typeof orchestrator, "object", "Generated orchestrator is not an object");
-		strictEqual(orchestrator instanceof Events, true, "Generated orchestrator is not a Events instance");
-		strictEqual(orchestrator instanceof DescriptorUser, true, "Generated orchestrator is not a DescriptorUser instance");
-		strictEqual(orchestrator instanceof MediatorUser, true, "Generated orchestrator is not a MediatorUser instance");
-		strictEqual(orchestrator instanceof Orchestrator, true, "Generated orchestrator is not a Orchestrator instance");
-		strictEqual(orchestrator instanceof LocalOrchestrator, true, "Generated orchestrator is not a LocalOrchestrator instance");
+		ok(orchestrator instanceof Events, "Generated orchestrator is not a Events instance");
+		ok(orchestrator instanceof DescriptorUser, "Generated orchestrator is not a DescriptorUser instance");
+		ok(orchestrator instanceof MediatorUser, "Generated orchestrator is not a MediatorUser instance");
+		ok(orchestrator instanceof Orchestrator, "Generated orchestrator is not a Orchestrator instance");
+		ok(orchestrator instanceof LocalOrchestrator, "Generated orchestrator is not a LocalOrchestrator instance");
 
 		// protected
 
@@ -74,13 +70,13 @@ describe("Orchestrator", () => {
 			// extended
 
 			strictEqual(typeof orchestrator._extended, "object", "Generated orchestrator extended is not an object");
-			strictEqual(orchestrator._extended instanceof Array, true, "Generated orchestrator extended is not an Array");
+			ok(orchestrator._extended instanceof Array, "Generated orchestrator extended is not an Array");
 			deepStrictEqual(orchestrator._extended, [], "Generated orchestrator extended is not as expected");
 
 		// public
 
 			strictEqual(typeof orchestrator.enabled, "boolean", "Generated orchestrator enabled is not a boolean");
-			strictEqual(orchestrator.enabled, true, "Generated orchestrator enabled is not as expected");
+			ok(orchestrator.enabled, "Generated orchestrator enabled is not as expected");
 
 			strictEqual(typeof orchestrator.initialized, "boolean", "Generated orchestrator initialized is not a boolean");
 			strictEqual(orchestrator.initialized, false, "Generated orchestrator initialized is not as expected");
@@ -142,7 +138,7 @@ describe("Orchestrator", () => {
 			// extended
 
 			strictEqual(typeof orchestrator._extended, "object", "Generated orchestrator extended is not an object");
-			strictEqual(orchestrator._extended instanceof Array, true, "Generated orchestrator extended is not an Array");
+			ok(orchestrator._extended instanceof Array, "Generated orchestrator extended is not an Array");
 			deepStrictEqual(orchestrator._extended, [], "Generated orchestrator extended is not as expected");
 
 	});
@@ -159,8 +155,8 @@ describe("Orchestrator", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
-				strictEqual(err instanceof ReferenceError, true, "Generated error is not a ReferenceError instance");
+				ok(err instanceof Error, "Generated error is not a Error instance");
+				ok(err instanceof ReferenceError, "Generated error is not a ReferenceError instance");
 
 				done();
 
@@ -178,8 +174,8 @@ describe("Orchestrator", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
-				strictEqual(err instanceof TypeError, true, "Generated error is not a ReferenceError instance");
+				ok(err instanceof Error, "Generated error is not a Error instance");
+				ok(err instanceof TypeError, "Generated error is not a ReferenceError instance");
 
 				done();
 
@@ -197,8 +193,8 @@ describe("Orchestrator", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
-				strictEqual(err instanceof TypeError, true, "Generated error is not a TypeError instance");
+				ok(err instanceof Error, "Generated error is not a Error instance");
+				ok(err instanceof TypeError, "Generated error is not a TypeError instance");
 
 				done();
 
@@ -216,8 +212,8 @@ describe("Orchestrator", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
-				strictEqual(err instanceof TypeError, true, "Generated error is not a TypeError instance");
+				ok(err instanceof Error, "Generated error is not a Error instance");
+				ok(err instanceof TypeError, "Generated error is not a TypeError instance");
 
 				done();
 
@@ -247,7 +243,7 @@ describe("Orchestrator", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not an object");
-					strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+					ok(err instanceof Error, "Generated error is not a Error instance");
 
 					done();
 
@@ -264,7 +260,7 @@ describe("Orchestrator", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not an object");
-					strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+					ok(err instanceof Error, "Generated error is not a Error instance");
 
 					done();
 
@@ -285,7 +281,7 @@ describe("Orchestrator", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not an object");
-					strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+					ok(err instanceof Error, "Generated error is not a Error instance");
 
 					done();
 
@@ -303,7 +299,7 @@ describe("Orchestrator", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not an object");
-					strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+					ok(err instanceof Error, "Generated error is not a Error instance");
 
 					done();
 
@@ -325,7 +321,7 @@ describe("Orchestrator", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not an object");
-					strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+					ok(err instanceof Error, "Generated error is not a Error instance");
 
 					done();
 
@@ -344,7 +340,7 @@ describe("Orchestrator", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not an object");
-					strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+					ok(err instanceof Error, "Generated error is not a Error instance");
 
 					done();
 
@@ -367,7 +363,7 @@ describe("Orchestrator", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not an object");
-					strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+					ok(err instanceof Error, "Generated error is not a Error instance");
 
 					done();
 
@@ -387,7 +383,7 @@ describe("Orchestrator", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not an object");
-					strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+					ok(err instanceof Error, "Generated error is not a Error instance");
 
 					done();
 

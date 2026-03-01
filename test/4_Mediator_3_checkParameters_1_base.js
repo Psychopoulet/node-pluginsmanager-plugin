@@ -1,14 +1,10 @@
-/*
-	eslint max-lines: 0
-*/
-
 "use strict";
 
 // deps
 
 	// natives
-	const { join } = require("path");
-	const { strictEqual } = require("assert");
+	const { strictEqual, ok } = require("node:assert");
+	const { join } = require("node:path");
 
 	// locals
 
@@ -44,7 +40,7 @@ describe("Mediator / checkParameters", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not as expected");
-				strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+				ok(err instanceof ReferenceError, "Generated error is not as expected");
 
 				done();
 
@@ -59,7 +55,7 @@ describe("Mediator / checkParameters", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not as expected");
-				strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+				ok(err instanceof TypeError, "Generated error is not as expected");
 
 				done();
 
@@ -74,7 +70,7 @@ describe("Mediator / checkParameters", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not as expected");
-				strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
+				ok(err instanceof RangeError, "Generated error is not as expected");
 
 				done();
 
@@ -98,7 +94,7 @@ describe("Mediator / checkParameters", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not as expected");
-				strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+				ok(err instanceof ReferenceError, "Generated error is not as expected");
 
 				done();
 
@@ -133,7 +129,7 @@ describe("Mediator / checkParameters", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not as expected");
-				strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+				ok(err instanceof TypeError, "Generated error is not as expected");
 
 				done();
 
@@ -148,7 +144,7 @@ describe("Mediator / checkParameters", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not as expected");
-				strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+				ok(err instanceof TypeError, "Generated error is not as expected");
 
 				done();
 
@@ -169,7 +165,7 @@ describe("Mediator / checkParameters", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not as expected");
-					strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+					ok(err instanceof ReferenceError, "Generated error is not as expected");
 
 					done();
 
@@ -186,7 +182,7 @@ describe("Mediator / checkParameters", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not as expected");
-					strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+					ok(err instanceof ReferenceError, "Generated error is not as expected");
 
 					done();
 
@@ -203,7 +199,7 @@ describe("Mediator / checkParameters", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not as expected");
-					strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+					ok(err instanceof TypeError, "Generated error is not as expected");
 
 					done();
 
@@ -220,7 +216,7 @@ describe("Mediator / checkParameters", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not as expected");
-					strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+					ok(err instanceof ReferenceError, "Generated error is not as expected");
 
 					done();
 
@@ -249,7 +245,7 @@ describe("Mediator / checkParameters", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not as expected");
-					strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+					ok(err instanceof ReferenceError, "Generated error is not as expected");
 
 					done();
 
@@ -266,7 +262,7 @@ describe("Mediator / checkParameters", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not as expected");
-					strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+					ok(err instanceof ReferenceError, "Generated error is not as expected");
 
 					done();
 
@@ -283,7 +279,7 @@ describe("Mediator / checkParameters", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not as expected");
-					strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+					ok(err instanceof TypeError, "Generated error is not as expected");
 
 					done();
 
@@ -300,7 +296,7 @@ describe("Mediator / checkParameters", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not as expected");
-					strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+					ok(err instanceof ReferenceError, "Generated error is not as expected");
 
 					done();
 
@@ -329,7 +325,7 @@ describe("Mediator / checkParameters", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not as expected");
-					strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+					ok(err instanceof ReferenceError, "Generated error is not as expected");
 
 					done();
 
@@ -346,7 +342,7 @@ describe("Mediator / checkParameters", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not as expected");
-					strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+					ok(err instanceof ReferenceError, "Generated error is not as expected");
 
 					done();
 
@@ -363,7 +359,7 @@ describe("Mediator / checkParameters", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not as expected");
-					strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+					ok(err instanceof TypeError, "Generated error is not as expected");
 
 					done();
 
@@ -380,7 +376,7 @@ describe("Mediator / checkParameters", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not as expected");
-					strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+					ok(err instanceof ReferenceError, "Generated error is not as expected");
 
 					done();
 
@@ -409,7 +405,7 @@ describe("Mediator / checkParameters", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not as expected");
-					strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+					ok(err instanceof ReferenceError, "Generated error is not as expected");
 
 					done();
 
@@ -426,7 +422,7 @@ describe("Mediator / checkParameters", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not as expected");
-					strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+					ok(err instanceof ReferenceError, "Generated error is not as expected");
 
 					done();
 
@@ -443,7 +439,7 @@ describe("Mediator / checkParameters", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not as expected");
-					strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+					ok(err instanceof TypeError, "Generated error is not as expected");
 
 					done();
 
@@ -460,7 +456,7 @@ describe("Mediator / checkParameters", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not as expected");
-					strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+					ok(err instanceof ReferenceError, "Generated error is not as expected");
 
 					done();
 
@@ -503,7 +499,7 @@ describe("Mediator / checkParameters", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not as expected");
-				strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+				ok(err instanceof ReferenceError, "Generated error is not as expected");
 
 				done();
 
@@ -518,7 +514,7 @@ describe("Mediator / checkParameters", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not as expected");
-				strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+				ok(err instanceof TypeError, "Generated error is not as expected");
 
 				done();
 
@@ -533,7 +529,7 @@ describe("Mediator / checkParameters", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not as expected");
-				strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+				ok(err instanceof TypeError, "Generated error is not as expected");
 
 				done();
 

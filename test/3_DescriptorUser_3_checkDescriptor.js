@@ -1,14 +1,10 @@
-/*
-	eslint max-nested-callbacks: 0
-*/
-
 "use strict";
 
 // deps
 
 	// natives
-	const { join } = require("path");
-	const { strictEqual } = require("assert");
+	const { strictEqual, ok } = require("node:assert");
+	const { join } = require("node:path");
 
 	// locals
 
@@ -36,7 +32,7 @@ describe("DescriptorUser / checkDescriptor", () => {
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+			ok(err instanceof ReferenceError, "Generated error is not as expected");
 
 			done();
 
@@ -53,7 +49,7 @@ describe("DescriptorUser / checkDescriptor", () => {
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+			ok(err instanceof TypeError, "Generated error is not as expected");
 
 			done();
 
@@ -70,7 +66,7 @@ describe("DescriptorUser / checkDescriptor", () => {
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+			ok(err instanceof TypeError, "Generated error is not as expected");
 
 			done();
 
@@ -87,7 +83,7 @@ describe("DescriptorUser / checkDescriptor", () => {
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
+			ok(err instanceof RangeError, "Generated error is not as expected");
 
 			done();
 
@@ -108,7 +104,7 @@ describe("DescriptorUser / checkDescriptor", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+				ok(err instanceof ReferenceError, "Generated error is not as expected");
 
 				done();
 
@@ -127,7 +123,7 @@ describe("DescriptorUser / checkDescriptor", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+				ok(err instanceof TypeError, "Generated error is not as expected");
 
 				done();
 
@@ -146,7 +142,7 @@ describe("DescriptorUser / checkDescriptor", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
+				ok(err instanceof RangeError, "Generated error is not as expected");
 
 				done();
 
@@ -187,7 +183,7 @@ describe("DescriptorUser / checkDescriptor", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not an object");
-					strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+					ok(err instanceof ReferenceError, "Generated error is not as expected");
 
 					done();
 
@@ -208,7 +204,7 @@ describe("DescriptorUser / checkDescriptor", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not an object");
-					strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+					ok(err instanceof TypeError, "Generated error is not as expected");
 
 					done();
 
@@ -229,7 +225,7 @@ describe("DescriptorUser / checkDescriptor", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not an object");
-					strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
+					ok(err instanceof RangeError, "Generated error is not as expected");
 
 					done();
 
@@ -250,7 +246,7 @@ describe("DescriptorUser / checkDescriptor", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not an object");
-					strictEqual(err instanceof Error, true, "Generated error is not as expected");
+					ok(err instanceof Error, "Generated error is not as expected");
 
 					done();
 
@@ -275,7 +271,7 @@ describe("DescriptorUser / checkDescriptor", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not an object");
-					strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+					ok(err instanceof ReferenceError, "Generated error is not as expected");
 
 					done();
 
@@ -297,7 +293,7 @@ describe("DescriptorUser / checkDescriptor", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not an object");
-					strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+					ok(err instanceof TypeError, "Generated error is not as expected");
 
 					done();
 
@@ -319,7 +315,7 @@ describe("DescriptorUser / checkDescriptor", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not an object");
-					strictEqual(err instanceof RangeError, true, "Generated error is not as expected");
+					ok(err instanceof RangeError, "Generated error is not as expected");
 
 					done();
 
@@ -347,7 +343,7 @@ describe("DescriptorUser / checkDescriptor", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+				ok(err instanceof ReferenceError, "Generated error is not as expected");
 
 				done();
 
@@ -369,8 +365,7 @@ describe("DescriptorUser / checkDescriptor", () => {
 
 		});
 
-		/*
-		it("should check without summary", (done) => {
+		it.skip("should check without summary", (done) => {
 
 			new LocalDescriptorUser({
 				"descriptor": {
@@ -391,7 +386,7 @@ describe("DescriptorUser / checkDescriptor", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof Error, true, "Generated error is not as expected");
+				ok(err instanceof Error, "Generated error is not as expected");
 
 				done();
 
@@ -399,7 +394,7 @@ describe("DescriptorUser / checkDescriptor", () => {
 
 		});
 
-		it("should check without operatorId", (done) => {
+		it.skip("should check without operatorId", (done) => {
 
 			new LocalDescriptorUser({
 				"descriptor": {
@@ -420,14 +415,13 @@ describe("DescriptorUser / checkDescriptor", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof Error, true, "Generated error is not as expected");
+				ok(err instanceof Error, "Generated error is not as expected");
 
 				done();
 
 			});
 
 		});
-		*/
 
 		it("should check with mutliple operatorIds", (done) => {
 
@@ -457,7 +451,7 @@ describe("DescriptorUser / checkDescriptor", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof Error, true, "Generated error is not as expected");
+				ok(err instanceof Error, "Generated error is not as expected");
 
 				done();
 

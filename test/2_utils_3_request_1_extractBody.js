@@ -3,9 +3,9 @@
 // deps
 
 	// natives
-	const { strictEqual } = require("assert");
-	const { join } = require("path");
-	const EventEmitter = require("events");
+	const { strictEqual, ok } = require("node:assert");
+	const EventEmitter = require("node:events");
+	const { join } = require("node:path");
 
 	// locals
 	const extractBody = require(join(__dirname, "..", "lib", "cjs", "utils", "request", "extractBody.js"));
@@ -21,7 +21,7 @@ describe("utils / request / extractBody", () => {
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object");
-			strictEqual(err instanceof ReferenceError, true);
+			ok(err instanceof ReferenceError);
 
 			done();
 
@@ -36,7 +36,7 @@ describe("utils / request / extractBody", () => {
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object");
-			strictEqual(err instanceof TypeError, true);
+			ok(err instanceof TypeError);
 
 			done();
 
@@ -51,7 +51,7 @@ describe("utils / request / extractBody", () => {
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object");
-			strictEqual(err instanceof RangeError, true);
+			ok(err instanceof RangeError);
 
 			done();
 
@@ -70,7 +70,7 @@ describe("utils / request / extractBody", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object");
-				strictEqual(err instanceof ReferenceError, true);
+				ok(err instanceof ReferenceError);
 
 				done();
 
@@ -87,7 +87,7 @@ describe("utils / request / extractBody", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object");
-				strictEqual(err instanceof TypeError, true);
+				ok(err instanceof TypeError);
 
 				done();
 
@@ -110,7 +110,7 @@ describe("utils / request / extractBody", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object");
-				strictEqual(err instanceof ReferenceError, true);
+				ok(err instanceof ReferenceError);
 
 				done();
 
@@ -130,7 +130,7 @@ describe("utils / request / extractBody", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object");
-				strictEqual(err instanceof TypeError, true);
+				ok(err instanceof TypeError);
 
 				done();
 
@@ -150,7 +150,7 @@ describe("utils / request / extractBody", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object");
-				strictEqual(err instanceof RangeError, true);
+				ok(err instanceof RangeError);
 
 				done();
 
@@ -174,7 +174,7 @@ describe("utils / request / extractBody", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object");
-					strictEqual(err instanceof ReferenceError, true);
+					ok(err instanceof ReferenceError);
 
 					done();
 
@@ -196,7 +196,7 @@ describe("utils / request / extractBody", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object");
-					strictEqual(err instanceof TypeError, true);
+					ok(err instanceof TypeError);
 
 					done();
 
@@ -250,7 +250,7 @@ describe("utils / request / extractBody", () => {
 				.catch((err) => {
 
 					strictEqual(typeof err, "object");
-					strictEqual(err instanceof Error, true);
+					ok(err instanceof Error);
 
 					done();
 

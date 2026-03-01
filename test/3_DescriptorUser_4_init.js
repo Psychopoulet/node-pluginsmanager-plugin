@@ -3,8 +3,8 @@
 // deps
 
 	// natives
-	const { join } = require("path");
-	const { strictEqual } = require("assert");
+	const { strictEqual, ok } = require("node:assert");
+	const { join } = require("node:path");
 
 	// locals
 
@@ -25,7 +25,7 @@ describe("DescriptorUser / init", () => {
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "Generated Error is not as expected");
-			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+			ok(err instanceof Error, "Generated Error is not as expected");
 
 			done();
 
@@ -42,7 +42,7 @@ describe("DescriptorUser / init", () => {
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "Generated Error is not as expected");
-			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+			ok(err instanceof Error, "Generated Error is not as expected");
 
 			done();
 
@@ -72,7 +72,7 @@ describe("DescriptorUser / init", () => {
 
 				strictEqual(type, "error", "logger does not send correct value");
 				strictEqual(message, "This is a test", "logger does not send correct value");
-				strictEqual(bold, true, "logger does not send correct value");
+				ok(bold, "logger does not send correct value");
 				strictEqual(pluginName, "test", "logger does not send correct value");
 
 				done();

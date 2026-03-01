@@ -3,8 +3,8 @@
 // deps
 
 	// natives
-	const { join } = require("path");
-	const { strictEqual } = require("assert");
+	const { join } = require("node:path");
+	const { strictEqual, ok } = require("node:assert");
 
 	// locals
 
@@ -25,7 +25,7 @@ describe("DescriptorUser / release", () => {
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "Generated Error is not as expected");
-			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+			ok(err instanceof Error, "Generated Error is not as expected");
 
 			done();
 
@@ -42,7 +42,7 @@ describe("DescriptorUser / release", () => {
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "Generated Error is not as expected");
-			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+			ok(err instanceof Error, "Generated Error is not as expected");
 
 			done();
 

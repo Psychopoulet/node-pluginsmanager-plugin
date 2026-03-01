@@ -3,8 +3,8 @@
 // deps
 
 	// natives
-	const { deepStrictEqual, strictEqual } = require("assert");
-	const { join } = require("path");
+	const { strictEqual, ok } = require("node:assert");
+	const { join } = require("node:path");
 
 	// locals
 	const send = require(join(__dirname, "..", "lib", "cjs", "utils", "send.js"));
@@ -84,7 +84,7 @@ describe("utils / send", () => {
 
 			return send.default(req, res, 200, buf, { ...BASE_OPTIONS, "mime": "text/plain" }).then(() => {
 				strictEqual(res._captured.endArgs[0], buf, "end content should be the same Buffer");
-				strictEqual(Buffer.isBuffer(res._captured.endArgs[0]), true, "end content should be Buffer");
+				ok(Buffer.isBuffer(res._captured.endArgs[0]), "end content should be Buffer");
 			});
 		});
 
@@ -161,7 +161,7 @@ describe("utils / send", () => {
 
 			return send.default(req, res, 200, "", { ...BASE_OPTIONS, "cors": true }).then(() => {
 				strictEqual(res.headers["Access-Control-Allow-Origin"], "*", "CORS Origin should be set");
-				strictEqual(res.headers["Access-Control-Allow-Credentials"], true, "CORS Credentials should be set");
+				ok(res.headers["Access-Control-Allow-Credentials"], "CORS Credentials should be set");
 				strictEqual(
 					res.headers["Access-Control-Allow-Methods"],
 					"GET, POST, PUT, DELETE, PATCH, OPTIONS",

@@ -3,10 +3,10 @@
 // deps
 
 	// natives
-	const { join } = require("path");
-	const { strictEqual } = require("assert");
-	const { homedir } = require("os");
-	const { unlink } = require("fs");
+	const { strictEqual, ok } = require("node:assert");
+	const { unlink } = require("node:fs");
+	const { homedir } = require("node:os");
+	const { join } = require("node:path");
 
 	// locals
 	const LocalOrchestrator = require(join(__dirname, "utils", "Orchestrator", "LocalOrchestrator.js"));
@@ -70,7 +70,7 @@ describe("Orchestrator / checkDescriptor / schema / components", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not an object");
-					strictEqual(err instanceof Error, true, "Generated error is not as expected");
+					ok(err instanceof Error, "Generated error is not as expected");
 
 					resolve();
 
@@ -105,7 +105,7 @@ describe("Orchestrator / checkDescriptor / schema / components", () => {
 				}).catch((err) => {
 
 					strictEqual(typeof err, "object", "Generated error is not an object");
-					strictEqual(err instanceof Error, true, "Generated error is not as expected");
+					ok(err instanceof Error, "Generated error is not as expected");
 
 					resolve();
 

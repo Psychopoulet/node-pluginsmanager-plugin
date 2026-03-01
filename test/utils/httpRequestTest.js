@@ -1,7 +1,3 @@
-/*
-	eslint max-params: 0
-*/
-
 "use strict";
 
 // deps

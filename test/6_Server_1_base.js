@@ -3,9 +3,9 @@
 // deps
 
 	// natives
-	const { join } = require("path");
-	const { deepStrictEqual, strictEqual } = require("assert");
-	const Events = require("events");
+	const { deepStrictEqual, strictEqual, ok } = require("node:assert");
+	const Events = require("node:events");
+	const { join } = require("node:path");
 
 	// locals
 
@@ -32,10 +32,10 @@ describe("Server", () => {
 		const server = new Server();
 
 		strictEqual(typeof server, "object", "Generated server is not an object");
-		strictEqual(server instanceof Events, true, "Generated server is not a Events instance");
-		strictEqual(server instanceof DescriptorUser, true, "Generated server is not a DescriptorUser instance");
-		strictEqual(server instanceof MediatorUser, true, "Generated server is not a MediatorUser instance");
-		strictEqual(server instanceof Server, true, "Generated server is not a Server instance");
+		ok(server instanceof Events, "Generated server is not a Events instance");
+		ok(server instanceof DescriptorUser, "Generated server is not a DescriptorUser instance");
+		ok(server instanceof MediatorUser, "Generated server is not a MediatorUser instance");
+		ok(server instanceof Server, "Generated server is not a Server instance");
 
 	});
 
@@ -53,7 +53,7 @@ describe("Server", () => {
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "Generated Error is not as expected");
-			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+			ok(err instanceof Error, "Generated Error is not as expected");
 
 			done();
 
@@ -77,7 +77,7 @@ describe("Server", () => {
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "Generated Error is not as expected");
-			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+			ok(err instanceof Error, "Generated Error is not as expected");
 
 			done();
 
@@ -95,16 +95,16 @@ describe("Server", () => {
 		strictEqual(typeof server._Descriptor, "object", "Generated server _Descriptor is not an object");
 		strictEqual(server._Descriptor, null, "Generated server _Descriptor is not null");
 		strictEqual(typeof server._Mediator, "object", "Generated server _Mediator is not an object");
-		strictEqual(server._Mediator instanceof Events, true, "Generated server _Mediator is not a Events instance");
-		strictEqual(server._Mediator instanceof DescriptorUser, true, "Generated server _Mediator is not a DescriptorUser instance");
-		strictEqual(server._Mediator instanceof Mediator, true, "Generated server _Mediator is not a Mediator instance");
+		ok(server._Mediator instanceof Events, "Generated server _Mediator is not a Events instance");
+		ok(server._Mediator instanceof DescriptorUser, "Generated server _Mediator is not a DescriptorUser instance");
+		ok(server._Mediator instanceof Mediator, "Generated server _Mediator is not a Mediator instance");
 
 		server.init("test init").then(() => {
 			done(new Error("There is no generated Error"));
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "Generated Error is not as expected");
-			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+			ok(err instanceof Error, "Generated Error is not as expected");
 
 			done();
 
@@ -127,9 +127,9 @@ describe("Server", () => {
 		strictEqual(typeof server._Descriptor, "object", "Generated server _Descriptor is not an object");
 		deepStrictEqual(server._Descriptor, descriptor, "Generated server _Descriptor is not as expected");
 		strictEqual(typeof server._Mediator, "object", "Generated server _Mediator is not an object");
-		strictEqual(server._Mediator instanceof Events, true, "Generated server _Mediator is not a Events instance");
-		strictEqual(server._Mediator instanceof DescriptorUser, true, "Generated server _Mediator is not a DescriptorUser instance");
-		strictEqual(server._Mediator instanceof Mediator, true, "Generated server _Mediator is not a Mediator instance");
+		ok(server._Mediator instanceof Events, "Generated server _Mediator is not a Events instance");
+		ok(server._Mediator instanceof DescriptorUser, "Generated server _Mediator is not a DescriptorUser instance");
+		ok(server._Mediator instanceof Mediator, "Generated server _Mediator is not a Mediator instance");
 
 		return server.init("test init");
 

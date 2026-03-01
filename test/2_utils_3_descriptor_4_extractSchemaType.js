@@ -3,8 +3,8 @@
 // deps
 
 	// natives
-	const { strictEqual } = require("assert");
-	const { join } = require("path");
+	const { strictEqual } = require("node:assert");
+	const { join } = require("node:path");
 
 	// locals
 	const extractSchemaType = require(join(__dirname, "..", "lib", "cjs", "utils", "descriptor", "extractSchemaType.js"));

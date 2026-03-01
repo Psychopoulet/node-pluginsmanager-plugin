@@ -3,8 +3,8 @@
 // deps
 
 	// natives
-	const { join } = require("path");
-	const { strictEqual } = require("assert");
+	const { strictEqual, ok } = require("node:assert");
+	const { join } = require("node:path");
 
 	// locals
 
@@ -42,7 +42,7 @@ describe("Orchestrator / init & release", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+				ok(err instanceof Error, "Generated error is not a Error instance");
 
 				done();
 
@@ -60,7 +60,7 @@ describe("Orchestrator / init & release", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof Error, true, "Generated error is not a Error instance");
+				ok(err instanceof Error, "Generated error is not a Error instance");
 
 				done();
 
@@ -73,7 +73,7 @@ describe("Orchestrator / init & release", () => {
 			const orchestrator = new NonEnabledOrchestrator(GOOD_OPTIONS);
 
 			strictEqual(typeof orchestrator.enabled, "boolean", "Generated orchestrator enabled is not a boolean");
-			strictEqual(orchestrator.enabled, true, "Generated orchestrator enabled is not as expected");
+			ok(orchestrator.enabled, "Generated orchestrator enabled is not as expected");
 
 			return orchestrator.load().then(() => {
 				return orchestrator.init();
@@ -108,7 +108,7 @@ describe("Orchestrator / init & release", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof Error, true, "Generated errors is not an Error");
+				ok(err instanceof Error, "Generated errors is not an Error");
 
 				done();
 
@@ -129,7 +129,7 @@ describe("Orchestrator / init & release", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof Error, true, "Generated errors is not an Error");
+				ok(err instanceof Error, "Generated errors is not an Error");
 
 				done();
 
@@ -154,13 +154,13 @@ describe("Orchestrator / init & release", () => {
 			}).then(() => {
 
 				strictEqual(typeof orchestrator._Mediator, "object", "Generated orchestrator _Mediator is not an object");
-				strictEqual(orchestrator._Mediator instanceof Mediator, true, "Generated orchestrator _Mediator is not as expected");
+				ok(orchestrator._Mediator instanceof Mediator, "Generated orchestrator _Mediator is not as expected");
 
 				strictEqual(typeof orchestrator._Server, "object", "Generated orchestrator _Server is not an object");
-				strictEqual(orchestrator._Server instanceof Server, true, "Generated orchestrator _Mediator is not as expected");
+				ok(orchestrator._Server instanceof Server, "Generated orchestrator _Mediator is not as expected");
 
 				strictEqual(typeof orchestrator.initialized, "boolean", "Generated orchestrator initialized is not a boolean");
-				strictEqual(orchestrator.initialized, true, "Generated orchestrator initialized is not as expected");
+				ok(orchestrator.initialized, "Generated orchestrator initialized is not as expected");
 
 				return Promise.resolve();
 

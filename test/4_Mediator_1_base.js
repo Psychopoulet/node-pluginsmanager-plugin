@@ -3,9 +3,9 @@
 // deps
 
 	// natives
-	const { join } = require("path");
-	const { strictEqual } = require("assert");
-	const Events = require("events");
+	const { strictEqual, ok } = require("node:assert");
+	const { join } = require("node:path");
+	const Events = require("node:events");
 
 	// locals
 
@@ -26,10 +26,10 @@ describe("Mediator", () => {
 		const mediator = new LocalMediator();
 
 		strictEqual(typeof mediator, "object", "Generated mediator is not an object");
-		strictEqual(mediator instanceof Events, true, "Generated mediator is not a Events instance");
-		strictEqual(mediator instanceof DescriptorUser, true, "Generated mediator is not a DescriptorUser instance");
-		strictEqual(mediator instanceof Mediator, true, "Generated mediator is not a Mediator instance");
-		strictEqual(mediator instanceof LocalMediator, true, "Generated mediator is not a LocalMediator instance");
+		ok(mediator instanceof Events, "Generated mediator is not a Events instance");
+		ok(mediator instanceof DescriptorUser, "Generated mediator is not a DescriptorUser instance");
+		ok(mediator instanceof Mediator, "Generated mediator is not a Mediator instance");
+		ok(mediator instanceof LocalMediator, "Generated mediator is not a LocalMediator instance");
 
 		strictEqual(typeof mediator.initialized, "boolean", "Generated mediator is not as expected");
 		strictEqual(mediator.initialized, false, "Generated mediator is not as expected");
@@ -45,7 +45,7 @@ describe("Mediator", () => {
 		return mediator.init().then(() => {
 
 			strictEqual(typeof mediator.initialized, "boolean", "Generated mediator is not as expected");
-			strictEqual(mediator.initialized, true, "Generated mediator is not as expected");
+			ok(mediator.initialized, "Generated mediator is not as expected");
 
 			return Promise.resolve();
 
@@ -64,7 +64,7 @@ describe("Mediator", () => {
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "Generated Error is not as expected");
-			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+			ok(err instanceof Error, "Generated Error is not as expected");
 
 			done();
 
@@ -83,7 +83,7 @@ describe("Mediator", () => {
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "Generated Error is not as expected");
-			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+			ok(err instanceof Error, "Generated Error is not as expected");
 
 			done();
 
@@ -100,7 +100,7 @@ describe("Mediator", () => {
 		return mediator.init().then(() => {
 
 			strictEqual(typeof mediator.initialized, "boolean", "Generated mediator is not as expected");
-			strictEqual(mediator.initialized, true, "Generated mediator is not as expected");
+			ok(mediator.initialized, "Generated mediator is not as expected");
 
 			return mediator.release();
 

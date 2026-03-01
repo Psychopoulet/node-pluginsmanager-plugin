@@ -3,8 +3,8 @@
 // deps
 
 	// natives
-	const { deepStrictEqual } = require("assert");
-	const { join } = require("path");
+	const { deepStrictEqual } = require("node:assert");
+	const { join } = require("node:path");
 
 	// locals
 	const extractCookies = require(join(__dirname, "..", "lib", "cjs", "utils", "request", "extractCookies.js"));

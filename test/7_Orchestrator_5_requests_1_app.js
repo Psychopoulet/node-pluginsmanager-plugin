@@ -3,9 +3,9 @@
 // deps
 
 	// natives
-	const { join } = require("path");
-	const { parse } = require("url");
-	const { strictEqual } = require("assert");
+	const { strictEqual } = require("node:assert");
+	const { join } = require("node:path");
+	const { parse } = require("node:url");
 
 	// externals
 	const express = require("express");

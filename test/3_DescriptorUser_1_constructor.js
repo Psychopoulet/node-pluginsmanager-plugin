@@ -3,9 +3,9 @@
 // deps
 
 	// natives
-	const { join } = require("path");
-	const { deepStrictEqual, strictEqual } = require("assert");
-	const Events = require("events");
+	const { deepStrictEqual, strictEqual, ok } = require("node:assert");
+	const Events = require("node:events");
+	const { join } = require("node:path");
 
 	// locals
 
@@ -22,9 +22,9 @@ describe("DescriptorUser / constructor", () => {
 		const bootable = new LocalDescriptorUser();
 
 		strictEqual(typeof bootable, "object", "Generated bootable is not an object");
-		strictEqual(bootable instanceof Events, true, "Generated bootable is not a Events instance");
-		strictEqual(bootable instanceof LocalDescriptorUser, true, "Generated bootable is not a LocalDescriptorUser instance");
-		strictEqual(bootable instanceof DescriptorUser, true, "Generated bootable is not a DescriptorUser instance");
+		ok(bootable instanceof Events, "Generated bootable is not a Events instance");
+		ok(bootable instanceof LocalDescriptorUser, "Generated bootable is not a LocalDescriptorUser instance");
+		ok(bootable instanceof DescriptorUser, "Generated bootable is not a DescriptorUser instance");
 
 		strictEqual(typeof bootable._Descriptor, "object", "Generated bootable _Descriptor is not an object");
 		strictEqual(bootable._Descriptor, null, "Generated bootable _Descriptor is not as expected");
@@ -83,7 +83,7 @@ describe("DescriptorUser / constructor", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated Error is not as expected");
-				strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+				ok(err instanceof Error, "Generated Error is not as expected");
 
 				done();
 
@@ -100,7 +100,7 @@ describe("DescriptorUser / constructor", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated Error is not as expected");
-				strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+				ok(err instanceof Error, "Generated Error is not as expected");
 
 				done();
 
@@ -129,7 +129,7 @@ describe("DescriptorUser / constructor", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated Error is not as expected");
-				strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+				ok(err instanceof Error, "Generated Error is not as expected");
 
 				done();
 
@@ -146,7 +146,7 @@ describe("DescriptorUser / constructor", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated Error is not as expected");
-				strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+				ok(err instanceof Error, "Generated Error is not as expected");
 
 				done();
 

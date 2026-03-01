@@ -3,8 +3,8 @@
 // deps
 
 	// natives
-	const { strictEqual } = require("assert");
-	const { join } = require("path");
+	const { strictEqual, ok } = require("node:assert");
+	const { join } = require("node:path");
 
 	// locals
 	const { checkNumber, checkNumberSync } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
@@ -22,7 +22,7 @@ describe("checkers / TypeError / checkNumber", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+				ok(err instanceof ReferenceError, "Generated error is not as expected");
 
 				done();
 
@@ -37,7 +37,7 @@ describe("checkers / TypeError / checkNumber", () => {
 			}).catch((err) => {
 
 				strictEqual(typeof err, "object", "Generated error is not an object");
-				strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+				ok(err instanceof TypeError, "Generated error is not as expected");
 
 				done();
 
@@ -62,7 +62,7 @@ describe("checkers / TypeError / checkNumber", () => {
 			const err = checkNumberSync("test");
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err instanceof ReferenceError, true, "Generated error is not as expected");
+			ok(err instanceof ReferenceError, "Generated error is not as expected");
 
 		});
 
@@ -71,7 +71,7 @@ describe("checkers / TypeError / checkNumber", () => {
 			const err = checkNumberSync("test", "test");
 
 			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err instanceof TypeError, true, "Generated error is not as expected");
+			ok(err instanceof TypeError, "Generated error is not as expected");
 
 		});
 

@@ -3,9 +3,9 @@
 // deps
 
 	// natives
-	const { join } = require("path");
-	const { parse } = require("url");
-	const { createServer } = require("http");
+	const { createServer } = require("node:http");
+	const { join } = require("node:path");
+	const { parse } = require("node:url");
 
 	// locals
 

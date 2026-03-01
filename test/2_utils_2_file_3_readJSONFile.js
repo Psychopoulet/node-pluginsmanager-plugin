@@ -3,8 +3,8 @@
 // deps
 
 	// natives
-	const { strictEqual } = require("assert");
-	const { join } = require("path");
+	const { strictEqual, ok } = require("node:assert");
+	const { join } = require("node:path");
 
 	// locals
 	const readJSONFile = require(join(__dirname, "..", "lib", "cjs", "utils", "file", "readJSONFile.js"));
@@ -20,7 +20,7 @@ describe("utils / file / readJSONFile", () => {
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "generated error is not as expected");
-			strictEqual(err instanceof ReferenceError, true, "generated error is not as expected");
+			ok(err instanceof ReferenceError, "generated error is not as expected");
 
 			done();
 
@@ -35,7 +35,7 @@ describe("utils / file / readJSONFile", () => {
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "generated error is not as expected");
-			strictEqual(err instanceof TypeError, true, "generated error is not as expected");
+			ok(err instanceof TypeError, "generated error is not as expected");
 
 			done();
 
@@ -50,7 +50,7 @@ describe("utils / file / readJSONFile", () => {
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "generated error is not as expected");
-			strictEqual(err instanceof Error, true, "generated error is not as expected");
+			ok(err instanceof Error, "generated error is not as expected");
 
 			done();
 
@@ -65,7 +65,7 @@ describe("utils / file / readJSONFile", () => {
 		}).catch((err) => {
 
 			strictEqual(typeof err, "object", "generated error is not as expected");
-			strictEqual(err instanceof Error, true, "generated error is not as expected");
+			ok(err instanceof Error, "generated error is not as expected");
 
 			done();
 

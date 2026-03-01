@@ -3,10 +3,10 @@
 // deps
 
 	// natives
-	const { join } = require("path");
-	const { parse } = require("url");
-	const { strictEqual } = require("assert");
-	const { createServer } = require("http");
+	const { ok } = require("node:assert");
+	const { createServer } = require("node:http");
+	const { join } = require("node:path");
+	const { parse } = require("node:url");
 
 	// externals
 	const WebSocketServer = require("ws").Server;
@@ -95,7 +95,7 @@ describe("Server / websockets", () => {
 
 			return socketRequestTest(port, "ping", "pong").then(() => {
 
-				strictEqual(pinged, true, "DebugStep is not as expected");
+				ok(pinged, "DebugStep is not as expected");
 
 			});
 
@@ -185,7 +185,7 @@ describe("Server / websockets", () => {
 
 			return socketRequestTest(port, "ping", "pong", true).then(() => {
 
-				strictEqual(pinged, true, "DebugStep is not as expected");
+				ok(pinged, "DebugStep is not as expected");
 
 			});
 

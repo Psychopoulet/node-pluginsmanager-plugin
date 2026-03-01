@@ -3,8 +3,8 @@
 // deps
 
 	// natives
-	const { join } = require("path");
-	const { parse } = require("url");
+	const { join } = require("node:path");
+	const { parse } = require("node:url");
 
 	// externals
 	const express = require("express");
