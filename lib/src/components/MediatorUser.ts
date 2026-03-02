@@ -1,3 +1,7 @@
+/*
+    eslint-disable @typescript-eslint/no-unused-vars
+*/
+
 //  deps
 
     // locals
@@ -30,9 +34,7 @@ export default class MediatorUser<T extends tEventMap<T> = tEventsNoEvent> exten
 
         super(options);
 
-        this._Mediator = "undefined" !== typeof options?.mediator
-            ? options.mediator
-            : null;
+        this._Mediator = options?.mediator ?? null;
 
     }
 

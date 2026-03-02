@@ -14,6 +14,7 @@
 // types & interfaces
 
     // externals
+    import type { RequestHandler } from "express";
     import type { OpenApiDocument } from "express-openapi-validate";
 
     // locals
@@ -116,9 +117,9 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
                         "body": bodyParams
                     };
 
-                    const validateRequest: any = (this._validator as OpenApiValidator).validate(req.method, req.path); // set to "any" for ts validation
+                    const validateRequest: RequestHandler = (this._validator as OpenApiValidator).validate(req.method, req.path);
 
-                    validateRequest(req, null, (err: Error): void => {
+                    validateRequest(req, null, (err: Error | null): void => {
                         return err ? reject(err) : resolve();
                     });
 

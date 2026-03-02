@@ -1,5 +1,5 @@
 /*
-    eslint-disable @typescript-eslint/no-dynamic-delete
+    eslint-disable @typescript-eslint/no-dynamic-delete, @typescript-eslint/no-unused-vars, @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 */
 
 // deps
@@ -96,10 +96,10 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
             this._checkResponse = true; // to delay checkResponse if necessary
 
             // params
-            this._packageFile = options && "string" === typeof options.packageFile ? options.packageFile : "";
-            this._descriptorFile = options && "string" === typeof options.descriptorFile ? options.descriptorFile : "";
-            this._mediatorFile = options && "string" === typeof options.mediatorFile ? options.mediatorFile : "";
-            this._serverFile = options && "string" === typeof options.serverFile ? options.serverFile : "";
+            this._packageFile = options?.packageFile ?? "";
+            this._descriptorFile = options?.descriptorFile ?? "";
+            this._mediatorFile = options?.mediatorFile ?? "";
+            this._serverFile = options?.serverFile ?? "";
 
             // extended
             this._extended = [];

@@ -1,3 +1,7 @@
+/*
+    eslint-disable @typescript-eslint/no-unused-vars
+*/
+
 //  deps
 
     // natives
@@ -75,17 +79,9 @@ export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> ext
 
             this._descriptorValidated = false;
 
-            this._externalResourcesDirectory = "string" === typeof options?.externalResourcesDirectory
-                ? options.externalResourcesDirectory
-                : "";
-
-            this._Descriptor = "object" === typeof options?.descriptor
-                ? options.descriptor
-                : null;
-
-            this._Logger = "function" === typeof options?.logger
-                ? options.logger
-                : null;
+            this._externalResourcesDirectory = options?.externalResourcesDirectory ?? "";
+            this._Descriptor = options?.descriptor ?? null;
+            this._Logger = options?.logger ?? null;
 
     }
 
@@ -118,21 +114,19 @@ export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> ext
     // public
 
         public getPluginName (): string {
-            return this._Descriptor?.info?.title ?? "";
+            return this._Descriptor?.info.title ?? "";
         }
 
         public getPluginVersion (): string {
-            return this._Descriptor?.info?.version ?? "";
+            return this._Descriptor?.info.version ?? "";
         }
 
         public getPluginDescription (): string {
-            return this._Descriptor?.info?.description ?? "";
+            return this._Descriptor?.info.description ?? "";
         }
 
         // must be inherited
         public init (...data: unknown[]): Promise<void> {
-
-            console.log("DescriptorUser", "init", ...data);
 
             return Promise.reject(new Error("\"init\" method must be inherited"));
 
@@ -140,8 +134,6 @@ export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> ext
 
         // must be inherited
         public release (...data: unknown[]): Promise<void> {
-
-            console.log("DescriptorUser", "release", ...data);
 
             return Promise.reject(new Error("\"release\" method must be inherited"));
 
@@ -188,7 +180,7 @@ export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> ext
 
                                 const path: Record<string, any> = (this._Descriptor as OpenApiDocument).paths[p];
 
-                                if (path[m].operationId) {
+                                if ("string" === typeof path[m].operationId) {
                                     operationIds.push(path[m].operationId);
                                 }
 
