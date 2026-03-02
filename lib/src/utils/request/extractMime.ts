@@ -34,14 +34,10 @@ export default function extractMime (contentType: string, code: number, response
 
             let descriptorContent: Record<string, any> = {};
 
-            if (responses[stringifiedCode]) {
-
-                if (responses[stringifiedCode].content) {
-                    descriptorContent = responses[stringifiedCode].content;
-                }
-
+            if ("object" === typeof responses[stringifiedCode].content) {
+                descriptorContent = responses[stringifiedCode].content;
             }
-            else if (responses.default?.content) {
+            else if ("object" === typeof responses.default.content) {
                 descriptorContent = responses.default.content;
             }
             else {

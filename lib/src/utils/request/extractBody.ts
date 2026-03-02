@@ -40,9 +40,9 @@ export default function extractBody (req: iIncomingMessage): Promise<string> {
                 }
                 else {
 
-                    req.headers["content-length"] = parseInt(req.headers["content-length"] as string, 10);
+                    const contentLength: number = parseInt(req.headers["content-length"] as string, 10);
 
-                    if (req.headers["content-length"] !== Buffer.byteLength(queryData)) {
+                    if (contentLength !== Buffer.byteLength(queryData)) {
 
                         reject(new Error("\"Content-Length\" header (" + Buffer.byteLength(queryData) + ")"
                             + " is not as expected (" + req.headers["content-length"] + ")."

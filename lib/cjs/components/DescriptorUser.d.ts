@@ -8,14 +8,13 @@ export interface iDescriptorUserOptions {
     "logger"?: tLogger;
 }
 export type tEventMap<T> = Record<keyof T, unknown[]>;
-export interface iEventsNoEvent {
-}
+export type tEventsNoEvent = {};
 export interface iEventsMinimal {
     "error": [Error];
     "initialized": [unknown];
     "released": [unknown];
 }
-export default class DescriptorUser<T extends tEventMap<T> = iEventsNoEvent> extends EventEmitter<T> {
+export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> extends EventEmitter<T> {
     initialized: boolean;
     protected _descriptorValidated: boolean;
     protected _externalResourcesDirectory: string;

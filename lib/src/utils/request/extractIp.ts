@@ -1,6 +1,11 @@
+// types & interfaces
+
+    // natives
+    import type { iIncomingMessage } from "../../components/Server";
+
 // module
 
-export default function extractIp (req: any): string {
+export default function extractIp (req: iIncomingMessage): string {
 
     if ("object" !== typeof req) {
         return "";
@@ -12,19 +17,30 @@ export default function extractIp (req: any): string {
         if (req.ip) {
             result = req.ip;
         }
-        else if (req.headers?.["x-forwarded-for"]) {
-            result = req.headers["x-forwarded-for"].split(",").pop();
+        else if ("string" === typeof req.headers["x-forwarded-for"]) {
+            result = req.headers["x-forwarded-for"].split(",").pop() as string;
         }
-        else if (req.socket?.remoteAddress) {
+        else if ("string" === typeof req.socket.remoteAddress) {
             result = req.socket.remoteAddress;
         }
-        else if (req.connection) {
+        else if ("object" === typeof req.connection) {
 
-            if (req.connection.remoteAddress) {
-                result = req.connection.remoteAddress;
+            const { connection }: { "connection": Record<string, unknown> } = req as unknown as { "connection": Record<string, unknown> };
+
+            if ("string" === typeof connection.remoteAddress) {
+                result = connection.remoteAddress;
             }
-            else if (req.connection.socket?.remoteAddress) {
-                result = req.connection.socket.remoteAddress;
+            else if ("object" === typeof connection.socket) {
+
+                const { socket }: { "socket": Record<string, string> } = connection as { "socket": Record<string, string> };
+
+                if (socket.remoteAddress) {
+                    result = socket.remoteAddress;
+                }
+                else {
+                    result = "";
+                }
+
             }
             else {
                 result = "";

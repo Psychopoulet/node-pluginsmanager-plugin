@@ -15,7 +15,7 @@
 
 // module
 
-export default function extractPathMethodByOperationId (paths: OpenApiDocument["paths"], operationId: string): iPathMethod | null {
+export default function extractPathMethodByOperationId (paths: OpenApiDocument["paths"] | null | undefined, operationId: string): iPathMethod | null {
 
     // no paths in this Descriptor
     if ("object" !== typeof paths || null === paths) {

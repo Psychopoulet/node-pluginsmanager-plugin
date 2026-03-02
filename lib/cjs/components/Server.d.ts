@@ -3,26 +3,26 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Server as WebSocketServer } from "ws";
 import type { Server as SocketIOServer } from "socket.io";
 import type { tEventMap, iEventsMinimal } from "./DescriptorUser";
+export type tMethod = "get" | "put" | "post" | "delete" | "options" | "head" | "patch" | "trace";
 export interface iClient {
     "id": string;
     "status": "CONNECTED" | "DISCONNECTED";
 }
 export interface iIncomingMessage extends IncomingMessage {
-    "method": string;
+    "method": tMethod;
     "pattern": string;
     "validatedIp": string;
-    "params": Record<string, any>;
+    "params": Record<string, string | number | boolean>;
     "query": Record<string, unknown>;
-    "headers": Record<string, any>;
     "header"?: Record<string, unknown>;
-    "cookies": Record<string, any>;
+    "cookies": Record<string, unknown>;
     "cookie"?: Record<string, unknown>;
     "body": string;
     "ip": string;
 }
 export interface iServerResponse extends ServerResponse {
     "body": string;
-    "headers": Record<string, any>;
+    "headers": Record<string, unknown>;
 }
 export default class Server<T extends tEventMap<T> = iEventsMinimal> extends MediatorUser<T> {
     protected _socketServer: WebSocketServer | SocketIOServer | null;
@@ -42,7 +42,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
     enableCors(): this;
     appMiddleware(_req: IncomingMessage, res: iServerResponse, next: (err?: Error) => void): void;
     socketMiddleware(socketServer: WebSocketServer | SocketIOServer): void;
-    push(command: string, data?: any, log?: boolean): this;
+    push(command: string, data?: unknown, log?: boolean): this;
     getClients(): iClient[];
     pushClient(clientId: string, command: string, data?: unknown, log?: boolean): this;
     init(...data: unknown[]): Promise<void>;

@@ -1,7 +1,6 @@
 // deps
 
     // natives
-    import type { AddressInfo } from "node:net";
     import { EOL } from "node:os";
     import { parse } from "node:url";
 
@@ -36,6 +35,7 @@
 
     // natives
     import type { IncomingMessage, ServerResponse } from "node:http";
+    import type { AddressInfo } from "node:net";
 
     // externals
     import type { OpenApiDocument } from "express-openapi-validate";
@@ -53,20 +53,22 @@
         "data"?: unknown;
     }
 
+    export type tMethod = "get" | "put" | "post" | "delete" | "options" | "head" | "patch" | "trace";
+
     export interface iClient {
         "id": string;
         "status": "CONNECTED" | "DISCONNECTED";
     }
 
     export interface iIncomingMessage extends IncomingMessage {
-        "method": string;
+        "method": tMethod; // specify IncomingMessage["method"];
         "pattern": string;
         "validatedIp": string;
-        "params": Record<string, any>;
+        "params": Record<string, string | number | boolean>;
         "query": Record<string, unknown>;
-        "headers": Record<string, any>;
+        // "headers": IncomingMessage["headers"];
         "header"?: Record<string, unknown>;
-        "cookies": Record<string, any>;
+        "cookies": Record<string, unknown>;
         "cookie"?: Record<string, unknown>;
         "body": string;
         "ip": string;
@@ -74,7 +76,7 @@
 
     export interface iServerResponse extends ServerResponse {
         "body": string;
-        "headers": Record<string, any>;
+        "headers": Record<string, unknown>;
     }
 
     interface iWebSocketWithId extends WebSocket {
@@ -211,8 +213,8 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                 const req: iIncomingMessage = Object.assign(_req);
 
                 // parse
-                const { pathname, query }: { "pathname": string | null; "query": any; } = parse((req.url as string), true);
-                req.method = req.method ? req.method.toLowerCase() : "get";
+                const { pathname, query }: { "pathname": string | null; "query": Record<string, unknown>; } = parse((req.url as string), true);
+                req.method = req.method ? req.method.toLowerCase() as tMethod : "get";
                 req.pattern = null === checkNonEmptyStringSync("pattern", req.pattern) ? req.pattern : extractPattern(
                     (this._Descriptor as OpenApiDocument).paths, pathname as string, req.method
                 );
@@ -243,19 +245,19 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                     req.query = null === checkNonEmptyObjectSync("query", req.query) ? req.query : query ?? {};
 
                     if (null !== checkNonEmptyObjectSync("headers", req.headers)) {
-                        req.headers = null === checkNonEmptyObjectSync("header", req.header) ? req.header as Record<string, any> : {};
+                        req.headers = null === checkNonEmptyObjectSync("header", req.header) ? req.header as iIncomingMessage["headers"] : {};
                     }
 
                     if (null !== checkNonEmptyObjectSync("cookies", req.cookies)) {
-                        req.cookies = null === checkNonEmptyObjectSync("header", req.cookie) ? req.cookie as Record<string, any> : extractCookies(req);
+                        req.cookies = null === checkNonEmptyObjectSync("header", req.cookie) ? req.cookie as iIncomingMessage["headers"] : extractCookies(req);
                     }
 
                     // ensure content length formate
                     if ("undefined" === typeof req.headers["content-length"]) {
-                        req.headers["content-length"] = 0;
+                        req.headers["content-length"] = "0";
                     }
-                    else if ("string" === typeof req.headers["content-length"]) {
-                        req.headers["content-length"] = parseInt(req.headers["content-length"], 10);
+                    else if ("number" === typeof req.headers["content-length"]) {
+                        req.headers["content-length"] = String(req.headers["content-length"]);
                     }
 
                 }
@@ -263,22 +265,22 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                     return next(e as Error);
                 }
 
-                if (!(this._Descriptor as OpenApiDocument).paths[req.pattern] || !((this._Descriptor as OpenApiDocument).paths[req.pattern] as Record<string, any>)[req.method]) {
+                if (!(this._Descriptor as OpenApiDocument).paths[req.pattern] || !(this._Descriptor as OpenApiDocument).paths[req.pattern][req.method]) {
                     return next();
                 }
 
-                const { operationId }: { "operationId": string; } = ((this._Descriptor as OpenApiDocument).paths[req.pattern] as Record<string, any>)[req.method];
+                const { operationId }: { "operationId"?: string; } = (this._Descriptor as OpenApiDocument).paths[req.pattern][req.method] as Record<string, any>;
                 const apiVersion: string = (this._Descriptor as OpenApiDocument).info.version;
 
-                const contentType: string = req.headers["content-type"] ?? req.headers["Content-Type"] ?? "";
-                const responses = ((this._Descriptor as OpenApiDocument).paths[req.pattern] as Record<string, any>)[req.method].responses;
+                const contentType: string = req.headers["content-type"] ?? req.headers["Content-Type"] as string ?? "";
+                const responses = (this._Descriptor as OpenApiDocument).paths[req.pattern][req.method]?.responses;
 
                 this._log("info", ""
                     + "=> [" + req.validatedIp + "] " + req.url + " (" + req.method.toUpperCase() + ")"
                     + (operationId ? EOL + "operationId    : " + operationId : "")
                     + (req.headers["content-type"] ? EOL + "content-type   : " + req.headers["content-type"] : "")
                     + (
-                        "get" !== req.method && req.headers["content-length"] && 4 < req.headers["content-length"]
+                        "get" !== req.method && req.headers["content-length"] && 4 < parseInt(req.headers["content-length"], 10)
                             ? EOL + "content-length : " + req.headers["content-length"]
                             : ""
                     )
@@ -410,9 +412,9 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                         const keys: string[] = Object.keys(req.params);
                         return !keys.length ? Promise.resolve() : Promise.resolve().then((): Promise<void> => {
 
-                            const docParameters: Array<Record<string, any>> = ((this._Descriptor as OpenApiDocument).paths[req.pattern] as Record<string, any>)[req.method].parameters.filter((p: Record<string, any>): boolean => {
+                            const docParameters: Array<Record<string, any>> = (this._Descriptor as OpenApiDocument).paths[req.pattern][req.method]?.parameters?.filter((p: Record<string, any>): boolean => {
                                 return "path" === p.in;
-                            });
+                            }) ?? [];
 
                             return !docParameters.length ? Promise.resolve() : Promise.resolve().then((): Promise<void> => {
 
@@ -421,7 +423,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                                     const key: string = keys[i];
 
-                                    const schema = docParameters.find((dp: Record<string, any>): boolean => {
+                                    const schema = docParameters.find((dp): boolean => {
                                         return dp.name === key;
                                     })?.schema ?? null;
 
@@ -429,7 +431,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                                         err = new ReferenceError("Unknown parameter: request.params['" + key + "']"); break;
                                     }
 
-                                    switch (extractSchemaType(schema, ((this._Descriptor as OpenApiDocument).components as Record<string, any>).schemas)) {
+                                    switch (extractSchemaType(schema, (this._Descriptor as OpenApiDocument)?.components?.schemas ?? {})) {
 
                                         case "boolean":
 
@@ -458,7 +460,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                                             // error returned, not an integer
                                             if (null !== checkIntegerSync("request.params['" + key + "']", req.params[key])) {
 
-                                                const value: number = parseInt(req.params[key], 10);
+                                                const value: number = parseInt(req.params[key] as string, 10);
 
                                                 if (!Number.isNaN(value)) {
                                                     req.params[key] = value;
@@ -479,7 +481,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                                             if ("number" !== typeof req.params[key]) {
 
-                                                const value: number = parseFloat(req.params[key]);
+                                                const value: number = parseFloat(req.params[key] as string);
 
                                                 if (!Number.isNaN(value)) {
                                                     req.params[key] = value;
@@ -772,7 +774,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
             this._socketServer = socketServer;
         }
 
-        public push (command: string, data?: any, log: boolean = true): this {
+        public push (command: string, data?: unknown, log: boolean = true): this {
 
             const serverType: "NO_SERVER" | "WEBSOCKET" | "SOCKETIO" | "UNKNOWN" = this._serverType();
 
@@ -867,7 +869,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                             for (const key in (this._socketServer as SocketIOServer).sockets.sockets) {
 
-                                const s: any = ((this._socketServer as SocketIOServer).sockets.sockets as Record<string, any>)[key];
+                                const s: { "id": string; "connected": boolean; } = ((this._socketServer as SocketIOServer).sockets.sockets as Record<string, any>)[key];
 
                                 result.push({
                                     "id": s.id,
@@ -879,7 +881,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                         }
                         else {
 
-                            (this._socketServer as SocketIOServer).sockets.sockets.forEach((s: any): void => { // SocketIO V3&4
+                            (this._socketServer as SocketIOServer).sockets.sockets.forEach((s: SocketIOSocket): void => { // SocketIO V3&4
 
                                 result.push({
                                     "id": s.id,

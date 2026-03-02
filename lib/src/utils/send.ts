@@ -5,7 +5,7 @@
 // types & interfaces
 
     // natives
-    import type { IncomingMessage } from "node:http";
+    import type { IncomingMessage, OutgoingHttpHeaders } from "node:http";
 
     // locals
     import type { iServerResponse } from "../components/Server";
@@ -105,7 +105,7 @@ export default function send (req: IncomingMessage, res: iServerResponse, code: 
 
             // send data
 
-            res.writeHead(res.statusCode, res.headers);
+            res.writeHead(res.statusCode, res.headers as OutgoingHttpHeaders);
 
             if ("string" === typeof formattedContent) {
 
