@@ -45,6 +45,7 @@
     // locals
 
     import type { tEventMap, iEventsMinimal } from "./DescriptorUser";
+    import type { iOperationHandler } from "./Mediator";
 
     interface iPush {
         "id": string;
@@ -570,7 +571,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                         // execute Mediator method
                         }).then((): Promise<string> => {
 
-                            return (this._Mediator as Record<string, any>)[operationId](parsed.url, parsed.body);
+                            return (this._Mediator as Mediator & Record<string, iOperationHandler>)[operationId](parsed.url, parsed.body);
 
                         });
 
@@ -936,7 +937,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                         (this._socketServer as WebSocketServer).clients.forEach((client: iWebSocketWithId): void => {
 
-                            if (!client.id) {
+                            if ("undefined" === typeof client.id) {
                                 client.id = uniqid();
                             }
                             else if (client.id === clientId && WEBSOCKET_STATE_OPEN === client.readyState) {

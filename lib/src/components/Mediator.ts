@@ -47,6 +47,11 @@
         "cookie"?: Record<string, any>;
     }
 
+    export type iOperationHandler = (
+        url: iUrlAllowedParameters,
+        body: unknown
+    ) => Promise<string>;
+
 // module
 
 export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends DescriptorUser<T> {

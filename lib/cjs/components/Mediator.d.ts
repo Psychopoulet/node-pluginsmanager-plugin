@@ -16,6 +16,7 @@ export interface iUrlAllowedParameters {
     "header"?: Record<string, any>;
     "cookie"?: Record<string, any>;
 }
+export type iOperationHandler = (url: iUrlAllowedParameters, body: unknown) => Promise<string>;
 export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends DescriptorUser<T> {
     protected _validator: OpenApiValidator | null;
     constructor(options: iDescriptorUserOptions);
