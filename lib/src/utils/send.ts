@@ -1,6 +1,7 @@
 /*
     eslint-disable @typescript-eslint/no-base-to-string
 */
+// => @typescript-eslint/no-base-to-string is disabled to allow stringification of unattented content ('[object Object]' for example)
 
 // types & interfaces
 

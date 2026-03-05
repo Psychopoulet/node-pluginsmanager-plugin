@@ -1,6 +1,7 @@
 /*
     eslint-disable camelcase
 */
+// => @typescript-eslint/camelcase is disabled because of "openapi-types" types
 
 // types & interfaces
 
@@ -9,12 +10,12 @@
 
 // module
 
-export default function extractSchemaType (schema: OpenAPIV3_1.SchemaObject | OpenAPIV3_1.ReferenceObject, schemas: Record<string, any>): "boolean" | "object" | "number" | "string" | "integer" | "array" {
+export default function extractSchemaType (schema: OpenAPIV3_1.SchemaObject | OpenAPIV3_1.ReferenceObject, schemas: { [index: string]: OpenAPIV3_1.SchemaObject; }): OpenAPIV3_1.SchemaObject["type"] {
 
-    let result: "boolean" | "object" | "number" | "string" | "integer" = "string";
+    let result: OpenAPIV3_1.SchemaObject["type"] = "string";
 
         if ("string" === typeof (schema as OpenAPIV3_1.SchemaObject).type) {
-            result = (schema as OpenAPIV3_1.SchemaObject).type as "boolean" | "object" | "number" | "string" | "integer";
+            result = (schema as OpenAPIV3_1.SchemaObject).type as OpenAPIV3_1.SchemaObject["type"];
         }
         else if ((schema as OpenAPIV3_1.ReferenceObject).$ref) {
 

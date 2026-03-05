@@ -9,7 +9,7 @@ export function checkNonEmptyObjectSync (dataName: string, data: unknown): Refer
 
     let err: ReferenceError | TypeError | RangeError | null = checkObjectSync(dataName, data);
 
-        if (!err && 1 > Object.keys(data as Record<string, any>).length) {
+        if (!err && 1 > Object.keys(data as Record<string, unknown>).length) {
 
             err = new RangeError(
                 "\"" + dataName + "\" must have keys"

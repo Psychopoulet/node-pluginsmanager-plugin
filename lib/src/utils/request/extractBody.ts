@@ -1,6 +1,7 @@
 /*
     eslint-disable @typescript-eslint/unbound-method
 */
+// => @typescript-eslint/unbound-method is disabled to allow check on req.headers (no need for js context)
 
 // deps
 

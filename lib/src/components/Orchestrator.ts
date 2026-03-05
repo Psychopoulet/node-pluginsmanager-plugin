@@ -1,6 +1,10 @@
 /*
-    eslint-disable @typescript-eslint/no-dynamic-delete, @typescript-eslint/no-unused-vars, @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
+    eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-dynamic-delete, @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 */
+// => @typescript-eslint/no-unused-vars is disabled to allow inheritance with proper signature
+// => @typescript-eslint/no-dynamic-delete is disabled to allow data release
+// => @typescript-eslint/no-require-imports is disabled to allow dynamic Mediator import on plugin load
+// => @typescript-eslint/no-var-requires is disabled for the same reason as @typescript-eslint/no-require-imports
 
 // deps
 
@@ -363,7 +367,7 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
                     return readJSONFile(this._packageFile);
 
                 // formate authors
-                }).then((packageData: Record<string, any>): Promise<Record<string, unknown>> => {
+                }).then((packageData: Record<string, unknown>): Promise<Record<string, unknown>> => {
 
                     if (packageData.authors) {
 

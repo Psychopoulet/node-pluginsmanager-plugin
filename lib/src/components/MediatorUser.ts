@@ -1,6 +1,7 @@
 /*
     eslint-disable @typescript-eslint/no-unused-vars
 */
+// => @typescript-eslint/no-unused-vars is disabled to allow inheritance with proper signature
 
 //  deps
 
@@ -34,7 +35,11 @@ export default class MediatorUser<T extends tEventMap<T> = tEventsNoEvent> exten
 
         super(options);
 
-        this._Mediator = options?.mediator ?? null;
+        // protected
+
+            // optional props
+
+            this._Mediator = options.mediator ?? null;
 
     }
 

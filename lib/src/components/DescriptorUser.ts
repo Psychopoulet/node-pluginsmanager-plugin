@@ -1,6 +1,7 @@
 /*
     eslint-disable @typescript-eslint/no-unused-vars
 */
+// => @typescript-eslint/no-unused-vars is disabled to allow inheritance with proper signature
 
 //  deps
 
@@ -34,6 +35,11 @@
         "error": [ Error ];
         "initialized": [ unknown ];
         "released": [ unknown ];
+    }
+
+    export interface iSimplifiedOperationObject {
+        [index: string]: unknown;
+        "operationId": string;
     }
 
 // consts
@@ -79,9 +85,20 @@ export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> ext
 
             this._descriptorValidated = false;
 
-            this._externalResourcesDirectory = options?.externalResourcesDirectory ?? "";
-            this._Descriptor = options?.descriptor ?? null;
-            this._Logger = options?.logger ?? null;
+            // mandatory props
+
+            if ("object" !== typeof options) {
+                throw new ReferenceError("\"options\" must be a non-null object");
+            }
+            if ("string" !== typeof options.externalResourcesDirectory) {
+                throw new ReferenceError("\"options.externalResourcesDirectory\" must be a string");
+            }
+
+            // optional props
+
+            this._externalResourcesDirectory = options.externalResourcesDirectory;
+            this._Descriptor = options.descriptor ?? null;
+            this._Logger = options.logger ?? null;
 
     }
 
@@ -174,14 +191,16 @@ export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> ext
                     return Promise.resolve().then((): Promise<void> => {
 
                         const operationIds: string[] = [];
-                        Object.keys((this._Descriptor as OpenApiDocument).paths).forEach((p: string): void => {
+                        Object.keys((this._Descriptor as OpenApiDocument).paths).forEach((pathname: string): void => {
 
-                            Object.keys((this._Descriptor as OpenApiDocument).paths[p]).forEach((m: string): void => {
+                            const path: OpenApiDocument["paths"][string] = (this._Descriptor as OpenApiDocument).paths[pathname];
 
-                                const path: Record<string, any> = (this._Descriptor as OpenApiDocument).paths[p];
+                            Object.keys(path).forEach((method: string): void => {
 
-                                if ("string" === typeof path[m].operationId) {
-                                    operationIds.push(path[m].operationId);
+                                const operation: iSimplifiedOperationObject | undefined = path[method as keyof OpenApiDocument["paths"][string]] as iSimplifiedOperationObject | undefined;
+
+                                if ("string" === typeof operation?.operationId) {
+                                    operationIds.push(operation.operationId);
                                 }
 
                             });
