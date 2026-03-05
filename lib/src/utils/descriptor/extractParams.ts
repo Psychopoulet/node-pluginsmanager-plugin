@@ -5,9 +5,9 @@
 
 // module
 
-export default function extractParams (patternPath: string, realPath: string): Record<string, any> {
+export default function extractParams (patternPath: string, realPath: string): Record<string, unknown> {
 
-    const params: Record<string, any> = {};
+    const params: Record<string, unknown> = {};
 
         const patternPathSplitted: string[] = removeFirstSlash(patternPath).split("/");
 

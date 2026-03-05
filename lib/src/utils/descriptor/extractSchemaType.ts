@@ -10,12 +10,12 @@
 
 // module
 
-export default function extractSchemaType (schema: OpenAPIV3_1.SchemaObject | OpenAPIV3_1.ReferenceObject, schemas: { [index: string]: OpenAPIV3_1.SchemaObject; }): OpenAPIV3_1.SchemaObject["type"] {
+export default function extractSchemaType (schema: OpenAPIV3_1.SchemaObject | OpenAPIV3_1.ReferenceObject, schemas: Record<string, OpenAPIV3_1.SchemaObject>): OpenAPIV3_1.SchemaObject["type"] {
 
     let result: OpenAPIV3_1.SchemaObject["type"] = "string";
 
         if ("string" === typeof (schema as OpenAPIV3_1.SchemaObject).type) {
-            result = (schema as OpenAPIV3_1.SchemaObject).type as OpenAPIV3_1.SchemaObject["type"];
+            result = (schema as OpenAPIV3_1.SchemaObject).type;
         }
         else if ((schema as OpenAPIV3_1.ReferenceObject).$ref) {
 

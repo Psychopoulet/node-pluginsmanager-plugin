@@ -4,8 +4,8 @@
     import type { OpenApiDocument } from "express-openapi-validate";
 
     // locals
-
-    export type tMethod = "get" | "put" | "post" | "delete" | "options" | "head" | "patch" | "trace";
+    import type { tMethod } from "../../components/Server";
+    import type { iSimplifiedOperationObject } from "../../components/DescriptorUser";
 
     export interface iPathMethod {
         "path": string;
@@ -15,45 +15,45 @@
 
 // module
 
-export default function extractPathMethodByOperationId (paths: OpenApiDocument["paths"] | null | undefined, operationId: string): iPathMethod | null {
+export default function extractPathMethodByOperationId (paths: OpenApiDocument["paths"] | null | undefined, operationId: string): iPathMethod | undefined {
 
     // no paths in this Descriptor
     if ("object" !== typeof paths || null === paths) {
-        return null;
+        return undefined;
     }
 
     // no operationId given
     else if ("string" !== typeof operationId || "" === operationId.trim()) {
-        return null;
+        return undefined;
     }
 
     else {
 
-        let result: iPathMethod | null = null;
+        for (let i: number = 0, pathnames = Object.keys(paths); i < pathnames.length; ++i) {
 
-            for (let i: number = 0, pathnames = Object.keys(paths); i < pathnames.length; ++i) {
+            const pathname: string = pathnames[i];
 
-                const pathname: string = pathnames[i];
+            if ("object" === typeof paths[pathname]) {
 
-                const method: tMethod = (Object.keys(paths[pathname]) as tMethod[]).find((m: tMethod): boolean => {
-                    return Boolean(paths[pathname][m]) && (paths[pathname][m] as Record<string, any>).operationId === operationId;
-                }) as tMethod;
+                const method: tMethod | undefined = (Object.keys(paths[pathname]) as tMethod[]).find((m: tMethod): boolean => {
+                    return (paths[pathname][m] as unknown as iSimplifiedOperationObject).operationId === operationId;
+                });
 
                 if ("undefined" !== typeof method) {
 
-                    result = {
+                    return {
                         "path": pathname,
                         method,
                         operationId
                     };
 
-                    break;
-
                 }
 
             }
 
-        return result;
+        }
+
+        return undefined;
 
     }
 

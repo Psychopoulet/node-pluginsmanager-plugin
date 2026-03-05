@@ -106,7 +106,7 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
             }).then((): Promise<void> => {
 
                 // search wanted operation
-                const foundPathMethod: iPathMethod | null = extractPathMethodByOperationId((this._Descriptor as OpenApiDocument).paths, operationId);
+                const foundPathMethod: iPathMethod | undefined = extractPathMethodByOperationId((this._Descriptor as OpenApiDocument).paths, operationId);
 
                 return !foundPathMethod ? Promise.reject(
                     new ReferenceError("Unknown operationId \"" + operationId + "\"")
@@ -172,7 +172,7 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
             }).then((): Promise<void> => {
 
                 // search wanted operation
-                const foundPathMethod: iPathMethod | null = extractPathMethodByOperationId((this._Descriptor as OpenApiDocument).paths, operationId);
+                const foundPathMethod: iPathMethod | undefined = extractPathMethodByOperationId((this._Descriptor as OpenApiDocument).paths, operationId);
 
                 return !foundPathMethod ? Promise.reject(
                     new ReferenceError("Unknown operationId \"" + operationId + "\"")

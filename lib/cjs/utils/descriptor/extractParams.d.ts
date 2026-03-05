@@ -1,1 +1,1 @@
-export default function extractParams(patternPath: string, realPath: string): Record<string, any>;
+export default function extractParams(patternPath: string, realPath: string): Record<string, unknown>;
