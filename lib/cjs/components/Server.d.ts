@@ -30,7 +30,8 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
     protected _checkResponse: boolean;
     protected _cors: boolean;
     constructor(opt: iMediatorUserOptions);
-    protected _serverType(): "NO_SERVER" | "WEBSOCKET" | "SOCKETIO" | "UNKNOWN";
+    protected _getServerType(): "NO_SERVER" | "WEBSOCKET" | "SOCKETIO" | "UNKNOWN";
+    protected _getSocketIOVersion(): "V2" | "V3-V4" | "UNKNOWN";
     protected _getUsableSocketIOClient(clientId: string): {
         "emit": (event: string, ...data: unknown[]) => void;
     } | undefined;

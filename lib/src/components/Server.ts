@@ -117,7 +117,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
     // protected
 
-        protected _serverType (): "NO_SERVER" | "WEBSOCKET" | "SOCKETIO" | "UNKNOWN" {
+        protected _getServerType (): "NO_SERVER" | "WEBSOCKET" | "SOCKETIO" | "UNKNOWN" {
 
             if (!this._socketServer) {
                 return "NO_SERVER";
@@ -134,32 +134,55 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
         }
 
+        protected _getSocketIOVersion (): "V2" | "V3-V4" | "UNKNOWN" {
+
+            if (this._socketServer) {
+
+                if ("function" === typeof (this._socketServer as SocketIOServer).sockets?.sockets?.has) {
+                    return "V3-V4";
+                }
+                else {
+                    return "V2";
+                }
+
+            }
+
+            return "UNKNOWN";
+
+        }
+
         protected _getUsableSocketIOClient (clientId: string): {
             "emit": (event: string, ...data: unknown[]) => void
         } | undefined {
 
-            if ("SOCKETIO" === this._serverType()) {
+            if ("SOCKETIO" === this._getServerType()) {
+
+                const socketIOVersion: "V2" | "V3-V4" | "UNKNOWN" = this._getSocketIOVersion();
 
                 let socket: SocketIOSocket | null | undefined = null;
 
-                if ("function" !== typeof (this._socketServer as SocketIOServer).sockets?.sockets?.has) { // SocketIO V2
+                    if ("V2" === socketIOVersion) {
 
-                    for (const key in (this._socketServer as SocketIOServer).sockets.sockets) {
+                        for (const key in (this._socketServer as SocketIOServer).sockets.sockets) {
 
-                        if (key === clientId) {
+                            if (key === clientId) {
 
-                            socket = ((this._socketServer as SocketIOServer).sockets.sockets as Record<string, any>)[key] as SocketIOSocket;
+                                socket = ((this._socketServer as SocketIOServer).sockets.sockets as Record<string, any>)[key];
 
-                            break;
+                                break;
+
+                            }
 
                         }
 
                     }
+                    else if ("V3-V4" === socketIOVersion) { // SocketIO V3&4
 
-                }
-                else if ((this._socketServer as SocketIOServer).sockets.sockets.has(clientId)) { // SocketIO V3&4
-                    socket = (this._socketServer as SocketIOServer).sockets.sockets.get(clientId);
-                }
+                        if ((this._socketServer as SocketIOServer).sockets.sockets.has(clientId)) {
+                            socket = (this._socketServer as SocketIOServer).sockets.sockets.get(clientId);
+                        }
+
+                    }
 
                 if (socket?.connected) {
                     return socket;
@@ -432,7 +455,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                                         err = new ReferenceError("Unknown parameter: request.params['" + key + "']"); break;
                                     }
 
-                                    switch (extractSchemaType(schema, (this._Descriptor as OpenApiDocument)?.components?.schemas ?? {})) {
+                                    switch (extractSchemaType(schema, (this._Descriptor as OpenApiDocument)?.components?.schemas ?? { })) {
 
                                         case "boolean":
 
@@ -777,7 +800,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
         public push (command: string, data?: unknown, log: boolean = true): this {
 
-            const serverType: "NO_SERVER" | "WEBSOCKET" | "SOCKETIO" | "UNKNOWN" = this._serverType();
+            const serverType: "NO_SERVER" | "WEBSOCKET" | "SOCKETIO" | "UNKNOWN" = this._getServerType();
 
             if (![ "WEBSOCKET", "SOCKETIO" ].includes(serverType)) {
                 return this;
@@ -841,7 +864,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
         public getClients (): iClient[] {
 
-            switch (this._serverType()) {
+            switch (this._getServerType()) {
 
                 case "WEBSOCKET": {
 
@@ -864,9 +887,11 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                 case "SOCKETIO": {
 
+                    const socketIOVersion: "V2" | "V3-V4" | "UNKNOWN" = this._getSocketIOVersion();
+
                     const result: iClient[] = [];
 
-                        if ("function" !== typeof (this._socketServer as SocketIOServer).sockets?.sockets?.has) { // SocketIO V2
+                        if ("V2" === socketIOVersion) {
 
                             for (const key in (this._socketServer as SocketIOServer).sockets.sockets) {
 
@@ -880,9 +905,9 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                             }
 
                         }
-                        else {
+                        else if ("V3-V4" === socketIOVersion) {
 
-                            (this._socketServer as SocketIOServer).sockets.sockets.forEach((s: SocketIOSocket): void => { // SocketIO V3&4
+                            (this._socketServer as SocketIOServer).sockets.sockets.forEach((s: SocketIOSocket): void => {
 
                                 result.push({
                                     "id": s.id,
@@ -907,7 +932,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
         public pushClient (clientId: string, command: string, data?: unknown, log: boolean = true): this {
 
-            const serverType = this._serverType();
+            const serverType = this._getServerType();
 
             if (![ "WEBSOCKET", "SOCKETIO" ].includes(serverType)) {
                 return this;
