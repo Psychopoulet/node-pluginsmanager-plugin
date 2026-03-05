@@ -13,7 +13,7 @@
 
 export default function extractMime (contentType: string, code: number, responses: Record<string, {
     "description": string;
-    "content"?: Record<string, any>
+    "content"?: Record<string, unknown>
 }>): string {
 
     const err = checkStringSync("contentType", contentType)
@@ -27,12 +27,12 @@ export default function extractMime (contentType: string, code: number, response
 
         const stringifiedCode: string = String(code);
 
-        if (!responses[stringifiedCode] && !responses.default && "" !== contentType.trim()) {
+        if ("undefined" === typeof responses[stringifiedCode] && "undefined" === typeof responses.default && "" !== contentType.trim()) {
             return contentType;
         }
         else {
 
-            let descriptorContent: Record<string, any> = {};
+            let descriptorContent: Record<string, unknown> = {};
 
             if ("object" === typeof responses[stringifiedCode].content) {
                 descriptorContent = responses[stringifiedCode].content;
@@ -63,7 +63,7 @@ export default function extractMime (contentType: string, code: number, response
 
                 }
                 else if (1 === possibleMimes.length) { // only one possible option
-                    result = possibleMimes[0];
+                    [ result ] = possibleMimes;
                 }
                 else {
 

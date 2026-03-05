@@ -1,1 +1,1 @@
-export default function readJSONFile(file: string): Promise<any>;
+export default function readJSONFile(file: string): Promise<unknown>;
