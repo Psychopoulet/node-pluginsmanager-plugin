@@ -8,13 +8,17 @@
     // externals
     import type { OpenApiDocument } from "express-openapi-validate";
 
+    // locals
+    type PathsObject = OpenApiDocument["paths"];
+    type PathItemObject = PathsObject[string];
+
 // module
 
-export default function extractPattern (paths: OpenApiDocument["paths"], pathname: string, method: string): string {
+export default function extractPattern (paths: PathsObject, pathname: string, method: keyof PathItemObject): string {
 
     return "object" !== typeof paths ? "" : Object.keys(paths).find((p: string): boolean => {
 
-        if ("undefined" === typeof (paths[p] as Record<string, any>)[method]) {
+        if ("undefined" === typeof paths[p][method]) {
             return false;
         }
 

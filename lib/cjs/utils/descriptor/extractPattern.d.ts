@@ -1,2 +1,4 @@
 import type { OpenApiDocument } from "express-openapi-validate";
-export default function extractPattern(paths: OpenApiDocument["paths"], pathname: string, method: string): string;
+type PathsObject = OpenApiDocument["paths"];
+type PathItemObject = PathsObject[string];
+export default function extractPattern(paths: PathsObject, pathname: string, method: keyof PathItemObject): string;

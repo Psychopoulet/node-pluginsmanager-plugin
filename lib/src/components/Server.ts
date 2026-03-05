@@ -54,7 +54,9 @@
         "data"?: unknown;
     }
 
-    export type tMethod = "get" | "put" | "post" | "delete" | "options" | "head" | "patch" | "trace";
+    type PathsObject = OpenApiDocument["paths"];
+    type PathItemObject = PathsObject[string];
+    type tMethod = keyof PathItemObject;
 
     export interface iClient {
         "id": string;

@@ -1,9 +1,12 @@
 import MediatorUser, { type iMediatorUserOptions } from "./MediatorUser";
 import type { IncomingMessage, ServerResponse } from "node:http";
+import type { OpenApiDocument } from "express-openapi-validate";
 import type { Server as WebSocketServer } from "ws";
 import type { Server as SocketIOServer } from "socket.io";
 import type { tEventMap, iEventsMinimal } from "./DescriptorUser";
-export type tMethod = "get" | "put" | "post" | "delete" | "options" | "head" | "patch" | "trace";
+type PathsObject = OpenApiDocument["paths"];
+type PathItemObject = PathsObject[string];
+type tMethod = keyof PathItemObject;
 export interface iClient {
     "id": string;
     "status": "CONNECTED" | "DISCONNECTED";
