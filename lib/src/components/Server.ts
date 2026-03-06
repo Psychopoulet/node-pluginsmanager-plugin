@@ -58,6 +58,7 @@
     type PathsObject = OpenApiDocument["paths"];
     type PathItemObject = PathsObject[string];
     type tMethod = keyof PathItemObject;
+    type OperationObject = PathItemObject["get" | "put" | "post" | "delete" | "options" | "head" | "patch" | "trace"];
 
     export interface iClient {
         "id": string;
@@ -303,7 +304,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                     return next();
                 }
 
-                const { operationId }: { "operationId"?: string; } = (this._Descriptor as OpenApiDocument).paths[req.pattern][req.method] as Record<string, any>;
+                const { operationId }: { operationId?: string } = (this._Descriptor as OpenApiDocument).paths[req.pattern][req.method] as OperationObject ?? {};
                 const apiVersion: string = (this._Descriptor as OpenApiDocument).info.version;
 
                 const contentType: string = req.headers["content-type"] ?? req.headers["Content-Type"] as string ?? "";
@@ -441,110 +442,108 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                 else {
 
                     // force formate for path parameters
-                    return Promise.resolve().then((): Promise<void> => {
+                    return Promise.resolve().then((): void => {
 
                         const keys: string[] = Object.keys(req.params);
-                        return !keys.length ? Promise.resolve() : Promise.resolve().then((): Promise<void> => {
 
-                            const docParameters: Array<Record<string, any>> = (this._Descriptor as OpenApiDocument).paths[req.pattern][req.method]?.parameters?.filter((p: Record<string, any>): boolean => {
-                                return "path" === p.in;
-                            }) ?? [];
+                        if (!keys.length) {
+                            return;
+                        }
 
-                            return !docParameters.length ? Promise.resolve() : Promise.resolve().then((): Promise<void> => {
+                        const docParameters: Array<Record<string, any>> = (this._Descriptor as OpenApiDocument).paths[req.pattern][req.method]?.parameters?.filter((p: Record<string, any>): boolean => {
+                            return "path" === p.in;
+                        }) ?? [];
 
-                                let err: Error | null = null;
-                                for (let i: number = 0; i < keys.length; ++i) {
+                        if (!docParameters.length) {
+                            return;
+                        }
 
-                                    const key: string = keys[i];
+                        for (let i: number = 0; i < keys.length; ++i) {
 
-                                    const schema = docParameters.find((dp): boolean => {
-                                        return dp.name === key;
-                                    })?.schema ?? null;
+                            const key: string = keys[i];
 
-                                    if (!schema) {
-                                        err = new ReferenceError("Unknown parameter: request.params['" + key + "']"); break;
-                                    }
+                            const schema = docParameters.find((dp): boolean => {
+                                return dp.name === key;
+                            })?.schema ?? null;
 
-                                    switch (extractSchemaType(schema, (this._Descriptor as OpenApiDocument)?.components?.schemas ?? { })) {
+                            if (!schema) {
+                                throw new ReferenceError("Unknown parameter: request.params['" + key + "']");
+                            }
 
-                                        case "boolean":
+                            switch (extractSchemaType(schema, (this._Descriptor as OpenApiDocument)?.components?.schemas ?? { })) {
 
-                                            if ("boolean" !== typeof req.params[key]) {
+                                case "boolean":
 
-                                                if ("true" === req.params[key]) {
-                                                    req.params[key] = true;
-                                                }
-                                                else if ("false" === req.params[key]) {
-                                                    req.params[key] = false;
-                                                }
-                                                else {
+                                    if ("boolean" !== typeof req.params[key]) {
 
-                                                    err = new TypeError(
-                                                        "Error while validating request: request.params['" + key + "'] should be boolean"
-                                                    ); break;
+                                        if ("true" === req.params[key]) {
+                                            req.params[key] = true;
+                                        }
+                                        else if ("false" === req.params[key]) {
+                                            req.params[key] = false;
+                                        }
+                                        else {
 
-                                                }
+                                            throw new TypeError(
+                                                "Error while validating request: request.params['" + key + "'] should be boolean"
+                                            );
 
-                                            }
-
-                                        break;
-
-                                        case "integer":
-
-                                            // error returned, not an integer
-                                            if (null !== checkIntegerSync("request.params['" + key + "']", req.params[key])) {
-
-                                                const value: number = parseInt(req.params[key] as string, 10);
-
-                                                if (!Number.isNaN(value)) {
-                                                    req.params[key] = value;
-                                                }
-                                                else {
-
-                                                    err = new TypeError(
-                                                        "Error while validating request: request.params['" + key + "'] should be integer"
-                                                    ); break;
-
-                                                }
-
-                                            }
-
-                                        break;
-
-                                        case "number":
-
-                                            if ("number" !== typeof req.params[key]) {
-
-                                                const value: number = parseFloat(req.params[key] as string);
-
-                                                if (!Number.isNaN(value)) {
-                                                    req.params[key] = value;
-                                                }
-                                                else {
-
-                                                    err = new TypeError(
-                                                        "Error while validating request: request.params['" + key + "'] should be number"
-                                                    ); break;
-
-                                                }
-
-                                            }
-
-                                        break;
-
-                                        default:
-                                            // nothing to do here
-                                        break;
+                                        }
 
                                     }
 
-                                }
+                                break;
 
-                                return err ? Promise.reject(err) : Promise.resolve();
+                                case "integer":
 
-                            });
+                                    // error returned, not an integer
+                                    if (null !== checkIntegerSync("request.params['" + key + "']", req.params[key])) {
 
-                        });
+                                        const value: number = parseInt(req.params[key] as string, 10);
+
+                                        if (!Number.isNaN(value)) {
+                                            req.params[key] = value;
+                                        }
+                                        else {
+
+                                            throw new TypeError(
+                                                "Error while validating request: request.params['" + key + "'] should be integer"
+                                            );
+
+                                        }
+
+                                    }
+
+                                break;
+
+                                case "number":
+
+                                    if ("number" !== typeof req.params[key]) {
+
+                                        const value: number = parseFloat(req.params[key] as string);
+
+                                        if (!Number.isNaN(value)) {
+                                            req.params[key] = value;
+                                        }
+                                        else {
+
+                                            throw new TypeError(
+                                                "Error while validating request: request.params['" + key + "'] should be number"
+                                            );
+
+                                        }
+
+                                    }
+
+                                break;
+
+                                default:
+                                    // nothing to do here
+                                break;
+
+                            }
+
+                        }
 
                     // extract body
                     }).then((): Promise<unknown> => {
