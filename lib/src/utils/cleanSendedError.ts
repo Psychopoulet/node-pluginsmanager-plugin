@@ -1,6 +1,6 @@
 // module
 
-export default function cleanSendedError (data: Error | Record<string, unknown> | string | null): Record<string, unknown> | string | null {
+export default function cleanSendedError (data: unknown): unknown {
 
     if ("object" === typeof data) {
 
@@ -12,8 +12,8 @@ export default function cleanSendedError (data: Error | Record<string, unknown> 
         }
         else {
 
-            Object.keys(data).forEach((key: string): void => {
-                data[key] = cleanSendedError(data[key] as Error | Record<string, unknown> | string | null); // in practice, it's unknown, had to specify the type for linter
+            Object.keys(data as Record<string, unknown>).forEach((key: string): void => {
+                (data as Record<string, unknown>)[key] = cleanSendedError((data as Record<string, unknown>)[key]); // in practice, it's unknown, had to specify the type for linter
             });
 
             return data;

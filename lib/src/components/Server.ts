@@ -57,8 +57,8 @@
 
     type PathsObject = OpenApiDocument["paths"];
     type PathItemObject = PathsObject[string];
-    type tMethod = keyof PathItemObject;
-    type OperationObject = PathItemObject["get" | "put" | "post" | "delete" | "options" | "head" | "patch" | "trace"];
+    type tMethod = "get" | "put" | "post" | "delete" | "options" | "head" | "patch" | "trace";
+    type OperationObject = PathItemObject[tMethod];
 
     export interface iClient {
         "id": string;
@@ -75,7 +75,7 @@
         "header"?: Record<string, unknown>;
         "cookies": Record<string, unknown>;
         "cookie"?: Record<string, unknown>;
-        "body": string;
+        "body": unknown;
         "ip": string;
     }
 
@@ -304,11 +304,13 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                     return next();
                 }
 
-                const { operationId }: { operationId?: string } = (this._Descriptor as OpenApiDocument).paths[req.pattern][req.method] as OperationObject ?? {};
+                const operation: OperationObject = (this._Descriptor as OpenApiDocument).paths[req.pattern][req.method] as OperationObject;
+
+                const { operationId }: { operationId?: string } = operation ?? {};
                 const apiVersion: string = (this._Descriptor as OpenApiDocument).info.version;
 
                 const contentType: string = req.headers["content-type"] ?? req.headers["Content-Type"] as string ?? "";
-                const responses = (this._Descriptor as OpenApiDocument).paths[req.pattern][req.method]?.responses;
+                const { responses }: { responses?: unknown } = operation ?? {};
 
                 this._log("info", ""
                     + "=> [" + req.validatedIp + "] " + req.url + " (" + req.method.toUpperCase() + ")"
@@ -563,7 +565,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                                     this._log("log", body);
 
                                     try {
-                                        req.body = JSON.parse(body);
+                                        req.body = JSON.parse(body) as unknown;
                                     }
                                     catch (e) {
                                         // nothing to do here
