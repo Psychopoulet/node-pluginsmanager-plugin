@@ -404,7 +404,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                 }
 
                 // not implemented operationId
-                else if ("function" !== typeof (this._Mediator as Record<string, any>)[operationId]) {
+                else if ("function" !== typeof (this._Mediator as Mediator & Record<string, iOperationHandler>)[operationId]) {
 
                     const result: string = JSON.stringify({
                         "code": "NOT_IMPLEMENTED",
@@ -452,7 +452,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                             return;
                         }
 
-                        const docParameters: Array<Record<string, any>> = (this._Descriptor as OpenApiDocument).paths[req.pattern][req.method]?.parameters?.filter((p: Record<string, any>): boolean => {
+                        const docParameters: Array<Record<string, unknown>> = (this._Descriptor as OpenApiDocument).paths[req.pattern][req.method]?.parameters?.filter((p: Record<string, unknown>): boolean => {
                             return "path" === p.in;
                         }) ?? [];
 
@@ -472,7 +472,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                                 throw new ReferenceError("Unknown parameter: request.params['" + key + "']");
                             }
 
-                            switch (extractSchemaType(schema, (this._Descriptor as OpenApiDocument)?.components?.schemas ?? { })) {
+                            switch (extractSchemaType(schema, (this._Descriptor as OpenApiDocument).components.schemas ?? { })) {
 
                                 case "boolean":
 

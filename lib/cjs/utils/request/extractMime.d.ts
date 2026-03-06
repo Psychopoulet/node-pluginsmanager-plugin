@@ -1,4 +1,1 @@
-export default function extractMime(contentType: string, code: number, responses: Record<string, {
-    "description": string;
-    "content"?: Record<string, unknown>;
-}>): string;
+export default function extractMime(contentType: string, code: number, responses: unknown): string;

@@ -11,10 +11,7 @@
 
 // module
 
-export default function extractMime (contentType: string, code: number, responses: Record<string, {
-    "description": string;
-    "content"?: Record<string, unknown>
-}>): string {
+export default function extractMime (contentType: string, code: number, responses: unknown): string {
 
     const err = checkStringSync("contentType", contentType)
         ?? checkNonEmptyNumberSync("code", code)
@@ -26,19 +23,23 @@ export default function extractMime (contentType: string, code: number, response
     else {
 
         const stringifiedCode: string = String(code);
+        const res = responses as Record<string, {
+            "description": string;
+            "content"?: Record<string, unknown>
+        }>; // mandatory for typing, convert "unknown" response to controlled and typed one
 
-        if ("undefined" === typeof responses[stringifiedCode] && "undefined" === typeof responses.default && "" !== contentType.trim()) {
+        if ("undefined" === typeof res[stringifiedCode] && "undefined" === typeof res.default && "" !== contentType.trim()) {
             return contentType;
         }
         else {
 
             let descriptorContent: Record<string, unknown> = {};
 
-            if ("object" === typeof responses[stringifiedCode].content) {
-                descriptorContent = responses[stringifiedCode].content;
+            if ("object" === typeof res[stringifiedCode].content) {
+                descriptorContent = res[stringifiedCode].content;
             }
-            else if ("object" === typeof responses.default.content) {
-                descriptorContent = responses.default.content;
+            else if ("object" === typeof res.default.content) {
+                descriptorContent = res.default.content;
             }
             else {
                 return DEFAULT_MIME;
