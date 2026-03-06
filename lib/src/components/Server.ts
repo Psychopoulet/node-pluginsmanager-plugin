@@ -41,6 +41,7 @@
     import type { OpenApiDocument } from "express-openapi-validate";
     import type { Server as WebSocketServer, WebSocket } from "ws";
     import type { Server as SocketIOServer, Socket as SocketIOSocket } from "socket.io";
+    import type { Server as SocketIOServerV2 } from "socket.io-v2";
 
     // locals
 
@@ -99,7 +100,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
         // protected
 
-            protected _socketServer: WebSocketServer | SocketIOServer | null;
+            protected _socketServer: WebSocketServer | SocketIOServer | SocketIOServerV2 | null;
             protected _checkParameters: boolean;
             protected _checkResponse: boolean;
             protected _cors: boolean;
@@ -161,33 +162,40 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                 const socketIOVersion: "V2" | "V3-V4" | "UNKNOWN" = this._getSocketIOVersion();
 
-                let socket: SocketIOSocket | null | undefined = null;
+                if ("V2" === socketIOVersion) {
 
-                    if ("V2" === socketIOVersion) {
+                    const sockets = (this._socketServer as SocketIOServerV2).sockets.sockets;
 
-                        for (const key in (this._socketServer as SocketIOServer).sockets.sockets) {
+                    for (const key in sockets) {
 
-                            if (key === clientId) {
+                        if (key === clientId) {
 
-                                socket = ((this._socketServer as SocketIOServer).sockets.sockets as Record<string, any>)[key];
-
-                                break;
-
+                            if (sockets[key]?.connected) {
+                                return sockets[key];
                             }
 
-                        }
+                            break;
 
-                    }
-                    else if ("V3-V4" === socketIOVersion) { // SocketIO V3&4
-
-                        if ((this._socketServer as SocketIOServer).sockets.sockets.has(clientId)) {
-                            socket = (this._socketServer as SocketIOServer).sockets.sockets.get(clientId);
                         }
 
                     }
 
-                if (socket?.connected) {
-                    return socket;
+                }
+
+                if ("V3-V4" === socketIOVersion) {
+
+                    const sockets = (this._socketServer as SocketIOServer).sockets.sockets;
+
+                    if (sockets.has(clientId)) {
+
+                        const result: SocketIOSocket | undefined = sockets.get(clientId);
+
+                        if (result && result?.connected) {
+                            return result;
+                        }
+
+                    }
+
                 }
 
             }
@@ -796,7 +804,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
         }
 
-        public socketMiddleware (socketServer: WebSocketServer | SocketIOServer): void {
+        public socketMiddleware (socketServer: WebSocketServer | SocketIOServer | SocketIOServerV2): void {
             this._socketServer = socketServer;
         }
 
@@ -895,9 +903,11 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                         if ("V2" === socketIOVersion) {
 
-                            for (const key in (this._socketServer as SocketIOServer).sockets.sockets) {
+                            const { sockets } = (this._socketServer as SocketIOServerV2).sockets;
 
-                                const s: { "id": string; "connected": boolean; } = ((this._socketServer as SocketIOServer).sockets.sockets as Record<string, any>)[key];
+                            for (const key in sockets) {
+
+                                const s: { "id": string; "connected": boolean; } = sockets[key];
 
                                 result.push({
                                     "id": s.id,

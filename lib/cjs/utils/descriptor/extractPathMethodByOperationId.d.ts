@@ -8,3 +8,4 @@ export interface iPathMethod {
     "operationId": string;
 }
 export default function extractPathMethodByOperationId(paths: OpenApiDocument["paths"] | null | undefined, operationId: string): iPathMethod | undefined;
+export {};

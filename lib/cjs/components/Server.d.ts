@@ -3,6 +3,7 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 import type { OpenApiDocument } from "express-openapi-validate";
 import type { Server as WebSocketServer } from "ws";
 import type { Server as SocketIOServer } from "socket.io";
+import type { Server as SocketIOServerV2 } from "socket.io-v2";
 import type { tEventMap, iEventsMinimal } from "./DescriptorUser";
 type PathsObject = OpenApiDocument["paths"];
 type PathItemObject = PathsObject[string];
@@ -28,7 +29,7 @@ export interface iServerResponse extends ServerResponse {
     "headers": Record<string, unknown>;
 }
 export default class Server<T extends tEventMap<T> = iEventsMinimal> extends MediatorUser<T> {
-    protected _socketServer: WebSocketServer | SocketIOServer | null;
+    protected _socketServer: WebSocketServer | SocketIOServer | SocketIOServerV2 | null;
     protected _checkParameters: boolean;
     protected _checkResponse: boolean;
     protected _cors: boolean;
@@ -45,10 +46,11 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
     disableCors(): this;
     enableCors(): this;
     appMiddleware(_req: IncomingMessage, res: iServerResponse, next: (err?: Error) => void): void;
-    socketMiddleware(socketServer: WebSocketServer | SocketIOServer): void;
+    socketMiddleware(socketServer: WebSocketServer | SocketIOServer | SocketIOServerV2): void;
     push(command: string, data?: unknown, log?: boolean): this;
     getClients(): iClient[];
     pushClient(clientId: string, command: string, data?: unknown, log?: boolean): this;
     init(...data: unknown[]): Promise<void>;
     release(...data: unknown[]): Promise<void>;
 }
+export {};
