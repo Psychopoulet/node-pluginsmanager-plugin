@@ -30,6 +30,8 @@
     import LockedError from "./errors/LockedError";
 
     import SERVER_CODES from "../utils/serverCodes";
+    import getServerTypeFromServer from "../utils/server/getServerTypeFromServer";
+    import getSocketIOVersionFromServer from "../utils/server/getSocketIOVersionFromServer";
 
 // types & interfaces
 
@@ -39,6 +41,7 @@
 
     // externals
     import type { OpenApiDocument } from "express-openapi-validate";
+    import type { Request as ExpressIncomingMessage } from "express";
     import type { Server as WebSocketServer, WebSocket } from "ws";
     import type { Server as SocketIOServer, Socket as SocketIOSocket } from "socket.io";
     import type { Server as SocketIOServerV2 } from "socket.io-v2";
@@ -122,37 +125,11 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
     // protected
 
         protected _getServerType (): "NO_SERVER" | "WEBSOCKET" | "SOCKETIO" | "UNKNOWN" {
-
-            if (!this._socketServer) {
-                return "NO_SERVER";
-            }
-            else if ((this._socketServer as WebSocketServer).clients && "function" === typeof (this._socketServer as WebSocketServer).clients.forEach) {
-                return "WEBSOCKET";
-            }
-            else if ((this._socketServer as SocketIOServer).sockets && "function" === typeof (this._socketServer as SocketIOServer).sockets.emit) {
-                return "SOCKETIO";
-            }
-            else {
-                return "UNKNOWN";
-            }
-
+            return getServerTypeFromServer(this._socketServer);
         }
 
-        protected _getSocketIOVersion (): "V2" | "V3-V4" | "UNKNOWN" {
-
-            if (this._socketServer) {
-
-                if ("function" === typeof (this._socketServer as SocketIOServer).sockets?.sockets?.has) {
-                    return "V3-V4";
-                }
-                else {
-                    return "V2";
-                }
-
-            }
-
-            return "UNKNOWN";
-
+        protected _getSocketIOVersion (): "NO_SERVER" | "V2" | "V3-V4" | "UNKNOWN" {
+            return getSocketIOVersionFromServer(this._socketServer);
         }
 
         protected _getUsableSocketIOClient (clientId: string): {
@@ -191,7 +168,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                         const result: SocketIOSocket | undefined = sockets.get(clientId);
 
-                        if (result && result?.connected) {
+                        if ("undefined" !== typeof result && result?.connected) {
                             return result;
                         }
 
@@ -240,7 +217,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
             this.checkDescriptor().then(() => {
 
-                const req: iIncomingMessage = Object.assign(_req);
+                const req: iIncomingMessage = Object.assign(_req) as iIncomingMessage;
 
                 // parse
                 const { pathname, query }: { "pathname": string | null; "query": Record<string, unknown>; } = parse((req.url as string), true);
@@ -257,7 +234,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                 try {
 
                     // workaround for express 5
-                    if (Object.getPrototypeOf(req).app) {
+                    if ((Object.getPrototypeOf(req) as ExpressIncomingMessage).app) {
 
                         Object.defineProperty(req, "query", {
                             ...Object.getOwnPropertyDescriptor(req, "query"),
@@ -301,7 +278,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                 const operation: OperationObject = (this._Descriptor as OpenApiDocument).paths[req.pattern][req.method] as OperationObject;
 
-                const { operationId }: { "operationId"?: string } = operation;
+                const { operationId }: { "operationId"?: string | undefined } = operation;
                 const apiVersion: string = (this._Descriptor as OpenApiDocument).info.version;
 
                 const contentType: string = req.headers["content-type"] ?? req.headers["Content-Type"] as string | undefined ?? "";
