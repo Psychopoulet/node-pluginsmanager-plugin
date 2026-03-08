@@ -1,7 +1,7 @@
 /*
     eslint-disable camelcase
 */
-// => @typescript-eslint/camelcase is disabled because of "openapi-types" types
+// => camelcase is disabled because of "openapi-types" types
 
 // types & interfaces
 

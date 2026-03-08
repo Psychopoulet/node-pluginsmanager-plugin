@@ -58,7 +58,7 @@
     type PathsObject = OpenApiDocument["paths"];
     type PathItemObject = PathsObject[string];
     type tMethod = "get" | "put" | "post" | "delete" | "options" | "head" | "patch" | "trace";
-    type OperationObject = PathItemObject[tMethod];
+    type OperationObject = NonNullable<PathItemObject[tMethod]>;
 
     export interface iClient {
         "id": string;
@@ -306,16 +306,16 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                 const operation: OperationObject = (this._Descriptor as OpenApiDocument).paths[req.pattern][req.method] as OperationObject;
 
-                const { operationId }: { operationId?: string } = operation ?? {};
+                const { operationId }: { "operationId"?: string } = operation;
                 const apiVersion: string = (this._Descriptor as OpenApiDocument).info.version;
 
-                const contentType: string = req.headers["content-type"] ?? req.headers["Content-Type"] as string ?? "";
-                const { responses }: { responses?: unknown } = operation ?? {};
+                const contentType: string = req.headers["content-type"] ?? req.headers["Content-Type"] as string | undefined ?? "";
+                const { responses }: { "responses": unknown } = operation;
 
                 this._log("info", ""
                     + "=> [" + req.validatedIp + "] " + req.url + " (" + req.method.toUpperCase() + ")"
-                    + (operationId ? EOL + "operationId    : " + operationId : "")
-                    + (req.headers["content-type"] ? EOL + "content-type   : " + req.headers["content-type"] : "")
+                    + ("undefined" !== typeof operationId ? EOL + "operationId    : " + operationId : "")
+                    + ("undefined" !== typeof req.headers["content-type"] ? EOL + "content-type   : " + req.headers["content-type"] : "")
                     + (
                         "get" !== req.method && req.headers["content-length"] && 4 < parseInt(req.headers["content-length"], 10)
                             ? EOL + "content-length : " + req.headers["content-length"]
@@ -386,7 +386,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                 }
 
                 // missing operationId
-                else if (!operationId) {
+                else if ("undefined" === typeof operationId) {
 
                     const result: string = JSON.stringify({
                         "code": "NOT_IMPLEMENTED",
