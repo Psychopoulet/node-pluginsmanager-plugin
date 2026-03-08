@@ -233,12 +233,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
         public appMiddleware (_req: IncomingMessage, res: iServerResponse, next: (err?: Error) => void): void { // req, res, next : void
 
-            if (!this._Descriptor) {
-                next();
-                return;
-            }
-
-            if (!this._Descriptor.paths) {
+            if (!this._Descriptor?.paths) {
                 next();
                 return;
             }
@@ -300,7 +295,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                     return next(e as Error);
                 }
 
-                if (!(this._Descriptor as OpenApiDocument).paths[req.pattern] || !(this._Descriptor as OpenApiDocument).paths[req.pattern][req.method]) {
+                if (!(this._Descriptor as OpenApiDocument).paths?.[req.pattern]?.[req.method]) {
                     return next();
                 }
 
