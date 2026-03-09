@@ -138,11 +138,11 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
             if ("SOCKETIO" === this._getServerType()) {
 
-                const socketIOVersion: "V2" | "V3-V4" | "UNKNOWN" = this._getSocketIOVersion();
+                const socketIOVersion: "NO_SERVER" | "V2" | "V3-V4" | "UNKNOWN" = this._getSocketIOVersion();
 
                 if ("V2" === socketIOVersion) {
 
-                    const sockets = (this._socketServer as SocketIOServerV2).sockets.sockets;
+                    const { sockets } = (this._socketServer as SocketIOServerV2).sockets;
 
                     for (const key in sockets) {
 
@@ -162,7 +162,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                 if ("V3-V4" === socketIOVersion) {
 
-                    const sockets = (this._socketServer as SocketIOServer).sockets.sockets;
+                    const { sockets } = (this._socketServer as SocketIOServer).sockets;
 
                     if (sockets.has(clientId)) {
 
@@ -879,7 +879,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                 case "SOCKETIO": {
 
-                    const socketIOVersion: "V2" | "V3-V4" | "UNKNOWN" = this._getSocketIOVersion();
+                    const socketIOVersion: "NO_SERVER" | "V2" | "V3-V4" | "UNKNOWN" = this._getSocketIOVersion();
 
                     const result: iClient[] = [];
 

@@ -31,6 +31,7 @@
     import type { OpenApiDocument } from "express-openapi-validate";
     import type { OpenAPI } from "openapi-types";
     import type { Server as SocketIOServer } from "socket.io";
+    import type { Server as SocketIOServerV2 } from "socket.io-v2";
     import type { Server as WebSocketServer } from "ws";
 
     // locals
@@ -39,6 +40,8 @@
 
     import type Mediator from "./Mediator";
     import type { tLogger, tEventMap, iEventsMinimal } from "./DescriptorUser";
+
+    import type SwaggerParser from "@apidevtools/swagger-parser";
 
     export interface iOrchestratorOptions {
         "externalResourcesDirectory": string; // used to write local data like sqlite database, json files, pictures, etc...
@@ -58,7 +61,7 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
         // protected
 
             protected _Server: Server | null;
-            protected _socketServer: WebSocketServer | SocketIOServer | null;
+            protected _socketServer: WebSocketServer | SocketIOServer | SocketIOServerV2 | null;
             protected _checkParameters: boolean;
             protected _checkResponse: boolean;
 
@@ -367,34 +370,40 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
                     return readJSONFile(this._packageFile) as Promise<Record<string, unknown>>;
 
                 // formate authors
-                }).then((packageData: Record<string, unknown>): Promise<Record<string, unknown>> => {
+                }).then((packageData: Record<string, unknown>): Record<string, unknown> => {
 
-                    if (packageData.authors) {
+                    if ("undefined" !== typeof packageData.authors) {
 
-                        this.authors = packageData.authors as string[];
-                        delete packageData.authors;
+                        if (Array.isArray(packageData.authors)) {
 
-                        if (packageData.author) {
+                            this.authors = packageData.authors as string[];
+                            delete packageData.authors;
 
-                            const { author }: { "author": string } = packageData as { "author": string };
+                            if ("string" === typeof packageData.author) {
 
-                            if (!this.authors.includes(author)) {
-                                this.authors.push(author);
+                                const { author } = packageData;
+
+                                if (!this.authors.includes(author)) {
+                                    this.authors.push(author);
+                                }
+
+                                delete packageData.author;
+
                             }
-
-                            delete packageData.author;
 
                         }
 
-                    }
-                    else if (packageData.author) {
+                        delete packageData.authors;
 
-                        this.authors = [ packageData.author as string ];
+                    }
+                    else if ("string" === typeof packageData.author) {
+
+                        this.authors = [ packageData.author ];
                         delete packageData.author;
 
                     }
 
-                    return Promise.resolve(packageData);
+                    return packageData;
 
                 // formate other data
                 }).then((packageData: Record<string, unknown>): void => {
@@ -478,48 +487,56 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
 
                 }).then((): Promise<void> => {
 
-                    return !this.enabled ? Promise.resolve() : Promise.resolve().then((): Promise<void> => {
+                    if (!this.enabled) {
+                        return Promise.resolve();
+                    }
 
-                        const SwaggerParser = require("@apidevtools/swagger-parser");
+                    const SwaggerParser = require("@apidevtools/swagger-parser") as SwaggerParser;
 
-                        // generate descriptor
-                        return SwaggerParser.bundle(this._descriptorFile).then((bundledDescriptor: OpenAPI.Document): Promise<OpenApiDocument> => {
+                    // generate descriptor
+                    return SwaggerParser.bundle(this._descriptorFile).then((bundledDescriptor: OpenAPI.Document): Promise<OpenApiDocument> => {
 
-                            // force validate because of stupid malformatted references
-                            return SwaggerParser.validate(bundledDescriptor).then((validatedDescriptor: OpenApiDocument): void => {
+                        // force validate because of stupid malformatted references
+                        return SwaggerParser.validate(bundledDescriptor).then((validatedDescriptor: OpenApiDocument): void => {
 
-                                this._Descriptor = validatedDescriptor;
-                                this._Descriptor.servers ??= [];
+                            this._Descriptor = validatedDescriptor;
+                            this._Descriptor.servers ??= [];
 
-                            });
+                        });
 
-                        }).then((): Promise<void> => {
+                    }).then((): Promise<void> => {
 
-                            return this.checkDescriptor().catch((err: Error): Promise<void> => {
+                        return this.checkDescriptor().then((): void => {
 
-                                this._Descriptor = null;
+                            const { info } = this._Descriptor as OpenApiDocument;
 
-                                return Promise.reject(err);
+                            // check title
+                            if (info.title !== this.name) {
 
-                            });
+                                throw new Error(
+                                    "The descriptor's title (\"" + info.title + "\") "
+                                    + "is not equals to "
+                                    + "the package's name (\"" + this.name + "\")"
+                                );
 
-                        // compare title to package name
-                        }).then((): Promise<void> => {
+                            }
 
-                            return (this._Descriptor as OpenApiDocument).info.title !== this.name ? Promise.reject(new Error(
-                                "The descriptor's title (\"" + (this._Descriptor as OpenApiDocument).info.title + "\") "
-                                + "is not equals to "
-                                + "the package's name (\"" + this.name + "\")"
-                            )) : Promise.resolve();
+                            // compare version to package version
+                            if (info.version !== this.version) {
 
-                        // compare version to package version
-                        }).then((): Promise<void> => {
+                                throw new Error(
+                                    "The descriptor's version (\"" + info.version + "\") "
+                                    + "is not equals to "
+                                    + "the package's version (\"" + this.version + "\")"
+                                );
 
-                            return (this._Descriptor as OpenApiDocument).info.version !== this.version ? Promise.reject(new Error(
-                                "The descriptor's version (\"" + (this._Descriptor as OpenApiDocument).info.version + "\") "
-                                + "is not equals to "
-                                + "the package's version (\"" + this.version + "\")"
-                            )) : Promise.resolve();
+                            }
+
+                        }).catch((err: Error): Promise<void> => {
+
+                            this._Descriptor = null;
+
+                            return Promise.reject(err);
 
                         });
 
@@ -531,7 +548,7 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
 
                             try {
 
-                                const val: typeof Mediator | { "default": typeof Mediator } = require(this._mediatorFile);
+                                const val: typeof Mediator | { "default": typeof Mediator } = require(this._mediatorFile) as typeof Mediator | { "default": typeof Mediator };
 
                                 if ("object" === typeof val && "function" === typeof val.default) {
                                     resolve(val.default);
@@ -579,7 +596,7 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
 
                             try {
 
-                                const val: typeof Server | { "default": typeof Server } = require(this._serverFile);
+                                const val: typeof Server | { "default": typeof Server } = require(this._serverFile) as typeof Server | { "default": typeof Server };
 
                                 if ("object" === typeof val && "function" === typeof val.default) {
                                     resolve(val.default);

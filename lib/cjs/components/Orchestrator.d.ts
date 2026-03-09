@@ -2,6 +2,7 @@ import MediatorUser from "./MediatorUser";
 import Server from "./Server";
 import type { IncomingMessage } from "node:http";
 import type { Server as SocketIOServer } from "socket.io";
+import type { Server as SocketIOServerV2 } from "socket.io-v2";
 import type { Server as WebSocketServer } from "ws";
 import type { iServerResponse } from "./Server";
 import type { tLogger, tEventMap, iEventsMinimal } from "./DescriptorUser";
@@ -15,7 +16,7 @@ export interface iOrchestratorOptions {
 }
 export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEventsMinimal> extends MediatorUser<T> {
     protected _Server: Server | null;
-    protected _socketServer: WebSocketServer | SocketIOServer | null;
+    protected _socketServer: WebSocketServer | SocketIOServer | SocketIOServerV2 | null;
     protected _checkParameters: boolean;
     protected _checkResponse: boolean;
     protected _packageFile: string;
