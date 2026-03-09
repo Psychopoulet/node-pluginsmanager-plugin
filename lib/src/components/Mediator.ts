@@ -22,19 +22,19 @@
     import type { iServerResponse } from "./Server";
 
     interface iUrControlledParameters {
-        "path": Record<string, any>;
-        "query": Record<string, any>;
-        "headers": Record<string, any>;
-        "cookies": Record<string, any>;
+        "path": Record<string, unknown>;
+        "query": Record<string, unknown>;
+        "headers": Record<string, unknown>;
+        "cookies": Record<string, unknown>;
     }
 
     export interface iUrlAllowedParameters {
-        "path"?: Record<string, any>;
-        "query"?: Record<string, any>;
-        "headers"?: Record<string, any>;
-        "cookies"?: Record<string, any>;
-        "header"?: Record<string, any>;
-        "cookie"?: Record<string, any>;
+        "path"?: Record<string, unknown>;
+        "query"?: Record<string, unknown>;
+        "headers"?: Record<string, unknown>;
+        "cookies"?: Record<string, unknown>;
+        "header"?: Record<string, unknown>;
+        "cookie"?: Record<string, unknown>;
     }
 
     export type iOperationHandler = (

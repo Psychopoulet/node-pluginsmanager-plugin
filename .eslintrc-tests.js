@@ -7,8 +7,17 @@
 // module
 
 module.exports = defineConfig({
+
     "plugins": {
         personnallinter
     },
-    "extends": [ personnallinter.configs["js-back"] ]
+    "extends": [ personnallinter.configs["js-back"] ],
+
+    "rules": {
+
+        // specific to this package
+        "n/no-sync": "warn"
+
+    }
+
 });
