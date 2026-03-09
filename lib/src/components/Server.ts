@@ -2,7 +2,7 @@
 
     // natives
     import { EOL } from "node:os";
-    import { parse } from "node:url";
+    import { URL } from "node:url";
 
     // externals
     import uniqid from "uniqid";
@@ -224,9 +224,10 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                 }
 
                 // parse
-                const { pathname, query }: { "pathname": string | null; "query": Record<string, unknown>; } = parse(req.url, true);
+                const { pathname, searchParams } = new URL(req.url, "http://localhost"); // any url, but "http://localhost" is used to avoid errors
+                const query = Object.fromEntries(searchParams);
 
-                if (null === pathname || 0 >= pathname.length) {
+                if (0 >= pathname.length) {
                     return next();
                 }
 
