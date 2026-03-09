@@ -3,7 +3,7 @@
     // natives
     const { createServer } = require("node:http");
     const { join } = require("node:path");
-    const { parse } = require("node:url");
+    const { URL } = require("node:url");
 
     // locals
 
@@ -24,7 +24,8 @@ describe("Server / requests / http", () => {
 
         return server.init().then(() => {
 
-            const port = parseInt(parse(server._Descriptor.servers[0].url).port, 10);
+            const url = new URL(server._Descriptor.servers[0].url, "http://localhost"); // any url, but "http://localhost" is used to avoid errors
+            const port = parseInt(url.port, 10);
 
             return new Promise((resolve) => {
 

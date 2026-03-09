@@ -25,23 +25,25 @@ function createMockRes () {
         "statusCode": 0,
         "headers": {},
         "body": undefined,
-        "writeHead": (code, headers) => {
+        "writeHead": function writeHead (code, headers) {
             captured.writeHead = { code, headers };
             this.statusCode = code;
             this.headers = headers;
         },
-        "end": (...args) => {
+        "end": function end (...args) {
 
             captured.endArgs = args;
 
-            const callback = args.find((a) => {
+            const cb = args.find((a) => {
                 return "function" === typeof a;
             });
 
-            if (callback) {
-                captured.endCallback = callback;
-                return callback();
+            if (cb) {
+                captured.endCallback = cb;
+                return cb();
             }
+
+            return this;
 
         },
         "_captured": captured
