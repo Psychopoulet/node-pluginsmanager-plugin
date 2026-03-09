@@ -48,6 +48,8 @@
 
     // locals
 
+    import type { tMethod, OperationObject } from "../openAPITypes";
+
     import type { tEventMap, iEventsMinimal } from "./DescriptorUser";
     import type { iOperationHandler } from "./Mediator";
 
@@ -57,11 +59,6 @@
         "command": string;
         "data"?: unknown;
     }
-
-    type PathsObject = OpenApiDocument["paths"];
-    type PathItemObject = PathsObject[string];
-    type tMethod = "get" | "put" | "post" | "delete" | "options" | "head" | "patch" | "trace";
-    type OperationObject = NonNullable<PathItemObject[tMethod]>;
 
     export interface iClient {
         "id": string;
@@ -138,7 +135,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
             if ("SOCKETIO" === this._getServerType()) {
 
-                const socketIOVersion: "NO_SERVER" | "V2" | "V3-V4" | "UNKNOWN" = this._getSocketIOVersion();
+                const socketIOVersion = this._getSocketIOVersion();
 
                 if ("V2" === socketIOVersion) {
 
@@ -217,7 +214,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
             this.checkDescriptor().then(() => {
 
-                const req: iIncomingMessage = Object.assign(_req) as iIncomingMessage;
+                const req = Object.assign(_req) as iIncomingMessage;
 
                 if ("undefined" === typeof req.url) {
                     return next();
@@ -296,13 +293,13 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                     return next();
                 }
 
-                const operation: OperationObject = paths[req.pattern][req.method] as OperationObject;
+                const operation = paths[req.pattern][req.method] as OperationObject;
 
-                const { operationId }: { "operationId"?: string | undefined } = operation as { "operationId"?: string | undefined }; // operationId is "any", had to specify the type to avoid lint errors
-                const apiVersion: string = (this._Descriptor as OpenApiDocument).info.version;
+                const { operationId } = operation as { "operationId"?: string | undefined }; // operationId is "any", had to specify the type to avoid lint errors
+                const apiVersion = (this._Descriptor as OpenApiDocument).info.version;
 
-                const contentType: string = req.headers["content-type"] ?? req.headers["Content-Type"] as string | undefined ?? "";
-                const { responses }: { "responses": unknown } = operation as { "responses": unknown }; // response is "any", had to specify the type to avoid lint errors
+                const contentType = req.headers["content-type"] ?? req.headers["Content-Type"] as string | undefined ?? "";
+                const { responses } = operation as { "responses": unknown }; // response is "any", had to specify the type to avoid lint errors
 
                 this._log("info", ""
                     + "=> [" + req.validatedIp + "] " + req.url + " (" + req.method.toUpperCase() + ")"
@@ -320,9 +317,9 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                     // add current server
 
-                    const port: number = res.socket?.localPort ?? (res.socket?.address() as AddressInfo).port;
+                    const port = res.socket?.localPort ?? (res.socket?.address() as AddressInfo).port;
 
-                    const descriptor: OpenApiDocument = { ...(this._Descriptor as OpenApiDocument) };
+                    const descriptor = { ...(this._Descriptor as OpenApiDocument) };
 
                     (descriptor.servers as Array<{
                         "url": string;
@@ -332,7 +329,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                         "description": "Actual current server"
                     });
 
-                    const content: string = JSON.stringify(descriptor);
+                    const content = JSON.stringify(descriptor);
 
                     this._log("info", "<= [" + req.validatedIp + "] " + content);
 
@@ -344,7 +341,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                         this._log("error", err);
 
-                        const result: string = JSON.stringify({
+                        const result = JSON.stringify({
                             "code": "INTERNAL_SERVER_ERROR",
                             "message": cleanSendedError(err)
                         });
@@ -364,8 +361,8 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                 // get plugin status
                 else if ("/" + (this._Descriptor as OpenApiDocument).info.title + "/api/status" === req.pattern && "get" === req.method) {
 
-                    const initialized: boolean = this.initialized && (this._Mediator as Mediator).initialized;
-                    const status: "INITIALIZED" | "ENABLED" = initialized ? "INITIALIZED" : "ENABLED";
+                    const initialized = this.initialized && (this._Mediator as Mediator).initialized;
+                    const status = initialized ? "INITIALIZED" : "ENABLED";
 
                     this._log("info", "<= [" + req.validatedIp + "] " + status);
 
@@ -380,7 +377,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                 // missing operationId
                 else if ("undefined" === typeof operationId) {
 
-                    const result: string = JSON.stringify({
+                    const result = JSON.stringify({
                         "code": "NOT_IMPLEMENTED",
                         "message": "Missing \"operationId\" in the Descriptor for this request"
                     });
@@ -398,7 +395,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                 // not implemented operationId
                 else if ("function" !== typeof (this._Mediator as Mediator & Record<string, iOperationHandler>)[operationId]) {
 
-                    const result: string = JSON.stringify({
+                    const result = JSON.stringify({
                         "code": "NOT_IMPLEMENTED",
                         "message": "Unknown Mediator's \"operationId\" method for this request"
                     });
@@ -418,7 +415,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                     "headers[\"content-length\"]", req.headers["content-length"]
                 )) {
 
-                    const result: string = JSON.stringify({
+                    const result = JSON.stringify({
                         "code": "MISSING_HEADER",
                         "message": "No valid \"Content-Length\" header found"
                     });
@@ -456,7 +453,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                             const key: string = keys[i];
 
-                            const schema = docParameters.find((dp): boolean => {
+                            const schema = docParameters.find((dp: Record<string, unknown>): boolean => {
                                 return dp.name === key;
                             })?.schema ?? null;
 
@@ -550,7 +547,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                         }
                         else {
 
-                            return extractBody(req).then((body: string): Promise<unknown> => {
+                            return extractBody(req).then((body: string): unknown => {
 
                                 if (body.length) {
 
@@ -568,7 +565,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                                     req.body = "";
                                 }
 
-                                return Promise.resolve(req.body);
+                                return req.body;
 
                             });
 
@@ -648,7 +645,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                         if (err instanceof ReferenceError) {
 
-                            const result: string = JSON.stringify({
+                            const result = JSON.stringify({
                                 "code": "MISSING_PARAMETER",
                                 "message": cleanSendedError(err)
                             });
@@ -680,7 +677,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                         }
                         else if (err instanceof RangeError) {
 
-                            const result: string = JSON.stringify({
+                            const result = JSON.stringify({
                                 "code": "EMPTY_OR_RANGE_OR_ENUM_PARAMETER",
                                 "message": cleanSendedError(err)
                             });
@@ -696,7 +693,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                         }
                         else if (err instanceof SyntaxError) {
 
-                            const result: string = JSON.stringify({
+                            const result = JSON.stringify({
                                 "code": "JSON_PARSE",
                                 "message": cleanSendedError(err)
                             });
@@ -712,7 +709,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                         }
                         else if (err instanceof UnauthorizedError) {
 
-                            const result: string = JSON.stringify({
+                            const result = JSON.stringify({
                                 "code": "UNAUTHORIZED",
                                 "message": cleanSendedError(err)
                             });
@@ -728,7 +725,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                         }
                         else if (err instanceof NotFoundError) {
 
-                            const result: string = JSON.stringify({
+                            const result = JSON.stringify({
                                 "code": "NOT_FOUND",
                                 "message": cleanSendedError(err)
                             });
@@ -744,7 +741,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                         }
                         else if (err instanceof LockedError) {
 
-                            const result: string = JSON.stringify({
+                            const result = JSON.stringify({
                                 "code": "LOCKED",
                                 "message": cleanSendedError(err)
                             });
@@ -762,7 +759,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                             this._log("error", err);
 
-                            const result: string = JSON.stringify({
+                            const result = JSON.stringify({
                                 "code": "INTERNAL_SERVER_ERROR",
                                 "message": cleanSendedError(err)
                             });
@@ -803,7 +800,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
         public push (command: string, data?: unknown, log: boolean = true): this {
 
-            const serverType: "NO_SERVER" | "WEBSOCKET" | "SOCKETIO" | "UNKNOWN" = this._getServerType();
+            const serverType = this._getServerType();
 
             if (![ "WEBSOCKET", "SOCKETIO" ].includes(serverType)) {
                 return this;
@@ -848,7 +845,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                     break;
 
                     case "SOCKETIO":
-                        (this._socketServer as SocketIOServer).sockets.emit("message", result);
+                        (this._socketServer as SocketIOServer | SocketIOServerV2).sockets.emit("message", result);
                     break;
 
                     default:
@@ -890,7 +887,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                 case "SOCKETIO": {
 
-                    const socketIOVersion: "NO_SERVER" | "V2" | "V3-V4" | "UNKNOWN" = this._getSocketIOVersion();
+                    const socketIOVersion = this._getSocketIOVersion();
 
                     const result: iClient[] = [];
 

@@ -19,6 +19,7 @@
     import type { OpenApiDocument } from "express-openapi-validate";
 
     // locals
+    import type { tMethod } from "../openAPITypes";
 
     export type tLogType = "data" | "debug" | "log" | "info" | "success" | "warning" | "error";
     export type tLogger = (type: tLogType, message: string | Error, bold?: boolean, pluginName?: string) => void;
@@ -35,11 +36,6 @@
         "error": [ Error ];
         "initialized": [ unknown ];
         "released": [ unknown ];
-    }
-
-    export interface iSimplifiedOperationObject {
-        [index: string]: unknown;
-        "operationId": string;
     }
 
 // consts
@@ -159,45 +155,53 @@ export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> ext
         // must be inherited
         public checkDescriptor (): Promise<void> {
 
+            if (this._descriptorValidated) {
+                return Promise.resolve();
+            }
+
             // check Descriptor object
-            return this._descriptorValidated ? Promise.resolve() : checkNonEmptyObject("Descriptor", this._Descriptor).then((): Promise<void> => {
+            return checkNonEmptyObject("Descriptor", this._Descriptor).then((): Promise<void> => {
 
                 // check info object
                 return checkNonEmptyObject("Descriptor.info", (this._Descriptor as OpenApiDocument).info).then((): Promise<void> => {
 
-                    // check title
-                    return checkNonEmptyString("Descriptor.info.title", (this._Descriptor as OpenApiDocument).info.title).then((): Promise<void> => {
+                    const { title, version } = (this._Descriptor as OpenApiDocument).info;
 
-                        return (this._Descriptor as OpenApiDocument).info.title !== (this._Descriptor as OpenApiDocument).info.title.toLowerCase()
+                    // check title
+                    return checkNonEmptyString("Descriptor.info.title", title).then((): Promise<void> => {
+
+                        return title !== title.toLowerCase()
                             ? Promise.reject(new Error(
-                                "The descriptor's title (\"" + (this._Descriptor as OpenApiDocument).info.title + "\") "
+                                "The descriptor's title (\"" + title + "\") "
                                 + "is not equals in lower case (package.json convention)"
                             ))
                             : Promise.resolve();
 
                     // check version
                     }).then((): Promise<void> => {
-                        return checkNonEmptyString("Descriptor.info.version", (this._Descriptor as OpenApiDocument).info.version);
+                        return checkNonEmptyString("Descriptor.info.version", version);
                     });
 
                 });
 
             }).then((): Promise<void> => {
 
+                const { paths } = this._Descriptor as OpenApiDocument;
+
                 // check paths object
-                return checkObject("Descriptor.paths", (this._Descriptor as OpenApiDocument).paths).then((): Promise<void> => {
+                return checkObject("Descriptor.paths", paths).then((): Promise<void> => {
 
                     // check multiple operationIds
                     return Promise.resolve().then((): Promise<void> => {
 
                         const operationIds: string[] = [];
-                        Object.keys((this._Descriptor as OpenApiDocument).paths).forEach((pathname: string): void => {
+                        Object.keys(paths).forEach((pathname: string): void => {
 
-                            const path: OpenApiDocument["paths"][string] = (this._Descriptor as OpenApiDocument).paths[pathname];
+                            const path = paths[pathname];
 
                             Object.keys(path).forEach((method: string): void => {
 
-                                const operation: iSimplifiedOperationObject | undefined = path[method as keyof OpenApiDocument["paths"][string]] as iSimplifiedOperationObject | undefined;
+                                const operation = path[method as tMethod];
 
                                 if ("string" === typeof operation?.operationId) {
                                     operationIds.push(operation.operationId);

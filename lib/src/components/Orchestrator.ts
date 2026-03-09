@@ -351,9 +351,11 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
 
             public load (...data: unknown[]): Promise<void> {
 
-                return this.checkFiles().then((): Promise<{ "engines": { "node": string; }; }> => {
-                    return readJSONFile(join(__dirname, "..", "..", "..", "package.json")) as Promise<{ "engines": { "node": string; }; }>; // enforce current core engine version
-                }).then(({ engines }: { "engines": { "node": string; }; }): Promise<Record<string, unknown>> => {
+                type tEnginesData = { "engines": { "node": string; }; };
+
+                return this.checkFiles().then((): Promise<tEnginesData> => {
+                    return readJSONFile(join(__dirname, "..", "..", "..", "package.json")) as Promise<tEnginesData>; // enforce current core engine version
+                }).then(({ engines }: tEnginesData): Promise<Record<string, unknown>> => {
 
                     // native
                     this.authors = [];
@@ -494,12 +496,12 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
                     const SwaggerParser = require("@apidevtools/swagger-parser") as SwaggerParser;
 
                     // generate descriptor
-                    return SwaggerParser.bundle(this._descriptorFile).then((bundledDescriptor: OpenAPI.Document): Promise<OpenApiDocument> => {
+                    return SwaggerParser.bundle(this._descriptorFile).then((bundledDescriptor: OpenAPI.Document): Promise<void> => {
 
                         // force validate because of stupid malformatted references
-                        return SwaggerParser.validate(bundledDescriptor).then((validatedDescriptor: OpenApiDocument): void => {
+                        return SwaggerParser.validate(bundledDescriptor).then((validatedDescriptor: OpenAPI.Document): void => {
 
-                            this._Descriptor = validatedDescriptor;
+                            this._Descriptor = validatedDescriptor as OpenApiDocument;
                             this._Descriptor.servers ??= [];
 
                         });
@@ -548,7 +550,7 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
 
                             try {
 
-                                const val: typeof Mediator | { "default": typeof Mediator } = require(this._mediatorFile) as typeof Mediator | { "default": typeof Mediator };
+                                const val = require(this._mediatorFile) as typeof Mediator | { "default": typeof Mediator };
 
                                 if ("object" === typeof val && "function" === typeof val.default) {
                                     resolve(val.default);
@@ -596,7 +598,7 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
 
                             try {
 
-                                const val: typeof Server | { "default": typeof Server } = require(this._serverFile) as typeof Server | { "default": typeof Server };
+                                const val = require(this._serverFile) as typeof Server | { "default": typeof Server };
 
                                 if ("object" === typeof val && "function" === typeof val.default) {
                                     resolve(val.default);

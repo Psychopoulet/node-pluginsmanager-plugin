@@ -9,9 +9,7 @@
     import type { OpenApiDocument } from "express-openapi-validate";
 
     // locals
-    import type { iSimplifiedOperationObject } from "../../components/DescriptorUser";
-
-    type tMethod = "get" | "put" | "post" | "delete" | "options" | "head" | "patch" | "trace";
+    import type { tMethod } from "../../openAPITypes";
 
     export interface iPathMethod {
         "path": string;
@@ -42,7 +40,7 @@ export default function extractPathMethodByOperationId (paths: OpenApiDocument["
             if ("object" === typeof paths[pathname]) {
 
                 const method: tMethod | undefined = (Object.keys(paths[pathname]) as tMethod[]).find((m: tMethod): boolean => {
-                    return (paths[pathname][m] as unknown as iSimplifiedOperationObject).operationId === operationId;
+                    return paths[pathname][m]?.operationId === operationId;
                 });
 
                 if ("undefined" !== typeof method) {

@@ -3,8 +3,8 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Server as WebSocketServer } from "ws";
 import type { Server as SocketIOServer } from "socket.io";
 import type { Server as SocketIOServerV2 } from "socket.io-v2";
+import type { tMethod } from "../openAPITypes";
 import type { tEventMap, iEventsMinimal } from "./DescriptorUser";
-type tMethod = "get" | "put" | "post" | "delete" | "options" | "head" | "patch" | "trace";
 export interface iClient {
     "id": string;
     "status": "CONNECTED" | "DISCONNECTED";
@@ -50,4 +50,3 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
     init(...data: unknown[]): Promise<void>;
     release(...data: unknown[]): Promise<void>;
 }
-export {};

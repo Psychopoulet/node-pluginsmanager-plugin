@@ -14,10 +14,6 @@ export interface iEventsMinimal {
     "initialized": [unknown];
     "released": [unknown];
 }
-export interface iSimplifiedOperationObject {
-    [index: string]: unknown;
-    "operationId": string;
-}
 export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> extends EventEmitter<T> {
     initialized: boolean;
     protected _descriptorValidated: boolean;

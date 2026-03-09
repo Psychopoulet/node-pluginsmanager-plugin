@@ -14,14 +14,12 @@
 // types & interfaces
 
     // externals
-    import type { RequestHandler } from "express";
     import type { OpenApiDocument } from "express-openapi-validate";
 
     // locals
 
     import type { iDescriptorUserOptions, tEventMap, iEventsMinimal } from "./DescriptorUser";
     import type { iServerResponse } from "./Server";
-    import type { iPathMethod } from "../utils/descriptor/extractPathMethodByOperationId";
 
     interface iUrControlledParameters {
         "path": Record<string, any>;
@@ -98,7 +96,7 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
             }).then((): Promise<void> => {
 
                 // search wanted operation
-                const foundPathMethod: iPathMethod | undefined = extractPathMethodByOperationId(
+                const foundPathMethod = extractPathMethodByOperationId(
                     this._Descriptor?.paths,
                     operationId
                 );
@@ -117,7 +115,7 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
                         "body": bodyParams
                     };
 
-                    const validateRequest: RequestHandler = (this._validator as OpenApiValidator).validate(req.method, req.path);
+                    const validateRequest = (this._validator as OpenApiValidator).validate(req.method, req.path);
 
                     validateRequest(req, null, (err: Error | null): void => {
                         return err ? reject(err) : resolve();
@@ -167,7 +165,7 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
             }).then((): Promise<void> => {
 
                 // search wanted operation
-                const foundPathMethod: iPathMethod | undefined = extractPathMethodByOperationId(
+                const foundPathMethod = extractPathMethodByOperationId(
                     this._Descriptor?.paths,
                     operationId
                 );
