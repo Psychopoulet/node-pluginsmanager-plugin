@@ -148,7 +148,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                         if (key === clientId) {
 
-                            if (sockets[key]?.connected) {
+                            if (sockets[key].connected) {
                                 return sockets[key];
                             }
 
@@ -168,7 +168,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                         const result: SocketIOSocket | undefined = sockets.get(clientId);
 
-                        if (result?.connected) {
+                        if (true === result?.connected) { // force boolean comparison to avoid lint errors with "?"
                             return result;
                         }
 
@@ -231,7 +231,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                     return next();
                 }
 
-                req.method = req.method ? req.method.toLowerCase() as tMethod : "get";
+                req.method = "string" === typeof _req.method ? _req.method.toLowerCase() as tMethod : "get";
                 req.pattern = null === checkNonEmptyStringSync("pattern", req.pattern) ? req.pattern : extractPattern(
                     (this._Descriptor as OpenApiDocument).paths, pathname, req.method
                 );
@@ -244,7 +244,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                 try {
 
                     // workaround for express 5
-                    if ((Object.getPrototypeOf(req) as ExpressIncomingMessage).app) {
+                    if ("app" in (Object.getPrototypeOf(req) as ExpressIncomingMessage)) {
 
                         Object.defineProperty(req, "query", {
                             ...Object.getOwnPropertyDescriptor(req, "query"),
@@ -259,7 +259,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                     // url
 
                     req.params = null === checkNonEmptyObjectSync("params", req.params) ? req.params : extractParams(req.pattern, pathname);
-                    req.query = null === checkNonEmptyObjectSync("query", req.query) ? req.query : query ?? {};
+                    req.query = null === checkNonEmptyObjectSync("query", req.query) ? req.query : query;
 
                     if (null !== checkNonEmptyObjectSync("headers", req.headers)) {
                         req.headers = null === checkNonEmptyObjectSync("header", req.header) ? req.header as iIncomingMessage["headers"] : {};
@@ -282,11 +282,21 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                     return next(e as Error);
                 }
 
-                if (!(this._Descriptor as OpenApiDocument).paths?.[req.pattern]?.[req.method]) {
+                const { paths } = this._Descriptor as OpenApiDocument;
+
+                // enforce with try to avoid unexpected (data are theoretically validated by types, but can be wrong in practice, like with pure JS dev)
+                try {
+
+                    if (!paths[req.pattern][req.method]) {
+                        return next();
+                    }
+
+                }
+                catch {
                     return next();
                 }
 
-                const operation: OperationObject = (this._Descriptor as OpenApiDocument).paths[req.pattern][req.method] as OperationObject;
+                const operation: OperationObject = paths[req.pattern][req.method] as OperationObject;
 
                 const { operationId }: { "operationId"?: string | undefined } = operation as { "operationId"?: string | undefined }; // operationId is "any", had to specify the type to avoid lint errors
                 const apiVersion: string = (this._Descriptor as OpenApiDocument).info.version;
@@ -434,7 +444,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                             return;
                         }
 
-                        const docParameters: Array<Record<string, unknown>> = (this._Descriptor as OpenApiDocument).paths[req.pattern][req.method]?.parameters?.filter((p: Record<string, unknown>): boolean => {
+                        const docParameters: Array<Record<string, unknown>> = paths[req.pattern][req.method]?.parameters?.filter((p: Record<string, unknown>): boolean => {
                             return "path" === p.in;
                         }) ?? [];
 
