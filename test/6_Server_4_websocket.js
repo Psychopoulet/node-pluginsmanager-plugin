@@ -4,7 +4,7 @@
     const { ok } = require("node:assert");
     const { createServer } = require("node:http");
     const { join } = require("node:path");
-    const { parse } = require("node:url");
+    const { URL } = require("node:url");
 
     // externals
     const WebSocketServer = require("ws").Server;
@@ -54,7 +54,8 @@ describe("Server / websockets", () => {
 
             return server.init().then(() => {
 
-                port = parseInt(parse(server._Descriptor.servers[1].url).port, 10);
+                const url = new URL(server._Descriptor.servers[1].url, "http://localhost"); // any url, but "http://localhost" is used to avoid errors
+                port = parseInt(url.port, 10);
 
                 runningServer = new WebSocketServer({
                     port
