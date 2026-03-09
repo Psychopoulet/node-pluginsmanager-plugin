@@ -31,7 +31,7 @@
     "build-back": "npm run clean-back && npx tsc --project ./tsconfig.json",
     "build": "npm run build-back",
 
-    "check-requires": "npx used-deps-analyzer ./package.json ./lib/src --no-dev",
+    "check-requires": "npx used-deps-analyzer ./package.json ./lib/src --no-dev --misscalled \"{ \\\"module\\\": \\\"@types/socket.io-v2\\\", \\\"call\\\": \\\"socket.io-v2\\\" }\"",
     "check-updates": "npx check-version-modules --no-fail-at-major --fail-at-minor --fail-at-patch",
     "unit-tests": "npm run build && npx nyc --reporter=html --reporter=text mocha",
 
@@ -53,7 +53,7 @@
   },
   "devDependencies": {
     "@types/express": "5.0.6",
-    "@types/node": "25.3.5",
+    "@types/node": "25.4.0",
     "@types/socket.io": "3.0.2",
     "@types/socket.io-v2": "npm:@types/socket.io@^2.1.13",
     "@types/uniqid": "5.3.4",
