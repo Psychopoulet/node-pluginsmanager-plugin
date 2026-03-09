@@ -11,9 +11,7 @@
     // locals
     import type { iSimplifiedOperationObject } from "../../components/DescriptorUser";
 
-    type PathsObject = OpenApiDocument["paths"];
-    type PathItemObject = PathsObject[string];
-    type tMethod = keyof PathItemObject;
+    type tMethod = "get" | "put" | "post" | "delete" | "options" | "head" | "patch" | "trace";
 
     export interface iPathMethod {
         "path": string;

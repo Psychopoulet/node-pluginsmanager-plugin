@@ -1,7 +1,5 @@
 import type { OpenApiDocument } from "express-openapi-validate";
-type PathsObject = OpenApiDocument["paths"];
-type PathItemObject = PathsObject[string];
-type tMethod = keyof PathItemObject;
+type tMethod = "get" | "put" | "post" | "delete" | "options" | "head" | "patch" | "trace";
 export interface iPathMethod {
     "path": string;
     "method": tMethod;

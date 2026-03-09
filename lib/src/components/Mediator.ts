@@ -20,16 +20,8 @@
     // locals
 
     import type { iDescriptorUserOptions, tEventMap, iEventsMinimal } from "./DescriptorUser";
-    import type { iIncomingMessage, iServerResponse } from "./Server";
+    import type { iServerResponse } from "./Server";
     import type { iPathMethod } from "../utils/descriptor/extractPathMethodByOperationId";
-
-    export interface iIncomingMessageForMediatorValidation extends iIncomingMessage {
-        "body": any;
-    }
-
-    export interface iServerResponseForMediatorValidation extends iServerResponse {
-        "body": any;
-    }
 
     interface iUrControlledParameters {
         "path": Record<string, any>;
@@ -167,7 +159,7 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
         }
 
         // Check sended parameters by method name (used by the Server)
-        public checkResponse (operationId: string, res: iServerResponseForMediatorValidation): Promise<void> {
+        public checkResponse (operationId: string, res: iServerResponse): Promise<void> {
 
             // parameters validation
             return this.checkDescriptor().then((): Promise<void> => {

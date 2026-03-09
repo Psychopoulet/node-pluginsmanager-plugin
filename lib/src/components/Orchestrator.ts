@@ -349,7 +349,7 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
             public load (...data: unknown[]): Promise<void> {
 
                 return this.checkFiles().then((): Promise<{ "engines": { "node": string; }; }> => {
-                    return readJSONFile(join(__dirname, "..", "..", "..", "package.json"));
+                    return readJSONFile(join(__dirname, "..", "..", "..", "package.json")) as Promise<{ "engines": { "node": string; }; }>; // enforce current core engine version
                 }).then(({ engines }: { "engines": { "node": string; }; }): Promise<Record<string, unknown>> => {
 
                     // native
@@ -364,20 +364,22 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
                     this.scripts = {};
                     this.version = "";
 
-                    return readJSONFile(this._packageFile);
+                    return readJSONFile(this._packageFile) as Promise<Record<string, unknown>>;
 
                 // formate authors
                 }).then((packageData: Record<string, unknown>): Promise<Record<string, unknown>> => {
 
                     if (packageData.authors) {
 
-                        this.authors = packageData.authors;
+                        this.authors = packageData.authors as string[];
                         delete packageData.authors;
 
                         if (packageData.author) {
 
-                            if (!this.authors.includes(packageData.author)) {
-                                this.authors.push(packageData.author);
+                            const { author }: { "author": string } = packageData as { "author": string };
+
+                            if (!this.authors.includes(author)) {
+                                this.authors.push(author);
                             }
 
                             delete packageData.author;

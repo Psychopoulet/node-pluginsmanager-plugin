@@ -168,7 +168,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                         const result: SocketIOSocket | undefined = sockets.get(clientId);
 
-                        if ("undefined" !== typeof result && result?.connected) {
+                        if (result?.connected) {
                             return result;
                         }
 
@@ -219,11 +219,20 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                 const req: iIncomingMessage = Object.assign(_req) as iIncomingMessage;
 
+                if ("undefined" === typeof req.url) {
+                    return next();
+                }
+
                 // parse
-                const { pathname, query }: { "pathname": string | null; "query": Record<string, unknown>; } = parse((req.url as string), true);
+                const { pathname, query }: { "pathname": string | null; "query": Record<string, unknown>; } = parse(req.url, true);
+
+                if (null === pathname || 0 >= pathname.length) {
+                    return next();
+                }
+
                 req.method = req.method ? req.method.toLowerCase() as tMethod : "get";
                 req.pattern = null === checkNonEmptyStringSync("pattern", req.pattern) ? req.pattern : extractPattern(
-                    (this._Descriptor as OpenApiDocument).paths, pathname as string, req.method
+                    (this._Descriptor as OpenApiDocument).paths, pathname, req.method
                 );
 
                 if (0 >= req.pattern.length) {
@@ -248,7 +257,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                     // url
 
-                    req.params = null === checkNonEmptyObjectSync("params", req.params) ? req.params : extractParams(req.pattern, pathname as string);
+                    req.params = null === checkNonEmptyObjectSync("params", req.params) ? req.params : extractParams(req.pattern, pathname);
                     req.query = null === checkNonEmptyObjectSync("query", req.query) ? req.query : query ?? {};
 
                     if (null !== checkNonEmptyObjectSync("headers", req.headers)) {
@@ -278,11 +287,11 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                 const operation: OperationObject = (this._Descriptor as OpenApiDocument).paths[req.pattern][req.method] as OperationObject;
 
-                const { operationId }: { "operationId"?: string | undefined } = operation;
+                const { operationId }: { "operationId"?: string | undefined } = operation as { "operationId"?: string | undefined }; // operationId is "any", had to specify the type to avoid lint errors
                 const apiVersion: string = (this._Descriptor as OpenApiDocument).info.version;
 
                 const contentType: string = req.headers["content-type"] ?? req.headers["Content-Type"] as string | undefined ?? "";
-                const { responses }: { "responses": unknown } = operation;
+                const { responses }: { "responses": unknown } = operation as { "responses": unknown }; // response is "any", had to specify the type to avoid lint errors
 
                 this._log("info", ""
                     + "=> [" + req.validatedIp + "] " + req.url + " (" + req.method.toUpperCase() + ")"
