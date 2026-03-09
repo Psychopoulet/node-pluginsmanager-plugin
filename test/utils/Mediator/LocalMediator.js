@@ -1,27 +1,25 @@
-"use strict";
-
 // deps
 
-	// natives
-	const { join } = require("path");
+    // natives
+    const { join } = require("node:path");
 
-	// locals
-	const { Mediator } = require(join(__dirname, "..", "..", "..", "lib", "cjs", "main.cjs"));
+    // locals
+    const { Mediator } = require(join(__dirname, "..", "..", "..", "lib", "cjs", "main.cjs"));
 
 // module
 
 module.exports = class LocalMediator extends Mediator {
 
-	_initWorkSpace () {
+    _initWorkSpace () {
 
-		return Promise.resolve();
+        return Promise.resolve();
 
-	}
+    }
 
-	_releaseWorkSpace () {
+    _releaseWorkSpace () {
 
-		return Promise.resolve();
+        return Promise.resolve();
 
-	}
+    }
 
 };

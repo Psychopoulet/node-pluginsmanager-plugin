@@ -1,23 +1,21 @@
-"use strict";
-
 // deps
 
-	// natives
-	const { join } = require("path");
+    // natives
+    const { join } = require("node:path");
 
-	// locals
-	const LocalOrchestrator = require(join(__dirname, "LocalOrchestrator.js"));
+    // locals
+    const LocalOrchestrator = require(join(__dirname, "LocalOrchestrator.js"));
 
 // module
 
 module.exports = class NonEnabledOrchestrator extends LocalOrchestrator {
 
-	isEnable () {
+    isEnable () {
 
-		this.enabled = false;
+        this.enabled = false;
 
-		return Promise.resolve();
+        return Promise.resolve();
 
-	}
+    }
 
 };

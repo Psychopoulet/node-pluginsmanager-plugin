@@ -1,48 +1,46 @@
-"use strict";
-
 // deps
 
-	// natives
-	const { join } = require("node:path");
+    // natives
+    const { join } = require("node:path");
 
-	// locals
-	const { Orchestrator } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
-	const LocalOrchestrator = require(join(__dirname, "utils", "Orchestrator", "LocalOrchestrator.js"));
+    // locals
+    const { Orchestrator } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
+    const LocalOrchestrator = require(join(__dirname, "utils", "Orchestrator", "LocalOrchestrator.js"));
 
 // tests
 
 describe("Orchestrator / write", () => {
 
-	describe("native", () => {
+    describe("native", () => {
 
-		it("should test install", () => {
-			return new Orchestrator().install();
-		});
+        it("should test install", () => {
+            return new Orchestrator().install();
+        });
 
-		it("should test update", () => {
-			return new Orchestrator().update();
-		});
+        it("should test update", () => {
+            return new Orchestrator().update();
+        });
 
-		it("should test uninstall", () => {
-			return new Orchestrator().uninstall();
-		});
+        it("should test uninstall", () => {
+            return new Orchestrator().uninstall();
+        });
 
-	});
+    });
 
-	describe("inherited", () => {
+    describe("inherited", () => {
 
-		it("should test install", () => {
-			return new LocalOrchestrator().install();
-		});
+        it("should test install", () => {
+            return new LocalOrchestrator().install();
+        });
 
-		it("should test update", () => {
-			return new LocalOrchestrator().update();
-		});
+        it("should test update", () => {
+            return new LocalOrchestrator().update();
+        });
 
-		it("should test uninstall", () => {
-			return new LocalOrchestrator().uninstall();
-		});
+        it("should test uninstall", () => {
+            return new LocalOrchestrator().uninstall();
+        });
 
-	});
+    });
 
 });

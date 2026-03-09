@@ -1,74 +1,72 @@
-"use strict";
-
 // deps
 
-	// natives
-	const { deepStrictEqual, strictEqual } = require("assert");
+    // natives
+    const { deepStrictEqual, strictEqual } = require("node:assert");
 
-	// externals
-	const WebSocket = require("ws");
-	const socketIOClient = require("socket.io-client");
+    // externals
+    const WebSocket = require("ws");
+    const socketIOClient = require("socket.io-client");
 
 // module
 
 module.exports = function socketWaitPush (port, commandPush, dataPush, requester, socketIO = false) {
 
-	const client = socketIO ?
-		socketIOClient("http://127.0.0.1:" + port) :
-		new WebSocket("ws://127.0.0.1:" + port);
+    const client = socketIO
+        ? socketIOClient("http://127.0.0.1:" + port)
+        : new WebSocket("ws://127.0.0.1:" + port);
 
-	// connection
-	return new Promise((resolve) => {
+    // connection
+    return new Promise((resolve) => {
 
-		client.on(socketIO ? "connect" : "open", resolve);
+        client.on(socketIO ? "connect" : "open", resolve);
 
-	// send & wait for response
-	}).then(() => {
+    // send & wait for response
+    }).then(() => {
 
-		return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
 
-			client.on("message", (message) => {
+            client.on("message", (message) => {
 
-				try {
+                try {
 
-					const { id, plugin, command } = JSON.parse(message);
+                    const { id, plugin, command } = JSON.parse(message);
 
-					strictEqual(typeof id, "string", "The id is not a string");
+                    strictEqual(typeof id, "string", "The id is not a string");
 
-					strictEqual(typeof plugin, "string", "The plugin is not a string");
-					strictEqual(plugin, "node-pluginsmanager-plugin", "The plugin is not node-pluginsmanager-plugin");
+                    strictEqual(typeof plugin, "string", "The plugin is not a string");
+                    strictEqual(plugin, "node-pluginsmanager-plugin", "The plugin is not node-pluginsmanager-plugin");
 
-					strictEqual(typeof command, "string", "The command is not a string");
-					strictEqual(command, commandPush, "The command is not " + commandPush);
+                    strictEqual(typeof command, "string", "The command is not a string");
+                    strictEqual(command, commandPush, "The command is not " + commandPush);
 
-					if (dataPush) {
+                    if (dataPush) {
 
-						const { data } = JSON.parse(message);
+                        const { data } = JSON.parse(message);
 
-						deepStrictEqual(data, dataPush, "The data is not " + JSON.stringify(dataPush));
+                        deepStrictEqual(data, dataPush, "The data is not " + JSON.stringify(dataPush));
 
-					}
+                    }
 
-					resolve();
+                    resolve();
 
-				}
-				catch (e) {
-					reject(e);
-				}
+                }
+                catch (e) {
+                    reject(e);
+                }
 
-			});
+            });
 
-			requester();
+            requester();
 
-		});
+        });
 
-	// send & wait for response
-	}).then(() => {
+    // send & wait for response
+    }).then(() => {
 
-		return new Promise((resolve) => {
-			client.on(socketIO ? "disconnect" : "close", resolve).close();
-		});
+        return new Promise((resolve) => {
+            client.on(socketIO ? "disconnect" : "close", resolve).close();
+        });
 
-	});
+    });
 
 };

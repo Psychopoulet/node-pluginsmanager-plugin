@@ -1,209 +1,207 @@
-"use strict";
-
 // deps
 
-	// natives
-	const { ok } = require("node:assert");
-	const { createServer } = require("node:http");
-	const { join } = require("node:path");
-	const { parse } = require("node:url");
+    // natives
+    const { ok } = require("node:assert");
+    const { createServer } = require("node:http");
+    const { join } = require("node:path");
+    const { parse } = require("node:url");
 
-	// externals
-	const WebSocketServer = require("ws").Server;
-	const socketIO = require("socket.io");
+    // externals
+    const WebSocketServer = require("ws").Server;
+    const socketIO = require("socket.io");
 
-	// locals
-	const socketRequestTest = require(join(__dirname, "utils", "socketRequestTest.js"));
-	const socketWaitPush = require(join(__dirname, "utils", "socketWaitPush.js"));
-	const HeritedServer = require(join(__dirname, "utils", "Server", "HeritedServer.js"));
+    // locals
+    const socketRequestTest = require(join(__dirname, "utils", "socketRequestTest.js"));
+    const socketWaitPush = require(join(__dirname, "utils", "socketWaitPush.js"));
+    const HeritedServer = require(join(__dirname, "utils", "Server", "HeritedServer.js"));
 
 // tests
 
 describe("Server / websockets", () => {
 
-	it("should test socket server without server", (done) => {
+    it("should test socket server without server", (done) => {
 
-		let ended = false;
+        let ended = false;
 
-		setTimeout(() => {
+        setTimeout(() => {
 
-			if (!ended) {
-				ended = true;
-				done();
-			}
+            if (!ended) {
+                ended = true;
+                done();
+            }
 
-		}, 500);
+        }, 500);
 
-		new HeritedServer().on("error", (err) => {
+        new HeritedServer().on("error", (err) => {
 
-			if (!ended) {
-				ended = true;
-				done(err);
-			}
+            if (!ended) {
+                ended = true;
+                done(err);
+            }
 
-		}).push("ping", "pong");
+        }).push("ping", "pong");
 
-	});
+    });
 
-	let port = 80;
-	let runningServer = null;
+    let port = 80;
+    let runningServer = null;
 
-	const server = new HeritedServer();
+    const server = new HeritedServer();
 
-	describe("ws", () => {
+    describe("ws", () => {
 
-		before(() => {
+        before(() => {
 
-			return server.init().then(() => {
+            return server.init().then(() => {
 
-				port = parseInt(parse(server._Descriptor.servers[1].url).port, 10);
+                port = parseInt(parse(server._Descriptor.servers[1].url).port, 10);
 
-				runningServer = new WebSocketServer({
-					port
-				});
+                runningServer = new WebSocketServer({
+                    port
+                });
 
-				server.socketMiddleware(runningServer);
+                server.socketMiddleware(runningServer);
 
-			});
+            });
 
-		});
+        });
 
-		after(() => {
+        after(() => {
 
-			return server.release().then(() => {
+            return server.release().then(() => {
 
-				return runningServer ? new Promise((resolve) => {
+                return runningServer ? new Promise((resolve) => {
 
-					runningServer.close(() => {
-						runningServer = null;
-						resolve();
-					});
+                    runningServer.close(() => {
+                        runningServer = null;
+                        resolve();
+                    });
 
-				}) : Promise.resolve();
+                }) : Promise.resolve();
 
-			});
+            });
 
-		});
+        });
 
-		it("should test socket server", () => {
+        it("should test socket server", () => {
 
-			// DebugStep
-			let pinged = false;
-			server.on("ping", () => {
-				pinged = true;
-			});
+            // DebugStep
+            let pinged = false;
+            server.on("ping", () => {
+                pinged = true;
+            });
 
-			return socketRequestTest(port, "ping", "pong").then(() => {
+            return socketRequestTest(port, "ping", "pong").then(() => {
 
-				ok(pinged, "DebugStep is not as expected");
+                ok(pinged, "DebugStep is not as expected");
 
-			});
+            });
 
-		});
+        });
 
-		it("should test push", () => {
+        it("should test push", () => {
 
-			const COMMAND = "created";
-			const DATA = {
-				"name": "test"
-			};
+            const COMMAND = "created";
+            const DATA = {
+                "name": "test"
+            };
 
-			return socketWaitPush(port, COMMAND, DATA, () => {
-				server.push(COMMAND, DATA);
-			});
+            return socketWaitPush(port, COMMAND, DATA, () => {
+                server.push(COMMAND, DATA);
+            });
 
-		});
+        });
 
-	});
+    });
 
-	describe("socket.io", () => {
+    describe("socket.io", () => {
 
-		const httpServer = createServer();
+        const httpServer = createServer();
 
-		before(() => {
+        before(() => {
 
-			return server.init().then(() => {
+            return server.init().then(() => {
 
-				runningServer = socketIO(httpServer);
+                runningServer = socketIO(httpServer);
 
-				httpServer.listen(port);
+                httpServer.listen(port);
 
-				server.socketMiddleware(runningServer);
+                server.socketMiddleware(runningServer);
 
-			});
+            });
 
-		});
+        });
 
-		after(() => {
+        after(() => {
 
-			return server.release().then(() => {
+            return server.release().then(() => {
 
-				return runningServer ? new Promise((resolve) => {
+                return runningServer ? new Promise((resolve) => {
 
-					runningServer.close(() => {
-						runningServer = null;
-						resolve();
-					});
+                    runningServer.close(() => {
+                        runningServer = null;
+                        resolve();
+                    });
 
-				}) : Promise.resolve();
+                }) : Promise.resolve();
 
-			});
+            });
 
-		});
+        });
 
-		it("should test socket server without server", (done) => {
+        it("should test socket server without server", (done) => {
 
-			let ended = false;
+            let ended = false;
 
-			setTimeout(() => {
+            setTimeout(() => {
 
-				if (!ended) {
-					ended = true;
-					done();
-				}
+                if (!ended) {
+                    ended = true;
+                    done();
+                }
 
-			}, 500);
+            }, 500);
 
-			new HeritedServer().on("error", (err) => {
+            new HeritedServer().on("error", (err) => {
 
-				if (!ended) {
-					ended = true;
-					done(err);
-				}
+                if (!ended) {
+                    ended = true;
+                    done(err);
+                }
 
-			}).push("ping", "pong");
+            }).push("ping", "pong");
 
-		});
+        });
 
-		it("should test socket server", () => {
+        it("should test socket server", () => {
 
-			// DebugStep
-			let pinged = false;
-			server.on("ping", () => {
-				pinged = true;
-			});
+            // DebugStep
+            let pinged = false;
+            server.on("ping", () => {
+                pinged = true;
+            });
 
-			return socketRequestTest(port, "ping", "pong", true).then(() => {
+            return socketRequestTest(port, "ping", "pong", true).then(() => {
 
-				ok(pinged, "DebugStep is not as expected");
+                ok(pinged, "DebugStep is not as expected");
 
-			});
+            });
 
-		});
+        });
 
-		it("should test push", () => {
+        it("should test push", () => {
 
-			const COMMAND = "created";
-			const DATA = {
-				"name": "test"
-			};
+            const COMMAND = "created";
+            const DATA = {
+                "name": "test"
+            };
 
-			return socketWaitPush(port, COMMAND, DATA, () => {
-				server.push(COMMAND, DATA);
-			}, true);
+            return socketWaitPush(port, COMMAND, DATA, () => {
+                server.push(COMMAND, DATA);
+            }, true);
 
-		});
+        });
 
-	});
+    });
 
 });

@@ -1,85 +1,83 @@
-"use strict";
-
 // deps
 
-	// natives
-	const { strictEqual, ok } = require("node:assert");
-	const { join } = require("node:path");
+    // natives
+    const { strictEqual, ok } = require("node:assert");
+    const { join } = require("node:path");
 
-	// locals
+    // locals
 
-		// plugin
-		const { DescriptorUser } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
-		const LocalDescriptorUser = require(join(__dirname, "utils", "DescriptorUser", "LocalDescriptorUser.js"));
+        // plugin
+        const { DescriptorUser } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
+        const LocalDescriptorUser = require(join(__dirname, "utils", "DescriptorUser", "LocalDescriptorUser.js"));
 
 // tests
 
 describe("DescriptorUser / init", () => {
 
-	it("should test non-herited _initWorkSpace", (done) => {
+    it("should test non-herited _initWorkSpace", (done) => {
 
-		const nonHerited = new DescriptorUser();
+        const nonHerited = new DescriptorUser();
 
-		nonHerited._initWorkSpace().then(() => {
-			done(new Error("There is no generated Error"));
-		}).catch((err) => {
+        nonHerited._initWorkSpace().then(() => {
+            done(new Error("There is no generated Error"));
+        }).catch((err) => {
 
-			strictEqual(typeof err, "object", "Generated Error is not as expected");
-			ok(err instanceof Error, "Generated Error is not as expected");
+            strictEqual(typeof err, "object", "Generated Error is not as expected");
+            ok(err instanceof Error, "Generated Error is not as expected");
 
-			done();
+            done();
 
-		});
+        });
 
-	});
+    });
 
-	it("should test non-herited init", (done) => {
+    it("should test non-herited init", (done) => {
 
-		const nonHerited = new DescriptorUser();
+        const nonHerited = new DescriptorUser();
 
-		nonHerited.init().then(() => {
-			done(new Error("There is no generated Error"));
-		}).catch((err) => {
+        nonHerited.init().then(() => {
+            done(new Error("There is no generated Error"));
+        }).catch((err) => {
 
-			strictEqual(typeof err, "object", "Generated Error is not as expected");
-			ok(err instanceof Error, "Generated Error is not as expected");
+            strictEqual(typeof err, "object", "Generated Error is not as expected");
+            ok(err instanceof Error, "Generated Error is not as expected");
 
-			done();
+            done();
 
-		});
+        });
 
-	});
+    });
 
-	it("should test _initWorkSpace", () => {
-		return new LocalDescriptorUser()._initWorkSpace();
-	});
+    it("should test _initWorkSpace", () => {
+        return new LocalDescriptorUser()._initWorkSpace();
+    });
 
-	it("should test init", () => {
-		return new LocalDescriptorUser().init();
-	});
+    it("should test init", () => {
+        return new LocalDescriptorUser().init();
+    });
 
-	it("should test logger", (done) => {
+    it("should test logger", (done) => {
 
-		new LocalDescriptorUser({
-			"descriptor": {
-				"info": {
-					"title": "test",
-					"version": "1.7.0",
-					"description": "This is a test"
-				}
-			},
-			"logger": (type, message, bold, pluginName) => {
+        new LocalDescriptorUser({
+            "descriptor": {
+                "info": {
+                    "title": "test",
+                    "version": "1.7.0",
+                    "description": "This is a test"
+                }
+            },
+            "logger": (type, message, bold, pluginName) => {
 
-				strictEqual(type, "error", "logger does not send correct value");
-				strictEqual(message, "This is a test", "logger does not send correct value");
-				ok(bold, "logger does not send correct value");
-				strictEqual(pluginName, "test", "logger does not send correct value");
+                strictEqual(type, "error", "logger does not send correct value");
+                strictEqual(message, "This is a test", "logger does not send correct value");
+                ok(bold, "logger does not send correct value");
+                strictEqual(pluginName, "test", "logger does not send correct value");
 
-				done();
+                done();
 
-			}
-		})._log("error", "This is a test", true, "test");
+            }
+        })._log("error", "This is a test", true, "test");
 
-	});
+    });
 
 });

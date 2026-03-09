@@ -1,113 +1,111 @@
-"use strict";
-
 // deps
 
-	// natives
-	const { deepStrictEqual } = require("node:assert");
-	const { join } = require("node:path");
+    // natives
+    const { deepStrictEqual } = require("node:assert");
+    const { join } = require("node:path");
 
-	// locals
-	const extractPathMethodByOperationId = require(join(__dirname, "..", "lib", "cjs", "utils", "descriptor", "extractPathMethodByOperationId.js"));
+    // locals
+    const extractPathMethodByOperationId = require(join(__dirname, "..", "lib", "cjs", "utils", "descriptor", "extractPathMethodByOperationId.js"));
 
 // tests
 
 describe("utils / descriptor / extractPathMethodByOperationId", () => {
 
-	describe("paths", () => {
+    describe("paths", () => {
 
-		it("should test with missing data", () => {
-			deepStrictEqual(extractPathMethodByOperationId.default(), null, "generated data is not as expected");
-		});
+        it("should test with missing data", () => {
+            deepStrictEqual(extractPathMethodByOperationId.default(), null, "generated data is not as expected");
+        });
 
-		it("should test with wrong data", () => {
-			deepStrictEqual(extractPathMethodByOperationId.default(false), null, "generated data is not as expected");
-		});
+        it("should test with wrong data", () => {
+            deepStrictEqual(extractPathMethodByOperationId.default(false), null, "generated data is not as expected");
+        });
 
-		it("should test with empty data", () => {
-			deepStrictEqual(extractPathMethodByOperationId.default({}), null, "generated data is not as expected");
-		});
+        it("should test with empty data", () => {
+            deepStrictEqual(extractPathMethodByOperationId.default({}), null, "generated data is not as expected");
+        });
 
-	});
+    });
 
-	describe("paths", () => {
+    describe("paths", () => {
 
-		it("should test with missing data", () => {
+        it("should test with missing data", () => {
 
-			deepStrictEqual(extractPathMethodByOperationId.default({
-				"test": {
-					"get": {
-						"operationId": "test"
-					}
-				}
-			}), null, "generated data is not as expected");
+            deepStrictEqual(extractPathMethodByOperationId.default({
+                "test": {
+                    "get": {
+                        "operationId": "test"
+                    }
+                }
+            }), null, "generated data is not as expected");
 
-		});
+        });
 
-		it("should test with wrong data", () => {
+        it("should test with wrong data", () => {
 
-			deepStrictEqual(extractPathMethodByOperationId.default({
-				"test": {
-					"get": {
-						"operationId": "test"
-					}
-				}
-			}, false), null, "generated data is not as expected");
+            deepStrictEqual(extractPathMethodByOperationId.default({
+                "test": {
+                    "get": {
+                        "operationId": "test"
+                    }
+                }
+            }, false), null, "generated data is not as expected");
 
-		});
+        });
 
-		it("should test with empty data", () => {
+        it("should test with empty data", () => {
 
-			deepStrictEqual(extractPathMethodByOperationId.default({
-				"test": {
-					"get": {
-						"operationId": "test"
-					}
-				}
-			}, ""), null, "generated data is not as expected");
+            deepStrictEqual(extractPathMethodByOperationId.default({
+                "test": {
+                    "get": {
+                        "operationId": "test"
+                    }
+                }
+            }, ""), null, "generated data is not as expected");
 
-		});
+        });
 
-		it("should test with inexisting data", () => {
+        it("should test with inexisting data", () => {
 
-			deepStrictEqual(extractPathMethodByOperationId.default({
-				"test": {
-					"get": {
-						"operationId": "test"
-					}
-				}
-			}, "test2"), null, "generated data is not as expected");
+            deepStrictEqual(extractPathMethodByOperationId.default({
+                "test": {
+                    "get": {
+                        "operationId": "test"
+                    }
+                }
+            }, "test2"), null, "generated data is not as expected");
 
-		});
+        });
 
-	});
+    });
 
-	describe("valid", () => {
+    describe("valid", () => {
 
-		it("should test with mutliples data", () => {
+        it("should test with mutliples data", () => {
 
-			deepStrictEqual(extractPathMethodByOperationId.default({
-				"/test": {
-					"get": {
-						"operationId": "getTest"
-					},
-					"post": {
-						"operationId": "addTest"
-					},
-					"put": {
-						"operationId": "editTest"
-					},
-					"delete": {
-						"operationId": "removeTest"
-					}
-				}
-			}, "editTest"), {
-				"path": "/test",
-				"method": "put",
-				"operationId": "editTest"
-			}, "generated data is not as expected");
+            deepStrictEqual(extractPathMethodByOperationId.default({
+                "/test": {
+                    "get": {
+                        "operationId": "getTest"
+                    },
+                    "post": {
+                        "operationId": "addTest"
+                    },
+                    "put": {
+                        "operationId": "editTest"
+                    },
+                    "delete": {
+                        "operationId": "removeTest"
+                    }
+                }
+            }, "editTest"), {
+                "path": "/test",
+                "method": "put",
+                "operationId": "editTest"
+            }, "generated data is not as expected");
 
-		});
+        });
 
-	});
+    });
 
 });

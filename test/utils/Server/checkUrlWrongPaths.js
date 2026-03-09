@@ -1,83 +1,81 @@
-"use strict";
-
 // deps
 
-	// natives
-	const { join } = require("node:path");
+    // natives
+    const { join } = require("node:path");
 
-	// locals
+    // locals
 
-		// utils
-		const httpRequestTest = require(join(__dirname, "..", "..", "utils", "httpRequestTest.js"));
+        // utils
+        const httpRequestTest = require(join(__dirname, "..", "..", "utils", "httpRequestTest.js"));
 
 // module
 
 module.exports = function checkUrlWrongPaths (URL_API) {
 
-	describe("check wrong paths", () => {
+    describe("check wrong paths", () => {
 
-		it("should test request with default path", () => {
+        it("should test request with default path", () => {
 
-			return httpRequestTest("/", "get", null, 404, "Not Found", {
-				"code": "404",
-				"message": "Unknown page"
-			});
+            return httpRequestTest("/", "get", null, 404, "Not Found", {
+                "code": "404",
+                "message": "Unknown page"
+            });
 
-		});
+        });
 
-		it("should test request with get request without operationId", () => {
+        it("should test request with get request without operationId", () => {
 
-			return httpRequestTest(URL_API + "/missingoperationid", "get", null, 501, "Not Implemented", {
-				"code": "NOT_IMPLEMENTED",
-				"message": "Missing \"operationId\" in the Descriptor for this request"
-			});
+            return httpRequestTest(URL_API + "/missingoperationid", "get", null, 501, "Not Implemented", {
+                "code": "NOT_IMPLEMENTED",
+                "message": "Missing \"operationId\" in the Descriptor for this request"
+            });
 
-		});
+        });
 
-		it("should test request with get request with not implemented operationId", () => {
+        it("should test request with get request with not implemented operationId", () => {
 
-			return httpRequestTest(URL_API + "/unknownoperationid", "get", null, 501, "Not Implemented", {
-				"code": "NOT_IMPLEMENTED",
-				"message": "Unknown Mediator's \"operationId\" method for this request"
-			});
+            return httpRequestTest(URL_API + "/unknownoperationid", "get", null, 501, "Not Implemented", {
+                "code": "NOT_IMPLEMENTED",
+                "message": "Unknown Mediator's \"operationId\" method for this request"
+            });
 
-		});
+        });
 
-		it("should test request with valid get path without returned data", () => {
+        it("should test request with valid get path without returned data", () => {
 
-			return httpRequestTest(URL_API + "/empty", "get", null, 204, "No Content");
+            return httpRequestTest(URL_API + "/empty", "get", null, 204, "No Content");
 
-		});
+        });
 
-		it("should test request with valid path without returned data", () => {
+        it("should test request with valid path without returned data", () => {
 
-			return httpRequestTest(URL_API + "/empty", "post", null, 204, "No Content");
+            return httpRequestTest(URL_API + "/empty", "post", null, 204, "No Content");
 
-		});
+        });
 
-		it("should test request with unauthorized path", () => {
+        it("should test request with unauthorized path", () => {
 
-			return httpRequestTest(URL_API + "/unauthorized", "get", null, 401, "Unauthorized");
+            return httpRequestTest(URL_API + "/unauthorized", "get", null, 401, "Unauthorized");
 
-		});
+        });
 
-		it("should test request with locked resource", () => {
+        it("should test request with locked resource", () => {
 
-			return httpRequestTest(URL_API + "/locked", "get", null, 423, "Locked");
+            return httpRequestTest(URL_API + "/locked", "get", null, 423, "Locked");
 
-		});
+        });
 
-		it("should test request with artificial error", () => {
+        it("should test request with artificial error", () => {
 
-			return httpRequestTest(URL_API + "/create?url-param=ok", "put", {
-				"body-param": "generate-fail"
-			}, 500, "Internal Server Error", {
-				"code": "INTERNAL_SERVER_ERROR",
-				"message": "Generate artificial error"
-			});
+            return httpRequestTest(URL_API + "/create?url-param=ok", "put", {
+                "body-param": "generate-fail"
+            }, 500, "Internal Server Error", {
+                "code": "INTERNAL_SERVER_ERROR",
+                "message": "Generate artificial error"
+            });
 
-		});
+        });
 
-	});
+    });
 
 };

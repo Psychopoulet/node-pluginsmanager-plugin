@@ -1,115 +1,113 @@
-"use strict";
-
 // deps
 
-	// natives
-	const { strictEqual, ok } = require("node:assert");
-	const { join } = require("node:path");
+    // natives
+    const { strictEqual, ok } = require("node:assert");
+    const { join } = require("node:path");
 
-	// locals
-	const { checkNonEmptyObject, checkNonEmptyObjectSync } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
+    // locals
+    const { checkNonEmptyObject, checkNonEmptyObjectSync } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
 
 // tests
 
 describe("checkers / RangeError / checkNonEmptyObject", () => {
 
-	describe("async", () => {
+    describe("async", () => {
 
-		it("should test with missing data", (done) => {
+        it("should test with missing data", (done) => {
 
-			checkNonEmptyObject("test").then(() => {
-				done(new Error("There is no generated error"));
-			}).catch((err) => {
+            checkNonEmptyObject("test").then(() => {
+                done(new Error("There is no generated error"));
+            }).catch((err) => {
 
-				strictEqual(typeof err, "object", "Generated error is not an object");
-				ok(err instanceof ReferenceError, "Generated error is not as expected");
+                strictEqual(typeof err, "object", "Generated error is not an object");
+                ok(err instanceof ReferenceError, "Generated error is not as expected");
 
-				done();
+                done();
 
-			});
+            });
 
-		});
+        });
 
-		it("should test with wrong type data", (done) => {
+        it("should test with wrong type data", (done) => {
 
-			checkNonEmptyObject("test", "test").then(() => {
-				done(new Error("There is no generated error"));
-			}).catch((err) => {
+            checkNonEmptyObject("test", "test").then(() => {
+                done(new Error("There is no generated error"));
+            }).catch((err) => {
 
-				strictEqual(typeof err, "object", "Generated error is not an object");
-				ok(err instanceof TypeError, "Generated error is not as expected");
+                strictEqual(typeof err, "object", "Generated error is not an object");
+                ok(err instanceof TypeError, "Generated error is not as expected");
 
-				done();
+                done();
 
-			});
+            });
 
-		});
+        });
 
-		it("should test with empty data", (done) => {
+        it("should test with empty data", (done) => {
 
-			checkNonEmptyObject("test", {}).then(() => {
-				done(new Error("There is no generated error"));
-			}).catch((err) => {
+            checkNonEmptyObject("test", {}).then(() => {
+                done(new Error("There is no generated error"));
+            }).catch((err) => {
 
-				strictEqual(typeof err, "object", "Generated error is not an object");
-				ok(err instanceof RangeError, "Generated error is not as expected");
+                strictEqual(typeof err, "object", "Generated error is not an object");
+                ok(err instanceof RangeError, "Generated error is not as expected");
 
-				done();
+                done();
 
-			});
+            });
 
-		});
+        });
 
-		it("should test with valid data", () => {
+        it("should test with valid data", () => {
 
-			return checkNonEmptyObject("test", {
-				"test": "test"
-			});
+            return checkNonEmptyObject("test", {
+                "test": "test"
+            });
 
-		});
+        });
 
-	});
+    });
 
-	describe("sync", () => {
+    describe("sync", () => {
 
-		it("should test with missing data", () => {
+        it("should test with missing data", () => {
 
-			const err = checkNonEmptyObjectSync("test");
+            const err = checkNonEmptyObjectSync("test");
 
-			strictEqual(typeof err, "object", "Generated error is not an object");
-			ok(err instanceof ReferenceError, "Generated error is not as expected");
+            strictEqual(typeof err, "object", "Generated error is not an object");
+            ok(err instanceof ReferenceError, "Generated error is not as expected");
 
-		});
+        });
 
-		it("should test with wrong type data", () => {
+        it("should test with wrong type data", () => {
 
-			const err = checkNonEmptyObjectSync("test", "test");
+            const err = checkNonEmptyObjectSync("test", "test");
 
-			strictEqual(typeof err, "object", "Generated error is not an object");
-			ok(err instanceof TypeError, "Generated error is not as expected");
+            strictEqual(typeof err, "object", "Generated error is not an object");
+            ok(err instanceof TypeError, "Generated error is not as expected");
 
-		});
+        });
 
-		it("should test with empty data", () => {
+        it("should test with empty data", () => {
 
-			const err = checkNonEmptyObjectSync("test", {});
+            const err = checkNonEmptyObjectSync("test", {});
 
-			strictEqual(typeof err, "object", "Generated error is not an object");
-			ok(err instanceof RangeError, "Generated error is not as expected");
+            strictEqual(typeof err, "object", "Generated error is not an object");
+            ok(err instanceof RangeError, "Generated error is not as expected");
 
-		});
+        });
 
-		it("should test with valid data", () => {
+        it("should test with valid data", () => {
 
-			const err = checkNonEmptyObjectSync("test", {
-				"test": "test"
-			});
+            const err = checkNonEmptyObjectSync("test", {
+                "test": "test"
+            });
 
-			strictEqual(typeof err, "object", "Generated error is not an object");
-			strictEqual(err, null, "Generated error is not as expected");
+            strictEqual(typeof err, "object", "Generated error is not an object");
+            strictEqual(err, null, "Generated error is not as expected");
 
-		});
+        });
 
-	});
+    });
 
 });

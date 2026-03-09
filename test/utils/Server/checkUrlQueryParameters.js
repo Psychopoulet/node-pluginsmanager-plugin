@@ -1,45 +1,43 @@
-"use strict";
-
 // deps
 
-	// natives
-	const { join } = require("node:path");
+    // natives
+    const { join } = require("node:path");
 
-	// locals
+    // locals
 
-		// utils
-		const httpRequestTest = require(join(__dirname, "..", "..", "utils", "httpRequestTest.js"));
+        // utils
+        const httpRequestTest = require(join(__dirname, "..", "..", "utils", "httpRequestTest.js"));
 
 // module
 
 module.exports = function checkUrlQueryParameters (URL_API) {
 
-	describe("check query parameters", () => {
+    describe("check query parameters", () => {
 
-		it("should test request with missing parameter", () => {
+        it("should test request with missing parameter", () => {
 
-			return httpRequestTest(URL_API + "/path/query", "get", null, 400, "Bad Request", {
-				"code": "MISSING_PARAMETER",
-				"message": "Error while validating request: request/query must have required property 'query-param'"
-			});
+            return httpRequestTest(URL_API + "/path/query", "get", null, 400, "Bad Request", {
+                "code": "MISSING_PARAMETER",
+                "message": "Error while validating request: request/query must have required property 'query-param'"
+            });
 
-		});
+        });
 
-		it("should test request with empty parameter", () => {
+        it("should test request with empty parameter", () => {
 
-			return httpRequestTest(URL_API + "/path/query?query-param=", "get", null, 400, "Bad Request", {
-				"code": "EMPTY_OR_RANGE_OR_ENUM_PARAMETER",
-				"message": "Error while validating request: request/query/query-param must NOT have fewer than 1 characters"
-			});
+            return httpRequestTest(URL_API + "/path/query?query-param=", "get", null, 400, "Bad Request", {
+                "code": "EMPTY_OR_RANGE_OR_ENUM_PARAMETER",
+                "message": "Error while validating request: request/query/query-param must NOT have fewer than 1 characters"
+            });
 
-		});
+        });
 
-		it("should test request with valid request", () => {
+        it("should test request with valid request", () => {
 
-			return httpRequestTest(URL_API + "/path/query?query-param=test", "get", null, 200, "OK", "test");
+            return httpRequestTest(URL_API + "/path/query?query-param=test", "get", null, 200, "OK", "test");
 
-		});
+        });
 
-	});
+    });
 
 };

@@ -1,93 +1,91 @@
-"use strict";
-
 // deps
 
-	// natives
-	const { join } = require("node:path");
+    // natives
+    const { join } = require("node:path");
 
-	// locals
+    // locals
 
-		// plugin
-		const { Mediator, Server } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
-		const readJSONFile = require(join(__dirname, "..", "lib", "cjs", "utils", "file", "readJSONFile.js"));
+        // plugin
+        const { Mediator, Server } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
+        const readJSONFile = require(join(__dirname, "..", "lib", "cjs", "utils", "file", "readJSONFile.js"));
 
 // tests
 
 describe("Server / events", () => {
 
-	let descriptor = null;
-	const mediator = new Mediator();
+    let descriptor = null;
+    const mediator = new Mediator();
 
-	before(() => {
+    before(() => {
 
-		return readJSONFile.default(join(__dirname, "utils", "DescriptorUser", "Descriptor.json")).then((data) => {
-			descriptor = data;
-		});
+        return readJSONFile.default(join(__dirname, "utils", "DescriptorUser", "Descriptor.json")).then((data) => {
+            descriptor = data;
+        });
 
-	});
+    });
 
-	it("should test events before init", () => {
+    it("should test events before init", () => {
 
-		const server = new Server({
-			descriptor,
-			mediator
-		});
+        const server = new Server({
+            descriptor,
+            mediator
+        });
 
-		return new Promise((resolve) => {
+        return new Promise((resolve) => {
 
-			server
-				.once("test", resolve)
-				.emit("test");
+            server
+                .once("test", resolve)
+                .emit("test");
 
-		});
+        });
 
-	});
+    });
 
-	it("should test events after init", () => {
+    it("should test events after init", () => {
 
-		const server = new Server({
-			descriptor,
-			mediator
-		});
+        const server = new Server({
+            descriptor,
+            mediator
+        });
 
-		return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
 
-			server
-				.once("test", resolve);
+            server
+                .once("test", resolve);
 
-			server.init().then(() => {
-				server.emit("test");
-			}).catch(reject);
+            server.init().then(() => {
+                server.emit("test");
+            }).catch(reject);
 
-		});
+        });
 
-	});
+    });
 
-	it("should test events after release", () => {
+    it("should test events after release", () => {
 
-		const server = new Server({
-			descriptor,
-			mediator
-		});
+        const server = new Server({
+            descriptor,
+            mediator
+        });
 
-		return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
 
-			server.once("test", () => {
-				reject(new Error("Should not fire this event"));
-			});
+            server.once("test", () => {
+                reject(new Error("Should not fire this event"));
+            });
 
-			server.init().then(() => {
-				return server.release();
-			}).then(() => {
+            server.init().then(() => {
+                return server.release();
+            }).then(() => {
 
-				server.emit("test");
+                server.emit("test");
 
-				resolve();
+                resolve();
 
-			}).catch(reject);
+            }).catch(reject);
 
-		});
+        });
 
-	});
+    });
 
 });

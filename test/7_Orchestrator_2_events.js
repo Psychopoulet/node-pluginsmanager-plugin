@@ -1,89 +1,87 @@
-"use strict";
-
 // deps
 
-	// natives
-	const { join } = require("node:path");
+    // natives
+    const { join } = require("node:path");
 
-	// locals
+    // locals
 
-		// utils
-		const LocalOrchestrator = require(join(__dirname, "utils", "Orchestrator", "LocalOrchestrator.js"));
+        // utils
+        const LocalOrchestrator = require(join(__dirname, "utils", "Orchestrator", "LocalOrchestrator.js"));
 
 // consts
 
-	const GOOD_OPTIONS = {
-		"packageFile": join(__dirname, "..", "package.json"),
-		"descriptorFile": join(__dirname, "utils", "DescriptorUser", "Descriptor.json"),
-		"mediatorFile": join(__dirname, "utils", "Mediator", "LocalMediator.js"),
-		"serverFile": join(__dirname, "utils", "Server", "LocalServer.js")
-	};
+    const GOOD_OPTIONS = {
+        "packageFile": join(__dirname, "..", "package.json"),
+        "descriptorFile": join(__dirname, "utils", "DescriptorUser", "Descriptor.json"),
+        "mediatorFile": join(__dirname, "utils", "Mediator", "LocalMediator.js"),
+        "serverFile": join(__dirname, "utils", "Server", "LocalServer.js")
+    };
 
 // tests
 
 describe("Orchestrator / events", () => {
 
-	it("should test events before init", () => {
+    it("should test events before init", () => {
 
-		const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
+        const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
 
-		return Promise.resolve().then(() => {
+        return Promise.resolve().then(() => {
 
-			return new Promise((resolve) => {
+            return new Promise((resolve) => {
 
-				orchestrator
-					.once("test", resolve)
-					.emit("test");
+                orchestrator
+                    .once("test", resolve)
+                    .emit("test");
 
-			});
+            });
 
-		});
+        });
 
-	});
+    });
 
-	it("should test events after init", () => {
+    it("should test events after init", () => {
 
-		const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
+        const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
 
-		return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
 
-			orchestrator
-				.once("initialized", resolve);
+            orchestrator
+                .once("initialized", resolve);
 
-			orchestrator.load().then(() => {
-				return orchestrator.init();
-			}).catch(reject);
+            orchestrator.load().then(() => {
+                return orchestrator.init();
+            }).catch(reject);
 
-		});
+        });
 
-	});
+    });
 
-	it("should test events after release", () => {
+    it("should test events after release", () => {
 
-		const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
+        const orchestrator = new LocalOrchestrator(GOOD_OPTIONS);
 
-		return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
 
-			orchestrator
-				.once("test", () => {
-					reject(new Error("Should not fire this event"));
-				})
-				.once("released", resolve);
+            orchestrator
+                .once("test", () => {
+                    reject(new Error("Should not fire this event"));
+                })
+                .once("released", resolve);
 
-			orchestrator.load().then(() => {
-				return orchestrator.init();
-			}).then(() => {
-				return orchestrator.release();
-			}).then(() => {
+            orchestrator.load().then(() => {
+                return orchestrator.init();
+            }).then(() => {
+                return orchestrator.release();
+            }).then(() => {
 
-				orchestrator.emit("test");
+                orchestrator.emit("test");
 
-				return Promise.resolve();
+                return Promise.resolve();
 
-			}).catch(reject);
+            }).catch(reject);
 
-		});
+        });
 
-	});
+    });
 
 });

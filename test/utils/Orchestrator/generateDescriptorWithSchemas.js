@@ -1,17 +1,15 @@
-"use strict";
-
 // deps
 
-	// natives
-	const { join } = require("path");
-	const { writeFile } = require("fs");
+    // natives
+    const { writeFile } = require("node:fs");
+    const { join } = require("node:path");
 
-	// locals
-	const readJSONFile = require(join(__dirname, "..", "..", "..", "lib", "cjs", "utils", "file", "readJSONFile.js"));
+    // locals
+    const readJSONFile = require(join(__dirname, "..", "..", "..", "lib", "cjs", "utils", "file", "readJSONFile.js"));
 
 // consts
 
-	const DESCRIPTOR = join(__dirname, "..", "DescriptorUser", "Descriptor.json");
+    const DESCRIPTOR = join(__dirname, "..", "DescriptorUser", "Descriptor.json");
 
 // module
 
@@ -19,24 +17,24 @@
 
 module.exports = function generateDescriptorWithSchemas (schemas, targetedFile, logs = false) {
 
-	return readJSONFile.default(DESCRIPTOR).then((descriptor) => {
+    return readJSONFile.default(DESCRIPTOR).then((descriptor) => {
 
-		return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
 
-			descriptor.paths = {};
-			delete descriptor.components.parameters;
-			descriptor.components.schemas = schemas;
+            descriptor.paths = {};
+            delete descriptor.components.parameters;
+            descriptor.components.schemas = schemas;
 
-			if (logs) {
-				(0, console).log(JSON.stringify(descriptor));
-			}
+            if (logs) {
+                (0, console).log(JSON.stringify(descriptor));
+            }
 
-			writeFile(targetedFile, JSON.stringify(descriptor), "utf8", (err) => {
-				return err ? reject(err) : resolve();
-			});
+            writeFile(targetedFile, JSON.stringify(descriptor), "utf8", (err) => {
+                return err ? reject(err) : resolve();
+            });
 
-		});
+        });
 
-	});
+    });
 
 };
