@@ -43,7 +43,7 @@ export default function send (req: IncomingMessage, res: iServerResponse, code: 
                         result = content; // yes => valid JSON string, send it as it is
 
                     }
-                    catch (e) {
+                    catch {
                         result = JSON.stringify(content); // no => not JSON string, send formatted one
                     }
 

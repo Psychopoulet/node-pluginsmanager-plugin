@@ -549,7 +549,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                                     try {
                                         req.body = JSON.parse(body) as unknown;
                                     }
-                                    catch (e) {
+                                    catch {
                                         // nothing to do here
                                     }
 
