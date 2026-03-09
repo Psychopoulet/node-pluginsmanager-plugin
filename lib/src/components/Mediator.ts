@@ -68,10 +68,10 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
         public checkParameters (operationId: string, urlParams?: iUrlAllowedParameters, bodyParams?: unknown): Promise<void> {
 
             const urlControlledParameters: iUrControlledParameters = {
-                "path": urlParams ? urlParams?.path ?? {} : {},
-                "query": urlParams ? urlParams?.query ?? {} : {},
-                "headers": urlParams ? urlParams?.headers ?? urlParams?.header ?? {} : {},
-                "cookies": urlParams ? urlParams?.cookies ?? urlParams?.cookie ?? {} : {}
+                "path": urlParams?.path ?? {},
+                "query": urlParams?.query ?? {},
+                "headers": urlParams?.headers ?? urlParams?.header ?? {},
+                "cookies": urlParams?.cookies ?? urlParams?.cookie ?? {}
             };
 
             // parameters validation

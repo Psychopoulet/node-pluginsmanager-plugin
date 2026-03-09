@@ -103,10 +103,10 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
             this._checkResponse = true; // to delay checkResponse if necessary
 
             // params
-            this._packageFile = options?.packageFile ?? "";
-            this._descriptorFile = options?.descriptorFile ?? "";
-            this._mediatorFile = options?.mediatorFile ?? "";
-            this._serverFile = options?.serverFile ?? "";
+            this._packageFile = options.packageFile ?? "";
+            this._descriptorFile = options.descriptorFile ?? "";
+            this._mediatorFile = options.mediatorFile ?? "";
+            this._serverFile = options.serverFile ?? "";
 
             // extended
             this._extended = [];
