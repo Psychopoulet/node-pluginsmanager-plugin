@@ -1,6 +1,12 @@
+/*
+    eslint-disable @typescript-eslint/no-base-to-string
+*/
+// => @typescript-eslint/no-base-to-string is disabled to allow stringification of unattented content ('[object Object]' for example)
+
 // deps
 
     // externals
+    import type { Request, Response } from "express";
     import { OpenApiValidator, ValidationError } from "express-openapi-validate";
 
     // locals
@@ -117,8 +123,8 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
 
                     const validateRequest = (this._validator as OpenApiValidator).validate(req.method, req.path);
 
-                    validateRequest(req, null, (err: Error | null): void => {
-                        return err ? reject(err) : resolve();
+                    validateRequest(req as Request, null as unknown as Response, (err?: unknown): void => {
+                        return "undefined" !== typeof err ? reject(err instanceof Error ? err : new Error(String(err))) : resolve();
                     });
 
                 });
