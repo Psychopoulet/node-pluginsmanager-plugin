@@ -50,9 +50,10 @@
     import type { Request as ExpressIncomingMessage } from "express";
     import type { Server as WebSocketServer, WebSocket } from "ws";
     import type { Server as SocketIOServer, Socket as SocketIOSocket } from "socket.io";
-    import type { Server as SocketIOServerV2 } from "socket.io-v2";
 
     // locals
+
+    import type { Server as SocketIOServerV2 } from "../../../@types/socket.io-v2";
 
     import type { tMethod, OperationObject } from "../openAPITypes";
 
