@@ -14,7 +14,9 @@
 describe("Server / events", () => {
 
     let descriptor = null;
-    const mediator = new Mediator();
+    const mediator = new Mediator({
+        "externalResourcesDirectory": ""
+    });
 
     before(() => {
 

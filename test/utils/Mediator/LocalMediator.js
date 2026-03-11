@@ -10,6 +10,15 @@
 
 module.exports = class LocalMediator extends Mediator {
 
+    constructor (options) {
+
+        super({
+            "externalResourcesDirectory": "",
+            ...options
+        });
+
+    }
+
     _initWorkSpace () {
 
         return Promise.resolve();

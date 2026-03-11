@@ -17,6 +17,15 @@
 
 module.exports = class LocalOrchestrator extends Orchestrator {
 
+    constructor (options) {
+
+        super({
+            "externalResourcesDirectory": "",
+            ...options
+        });
+
+    }
+
     _initWorkSpace () {
 
         this._Server.on("ping", () => {

@@ -10,6 +10,15 @@
 
 module.exports = class LocalServer extends Server {
 
+    constructor (options) {
+
+        super({
+            "externalResourcesDirectory": "",
+            ...options
+        });
+
+    }
+
     _initWorkSpace () {
 
         return Promise.resolve();

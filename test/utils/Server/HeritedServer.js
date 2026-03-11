@@ -16,6 +16,15 @@
 
 module.exports = class HeritedServer extends ServerWithSockets {
 
+    constructor (options) {
+
+        super({
+            "externalResourcesDirectory": "",
+            ...options
+        });
+
+    }
+
     init (...data) {
 
         return readJSONFile.default(join(__dirname, "..", "DescriptorUser", "Descriptor.json")).then((content) => {
