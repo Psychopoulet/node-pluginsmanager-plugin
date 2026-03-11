@@ -869,9 +869,13 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                     break;
 
-                    case "SOCKETIO":
-                        (this._socketServer as SocketIOServer | SocketIOServerV2).sockets.emit("message", result);
-                    break;
+                    case "SOCKETIO": {
+
+                        const sockets = (this._socketServer as SocketIOServer | SocketIOServerV2).sockets;
+
+                        (sockets.emit as (event: string, ...args: unknown[]) => void)("message", result);
+
+                    } break;
 
                     default:
                         // nothing to do here
