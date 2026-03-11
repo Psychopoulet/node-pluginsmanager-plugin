@@ -5,7 +5,20 @@
 
     // locals
     const { Orchestrator } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
-    const LocalOrchestrator = require(join(__dirname, "utils", "Orchestrator", "LocalOrchestrator.js"));
+
+// private
+
+    function _getOrchestrator () {
+
+        return new Orchestrator({
+            "externalResourcesDirectory": "",
+            "packageFile": "",
+            "descriptorFile": "",
+            "mediatorFile": "",
+            "serverFile": ""
+        });
+
+    }
 
 // tests
 
@@ -14,15 +27,15 @@ describe("Orchestrator / write", () => {
     describe("native", () => {
 
         it("should test install", () => {
-            return new Orchestrator().install();
+            return _getOrchestrator().install();
         });
 
         it("should test update", () => {
-            return new Orchestrator().update();
+            return _getOrchestrator().update();
         });
 
         it("should test uninstall", () => {
-            return new Orchestrator().uninstall();
+            return _getOrchestrator().uninstall();
         });
 
     });
@@ -30,15 +43,15 @@ describe("Orchestrator / write", () => {
     describe("inherited", () => {
 
         it("should test install", () => {
-            return new LocalOrchestrator().install();
+            return _getOrchestrator().install();
         });
 
         it("should test update", () => {
-            return new LocalOrchestrator().update();
+            return _getOrchestrator().update();
         });
 
         it("should test uninstall", () => {
-            return new LocalOrchestrator().uninstall();
+            return _getOrchestrator().uninstall();
         });
 
     });
