@@ -457,9 +457,9 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                             return;
                         }
 
-                        const docParameters: Array<Record<string, unknown>> = paths[req.pattern][req.method]?.parameters?.filter((p: Record<string, unknown>): boolean => {
-                            return "path" === p.in;
-                        }) ?? [];
+                        const docParameters = (paths[req.pattern][req.method]?.parameters?.filter((p): boolean => {
+                            return "path" === (p as { "in"?: string }).in;
+                        }) ?? []) as unknown as Array<Record<string, unknown>>;
 
                         if (!docParameters.length) {
                             return;
@@ -469,7 +469,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                             const key: string = keys[i];
 
-                            const schema = docParameters.find((dp: Record<string, unknown>): boolean => {
+                            const schema: OpenAPIV3_1.SchemaObject | OpenAPIV3_1.ReferenceObject | null = docParameters.find((dp): boolean => {
                                 return dp.name === key;
                             })?.schema ?? null;
 
