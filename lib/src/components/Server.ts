@@ -1,3 +1,8 @@
+/*
+    eslint-disable camelcase
+*/
+// => camelcase is disabled because of "openapi-types" types
+
 // deps
 
     // natives
@@ -40,6 +45,7 @@
     import type { AddressInfo } from "node:net";
 
     // externals
+    import type { OpenAPIV3_1 } from "openapi-types";
     import type { OpenApiDocument } from "express-openapi-validate";
     import type { Request as ExpressIncomingMessage } from "express";
     import type { Server as WebSocketServer, WebSocket } from "ws";
@@ -471,7 +477,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                                 throw new ReferenceError("Unknown parameter: request.params['" + key + "']");
                             }
 
-                            switch (extractSchemaType(schema, (this._Descriptor as OpenApiDocument).components.schemas ?? { })) {
+                            switch (extractSchemaType(schema, ((this._Descriptor as OpenApiDocument).components?.schemas ?? { }) as Record<string, OpenAPIV3_1.SchemaObject>)) {
 
                                 case "boolean":
 
