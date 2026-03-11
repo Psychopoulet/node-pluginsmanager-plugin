@@ -21,7 +21,7 @@ export interface iIncomingMessage extends IncomingMessage {
     "body": unknown;
     "ip": string;
 }
-export interface iServerResponse extends ServerResponse {
+export interface iFormatedServerResponseForValidation extends ServerResponse {
     "body": string;
     "headers": Record<string, unknown>;
 }
@@ -42,7 +42,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
     enableCheckResponse(): this;
     disableCors(): this;
     enableCors(): this;
-    appMiddleware(_req: IncomingMessage, res: iServerResponse, next: (err?: Error) => void): void;
+    appMiddleware(_req: IncomingMessage, res: ServerResponse, next: (err?: Error) => void): void;
     socketMiddleware(socketServer: WebSocketServer | SocketIOServer | SocketIOServerV2): void;
     push(command: string, data?: unknown, log?: boolean): this;
     getClients(): iClient[];

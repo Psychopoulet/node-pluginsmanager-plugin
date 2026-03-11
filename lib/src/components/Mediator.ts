@@ -6,7 +6,6 @@
 // deps
 
     // externals
-    import type { Request, Response } from "express";
     import { OpenApiValidator, ValidationError } from "express-openapi-validate";
 
     // locals
@@ -20,12 +19,13 @@
 // types & interfaces
 
     // externals
+    import type { Request, Response } from "express"; // only here for express validators
     import type { OpenApiDocument } from "express-openapi-validate";
 
     // locals
 
     import type { iDescriptorUserOptions, tEventMap, iEventsMinimal } from "./DescriptorUser";
-    import type { iServerResponse } from "./Server";
+    import type { iFormatedServerResponseForValidation } from "./Server";
 
     interface iUrControlledParameters {
         "path": Record<string, unknown>;
@@ -163,7 +163,7 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
         }
 
         // Check sended parameters by method name (used by the Server)
-        public checkResponse (operationId: string, res: iServerResponse): Promise<void> {
+        public checkResponse (operationId: string, res: iFormatedServerResponseForValidation): Promise<void> {
 
             // parameters validation
             return this.checkDescriptor().then((): Promise<void> => {
@@ -205,18 +205,10 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
 
                         try {
 
-                            const mutedRes = { ...res };
-
-                            mutedRes.headers = res.getHeaders();
-
-                            if ("undefined" === typeof mutedRes.body || "" === mutedRes.body) {
-                                mutedRes.body = {};
-                            }
-
                             const validateResponse = (this._validator as OpenApiValidator)
                                 .validateResponse(foundPathMethod.method, foundPathMethod.path);
 
-                            validateResponse(mutedRes);
+                            validateResponse(res);
 
                             return resolve();
 

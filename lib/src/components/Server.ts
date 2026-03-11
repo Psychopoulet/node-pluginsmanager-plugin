@@ -79,7 +79,7 @@
         "ip": string;
     }
 
-    export interface iServerResponse extends ServerResponse {
+    export interface iFormatedServerResponseForValidation extends ServerResponse {
         "body": string;
         "headers": Record<string, unknown>;
     }
@@ -205,7 +205,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
             this._cors = true; return this;
         }
 
-        public appMiddleware (_req: IncomingMessage, res: iServerResponse, next: (err?: Error) => void): void { // req, res, next : void
+        public appMiddleware (_req: IncomingMessage, res: ServerResponse, next: (err?: Error) => void): void { // req, res, next : void
 
             if (!this._Descriptor?.paths) {
                 next();
@@ -352,6 +352,8 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                             "apiVersion": apiVersion,
                             "cors": this._cors,
                             "mime": extractMime(contentType, SERVER_CODES.INTERNAL_SERVER_ERROR, responses)
+                        }).then((): void => {
+                            // force return nothing
                         });
 
                     });
@@ -370,6 +372,8 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                         "apiVersion": apiVersion,
                         "cors": this._cors,
                         "mime": extractMime(contentType, SERVER_CODES.OK, responses)
+                    }).then((): void => {
+                        // force return nothing
                     });
 
                 }
@@ -388,6 +392,8 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                         "apiVersion": apiVersion,
                         "cors": this._cors,
                         "mime": extractMime(contentType, SERVER_CODES.NOT_IMPLEMENTED, responses)
+                    }).then((): void => {
+                        // force return nothing
                     });
 
                 }
@@ -406,6 +412,8 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                         "apiVersion": apiVersion,
                         "cors": this._cors,
                         "mime": extractMime(contentType, SERVER_CODES.NOT_IMPLEMENTED, responses)
+                    }).then((): void => {
+                        // force return nothing
                     });
 
                 }
@@ -426,6 +434,8 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                         "apiVersion": apiVersion,
                         "cors": this._cors,
                         "mime": extractMime(contentType, SERVER_CODES.MISSING_HEADER, responses)
+                    }).then((): void => {
+                        // force return nothing
                     });
 
                 }
@@ -599,7 +609,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                         });
 
                     // send response
-                    }).then((content: unknown): Promise<void> => {
+                    }).then((content: unknown): Promise<iFormatedServerResponseForValidation> => {
 
                         // no content
                         if ("undefined" === typeof content || null === content) {
@@ -641,143 +651,152 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                         }
 
+                    // check response
+                    }).then((response: iFormatedServerResponseForValidation): Promise<void> => {
+
+                        return this._checkResponse ? (this._Mediator as Mediator).checkResponse(operationId, response) : Promise.resolve();
+
                     }).catch((err: Error): Promise<void> => {
 
-                        if (err instanceof ReferenceError) {
+                        return Promise.resolve().then((): Promise<iFormatedServerResponseForValidation> => {
 
-                            const result = JSON.stringify({
-                                "code": "MISSING_PARAMETER",
-                                "message": cleanSendedError(err)
-                            });
+                            if (err instanceof ReferenceError) {
 
-                            this._log("error", "<= [" + req.validatedIp + "] " + result);
+                                const result = JSON.stringify({
+                                    "code": "MISSING_PARAMETER",
+                                    "message": cleanSendedError(err)
+                                });
 
-                            return send(req, res, SERVER_CODES.MISSING_PARAMETER, result, {
-                                "apiVersion": apiVersion,
-                                "cors": this._cors,
-                                "mime": extractMime(contentType, SERVER_CODES.MISSING_PARAMETER, responses)
-                            });
+                                this._log("error", "<= [" + req.validatedIp + "] " + result);
 
-                        }
-                        else if (err instanceof TypeError) {
+                                return send(req, res, SERVER_CODES.MISSING_PARAMETER, result, {
+                                    "apiVersion": apiVersion,
+                                    "cors": this._cors,
+                                    "mime": extractMime(contentType, SERVER_CODES.MISSING_PARAMETER, responses)
+                                });
 
-                            const result: string = JSON.stringify({
-                                "code": "WRONG_TYPE_PARAMETER",
-                                "message": cleanSendedError(err)
-                            });
+                            }
+                            else if (err instanceof TypeError) {
 
-                            this._log("error", "<= [" + req.validatedIp + "] " + result);
+                                const result: string = JSON.stringify({
+                                    "code": "WRONG_TYPE_PARAMETER",
+                                    "message": cleanSendedError(err)
+                                });
 
-                            return send(req, res, SERVER_CODES.WRONG_TYPE_PARAMETER, result, {
-                                "apiVersion": apiVersion,
-                                "cors": this._cors,
-                                "mime": extractMime(contentType, SERVER_CODES.WRONG_TYPE_PARAMETER, responses)
-                            });
+                                this._log("error", "<= [" + req.validatedIp + "] " + result);
 
-                        }
-                        else if (err instanceof RangeError) {
+                                return send(req, res, SERVER_CODES.WRONG_TYPE_PARAMETER, result, {
+                                    "apiVersion": apiVersion,
+                                    "cors": this._cors,
+                                    "mime": extractMime(contentType, SERVER_CODES.WRONG_TYPE_PARAMETER, responses)
+                                });
 
-                            const result = JSON.stringify({
-                                "code": "EMPTY_OR_RANGE_OR_ENUM_PARAMETER",
-                                "message": cleanSendedError(err)
-                            });
+                            }
+                            else if (err instanceof RangeError) {
 
-                            this._log("error", "<= [" + req.validatedIp + "] " + result);
+                                const result = JSON.stringify({
+                                    "code": "EMPTY_OR_RANGE_OR_ENUM_PARAMETER",
+                                    "message": cleanSendedError(err)
+                                });
 
-                            return send(req, res, SERVER_CODES.EMPTY_OR_RANGE_OR_ENUM_PARAMETER, result, {
-                                "apiVersion": apiVersion,
-                                "cors": this._cors,
-                                "mime": extractMime(contentType, SERVER_CODES.EMPTY_OR_RANGE_OR_ENUM_PARAMETER, responses)
-                            });
+                                this._log("error", "<= [" + req.validatedIp + "] " + result);
 
-                        }
-                        else if (err instanceof SyntaxError) {
+                                return send(req, res, SERVER_CODES.EMPTY_OR_RANGE_OR_ENUM_PARAMETER, result, {
+                                    "apiVersion": apiVersion,
+                                    "cors": this._cors,
+                                    "mime": extractMime(contentType, SERVER_CODES.EMPTY_OR_RANGE_OR_ENUM_PARAMETER, responses)
+                                });
 
-                            const result = JSON.stringify({
-                                "code": "JSON_PARSE",
-                                "message": cleanSendedError(err)
-                            });
+                            }
+                            else if (err instanceof SyntaxError) {
 
-                            this._log("error", "<= [" + req.validatedIp + "] " + result);
+                                const result = JSON.stringify({
+                                    "code": "JSON_PARSE",
+                                    "message": cleanSendedError(err)
+                                });
 
-                            return send(req, res, SERVER_CODES.JSON_PARSE, result, {
-                                "apiVersion": apiVersion,
-                                "cors": this._cors,
-                                "mime": extractMime(contentType, SERVER_CODES.JSON_PARSE, responses)
-                            });
+                                this._log("error", "<= [" + req.validatedIp + "] " + result);
 
-                        }
-                        else if (err instanceof UnauthorizedError) {
+                                return send(req, res, SERVER_CODES.JSON_PARSE, result, {
+                                    "apiVersion": apiVersion,
+                                    "cors": this._cors,
+                                    "mime": extractMime(contentType, SERVER_CODES.JSON_PARSE, responses)
+                                });
 
-                            const result = JSON.stringify({
-                                "code": "UNAUTHORIZED",
-                                "message": cleanSendedError(err)
-                            });
+                            }
+                            else if (err instanceof UnauthorizedError) {
 
-                            this._log("error", "<= [" + req.validatedIp + "] " + result);
+                                const result = JSON.stringify({
+                                    "code": "UNAUTHORIZED",
+                                    "message": cleanSendedError(err)
+                                });
 
-                            return send(req, res, SERVER_CODES.UNAUTHORIZED, result, {
-                                "apiVersion": apiVersion,
-                                "cors": this._cors,
-                                "mime": extractMime(contentType, SERVER_CODES.UNAUTHORIZED, responses)
-                            });
+                                this._log("error", "<= [" + req.validatedIp + "] " + result);
 
-                        }
-                        else if (err instanceof NotFoundError) {
+                                return send(req, res, SERVER_CODES.UNAUTHORIZED, result, {
+                                    "apiVersion": apiVersion,
+                                    "cors": this._cors,
+                                    "mime": extractMime(contentType, SERVER_CODES.UNAUTHORIZED, responses)
+                                });
 
-                            const result = JSON.stringify({
-                                "code": "NOT_FOUND",
-                                "message": cleanSendedError(err)
-                            });
+                            }
+                            else if (err instanceof NotFoundError) {
 
-                            this._log("error", "<= [" + req.validatedIp + "] " + result);
+                                const result = JSON.stringify({
+                                    "code": "NOT_FOUND",
+                                    "message": cleanSendedError(err)
+                                });
 
-                            return send(req, res, SERVER_CODES.NOT_FOUND, result, {
-                                "apiVersion": apiVersion,
-                                "cors": this._cors,
-                                "mime": extractMime(contentType, SERVER_CODES.NOT_FOUND, responses)
-                            });
+                                this._log("error", "<= [" + req.validatedIp + "] " + result);
 
-                        }
-                        else if (err instanceof LockedError) {
+                                return send(req, res, SERVER_CODES.NOT_FOUND, result, {
+                                    "apiVersion": apiVersion,
+                                    "cors": this._cors,
+                                    "mime": extractMime(contentType, SERVER_CODES.NOT_FOUND, responses)
+                                });
 
-                            const result = JSON.stringify({
-                                "code": "LOCKED",
-                                "message": cleanSendedError(err)
-                            });
+                            }
+                            else if (err instanceof LockedError) {
 
-                            this._log("error", "<= [" + req.validatedIp + "] " + result);
+                                const result = JSON.stringify({
+                                    "code": "LOCKED",
+                                    "message": cleanSendedError(err)
+                                });
 
-                            return send(req, res, SERVER_CODES.LOCKED, result, {
-                                "apiVersion": apiVersion,
-                                "cors": this._cors,
-                                "mime": extractMime(contentType, SERVER_CODES.LOCKED, responses)
-                            });
+                                this._log("error", "<= [" + req.validatedIp + "] " + result);
 
-                        }
-                        else {
+                                return send(req, res, SERVER_CODES.LOCKED, result, {
+                                    "apiVersion": apiVersion,
+                                    "cors": this._cors,
+                                    "mime": extractMime(contentType, SERVER_CODES.LOCKED, responses)
+                                });
 
-                            this._log("error", err);
+                            }
+                            else {
 
-                            const result = JSON.stringify({
-                                "code": "INTERNAL_SERVER_ERROR",
-                                "message": cleanSendedError(err)
-                            });
+                                this._log("error", err);
 
-                            this._log("error", "<= [" + req.validatedIp + "] " + result);
+                                const result = JSON.stringify({
+                                    "code": "INTERNAL_SERVER_ERROR",
+                                    "message": cleanSendedError(err)
+                                });
 
-                            return send(req, res, SERVER_CODES.INTERNAL_SERVER_ERROR, result, {
-                                "apiVersion": apiVersion,
-                                "cors": this._cors,
-                                "mime": extractMime(contentType, SERVER_CODES.INTERNAL_SERVER_ERROR, responses)
-                            });
+                                this._log("error", "<= [" + req.validatedIp + "] " + result);
 
-                        }
+                                return send(req, res, SERVER_CODES.INTERNAL_SERVER_ERROR, result, {
+                                    "apiVersion": apiVersion,
+                                    "cors": this._cors,
+                                    "mime": extractMime(contentType, SERVER_CODES.INTERNAL_SERVER_ERROR, responses)
+                                });
 
-                    // check response
-                    }).then((): Promise<void> => {
+                            }
 
-                        return this._checkResponse ? (this._Mediator as Mediator).checkResponse(operationId, res) : Promise.resolve();
+                        // still check response for errors
+                        }).then((response: iFormatedServerResponseForValidation): Promise<void> => {
+
+                            return this._checkResponse ? (this._Mediator as Mediator).checkResponse(operationId, response) : Promise.resolve();
+
+                        });
 
                     });
 

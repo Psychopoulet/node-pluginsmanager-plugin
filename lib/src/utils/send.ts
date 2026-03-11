@@ -6,18 +6,20 @@
 // types & interfaces
 
     // natives
-    import type { IncomingMessage, OutgoingHttpHeaders } from "node:http";
+    import type { IncomingMessage, OutgoingHttpHeaders, ServerResponse } from "node:http";
 
     // locals
-    import type { iServerResponse } from "../components/Server";
+    import type { iFormatedServerResponseForValidation } from "../components/Server";
 
 // module
 
-export default function send (req: IncomingMessage, res: iServerResponse, code: number, content: unknown, options: {
+export default function send (req: IncomingMessage, res: ServerResponse, code: number, content: unknown, options: {
     "apiVersion": string,
     "cors": boolean,
     "mime": string
-}): Promise<void> {
+}): Promise<iFormatedServerResponseForValidation> {
+
+    const response = { ...res, "body": "", "headers": {} } as iFormatedServerResponseForValidation;
 
     return Promise.resolve().then((): Buffer | string => {
 
@@ -70,9 +72,9 @@ export default function send (req: IncomingMessage, res: iServerResponse, code: 
 
             // force data for checking
 
-            res.statusCode = code;
+            response.statusCode = code;
 
-            res.headers = {
+            response.headers = {
                 "Content-Type": options.mime,
                 "Content-Length": 0 < formattedContent.length ? Buffer.byteLength(formattedContent) : 0,
                 "Status-Code-Url-Cat": "https://http.cat/" + code,
@@ -106,33 +108,36 @@ export default function send (req: IncomingMessage, res: iServerResponse, code: 
 
             // send data
 
-            res.writeHead(res.statusCode, res.headers as OutgoingHttpHeaders);
+            response.writeHead(response.statusCode, response.headers as OutgoingHttpHeaders);
 
             if ("string" === typeof formattedContent) {
 
-                res.body = content as string; // for Mediator response validator
+                response.body = content as string; // for Mediator response validator
 
-                res.end(formattedContent, "utf-8", (): void => {
+                response.end(formattedContent, "utf-8", (): void => {
                     resolve();
                 });
 
             }
             else if (Buffer.isBuffer(formattedContent)) {
 
-                res.end(formattedContent, (): void => {
+                response.end(formattedContent, (): void => {
                     resolve();
                 });
 
             }
             else {
 
-                res.end((): void => {
+                response.end((): void => {
                     resolve();
                 });
 
             }
 
         });
+
+    }).then((): iFormatedServerResponseForValidation => {
+        return response;
     });
 
 }

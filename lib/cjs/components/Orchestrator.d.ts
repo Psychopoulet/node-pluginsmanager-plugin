@@ -1,10 +1,9 @@
 import MediatorUser from "./MediatorUser";
 import Server from "./Server";
-import type { IncomingMessage } from "node:http";
+import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Server as SocketIOServer } from "socket.io";
 import type { Server as SocketIOServerV2 } from "socket.io-v2";
 import type { Server as WebSocketServer } from "ws";
-import type { iServerResponse } from "./Server";
 import type { tLogger, tEventMap, iEventsMinimal } from "./DescriptorUser";
 export interface iOrchestratorOptions {
     "externalResourcesDirectory": string;
@@ -46,7 +45,7 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
     enableCheckResponse(): this;
     disableCors(): this;
     enableCors(): this;
-    appMiddleware(req: IncomingMessage, res: iServerResponse, next: () => void): void;
+    appMiddleware(req: IncomingMessage, res: ServerResponse, next: () => void): void;
     socketMiddleware(server: WebSocketServer | SocketIOServer): void;
     load(...data: unknown[]): Promise<void>;
     destroy(...data: unknown[]): Promise<void>;

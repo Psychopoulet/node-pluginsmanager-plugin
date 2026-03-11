@@ -24,7 +24,7 @@
 // types & interfaces
 
     // natives
-    import type { IncomingMessage } from "node:http";
+    import type { IncomingMessage, ServerResponse } from "node:http";
 
     // externals
 
@@ -35,8 +35,6 @@
     import type { Server as WebSocketServer } from "ws";
 
     // locals
-
-    import type { iServerResponse } from "./Server";
 
     import type Mediator from "./Mediator";
     import type { tLogger, tEventMap, iEventsMinimal } from "./DescriptorUser";
@@ -315,7 +313,7 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
 
             }
 
-            public appMiddleware (req: IncomingMessage, res: iServerResponse, next: () => void): void {
+            public appMiddleware (req: IncomingMessage, res: ServerResponse, next: () => void): void {
 
                 if (!this.enabled) {
                     next();
