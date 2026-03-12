@@ -14,15 +14,15 @@ describe("utils / descriptor / extractPathMethodByOperationId", () => {
     describe("paths", () => {
 
         it("should test with missing data", () => {
-            deepStrictEqual(extractPathMethodByOperationId.default(), null, "generated data is not as expected");
+            deepStrictEqual(extractPathMethodByOperationId.default(), undefined, "generated data is not as expected");
         });
 
         it("should test with wrong data", () => {
-            deepStrictEqual(extractPathMethodByOperationId.default(false), null, "generated data is not as expected");
+            deepStrictEqual(extractPathMethodByOperationId.default(false), undefined, "generated data is not as expected");
         });
 
         it("should test with empty data", () => {
-            deepStrictEqual(extractPathMethodByOperationId.default({}), null, "generated data is not as expected");
+            deepStrictEqual(extractPathMethodByOperationId.default({}), undefined, "generated data is not as expected");
         });
 
     });
@@ -37,7 +37,7 @@ describe("utils / descriptor / extractPathMethodByOperationId", () => {
                         "operationId": "test"
                     }
                 }
-            }), null, "generated data is not as expected");
+            }), undefined, "generated data is not as expected");
 
         });
 
@@ -49,7 +49,7 @@ describe("utils / descriptor / extractPathMethodByOperationId", () => {
                         "operationId": "test"
                     }
                 }
-            }, false), null, "generated data is not as expected");
+            }, false), undefined, "generated data is not as expected");
 
         });
 
@@ -61,7 +61,7 @@ describe("utils / descriptor / extractPathMethodByOperationId", () => {
                         "operationId": "test"
                     }
                 }
-            }, ""), null, "generated data is not as expected");
+            }, ""), undefined, "generated data is not as expected");
 
         });
 
@@ -73,7 +73,7 @@ describe("utils / descriptor / extractPathMethodByOperationId", () => {
                         "operationId": "test"
                     }
                 }
-            }, "test2"), null, "generated data is not as expected");
+            }, "test2"), undefined, "generated data is not as expected");
 
         });
 
