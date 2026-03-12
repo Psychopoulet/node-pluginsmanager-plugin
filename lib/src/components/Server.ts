@@ -245,6 +245,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                 }
 
                 // extract specific data
+
                 try {
 
                     // workaround for express 5
@@ -308,12 +309,14 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                 const contentType = req.headers["content-type"] ?? req.headers["Content-Type"] as string | undefined ?? "";
                 const { responses } = operation as { "responses": unknown }; // response is "any", had to specify the type to avoid lint errors
 
+                const contentLengthParsed = parseInt(req.headers["content-length"], 10);
+
                 this._log("info", ""
                     + "=> [" + req.validatedIp + "] " + req.url + " (" + req.method.toUpperCase() + ")"
                     + ("undefined" !== typeof operationId ? EOL + "operationId    : " + operationId : "")
                     + ("undefined" !== typeof req.headers["content-type"] ? EOL + "content-type   : " + req.headers["content-type"] : "")
                     + (
-                        "get" !== req.method && req.headers["content-length"] && 4 < parseInt(req.headers["content-length"], 10)
+                        "get" !== req.method && !Number.isNaN(contentLengthParsed) && 4 < contentLengthParsed
                             ? EOL + "content-length : " + req.headers["content-length"]
                             : ""
                     )
