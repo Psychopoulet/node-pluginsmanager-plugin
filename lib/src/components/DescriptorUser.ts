@@ -212,21 +212,19 @@ export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> ext
                         });
 
                         let multiple: boolean = false;
-                        for (let i: number = 0; i < operationIds.length - 1; ++i) {
 
-                            for (let j: number = i + 1; j < operationIds.length; ++j) {
+                            const seen: Set<string> = new Set();
 
-                                if (operationIds[i] === operationIds[j]) {
-                                    multiple = true; break;
+                            for (let i: number = 0; i < operationIds.length; ++i) {
+
+                                if (seen.has(operationIds[i])) {
+                                    multiple = true;
+                                    break;
                                 }
 
-                            }
+                                seen.add(operationIds[i]);
 
-                            if (multiple) {
-                                break;
                             }
-
-                        }
 
                         return multiple ? Promise.reject(new Error(
                             "There is multiple operationIds in [\" " + operationIds.join("\", ") + " \"]"
