@@ -10,9 +10,14 @@
 	// locals
 	import { Orchestrator, Mediator, Server } from "../../lib/cjs/main.cjs";
 
+// types & interfaces
+
+	// locals
+	import type { iEventsMinimal } from "../../lib/cjs/components/DescriptorUser";
+
 // classes
 
-	class OrchestratorTest extends Orchestrator<{
+	class OrchestratorTest extends Orchestrator<iEventsMinimal & {
 		"test": [ string ]
 	}> {
 

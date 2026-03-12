@@ -18,6 +18,24 @@
 
     const DESCRIPTOR = require(join(__dirname, "utils", "DescriptorUser", "DescriptorOnlyUrl.js"));
 
+// private
+
+    function _getMediator () {
+
+        return new Mediator({
+            "externalResourcesDirectory": ""
+        });
+
+    }
+
+    function _getMediatorUser () {
+
+        return new MediatorUser({
+            "externalResourcesDirectory": ""
+        });
+
+    }
+
 // tests
 
 describe("MediatorUser", () => {
@@ -40,13 +58,13 @@ describe("MediatorUser", () => {
     it("should init mediatorUser", () => {
 
         return new LocalMediatorUser({
-            "mediator": new Mediator()
+            "mediator": _getMediator()
         }).init("test init");
 
     });
 
     it("should test non-herited _initWorkSpace", () => {
-        return new MediatorUser()._initWorkSpace();
+        return _getMediatorUser()._initWorkSpace();
     });
 
     it("should release mediatorUser without mediator", () => {
@@ -56,13 +74,13 @@ describe("MediatorUser", () => {
     });
 
     it("should test non-herited _releaseWorkSpace", () => {
-        return new MediatorUser()._releaseWorkSpace();
+        return _getMediatorUser()._releaseWorkSpace();
     });
 
     it("should release mediatorUser with mediator", () => {
 
         return new LocalMediatorUser({
-            "mediator": new Mediator()
+            "mediator": _getMediator()
         }).release("test release");
 
     });

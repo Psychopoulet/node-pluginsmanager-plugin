@@ -11,6 +11,16 @@
         const { DescriptorUser, MediatorUser, Mediator, Server } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
         const readJSONFile = require(join(__dirname, "..", "lib", "cjs", "utils", "file", "readJSONFile.js"));
 
+// private
+
+    function _getMediator () {
+
+        return new Mediator({
+            "externalResourcesDirectory": ""
+        });
+
+    }
+
 // tests
 
 describe("Server", () => {
@@ -85,7 +95,7 @@ describe("Server", () => {
 
     it("should init server without Descriptor with Mediator", (done) => {
 
-        const mediator = new Mediator();
+        const mediator = _getMediator();
         const server = new Server({
             mediator
         });
@@ -116,7 +126,7 @@ describe("Server", () => {
 
     it("should init server with Descriptor and Mediator", () => {
 
-        const mediator = new Mediator();
+        const mediator = _getMediator();
         const server = new Server({
             descriptor,
             mediator

@@ -15,6 +15,16 @@
 
     const DESCRIPTOR_ONLY_URL = require(join(__dirname, "utils", "DescriptorUser", "DescriptorOnlyUrl.js"));
 
+// private
+
+    function _getMediator () {
+
+        return new Mediator({
+            "externalResourcesDirectory": ""
+        });
+
+    }
+
 // tests
 
 describe("Mediator", () => {
@@ -53,7 +63,7 @@ describe("Mediator", () => {
 
     it("should test non-herited _initWorkSpace", (done) => {
 
-        const nonHerited = new Mediator();
+        const nonHerited = _getMediator();
 
         nonHerited.init().then(() => {
 
@@ -72,7 +82,7 @@ describe("Mediator", () => {
 
     it("should test non-herited _releaseWorkSpace", (done) => {
 
-        const nonHerited = new Mediator();
+        const nonHerited = _getMediator();
 
         nonHerited.release().then(() => {
 
