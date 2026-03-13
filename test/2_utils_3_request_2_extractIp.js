@@ -15,6 +15,10 @@ describe("utils / request / extractIp", () => {
         strictEqual(extractIp.default(), "");
     });
 
+    it("should test with null data", () => {
+        strictEqual(extractIp.default(null), "");
+    });
+
     it("should test with missing data", () => {
         strictEqual(extractIp.default({}), "");
     });

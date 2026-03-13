@@ -17,6 +17,10 @@ describe("utils / descriptor / extractSchemaType", () => {
             strictEqual(extractSchemaType.default({}, {}), "string");
         });
 
+        it("should return string when schema has no null data", () => {
+            strictEqual(extractSchemaType.default(null, {}), "string");
+        });
+
     });
 
     describe("direct type", () => {
