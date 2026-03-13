@@ -1,2 +1,1 @@
-import type { iIncomingMessage } from "../../components/Server";
-export default function extractIp(req: iIncomingMessage): string;
+export default function extractIp(_req: unknown): string;

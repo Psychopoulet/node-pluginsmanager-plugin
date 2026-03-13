@@ -5,22 +5,24 @@
 
 // module
 
-export default function extractIp (req: iIncomingMessage): string {
+export default function extractIp (_req: unknown): string {
 
-    if ("object" !== typeof req) {
+    if ("object" !== typeof _req || null === _req) {
         return "";
     }
     else {
+
+        const req: iIncomingMessage = _req as iIncomingMessage;
 
         let result: string = "";
 
         if (req.ip) {
             result = req.ip;
         }
-        else if ("string" === typeof req.headers["x-forwarded-for"]) {
+        else if ("object" === typeof req.headers && "string" === typeof req.headers["x-forwarded-for"]) {
             result = req.headers["x-forwarded-for"].split(",").pop() as string;
         }
-        else if ("string" === typeof req.socket.remoteAddress) {
+        else if ("object" === typeof req.socket && "string" === typeof req.socket.remoteAddress) {
             result = req.socket.remoteAddress;
         }
         else if ("object" === typeof req.connection) {
