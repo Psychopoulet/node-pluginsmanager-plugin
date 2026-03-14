@@ -22,7 +22,7 @@ export default function extractMime (contentType: string, code: number, response
     }
     else {
 
-        const stringifiedCode: string = String(code);
+        const stringifiedCode = String(code);
         const res = responses as Record<string, {
             "description": string;
             "content"?: Record<string, unknown>
@@ -35,11 +35,19 @@ export default function extractMime (contentType: string, code: number, response
 
             let descriptorContent: Record<string, unknown> = {};
 
-            if ("object" === typeof res[stringifiedCode].content) {
-                descriptorContent = res[stringifiedCode].content;
+            if ("object" === typeof res[stringifiedCode]) {
+
+                if ("object" === typeof res[stringifiedCode].content) {
+                    descriptorContent = res[stringifiedCode].content as unknown as Record<string, unknown>;
+                }
+
             }
-            else if ("object" === typeof res.default.content) {
-                descriptorContent = res.default.content;
+            else if ("object" === typeof res.default) {
+
+                if ("object" === typeof res.default.content) {
+                    descriptorContent = res.default.content as unknown as Record<string, unknown>;
+                }
+
             }
             else {
                 return DEFAULT_MIME;

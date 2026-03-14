@@ -21,6 +21,14 @@ describe("utils / request / extractMime", () => {
 
         });
 
+        it("should test with null contentType", () => {
+
+            throws(() => {
+                extractMime.default(null);
+            });
+
+        });
+
         it("should test with missing code", () => {
 
             throws(() => {
