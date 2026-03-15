@@ -54,6 +54,7 @@ describe("Server / websockets", () => {
 
             return server.init().then(() => {
 
+                // servers[1] => socket server
                 const url = new URL(server._Descriptor.servers[1].url, "http://localhost"); // any url, but "http://localhost" is used to avoid errors
                 port = parseInt(url.port, 10);
 

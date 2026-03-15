@@ -30,7 +30,7 @@ module.exports = function httpRequestTest (
                 "protocol": url.protocol,
                 "hostname": url.hostname,
                 "port": url.port,
-                "path": url.path,
+                "path": url.pathname,
                 "query": query,
                 "method": method.toUpperCase(),
                 "headers": {

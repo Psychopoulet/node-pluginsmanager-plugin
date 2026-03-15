@@ -24,8 +24,8 @@ describe("Server / requests / http", () => {
 
         return server.init().then(() => {
 
+            // servers[0] => http server
             const url = new URL(server._Descriptor.servers[0].url, "http://localhost"); // any url, but "http://localhost" is used to avoid errors
-            const port = parseInt(url.port, 10);
 
             return new Promise((resolve) => {
 
@@ -44,7 +44,7 @@ describe("Server / requests / http", () => {
 
                     });
 
-                }).listen(port, resolve);
+                }).listen(parseInt(url.port, 10), resolve);
 
             });
 
