@@ -6,7 +6,7 @@
 // deps
 
     // locals
-    import { checkInteger } from "../../checkers/TypeError/checkInteger";
+    import { checkString } from "../../checkers/TypeError/checkString";
     import { checkFunction } from "../../checkers/TypeError/checkFunction";
     import { checkNonEmptyObject } from "../../checkers/RangeError/checkNonEmptyObject";
 
@@ -24,7 +24,7 @@ export default function extractBody (req: iIncomingMessage): Promise<string> {
     }).then((): Promise<void> => {
         return checkNonEmptyObject("req.headers", req.headers);
     }).then((): Promise<void> => {
-        return checkInteger("req.headers[\"content-length\"]", req.headers["content-length"]);
+        return checkString("req.headers[\"content-length\"]", req.headers["content-length"]);
     }).then((): Promise<string> => {
 
         return new Promise((resolve: (res: string) => void, reject: (err: Error) => void): void => {

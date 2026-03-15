@@ -430,7 +430,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                 // no "Content-Length" header found
                 else if ("get" !== req.method && null !== checkIntegerSync(
-                    "headers[\"content-length\"]", req.headers["content-length"]
+                    "headers[\"content-length\"]", contentLengthParsed
                 )) {
 
                     const result = JSON.stringify({
