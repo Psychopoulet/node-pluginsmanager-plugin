@@ -19,8 +19,6 @@ export default function send (req: IncomingMessage, res: ServerResponse, code: n
     "mime": string
 }): Promise<iFormatedServerResponseForValidation> {
 
-    const response = { ...res, "body": "", "headers": {} } as iFormatedServerResponseForValidation;
-
     return Promise.resolve().then((): Buffer | string => {
 
         if ("undefined" === typeof content) {
@@ -72,9 +70,9 @@ export default function send (req: IncomingMessage, res: ServerResponse, code: n
 
             // force data for checking
 
-            response.statusCode = code;
+            res.statusCode = code;
 
-            response.headers = {
+            (res as iFormatedServerResponseForValidation).headers = {
                 "Content-Type": options.mime,
                 "Content-Length": 0 < formattedContent.length ? Buffer.byteLength(formattedContent) : 0,
                 "Status-Code-Url-Cat": "https://http.cat/" + code,
@@ -108,27 +106,27 @@ export default function send (req: IncomingMessage, res: ServerResponse, code: n
 
             // send data
 
-            response.writeHead(response.statusCode, response.headers as OutgoingHttpHeaders);
+            res.writeHead(res.statusCode, (res as iFormatedServerResponseForValidation).headers as OutgoingHttpHeaders);
 
             if ("string" === typeof formattedContent) {
 
-                response.body = content as string; // for Mediator response validator
+                (res as iFormatedServerResponseForValidation).body = content as string; // for Mediator response validator
 
-                response.end(formattedContent, "utf-8", (): void => {
+                res.end(formattedContent, "utf-8", (): void => {
                     resolve();
                 });
 
             }
             else if (Buffer.isBuffer(formattedContent)) {
 
-                response.end(formattedContent, (): void => {
+                res.end(formattedContent, (): void => {
                     resolve();
                 });
 
             }
             else {
 
-                response.end((): void => {
+                res.end((): void => {
                     resolve();
                 });
 
@@ -137,7 +135,7 @@ export default function send (req: IncomingMessage, res: ServerResponse, code: n
         });
 
     }).then((): iFormatedServerResponseForValidation => {
-        return response;
+        return res as iFormatedServerResponseForValidation;
     });
 
 }

@@ -5,11 +5,8 @@
 
 // types & interfaces
 
-    // externals
-    import type { OpenApiDocument } from "express-openapi-validate";
-
     // locals
-    import type { tMethod } from "../../openAPITypes";
+    import type { PathsObject, tMethod } from "../../openAPITypes";
 
     export interface iPathMethod {
         "path": string;
@@ -19,7 +16,7 @@
 
 // module
 
-export default function extractPathMethodByOperationId (paths: OpenApiDocument["paths"] | null | undefined, operationId: string): iPathMethod | undefined {
+export default function extractPathMethodByOperationId (paths: PathsObject | null | undefined, operationId: string): iPathMethod | undefined {
 
     // no paths in this Descriptor
     if ("object" !== typeof paths || null === paths) {

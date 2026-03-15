@@ -5,12 +5,8 @@
 
 // types & interfaces
 
-    // externals
-    import type { OpenApiDocument } from "express-openapi-validate";
-
     // locals
-    type PathsObject = OpenApiDocument["paths"];
-    type PathItemObject = PathsObject[string];
+    import type { PathsObject, PathItemObject } from "../../openAPITypes";
 
 // module
 
