@@ -10,7 +10,7 @@
 
 module.exports = class LocalMediator extends Mediator {
 
-    constructor (options) {
+    constructor (options = {}) {
 
         super({
             "externalResourcesDirectory": "",

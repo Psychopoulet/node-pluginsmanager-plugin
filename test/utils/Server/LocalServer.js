@@ -10,7 +10,7 @@
 
 module.exports = class LocalServer extends Server {
 
-    constructor (options) {
+    constructor (options = {}) {
 
         super({
             "externalResourcesDirectory": "",

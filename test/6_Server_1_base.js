@@ -10,16 +10,8 @@
         // plugin
         const { DescriptorUser, MediatorUser, Mediator, Server } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
         const readJSONFile = require(join(__dirname, "..", "lib", "cjs", "utils", "file", "readJSONFile.js"));
-
-// private
-
-    function _getMediator () {
-
-        return new Mediator({
-            "externalResourcesDirectory": ""
-        });
-
-    }
+        const LocalMediator = require(join(__dirname, "utils", "Mediator", "LocalMediator.js"));
+        const LocalServer = require(join(__dirname, "utils", "Server", "LocalServer.js"));
 
 // tests
 
@@ -37,7 +29,7 @@ describe("Server", () => {
 
     it("should test constructor", () => {
 
-        const server = new Server();
+        const server = new LocalServer();
 
         strictEqual(typeof server, "object", "Generated server is not an object");
         ok(server instanceof Events, "Generated server is not a Events instance");
@@ -49,7 +41,7 @@ describe("Server", () => {
 
     it("should init server without Descriptor or Mediator", (done) => {
 
-        const server = new Server();
+        const server = new LocalServer();
 
         strictEqual(typeof server._Descriptor, "object", "Generated server _Descriptor is not an object");
         strictEqual(server._Descriptor, null, "Generated server _Descriptor is not null");
@@ -71,7 +63,7 @@ describe("Server", () => {
 
     it("should init server without Mediator with Descriptor", (done) => {
 
-        const server = new Server({
+        const server = new LocalServer({
             descriptor
         });
 
@@ -95,8 +87,8 @@ describe("Server", () => {
 
     it("should init server without Descriptor with Mediator", (done) => {
 
-        const mediator = _getMediator();
-        const server = new Server({
+        const mediator = new LocalMediator();
+        const server = new LocalServer({
             mediator
         });
 
@@ -121,13 +113,18 @@ describe("Server", () => {
     });
 
     it("should test non-herited _initWorkSpace", () => {
-        return new Server()._initWorkSpace();
+
+        return new Server({
+            "externalResourcesDirectory": ""
+        })._initWorkSpace();
+
     });
 
     it("should init server with Descriptor and Mediator", () => {
 
-        const mediator = _getMediator();
+        const mediator = new LocalMediator();
         const server = new Server({
+            "externalResourcesDirectory": "",
             descriptor,
             mediator
         });
@@ -144,11 +141,19 @@ describe("Server", () => {
     });
 
     it("should test non-herited _releaseWorkSpace", () => {
-        return new Server()._releaseWorkSpace();
+
+        return new Server({
+            "externalResourcesDirectory": ""
+        })._releaseWorkSpace();
+
     });
 
     it("should release server", () => {
-        return new Server().release("test release");
+
+        return new Server({
+            "externalResourcesDirectory": ""
+        }).release("test release");
+
     });
 
 });

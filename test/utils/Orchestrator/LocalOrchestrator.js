@@ -17,7 +17,7 @@
 
 module.exports = class LocalOrchestrator extends Orchestrator {
 
-    constructor (options) {
+    constructor (options = {}) {
 
         super({
             "externalResourcesDirectory": "",

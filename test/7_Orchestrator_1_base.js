@@ -268,7 +268,9 @@ describe("Orchestrator", () => {
         it("should check with right server", () => {
 
             const orchestrator = new LocalOrchestrator();
-            orchestrator._Server = new Server();
+            orchestrator._Server = new Server({
+                "externalResourcesDirectory": ""
+            });
 
             return orchestrator.checkServer();
 

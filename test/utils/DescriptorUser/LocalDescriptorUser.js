@@ -10,7 +10,7 @@
 
 module.exports = class LocalDescriptorUser extends DescriptorUser {
 
-    constructor (options) {
+    constructor (options = {}) {
 
         super({
             "externalResourcesDirectory": "",
