@@ -16,7 +16,8 @@ module.exports = defineConfig({
     "rules": {
 
         // specific to this package
-        "n/no-sync": "warn"
+        "n/no-sync": "warn",
+        "no-new": "warn"
 
     }
 

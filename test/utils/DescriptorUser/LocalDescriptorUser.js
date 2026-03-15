@@ -10,6 +10,15 @@
 
 module.exports = class LocalDescriptorUser extends DescriptorUser {
 
+    constructor (options) {
+
+        super({
+            "externalResourcesDirectory": "",
+            ...options
+        });
+
+    }
+
     _initWorkSpace () {
 
         return Promise.resolve();

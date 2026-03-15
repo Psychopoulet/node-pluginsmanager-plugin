@@ -1,7 +1,7 @@
 // deps
 
     // natives
-    const { deepStrictEqual, strictEqual, ok } = require("node:assert");
+    const { deepStrictEqual, strictEqual, ok, throws } = require("node:assert");
     const Events = require("node:events");
     const { join } = require("node:path");
 
@@ -16,6 +16,22 @@
 describe("DescriptorUser / constructor", () => {
 
     it("should test constructor without parameters", () => {
+
+        throws(() => {
+            new DescriptorUser();
+        });
+
+        throws(() => {
+            new DescriptorUser({});
+        });
+
+        throws(() => {
+
+            new DescriptorUser({
+                "externalResourcesDirectory": 123
+            });
+
+        });
 
         const bootable = new LocalDescriptorUser();
 
@@ -74,7 +90,9 @@ describe("DescriptorUser / constructor", () => {
 
         it("should test non-herited _initWorkSpace", (done) => {
 
-            const nonHerited = new DescriptorUser();
+            const nonHerited = new DescriptorUser({
+                "externalResourcesDirectory": ""
+            });
 
             nonHerited._initWorkSpace().then(() => {
                 done(new Error("There is no generated Error"));
@@ -91,7 +109,9 @@ describe("DescriptorUser / constructor", () => {
 
         it("should test non-herited init", (done) => {
 
-            const nonHerited = new DescriptorUser();
+            const nonHerited = new DescriptorUser({
+                "externalResourcesDirectory": ""
+            });
 
             nonHerited.init().then(() => {
                 done(new Error("There is no generated Error"));
@@ -120,7 +140,9 @@ describe("DescriptorUser / constructor", () => {
 
         it("should test non-herited _releaseWorkSpace", (done) => {
 
-            const nonHerited = new DescriptorUser();
+            const nonHerited = new DescriptorUser({
+                "externalResourcesDirectory": ""
+            });
 
             nonHerited._releaseWorkSpace().then(() => {
                 done(new Error("There is no generated Error"));
@@ -137,7 +159,9 @@ describe("DescriptorUser / constructor", () => {
 
         it("should test non-herited release", (done) => {
 
-            const nonHerited = new DescriptorUser();
+            const nonHerited = new DescriptorUser({
+                "externalResourcesDirectory": ""
+            });
 
             nonHerited.release().then(() => {
                 done(new Error("There is no generated Error"));
