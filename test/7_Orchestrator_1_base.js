@@ -1,7 +1,7 @@
 // deps
 
     // natives
-    const { deepStrictEqual, strictEqual, ok } = require("node:assert");
+    const { deepStrictEqual, strictEqual, ok, throws } = require("node:assert");
     const Events = require("node:events");
     const { join } = require("node:path");
 
@@ -30,6 +30,52 @@
 describe("Orchestrator", () => {
 
     it("should test constructor", () => {
+
+        throws(() => {
+            new Orchestrator();
+        });
+
+        throws(() => {
+            new Orchestrator({});
+        });
+
+        throws(() => {
+
+            new Orchestrator({
+                "packageFile": 123
+            });
+
+        });
+
+        throws(() => {
+
+            new Orchestrator({
+                "packageFile": "",
+                "descriptorFile": 123
+            });
+
+        });
+
+        throws(() => {
+
+            new Orchestrator({
+                "packageFile": "",
+                "descriptorFile": "",
+                "mediatorFile": 123
+            });
+
+        });
+
+        throws(() => {
+
+            new Orchestrator({
+                "packageFile": "",
+                "descriptorFile": "",
+                "mediatorFile": "",
+                "serverFile": 123
+            });
+
+        });
 
         const orchestrator = new LocalOrchestrator({
             "packageFile": "packageFile",

@@ -1,7 +1,7 @@
 // deps
 
     // natives
-    const { strictEqual, ok } = require("node:assert");
+    const { strictEqual, ok, throws } = require("node:assert");
     const { join } = require("node:path");
     const Events = require("node:events");
 
@@ -30,6 +30,14 @@
 describe("Mediator", () => {
 
     it("should test constructor", () => {
+
+        throws(() => {
+            new Mediator();
+        });
+
+        throws(() => {
+            new Mediator({});
+        });
 
         const mediator = new LocalMediator();
 

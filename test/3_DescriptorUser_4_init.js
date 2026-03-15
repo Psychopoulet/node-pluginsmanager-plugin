@@ -16,7 +16,9 @@ describe("DescriptorUser / init", () => {
 
     it("should test non-herited _initWorkSpace", (done) => {
 
-        const nonHerited = new DescriptorUser();
+        const nonHerited = new DescriptorUser({
+            "externalResourcesDirectory": ""
+        });
 
         nonHerited._initWorkSpace().then(() => {
             done(new Error("There is no generated Error"));
@@ -33,7 +35,9 @@ describe("DescriptorUser / init", () => {
 
     it("should test non-herited init", (done) => {
 
-        const nonHerited = new DescriptorUser();
+        const nonHerited = new DescriptorUser({
+            "externalResourcesDirectory": ""
+        });
 
         nonHerited.init().then(() => {
             done(new Error("There is no generated Error"));

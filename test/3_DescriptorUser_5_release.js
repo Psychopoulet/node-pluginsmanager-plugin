@@ -16,7 +16,9 @@ describe("DescriptorUser / release", () => {
 
     it("should test non-herited _releaseWorkSpace", (done) => {
 
-        const nonHerited = new DescriptorUser();
+        const nonHerited = new DescriptorUser({
+            "externalResourcesDirectory": ""
+        });
 
         nonHerited._releaseWorkSpace().then(() => {
             done(new Error("There is no generated Error"));
@@ -33,7 +35,9 @@ describe("DescriptorUser / release", () => {
 
     it("should test non-herited release", (done) => {
 
-        const nonHerited = new DescriptorUser();
+        const nonHerited = new DescriptorUser({
+            "externalResourcesDirectory": ""
+        });
 
         nonHerited.release().then(() => {
             done(new Error("There is no generated Error"));
