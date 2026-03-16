@@ -24,6 +24,20 @@
         "serverFile": join(__dirname, "utils", "Server", "LocalServer.js")
     };
 
+// private
+
+    function _getOrchestrator () {
+
+        return new Orchestrator({
+            "externalResourcesDirectory": "",
+            "packageFile": "",
+            "descriptorFile": "",
+            "mediatorFile": "",
+            "serverFile": ""
+        });
+
+    }
+
 // tests
 
 describe("Orchestrator / init & release", () => {
@@ -90,7 +104,7 @@ describe("Orchestrator / init & release", () => {
         });
 
         it("should test non-herited _initWorkSpace", () => {
-            return new Orchestrator()._initWorkSpace();
+            return _getOrchestrator()._initWorkSpace();
         });
 
         it("should test package file loader with wrong Descriptor title", (done) => {
@@ -171,7 +185,7 @@ describe("Orchestrator / init & release", () => {
     describe("release", () => {
 
         it("should test non-herited _releaseWorkSpace", () => {
-            return new Orchestrator().release();
+            return _getOrchestrator().release();
         });
 
         it("should release orchestrator", () => {

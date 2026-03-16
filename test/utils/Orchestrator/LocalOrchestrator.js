@@ -21,6 +21,10 @@ module.exports = class LocalOrchestrator extends Orchestrator {
 
         super({
             "externalResourcesDirectory": "",
+            "packageFile": "",
+            "descriptorFile": "",
+            "mediatorFile": "",
+            "serverFile": "",
             ...options
         });
 
