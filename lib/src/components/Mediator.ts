@@ -132,7 +132,7 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
             }).catch((err: Error): Promise<void> => {
 
                 if (!(err instanceof ValidationError)) {
-                    return Promise.reject(new Error(err.message));
+                    return Promise.reject(err);
                 }
 
                 if ("object" !== typeof err.data
