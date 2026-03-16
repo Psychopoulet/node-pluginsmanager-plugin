@@ -19,19 +19,17 @@ module.exports = function httpRequestTest (
 
     return readJSONFile.default(join(__dirname, "DescriptorUser", "Descriptor.json")).then((content) => {
 
-        const url = new URL(content.servers[0].url + urlpath, "http://localhost"); // any url, but "http://localhost" is used to avoid errors
-        const query = Object.fromEntries(url.searchParams);
+        const { protocol, hostname, port } = new URL(content.servers[0].url + urlpath, "http://localhost"); // any url, but "http://localhost" is used to avoid errors
 
         return new Promise((resolve, reject) => {
 
             const bodyParams = "undefined" !== typeof params ? JSON.stringify(params) : "";
 
             const opts = {
-                "protocol": url.protocol,
-                "hostname": url.hostname,
-                "port": url.port,
-                "path": url.pathname,
-                "query": query,
+                "protocol": protocol,
+                "hostname": hostname,
+                "port": port,
+                "path": urlpath,
                 "method": method.toUpperCase(),
                 "headers": {
                     "Content-Type": contentType,
