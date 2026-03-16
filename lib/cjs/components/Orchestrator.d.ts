@@ -3,7 +3,7 @@ import Server from "./Server";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Server as SocketIOServer } from "socket.io";
 import type { Server as WebSocketServer } from "ws";
-import type { Server as SocketIOServerV2 } from "../../../@types/socket.io-v2";
+import type { Server as SocketIOServerV2 } from "../../@types/socket.io-v2";
 import type { tLogger, tEventMap, iEventsMinimal } from "./DescriptorUser";
 export interface iOrchestratorOptions {
     "externalResourcesDirectory": string;

@@ -35,7 +35,7 @@
 
     // locals
 
-    import type { Server as SocketIOServerV2 } from "../../../@types/socket.io-v2";
+    import type { Server as SocketIOServerV2 } from "../../@types/socket.io-v2";
 
     import type Mediator from "./Mediator";
     import type { tLogger, tEventMap, iEventsMinimal } from "./DescriptorUser";

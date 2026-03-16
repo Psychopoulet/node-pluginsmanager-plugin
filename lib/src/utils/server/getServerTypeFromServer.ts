@@ -6,7 +6,7 @@
 
     // locals
 
-    import type { Server as SocketIOServerV2 } from "../../../../@types/socket.io-v2";
+    import type { Server as SocketIOServerV2 } from "../../../@types/socket.io-v2";
 
 // module
 

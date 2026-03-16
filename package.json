@@ -40,7 +40,8 @@
   },
 
   "files": [
-    "lib/cjs"
+    "lib/cjs",
+    "lib/@types"
   ],
   "engines": {
     "node": ">=22.22.0"
