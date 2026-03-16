@@ -131,32 +131,40 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
 
             }).catch((err: Error): Promise<void> => {
 
-                return err instanceof ValidationError ? Promise.resolve().then((): Promise<void> => {
+                if (!(err instanceof ValidationError)) {
+                    return Promise.reject(new Error(err.message));
+                }
 
-                    switch (err.data[0].keyword) { // extract first Error
+                if ("object" !== typeof err.data
+                    || !(err.data instanceof Array)
+                    || 0 >= err.data.length
+                    || "object" !== typeof err.data[0]
+                    || "string" !== typeof err.data[0].keyword) {
+                    return Promise.reject(new Error(err.message));
+                }
 
-                        case "required":
-                            return Promise.reject(new ReferenceError(err.message));
+                switch (err.data[0].keyword) { // extract first Error
 
-                        case "type":
-                        case "pattern":
-                            return Promise.reject(new TypeError(err.message));
+                    case "required":
+                        return Promise.reject(new ReferenceError(err.message));
 
-                        case "minimum":
-                        case "maximum":
-                        case "minLength":
-                        case "maxLength":
-                        case "minItems":
-                        case "maxItems":
-                        case "enum":
-                            return Promise.reject(new RangeError(err.message));
+                    case "type":
+                    case "pattern":
+                        return Promise.reject(new TypeError(err.message));
 
-                        default:
-                            return Promise.reject(new Error(err.message));
+                    case "minimum":
+                    case "maximum":
+                    case "minLength":
+                    case "maxLength":
+                    case "minItems":
+                    case "maxItems":
+                    case "enum":
+                        return Promise.reject(new RangeError(err.message));
 
-                    }
+                    default:
+                        return Promise.reject(new Error(err.message));
 
-                }) : Promise.reject(err);
+                }
 
             });
 

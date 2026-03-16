@@ -13,7 +13,7 @@ export default function extractParams (patternPath: string, realPath: string): R
 
         removeFirstSlash(realPath).split("/").forEach((p: string, i: number): void => {
 
-            if ("{" === patternPathSplitted[i][0]) {
+            if (i < patternPathSplitted.length && "{" === patternPathSplitted[i][0]) {
                 params[patternPathSplitted[i].replace("{", "").replace("}", "")] = decodeURI(p);
             }
 
