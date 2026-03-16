@@ -213,7 +213,7 @@ describe("utils / request / extractBody", () => {
         it("should test with empty body", () => {
 
             event.headers = {
-                "content-length": Buffer.byteLength("")
+                "content-length": "0"
             };
 
             return new Promise((resolve, reject) => {
@@ -238,7 +238,7 @@ describe("utils / request / extractBody", () => {
             };
 
             event.headers = {
-                "content-length": Buffer.byteLength(JSON.stringify(data))
+                "content-length": String(Buffer.byteLength(JSON.stringify(data)))
             };
 
             extractBody.default(event)
@@ -268,7 +268,7 @@ describe("utils / request / extractBody", () => {
             const data = "{ \"test\": \"test2\" }";
 
             event.headers = {
-                "content-length": Buffer.byteLength(data)
+                "content-length": String(Buffer.byteLength(data))
             };
 
             return new Promise((resolve, reject) => {
