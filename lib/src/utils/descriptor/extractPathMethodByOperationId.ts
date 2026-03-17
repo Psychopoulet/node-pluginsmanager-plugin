@@ -1,8 +1,3 @@
-/*
-    eslint-disable no-undefined
-*/
-// => no-undefined is disabled because the function can return undefined
-
 // types & interfaces
 
     // locals
