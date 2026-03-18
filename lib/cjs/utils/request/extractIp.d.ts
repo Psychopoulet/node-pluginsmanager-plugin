@@ -1,1 +1,1 @@
-export default function extractIp(req: any): string;
+export default function extractIp(_req: unknown): string;

@@ -1,2 +1,2 @@
-export declare function checkObjectSync(dataName: string, data: any): ReferenceError | TypeError | null;
-export declare function checkObject(dataName: string, data: any): Promise<void>;
+export declare function checkObjectSync(dataName: string, data: unknown): ReferenceError | TypeError | null;
+export declare function checkObject(dataName: string, data: unknown): Promise<void>;

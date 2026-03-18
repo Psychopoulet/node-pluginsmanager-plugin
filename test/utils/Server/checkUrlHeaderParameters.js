@@ -1,49 +1,47 @@
-"use strict";
-
 // deps
 
-	// natives
-	const { join } = require("path");
+    // natives
+    const { join } = require("node:path");
 
-	// locals
+    // locals
 
-		// utils
-		const httpRequestHeaderTest = require(join(__dirname, "..", "..", "utils", "httpRequestHeaderTest.js"));
+        // utils
+        const httpRequestHeaderTest = require(join(__dirname, "..", "..", "utils", "httpRequestHeaderTest.js"));
 
 // module
 
 module.exports = function checkUrlHeaderParameters (URL_API) {
 
-	describe("check header parameters", () => {
+    describe("check header parameters", () => {
 
-		it("should test request with missing header parameter", () => {
+        it("should test request with missing header parameter", () => {
 
-			return httpRequestHeaderTest(URL_API + "/path/header", "get", {}, 400, "Bad Request", {
-				"code": "MISSING_PARAMETER",
-				"message": "Error while validating request: request/headers must have required property 'header-param'"
-			});
+            return httpRequestHeaderTest(URL_API + "/path/header", "get", {}, 400, "Bad Request", {
+                "code": "MISSING_PARAMETER",
+                "message": "Error while validating request: request/headers must have required property 'header-param'"
+            });
 
-		});
+        });
 
-		it("should test request with empty header parameter", () => {
+        it("should test request with empty header parameter", () => {
 
-			return httpRequestHeaderTest(URL_API + "/path/header", "get", {
-				"header-param": ""
-			}, 400, "Bad Request", {
-				"code": "EMPTY_OR_RANGE_OR_ENUM_PARAMETER",
-				"message": "Error while validating request: request/headers/header-param must NOT have fewer than 1 characters"
-			});
+            return httpRequestHeaderTest(URL_API + "/path/header", "get", {
+                "header-param": ""
+            }, 400, "Bad Request", {
+                "code": "EMPTY_OR_RANGE_OR_ENUM_PARAMETER",
+                "message": "Error while validating request: request/headers/header-param must NOT have fewer than 1 characters"
+            });
 
-		});
+        });
 
-		it("should test request with valid request", () => {
+        it("should test request with valid request", () => {
 
-			return httpRequestHeaderTest(URL_API + "/path/header", "get", {
-				"header-param": "test"
-			}, 200, "OK", "test");
+            return httpRequestHeaderTest(URL_API + "/path/header", "get", {
+                "header-param": "test"
+            }, 200, "OK", "test");
 
-		});
+        });
 
-	});
+    });
 
 };

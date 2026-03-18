@@ -1,7 +1,12 @@
+/*
+    eslint-disable @typescript-eslint/unbound-method
+*/
+// => @typescript-eslint/unbound-method is disabled to allow check on req.headers (no need for js context)
+
 // deps
 
     // locals
-    import { checkInteger } from "../../checkers/TypeError/checkInteger";
+    import { checkString } from "../../checkers/TypeError/checkString";
     import { checkFunction } from "../../checkers/TypeError/checkFunction";
     import { checkNonEmptyObject } from "../../checkers/RangeError/checkNonEmptyObject";
 
@@ -19,7 +24,7 @@ export default function extractBody (req: iIncomingMessage): Promise<string> {
     }).then((): Promise<void> => {
         return checkNonEmptyObject("req.headers", req.headers);
     }).then((): Promise<void> => {
-        return checkInteger("req.headers[\"content-length\"]", req.headers["content-length"]);
+        return checkString("req.headers[\"content-length\"]", req.headers["content-length"]);
     }).then((): Promise<string> => {
 
         return new Promise((resolve: (res: string) => void, reject: (err: Error) => void): void => {
@@ -36,9 +41,9 @@ export default function extractBody (req: iIncomingMessage): Promise<string> {
                 }
                 else {
 
-                    req.headers["content-length"] = parseInt(req.headers["content-length"] as string, 10);
+                    const contentLength: number = parseInt(req.headers["content-length"] as string, 10);
 
-                    if (req.headers["content-length"] !== Buffer.byteLength(queryData)) {
+                    if (contentLength !== Buffer.byteLength(queryData)) {
 
                         reject(new Error("\"Content-Length\" header (" + Buffer.byteLength(queryData) + ")"
                             + " is not as expected (" + req.headers["content-length"] + ")."

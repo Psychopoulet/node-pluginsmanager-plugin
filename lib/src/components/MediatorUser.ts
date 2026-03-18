@@ -1,3 +1,8 @@
+/*
+    eslint-disable @typescript-eslint/no-unused-vars
+*/
+// => @typescript-eslint/no-unused-vars is disabled to allow inheritance with proper signature
+
 //  deps
 
     // locals
@@ -10,12 +15,12 @@
     import type { iDescriptorUserOptions, tEventMap, tEventsNoEvent } from "./DescriptorUser";
 
     export interface iMediatorUserOptions extends iDescriptorUserOptions {
-        "mediator"?: Mediator; // not sended by Orchestrator
+        "mediator"?: Mediator; // not sent by Orchestrator
     }
 
 // module
 
-// Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic
+// Please note the fact that "init" and "release" method MUST NOT be re-written. Each child has its own init logic
 export default class MediatorUser<T extends tEventMap<T> = tEventsNoEvent> extends DescriptorUser<T> {
 
     // attributes
@@ -30,21 +35,23 @@ export default class MediatorUser<T extends tEventMap<T> = tEventsNoEvent> exten
 
         super(options);
 
-        this._Mediator = options && "undefined" !== typeof options.mediator
-            ? options.mediator
-            : null;
+        // protected
+
+            // optional props
+
+            this._Mediator = options.mediator ?? null;
 
     }
 
     // protected
 
-        protected _initWorkSpace (...data: any): Promise<void> {
+        protected _initWorkSpace (...data: unknown[]): Promise<void> {
 
             return Promise.resolve();
 
         }
 
-        protected _releaseWorkSpace (...data: any): Promise<void> {
+        protected _releaseWorkSpace (...data: unknown[]): Promise<void> {
 
             return Promise.resolve();
 

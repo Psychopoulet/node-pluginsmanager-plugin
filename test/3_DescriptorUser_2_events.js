@@ -1,72 +1,70 @@
-"use strict";
-
 // deps
 
-	// natives
-	const { join } = require("path");
+    // natives
+    const { join } = require("node:path");
 
-	// locals
+    // locals
 
-		// plugin
-		const LocalDescriptorUser = require(join(__dirname, "utils", "DescriptorUser", "LocalDescriptorUser.js"));
+        // plugin
+        const LocalDescriptorUser = require(join(__dirname, "utils", "DescriptorUser", "LocalDescriptorUser.js"));
 
 // tests
 
 describe("DescriptorUser / events", () => {
 
-	it("should test events before init", () => {
+    it("should test events before init", () => {
 
-		const bootable = new LocalDescriptorUser();
+        const bootable = new LocalDescriptorUser();
 
-		return new Promise((resolve) => {
+        return new Promise((resolve) => {
 
-			bootable
-				.once("test", resolve)
-				.emit("test");
+            bootable
+                .once("test", resolve)
+                .emit("test");
 
-		});
+        });
 
-	});
+    });
 
-	it("should test events after init", () => {
+    it("should test events after init", () => {
 
-		const bootable = new LocalDescriptorUser();
+        const bootable = new LocalDescriptorUser();
 
-		return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
 
-			bootable
-				.once("test", resolve);
+            bootable
+                .once("test", resolve);
 
-			bootable.init().then(() => {
-				bootable.emit("test");
-			}).catch(reject);
+            bootable.init().then(() => {
+                bootable.emit("test");
+            }).catch(reject);
 
-		});
+        });
 
-	});
+    });
 
-	it("should test events after release", () => {
+    it("should test events after release", () => {
 
-		const bootable = new LocalDescriptorUser();
+        const bootable = new LocalDescriptorUser();
 
-		return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
 
-			bootable.once("test", () => {
-				reject(new Error("Should not fire this event"));
-			});
+            bootable.once("test", () => {
+                reject(new Error("Should not fire this event"));
+            });
 
-			bootable.init().then(() => {
-				return bootable.release();
-			}).then(() => {
+            bootable.init().then(() => {
+                return bootable.release();
+            }).then(() => {
 
-				bootable.emit("test");
+                bootable.emit("test");
 
-				resolve();
+                resolve();
 
-			}).catch(reject);
+            }).catch(reject);
 
-		});
+        });
 
-	});
+    });
 
 });

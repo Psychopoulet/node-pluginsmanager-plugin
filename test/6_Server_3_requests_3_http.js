@@ -1,75 +1,74 @@
-"use strict";
-
 // deps
 
-	// natives
-	const { join } = require("path");
-	const { parse } = require("url");
-	const { createServer } = require("http");
+    // natives
+    const { createServer } = require("node:http");
+    const { join } = require("node:path");
+    const { URL } = require("node:url");
 
-	// locals
+    // locals
 
-		// utils
-		const HeritedServer = require(join(__dirname, "utils", "Server", "HeritedServer.js"));
-		const tests = require(join(__dirname, "utils", "Server", "tests.js"));
+        // utils
+        const HeritedServer = require(join(__dirname, "utils", "Server", "HeritedServer.js"));
+        const tests = require(join(__dirname, "utils", "Server", "tests.js"));
 
 // tests
 
 describe("Server / requests / http", () => {
 
-	let runningServer = null;
-	const server = new HeritedServer();
+    let runningServer = null;
+    const server = new HeritedServer();
 
-	before(() => {
+    before(() => {
 
-		server.enableCheckParameters().enableCheckResponse();
+        server.enableCheckParameters().enableCheckResponse();
 
-		return server.init().then(() => {
+        return server.init().then(() => {
 
-			const port = parseInt(parse(server._Descriptor.servers[0].url).port, 10);
+            // servers[0] => http server
+            const url = new URL(server._Descriptor.servers[0].url, "http://localhost"); // any url, but "http://localhost" is used to avoid errors
 
-			return new Promise((resolve) => {
+            return new Promise((resolve) => {
 
-				runningServer = createServer((req, res) => {
+                runningServer = createServer((req, res) => {
 
-					server.appMiddleware(req, res, () => {
+                    server.appMiddleware(req, res, () => {
 
-						res.writeHead(404, {
-							"Content-Type": "application/json; charset=utf-8"
-						});
+                        res.writeHead(404, {
+                            "Content-Type": "application/json; charset=utf-8"
+                        });
 
-						res.end(JSON.stringify({
-							"code": "404",
-							"message": "Unknown page"
-						}));
+                        res.end(JSON.stringify({
+                            "code": "404",
+                            "message": "Unknown page"
+                        }));
 
-					});
+                    });
 
-				}).listen(port, resolve);
+                }).listen(parseInt(url.port, 10), resolve);
 
-			});
+            });
 
-		});
+        });
 
-	});
+    });
 
-	after(() => {
+    after(() => {
 
-		return server.release().then(() => {
+        return server.release().then(() => {
 
-			return runningServer ? new Promise((resolve) => {
+            return runningServer ? new Promise((resolve) => {
 
-				runningServer.close(() => {
-					runningServer = null;
-					resolve();
-				});
+                runningServer.close(() => {
+                    runningServer = null;
+                    resolve();
+                });
 
-			}) : Promise.resolve();
+            }) : Promise.resolve();
 
-		});
+        });
 
-	});
+    });
 
-	tests(server, true);
+    tests(server, true);
 
 });

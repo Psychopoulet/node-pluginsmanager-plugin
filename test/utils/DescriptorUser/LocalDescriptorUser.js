@@ -1,41 +1,48 @@
-"use strict";
-
 // deps
 
-	// natives
-	const { join } = require("path");
+    // natives
+    const { join } = require("node:path");
 
-	// locals
-	const { DescriptorUser } = require(join(__dirname, "..", "..", "..", "lib", "cjs", "main.cjs"));
+    // locals
+    const { DescriptorUser } = require(join(__dirname, "..", "..", "..", "lib", "cjs", "main.cjs"));
 
 // module
 
 module.exports = class LocalDescriptorUser extends DescriptorUser {
 
-	_initWorkSpace () {
+    constructor (options = {}) {
 
-		return Promise.resolve();
+        super({
+            "externalResourcesDirectory": "",
+            ...options
+        });
 
-	}
+    }
 
-	_releaseWorkSpace () {
+    _initWorkSpace () {
 
-		return Promise.resolve();
+        return Promise.resolve();
 
-	}
+    }
 
-	init () {
+    _releaseWorkSpace () {
 
-		return Promise.resolve();
+        return Promise.resolve();
 
-	}
+    }
 
-	release () {
+    init () {
 
-		this.removeAllListeners();
+        return Promise.resolve();
 
-		return Promise.resolve();
+    }
 
-	}
+    release () {
+
+        this.removeAllListeners();
+
+        return Promise.resolve();
+
+    }
 
 };

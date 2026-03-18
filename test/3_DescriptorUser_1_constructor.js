@@ -1,226 +1,248 @@
-"use strict";
-
 // deps
 
-	// natives
-	const { join } = require("path");
-	const { deepStrictEqual, strictEqual } = require("assert");
-	const Events = require("events");
+    // natives
+    const { deepStrictEqual, strictEqual, ok, throws } = require("node:assert");
+    const Events = require("node:events");
+    const { join } = require("node:path");
 
-	// locals
+    // locals
 
-		// plugin
-		const { DescriptorUser } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
-		const LocalDescriptorUser = require(join(__dirname, "utils", "DescriptorUser", "LocalDescriptorUser.js"));
+        // plugin
+        const { DescriptorUser } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
+        const LocalDescriptorUser = require(join(__dirname, "utils", "DescriptorUser", "LocalDescriptorUser.js"));
 
 // tests
 
 describe("DescriptorUser / constructor", () => {
 
-	it("should test constructor without parameters", () => {
+    it("should test constructor without parameters", () => {
 
-		const bootable = new LocalDescriptorUser();
+        throws(() => {
+            new DescriptorUser();
+        });
 
-		strictEqual(typeof bootable, "object", "Generated bootable is not an object");
-		strictEqual(bootable instanceof Events, true, "Generated bootable is not a Events instance");
-		strictEqual(bootable instanceof LocalDescriptorUser, true, "Generated bootable is not a LocalDescriptorUser instance");
-		strictEqual(bootable instanceof DescriptorUser, true, "Generated bootable is not a DescriptorUser instance");
+        throws(() => {
+            new DescriptorUser({});
+        });
 
-		strictEqual(typeof bootable._Descriptor, "object", "Generated bootable _Descriptor is not an object");
-		strictEqual(bootable._Descriptor, null, "Generated bootable _Descriptor is not as expected");
+        throws(() => {
 
-		strictEqual(
-			typeof bootable._externalRessourcesDirectory, "string",
-			"Generated bootable _externalRessourcesDirectory is not a string"
-		);
-		strictEqual(
-			bootable._externalRessourcesDirectory, "",
-			"Generated bootable _externalRessourcesDirectory is not as expected"
-		);
+            new DescriptorUser({
+                "externalResourcesDirectory": 123
+            });
 
-	});
+        });
 
-	it("should test constructor with descriptor", () => {
+        const bootable = new LocalDescriptorUser();
 
-		const bootable = new LocalDescriptorUser({
-			"descriptor": {
-				"test": "test"
-			}
-		});
+        strictEqual(typeof bootable, "object", "Generated bootable is not an object");
+        ok(bootable instanceof Events, "Generated bootable is not a Events instance");
+        ok(bootable instanceof LocalDescriptorUser, "Generated bootable is not a LocalDescriptorUser instance");
+        ok(bootable instanceof DescriptorUser, "Generated bootable is not a DescriptorUser instance");
 
-		strictEqual(typeof bootable._Descriptor, "object", "Generated bootable _Descriptor is not an object");
-		deepStrictEqual(bootable._Descriptor, {
-			"test": "test"
-		}, "Generated bootable _Descriptor is not as expected");
+        strictEqual(typeof bootable._Descriptor, "object", "Generated bootable _Descriptor is not an object");
+        strictEqual(bootable._Descriptor, null, "Generated bootable _Descriptor is not as expected");
 
-	});
+        strictEqual(
+            typeof bootable._externalResourcesDirectory, "string",
+            "Generated bootable _externalResourcesDirectory is not a string"
+        );
+        strictEqual(
+            bootable._externalResourcesDirectory, "",
+            "Generated bootable _externalResourcesDirectory is not as expected"
+        );
 
-	it("should test constructor with externalRessourcesDirectory", () => {
+    });
 
-		const bootable = new LocalDescriptorUser({
-			"externalRessourcesDirectory": __dirname
-		});
+    it("should test constructor with descriptor", () => {
 
-		strictEqual(
-			typeof bootable._externalRessourcesDirectory, "string",
-			"Generated bootable _externalRessourcesDirectory is not a string"
-		);
-		strictEqual(
-			bootable._externalRessourcesDirectory, __dirname,
-			"Generated bootable _externalRessourcesDirectory is not as expected"
-		);
+        const bootable = new LocalDescriptorUser({
+            "descriptor": {
+                "test": "test"
+            }
+        });
 
-	});
+        strictEqual(typeof bootable._Descriptor, "object", "Generated bootable _Descriptor is not an object");
+        deepStrictEqual(bootable._Descriptor, {
+            "test": "test"
+        }, "Generated bootable _Descriptor is not as expected");
 
-	describe("init", () => {
+    });
 
-		it("should test non-herited _initWorkSpace", (done) => {
+    it("should test constructor with externalResourcesDirectory", () => {
 
-			const nonHerited = new DescriptorUser();
+        const bootable = new LocalDescriptorUser({
+            "externalResourcesDirectory": __dirname
+        });
 
-			nonHerited._initWorkSpace().then(() => {
-				done(new Error("There is no generated Error"));
-			}).catch((err) => {
+        strictEqual(
+            typeof bootable._externalResourcesDirectory, "string",
+            "Generated bootable _externalResourcesDirectory is not a string"
+        );
+        strictEqual(
+            bootable._externalResourcesDirectory, __dirname,
+            "Generated bootable _externalResourcesDirectory is not as expected"
+        );
 
-				strictEqual(typeof err, "object", "Generated Error is not as expected");
-				strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+    });
 
-				done();
+    describe("init", () => {
 
-			});
+        it("should test non-herited _initWorkSpace", (done) => {
 
-		});
+            const nonHerited = new DescriptorUser({
+                "externalResourcesDirectory": ""
+            });
 
-		it("should test non-herited init", (done) => {
+            nonHerited._initWorkSpace().then(() => {
+                done(new Error("There is no generated Error"));
+            }).catch((err) => {
 
-			const nonHerited = new DescriptorUser();
+                strictEqual(typeof err, "object", "Generated Error is not as expected");
+                ok(err instanceof Error, "Generated Error is not as expected");
 
-			nonHerited.init().then(() => {
-				done(new Error("There is no generated Error"));
-			}).catch((err) => {
+                done();
 
-				strictEqual(typeof err, "object", "Generated Error is not as expected");
-				strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+            });
 
-				done();
+        });
 
-			});
+        it("should test non-herited init", (done) => {
 
-		});
+            const nonHerited = new DescriptorUser({
+                "externalResourcesDirectory": ""
+            });
 
-		it("should test _initWorkSpace", () => {
-			return new LocalDescriptorUser()._initWorkSpace();
-		});
+            nonHerited.init().then(() => {
+                done(new Error("There is no generated Error"));
+            }).catch((err) => {
 
-		it("should test init", () => {
-			return new LocalDescriptorUser().init();
-		});
+                strictEqual(typeof err, "object", "Generated Error is not as expected");
+                ok(err instanceof Error, "Generated Error is not as expected");
 
-	});
+                done();
 
-	describe("release", () => {
+            });
 
-		it("should test non-herited _releaseWorkSpace", (done) => {
+        });
 
-			const nonHerited = new DescriptorUser();
+        it("should test _initWorkSpace", () => {
+            return new LocalDescriptorUser()._initWorkSpace();
+        });
 
-			nonHerited._releaseWorkSpace().then(() => {
-				done(new Error("There is no generated Error"));
-			}).catch((err) => {
+        it("should test init", () => {
+            return new LocalDescriptorUser().init();
+        });
 
-				strictEqual(typeof err, "object", "Generated Error is not as expected");
-				strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+    });
 
-				done();
+    describe("release", () => {
 
-			});
+        it("should test non-herited _releaseWorkSpace", (done) => {
 
-		});
+            const nonHerited = new DescriptorUser({
+                "externalResourcesDirectory": ""
+            });
 
-		it("should test non-herited release", (done) => {
+            nonHerited._releaseWorkSpace().then(() => {
+                done(new Error("There is no generated Error"));
+            }).catch((err) => {
 
-			const nonHerited = new DescriptorUser();
+                strictEqual(typeof err, "object", "Generated Error is not as expected");
+                ok(err instanceof Error, "Generated Error is not as expected");
 
-			nonHerited.release().then(() => {
-				done(new Error("There is no generated Error"));
-			}).catch((err) => {
+                done();
 
-				strictEqual(typeof err, "object", "Generated Error is not as expected");
-				strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+            });
 
-				done();
+        });
 
-			});
+        it("should test non-herited release", (done) => {
 
-		});
+            const nonHerited = new DescriptorUser({
+                "externalResourcesDirectory": ""
+            });
 
-		it("should test _releaseWorkSpace", () => {
-			return new LocalDescriptorUser()._releaseWorkSpace();
-		});
+            nonHerited.release().then(() => {
+                done(new Error("There is no generated Error"));
+            }).catch((err) => {
 
-		it("should test release", () => {
-			return new LocalDescriptorUser().release();
-		});
+                strictEqual(typeof err, "object", "Generated Error is not as expected");
+                ok(err instanceof Error, "Generated Error is not as expected");
 
-	});
+                done();
 
-	describe("events", () => {
+            });
 
-		it("should test events before init", () => {
+        });
 
-			const bootable = new LocalDescriptorUser();
+        it("should test _releaseWorkSpace", () => {
+            return new LocalDescriptorUser()._releaseWorkSpace();
+        });
 
-			return new Promise((resolve) => {
+        it("should test release", () => {
+            return new LocalDescriptorUser().release();
+        });
 
-				bootable
-					.once("test", resolve)
-					.emit("test");
+    });
 
-			});
+    describe("events", () => {
 
-		});
+        it("should test events before init", () => {
 
-		it("should test events after init", () => {
+            const bootable = new LocalDescriptorUser();
 
-			const bootable = new LocalDescriptorUser();
+            return new Promise((resolve) => {
 
-			return new Promise((resolve, reject) => {
+                bootable
+                    .once("test", resolve)
+                    .emit("test");
 
-				bootable
-					.once("test", resolve);
+            });
 
-				bootable.init().then(() => {
-					bootable.emit("test");
-				}).catch(reject);
+        });
 
-			});
+        it("should test events after init", () => {
 
-		});
+            const bootable = new LocalDescriptorUser();
 
-		it("should test events after release", () => {
+            return new Promise((resolve, reject) => {
 
-			const bootable = new LocalDescriptorUser();
+                bootable
+                    .once("test", resolve);
 
-			return new Promise((resolve, reject) => {
+                bootable.init().then(() => {
+                    bootable.emit("test");
+                }).catch(reject);
 
-				bootable.once("test", () => {
-					reject(new Error("Should not fire this event"));
-				});
+            });
 
-				bootable.init().then(() => {
-					return bootable.release();
-				}).then(() => {
+        });
 
-					bootable.emit("test");
+        it("should test events after release", () => {
 
-					resolve();
+            const bootable = new LocalDescriptorUser();
 
-				}).catch(reject);
+            return new Promise((resolve, reject) => {
 
-			});
+                bootable.once("test", () => {
+                    reject(new Error("Should not fire this event"));
+                });
 
-		});
+                bootable.init().then(() => {
+                    return bootable.release();
+                }).then(() => {
 
-	});
+                    bootable.emit("test");
+
+                    resolve();
+
+                }).catch(reject);
+
+            });
+
+        });
+
+    });
 
 });

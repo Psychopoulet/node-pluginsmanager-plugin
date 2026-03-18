@@ -20,7 +20,7 @@ Expose the [Mediator](./Mediator.md)'s methods with the [Descriptor](./Descripto
 
 ## Code
 
-> Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic.
+> Please note the fact that "init" and "release" method MUST NOT be re-written. Each child has its own init logic.
 
 [check the TypeScript definition file](../lib/index.d.ts)
 
@@ -51,7 +51,7 @@ Expose the [Mediator](./Mediator.md)'s methods with the [Descriptor](./Descripto
   * [401](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/401) (authentication required)
   * [404](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/404) (this path does not exist)
   * [411](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/411) (the request does not have "Content-length" header)
-  * [423](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/423) (the ressource (device, service, API, etc...) is busy)
+  * [423](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/423) (the resource (device, service, API, etc...) is busy)
   * [500](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/500) (the [Mediator](./Mediator.md) generate an unknown error)
   * [501](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/501) (there is no "operationId" for this path in the [Descriptor](./Descriptor.md) or the [Mediator](./Mediator.md) does not have the "operationId" method given by the [Descriptor](./Descriptor.md))
 

@@ -1,40 +1,47 @@
-"use strict";
-
 // deps
 
-	// natives
-	const { join } = require("path");
+    // natives
+    const { join } = require("path");
 
-	// locals
+    // locals
 
-		// plugin
-		const readJSONFile = require(join(__dirname, "..", "..", "..", "lib", "cjs", "utils", "file", "readJSONFile.js"));
+        // plugin
+        const readJSONFile = require(join(__dirname, "..", "..", "..", "lib", "cjs", "utils", "file", "readJSONFile.js"));
 
-		// utils
-		const HeritedMediator = require(join(__dirname, "..", "Mediator", "HeritedMediator.js"));
-		const ServerWithSockets = require(join(__dirname, "..", "Server", "ServerWithSockets.js"));
+        // utils
+        const HeritedMediator = require(join(__dirname, "..", "Mediator", "HeritedMediator.js"));
+        const ServerWithSockets = require(join(__dirname, "..", "Server", "ServerWithSockets.js"));
 
 // module
 
 module.exports = class HeritedServer extends ServerWithSockets {
 
-	init (...data) {
+    constructor (options) {
 
-		return readJSONFile.default(join(__dirname, "..", "DescriptorUser", "Descriptor.json")).then((content) => {
+        super({
+            "externalResourcesDirectory": "",
+            ...options
+        });
 
-			this._Descriptor = content;
-			this._Mediator = new HeritedMediator({
-				"descriptor": this._Descriptor
-			});
+    }
 
-			return this._Mediator.init();
+    init (...data) {
 
-		}).then(() => {
+        return readJSONFile.default(join(__dirname, "..", "DescriptorUser", "Descriptor.json")).then((content) => {
 
-			return super.init(...data);
+            this._Descriptor = content;
+            this._Mediator = new HeritedMediator({
+                "descriptor": this._Descriptor
+            });
 
-		});
+            return this._Mediator.init();
 
-	}
+        }).then(() => {
+
+            return super.init(...data);
+
+        });
+
+    }
 
 };

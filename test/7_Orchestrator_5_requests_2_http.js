@@ -1,107 +1,106 @@
-"use strict";
-
 // deps
 
-	// natives
-	const { join } = require("path");
-	const { parse } = require("url");
-	const { strictEqual } = require("assert");
-	const { createServer } = require("http");
+    // natives
+    const { strictEqual } = require("node:assert");
+    const { createServer } = require("node:http");
+    const { join } = require("node:path");
+    const { URL } = require("node:url");
 
-	// locals
+    // locals
 
-		const LocalOrchestrator = require(join(__dirname, "utils", "Orchestrator", "LocalOrchestrator.js"));
-		const tests = require(join(__dirname, "utils", "Server", "tests.js"));
+        const LocalOrchestrator = require(join(__dirname, "utils", "Orchestrator", "LocalOrchestrator.js"));
+        const tests = require(join(__dirname, "utils", "Server", "tests.js"));
 
 // consts
 
-	const GOOD_OPTIONS = {
-		"packageFile": join(__dirname, "..", "package.json"),
-		"descriptorFile": join(__dirname, "utils", "DescriptorUser", "Descriptor.json"),
-		"mediatorFile": join(__dirname, "utils", "Mediator", "LocalMediator.js"),
-		"serverFile": join(__dirname, "utils", "Server", "LocalServer.js")
-	};
+    const GOOD_OPTIONS = {
+        "packageFile": join(__dirname, "..", "package.json"),
+        "descriptorFile": join(__dirname, "utils", "DescriptorUser", "Descriptor.json"),
+        "mediatorFile": join(__dirname, "utils", "Mediator", "LocalMediator.js"),
+        "serverFile": join(__dirname, "utils", "Server", "LocalServer.js")
+    };
 
-	const HERITED_OPTIONS = {
-		"packageFile": join(__dirname, "..", "package.json"),
-		"descriptorFile": join(__dirname, "utils", "DescriptorUser", "Descriptor.json"),
-		"mediatorFile": join(__dirname, "utils", "Mediator", "HeritedMediator.js"),
-		"serverFile": join(__dirname, "utils", "Server", "ServerWithSockets.js")
-	};
+    const HERITED_OPTIONS = {
+        "packageFile": join(__dirname, "..", "package.json"),
+        "descriptorFile": join(__dirname, "utils", "DescriptorUser", "Descriptor.json"),
+        "mediatorFile": join(__dirname, "utils", "Mediator", "HeritedMediator.js"),
+        "serverFile": join(__dirname, "utils", "Server", "ServerWithSockets.js")
+    };
 
 // tests
 
 describe("Orchestrator / request / http", () => {
 
-	let runningServer = null;
-	const orchestrator = new LocalOrchestrator(HERITED_OPTIONS);
+    let runningServer = null;
+    const orchestrator = new LocalOrchestrator(HERITED_OPTIONS);
 
-	before(() => {
+    before(() => {
 
-		orchestrator.disableCheckParameters().disableCheckResponse();
+        orchestrator.disableCheckParameters().disableCheckResponse();
 
-		return orchestrator.load().then(() => {
-			return orchestrator.init();
-		}).then(() => {
+        return orchestrator.load().then(() => {
+            return orchestrator.init();
+        }).then(() => {
 
-			orchestrator.disableCheckParameters().disableCheckResponse();
+            orchestrator.disableCheckParameters().disableCheckResponse();
 
-			const port = parseInt(parse(orchestrator._Descriptor.servers[0].url).port, 10);
+            const url = new URL(orchestrator._Descriptor.servers[0].url, "http://localhost"); // any url, but "http://localhost" is used to avoid errors
+            const port = parseInt(url.port, 10);
 
-			return new Promise((resolve) => {
+            return new Promise((resolve) => {
 
-				runningServer = createServer((req, res) => {
+                runningServer = createServer((req, res) => {
 
-					orchestrator.appMiddleware(req, res, () => {
+                    orchestrator.appMiddleware(req, res, () => {
 
-						res.writeHead(404, {
-							"Content-Type": "application/json; charset=utf-8"
-						});
+                        res.writeHead(404, {
+                            "Content-Type": "application/json; charset=utf-8"
+                        });
 
-						res.end(JSON.stringify({
-							"code": "404",
-							"message": "Unknown page"
-						}));
+                        res.end(JSON.stringify({
+                            "code": "404",
+                            "message": "Unknown page"
+                        }));
 
-					});
+                    });
 
-				}).listen(port, resolve);
+                }).listen(port, resolve);
 
-			});
+            });
 
-		});
+        });
 
-	});
+    });
 
-	after(() => {
+    after(() => {
 
-		return orchestrator.release().then(() => {
-			return orchestrator.destroy();
-		}).then(() => {
+        return orchestrator.release().then(() => {
+            return orchestrator.destroy();
+        }).then(() => {
 
-			return runningServer ? new Promise((resolve) => {
+            return runningServer ? new Promise((resolve) => {
 
-				runningServer.close(() => {
-					runningServer = null;
-					resolve();
-				});
+                runningServer.close(() => {
+                    runningServer = null;
+                    resolve();
+                });
 
-			}) : Promise.resolve();
+            }) : Promise.resolve();
 
-		});
+        });
 
-	});
+    });
 
-	it("should test app middleware without Server", () => {
+    it("should test app middleware without Server", () => {
 
-		const res = new LocalOrchestrator(GOOD_OPTIONS).appMiddleware(null, null, () => {
-			return false;
-		});
+        const res = new LocalOrchestrator(GOOD_OPTIONS).appMiddleware(null, null, () => {
+            return false;
+        });
 
-		strictEqual(typeof res, "undefined", "Generated result is not undefined");
+        strictEqual(typeof res, "undefined", "Generated result is not undefined");
 
-	});
+    });
 
-	tests(orchestrator, true);
+    tests(orchestrator, true);
 
 });

@@ -10,9 +10,14 @@
 	// locals
 	import { Orchestrator, Mediator, Server } from "../../lib/cjs/main.cjs";
 
+// types & interfaces
+
+	// locals
+	import type { iEventsMinimal } from "../../lib/cjs/components/DescriptorUser";
+
 // classes
 
-	class OrchestratorTest extends Orchestrator<{
+	class OrchestratorTest extends Orchestrator<iEventsMinimal & {
 		"test": [ string ]
 	}> {
 
@@ -26,7 +31,7 @@
 // consts
 
 	const orchestrator: OrchestratorTest = new OrchestratorTest({
-		"externalRessourcesDirectory": ".",
+		"externalResourcesDirectory": ".",
 		"packageFile": join(__dirname, "..", "..", "package.json"),
 		"descriptorFile": join(__dirname, "..", "utils", "DescriptorUser", "Descriptor.json"),
 		"mediatorFile": join(__dirname, "..", "utils", "Mediator", "LocalMediator.js"),
@@ -44,6 +49,8 @@ console.log(orchestrator);
 orchestrator.on("test", (test: string): void => {
 	console.log("test emitted", test);
 });
+
+orchestrator.emit("test", "this is a test");
 
 orchestrator.load().then((): Promise<void> => {
 

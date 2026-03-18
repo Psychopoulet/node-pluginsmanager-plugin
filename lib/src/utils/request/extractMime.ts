@@ -11,10 +11,7 @@
 
 // module
 
-export default function extractMime (contentType: string, code: number, responses: Record<string, {
-    "description": string;
-    "content"?: Record<string, any>
-}>): string {
+export default function extractMime (contentType: string, code: number, responses: unknown): string {
 
     const err = checkStringSync("contentType", contentType)
         ?? checkNonEmptyNumberSync("code", code)
@@ -25,30 +22,38 @@ export default function extractMime (contentType: string, code: number, response
     }
     else {
 
-        const stringifiedCode: string = String(code);
+        const stringifiedCode = String(code);
+        const res = responses as Record<string, {
+            "description": string;
+            "content"?: Record<string, unknown>
+        }>; // mandatory for typing, convert "unknown" response to controlled and typed one
 
-        if (!responses[stringifiedCode] && !responses.default && "" !== contentType.trim()) {
+        if ("undefined" === typeof res[stringifiedCode] && "undefined" === typeof res.default && "" !== contentType.trim()) {
             return contentType;
         }
         else {
 
-            let descriptorContent: Record<string, any> | undefined;
+            let descriptorContent: Record<string, unknown> = {};
 
-            if (responses[stringifiedCode]) {
+            if ("object" === typeof res[stringifiedCode]) {
 
-                if (responses[stringifiedCode].content) {
-                    descriptorContent = responses[stringifiedCode].content;
+                if ("object" === typeof res[stringifiedCode].content) {
+                    descriptorContent = res[stringifiedCode].content as unknown as Record<string, unknown>;
                 }
 
             }
-            else if (responses.default && responses.default.content) {
-                descriptorContent = responses.default.content;
+            else if ("object" === typeof res.default) {
+
+                if ("object" === typeof res.default.content) {
+                    descriptorContent = res.default.content as unknown as Record<string, unknown>;
+                }
+
             }
             else {
                 return DEFAULT_MIME;
             }
 
-            const possibleMimes: string[] = descriptorContent ? Object.keys(descriptorContent) : [];
+            const possibleMimes: string[] = Object.keys(descriptorContent);
 
             const [ mimeRequest, charsetRequest ] = contentType.split(";").map((content: string): string => {
                 return content.trim().toLowerCase();
@@ -67,7 +72,7 @@ export default function extractMime (contentType: string, code: number, response
 
                 }
                 else if (1 === possibleMimes.length) { // only one possible option
-                    result = possibleMimes[0];
+                    [ result ] = possibleMimes;
                 }
                 else {
 

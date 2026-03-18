@@ -1,64 +1,75 @@
-"use strict";
-
 // deps
 
-	// natives
-	const { join } = require("path");
-	const { unlink, writeFile } = require("fs");
-	const { homedir } = require("os");
+    // natives
+    const { unlink, writeFile } = require("node:fs");
+    const { join } = require("node:path");
+    const { homedir } = require("node:os");
 
-	// locals
-	const isFile = require(join(__dirname, "..", "..", "..", "lib", "cjs", "utils", "file", "isFile.js"));
-	const { Orchestrator } = require(join(__dirname, "..", "..", "..", "lib", "cjs", "main.cjs"));
+    // locals
+    const isFile = require(join(__dirname, "..", "..", "..", "lib", "cjs", "utils", "file", "isFile.js"));
+    const { Orchestrator } = require(join(__dirname, "..", "..", "..", "lib", "cjs", "main.cjs"));
 
 // consts
 
-	const FILE = join(homedir(), "test.json");
+    const FILE = join(homedir(), "test.json");
 
 // module
 
 module.exports = class LocalOrchestrator extends Orchestrator {
 
-	_initWorkSpace () {
+    constructor (options = {}) {
 
-		this._Server.on("ping", () => {
-			this.emit("ping");
-		});
+        super({
+            "externalResourcesDirectory": "",
+            "packageFile": "",
+            "descriptorFile": "",
+            "mediatorFile": "",
+            "serverFile": "",
+            ...options
+        });
 
-		return Promise.resolve();
+    }
 
-	}
+    _initWorkSpace () {
 
-	install () {
+        this._Server.on("ping", () => {
+            this.emit("ping");
+        });
 
-		return new Promise((resolve, reject) => {
+        return Promise.resolve();
 
-			writeFile(FILE, "test", (err) => {
-				return err ? reject(err) : resolve();
-			});
+    }
 
-		});
+    install () {
 
-	}
+        return new Promise((resolve, reject) => {
 
-	update () {
+            writeFile(FILE, "test", (err) => {
+                return err ? reject(err) : resolve();
+            });
 
-		return isFile.default(FILE).then((exists) => {
-			return exists ? Promise.resolve() : this.install();
-		});
+        });
 
-	}
+    }
 
-	uninstall () {
+    update () {
 
-		return new Promise((resolve, reject) => {
+        return isFile.default(FILE).then((exists) => {
+            return exists ? Promise.resolve() : this.install();
+        });
 
-			unlink(FILE, (err) => {
-				return err ? reject(err) : resolve();
-			});
+    }
 
-		});
+    uninstall () {
 
-	}
+        return new Promise((resolve, reject) => {
+
+            unlink(FILE, (err) => {
+                return err ? reject(err) : resolve();
+            });
+
+        });
+
+    }
 
 };

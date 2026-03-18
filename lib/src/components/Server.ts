@@ -1,9 +1,13 @@
+/*
+    eslint-disable camelcase
+*/
+// => camelcase is disabled because of "openapi-types" types
+
 // deps
 
     // natives
-    import { AddressInfo } from "node:net";
     import { EOL } from "node:os";
-    import { parse } from "node:url";
+    import { URL } from "node:url";
 
     // externals
     import uniqid from "uniqid";
@@ -21,37 +25,46 @@
     import extractIp from "../utils/request/extractIp";
     import extractCookies from "../utils/request/extractCookies";
     import extractMime from "../utils/request/extractMime";
-    import jsonParser from "../utils/jsonParser";
     import send from "../utils/send";
     import cleanSendedError from "../utils/cleanSendedError";
 
     import MediatorUser, { type iMediatorUserOptions } from "./MediatorUser";
-    import Mediator from "./Mediator";
+    import type Mediator from "./Mediator";
     import UnauthorizedError from "./errors/UnauthorizedError";
     import NotFoundError from "./errors/NotFoundError";
     import LockedError from "./errors/LockedError";
 
     import SERVER_CODES from "../utils/serverCodes";
+    import getServerTypeFromServer from "../utils/server/getServerTypeFromServer";
+    import getSocketIOVersionFromServer from "../utils/server/getSocketIOVersionFromServer";
 
 // types & interfaces
 
     // natives
     import type { IncomingMessage, ServerResponse } from "node:http";
+    import type { AddressInfo } from "node:net";
 
     // externals
+    import type { OpenAPIV3_1 } from "openapi-types";
     import type { OpenApiDocument } from "express-openapi-validate";
+    import type { Request as ExpressIncomingMessage } from "express";
     import type { Server as WebSocketServer, WebSocket } from "ws";
-    import type { Server as SocketIOServer } from "socket.io";
+    import type { Server as SocketIOServer, Socket as SocketIOSocket } from "socket.io";
 
     // locals
 
+    import type { Server as SocketIOServerV2 } from "../../@types/socket.io-v2";
+
+    import type { tMethod, OperationObject } from "../openAPITypes";
+
     import type { tEventMap, iEventsMinimal } from "./DescriptorUser";
+    import type { iOperationHandler } from "./Mediator";
 
     interface iPush {
         "id": string;
         "plugin": string;
         "command": string;
-        "data"?: any;
+        "data"?: unknown;
     }
 
     export interface iClient {
@@ -60,21 +73,22 @@
     }
 
     export interface iIncomingMessage extends IncomingMessage {
-        "method": string;
+        "method": tMethod; // specify IncomingMessage["method"];
         "pattern": string;
         "validatedIp": string;
-        "params": Record<string, any>;
-        "query": Record<string, any>;
-        "headers": Record<string, any>;
-        "header"?: Record<string, any>;
-        "cookies": Record<string, any>;
-        "cookie"?: Record<string, any>;
-        "body": string;
+        "params": Record<string, string | number | boolean>;
+        "query": Record<string, unknown>;
+        // "headers": IncomingMessage["headers"];
+        "header"?: Record<string, unknown>;
+        "cookies": Record<string, unknown>;
+        "cookie"?: Record<string, unknown>;
+        "body": unknown;
+        "ip": string;
     }
 
-    export interface iServerResponse extends ServerResponse {
+    export interface iFormatedServerResponseForValidation extends ServerResponse {
         "body": string;
-        "headers": Record<string, any>;
+        "headers": Record<string, unknown>;
     }
 
     interface iWebSocketWithId extends WebSocket {
@@ -87,14 +101,14 @@
 
 // module
 
-// Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic.
+// Please note the fact that "init" and "release" method MUST NOT be re-written. Each child has its own init logic.
 export default class Server<T extends tEventMap<T> = iEventsMinimal> extends MediatorUser<T> {
 
     // attributes
 
         // protected
 
-            protected _socketServer: WebSocketServer | SocketIOServer | null;
+            protected _socketServer: WebSocketServer | SocketIOServer | SocketIOServerV2 | null;
             protected _checkParameters: boolean;
             protected _checkResponse: boolean;
             protected _cors: boolean;
@@ -114,38 +128,33 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
     // protected
 
-        protected _serverType (): "NO_SERVER" | "WEBSOCKET" | "SOCKETIO" | "UNKNOWN" {
+        protected _getServerType (): "NO_SERVER" | "WEBSOCKET" | "SOCKETIO" | "UNKNOWN" {
+            return getServerTypeFromServer(this._socketServer);
+        }
 
-            if (!this._socketServer) {
-                return "NO_SERVER";
-            }
-            else if ((this._socketServer as WebSocketServer).clients && "function" === typeof (this._socketServer as WebSocketServer).clients.forEach) {
-                return "WEBSOCKET";
-            }
-            else if ((this._socketServer as SocketIOServer).sockets && "function" === typeof (this._socketServer as SocketIOServer).sockets.emit) {
-                return "SOCKETIO";
-            }
-            else {
-                return "UNKNOWN";
-            }
-
+        protected _getSocketIOVersion (): "NO_SERVER" | "V2" | "V3-V4" | "UNKNOWN" {
+            return getSocketIOVersionFromServer(this._socketServer);
         }
 
         protected _getUsableSocketIOClient (clientId: string): {
-            "emit": (event: string, data: any) => void
+            "emit": (event: string, ...data: unknown[]) => void
         } | undefined {
 
-            if ("SOCKETIO" === this._serverType()) {
+            if ("SOCKETIO" === this._getServerType()) {
 
-                let socket: any | null = null;
+                const socketIOVersion = this._getSocketIOVersion();
 
-                if ("function" !== typeof (this._socketServer as SocketIOServer).sockets?.sockets?.has) { // SocketIO V2
+                if ("V2" === socketIOVersion) {
 
-                    for (const key in (this._socketServer as SocketIOServer).sockets.sockets) {
+                    const { sockets } = (this._socketServer as SocketIOServerV2).sockets;
+
+                    for (const key in sockets) {
 
                         if (key === clientId) {
 
-                            socket = ((this._socketServer as SocketIOServer).sockets.sockets as Record<string, any>)[key];
+                            if (sockets[key].connected) {
+                                return sockets[key];
+                            }
 
                             break;
 
@@ -154,12 +163,21 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                     }
 
                 }
-                else if ((this._socketServer as SocketIOServer).sockets.sockets.has(clientId)) { // SocketIO V3&4
-                    socket = (this._socketServer as SocketIOServer).sockets.sockets.get(clientId);
-                }
 
-                if (socket && socket.connected) {
-                    return socket;
+                if ("V3-V4" === socketIOVersion) {
+
+                    const { sockets } = (this._socketServer as SocketIOServer).sockets;
+
+                    if (sockets.has(clientId)) {
+
+                        const result: SocketIOSocket | undefined = sockets.get(clientId);
+
+                        if (true === result?.connected) { // force boolean comparison to avoid lint errors with "?"
+                            return result;
+                        }
+
+                    }
+
                 }
 
             }
@@ -194,25 +212,32 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
             this._cors = true; return this;
         }
 
-        public appMiddleware (_req: IncomingMessage, res: iServerResponse, next: (err?: Error) => void): void { // req, res, next : void
+        public appMiddleware (_req: IncomingMessage, res: ServerResponse, next: (err?: Error) => void): void { // req, res, next : void
 
-            if (!this._Descriptor) {
-                return next();
-            }
-
-            if (!(this._Descriptor as OpenApiDocument).paths) {
-                return next();
+            if (!this._Descriptor?.paths) {
+                next();
+                return;
             }
 
             this.checkDescriptor().then(() => {
 
-                const req: iIncomingMessage = Object.assign(_req);
+                const req = Object.assign(_req) as iIncomingMessage;
+
+                if ("undefined" === typeof req.url) {
+                    return next();
+                }
 
                 // parse
-                const { pathname, query }: { "pathname": string | null; "query": any; } = parse((req.url as string), true);
-                req.method = req.method ? req.method.toLowerCase() : "get";
+                const { pathname, searchParams } = new URL(req.url, "http://localhost"); // any url, but "http://localhost" is used to avoid errors
+                const query = Object.fromEntries(searchParams);
+
+                if (0 >= pathname.length) {
+                    return next();
+                }
+
+                req.method = "string" === typeof _req.method ? _req.method.toLowerCase() as tMethod : "get";
                 req.pattern = null === checkNonEmptyStringSync("pattern", req.pattern) ? req.pattern : extractPattern(
-                    (this._Descriptor as OpenApiDocument).paths, pathname as string, req.method
+                    (this._Descriptor as OpenApiDocument).paths, pathname, req.method
                 );
 
                 if (0 >= req.pattern.length) {
@@ -220,10 +245,11 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                 }
 
                 // extract specific data
+
                 try {
 
                     // workaround for express 5
-                    if (Object.getPrototypeOf(req).app) {
+                    if ("app" in (Object.getPrototypeOf(req) as ExpressIncomingMessage)) {
 
                         Object.defineProperty(req, "query", {
                             ...Object.getOwnPropertyDescriptor(req, "query"),
@@ -237,23 +263,23 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                     // url
 
-                    req.params = null === checkNonEmptyObjectSync("params", req.params) ? req.params : extractParams(req.pattern, pathname as string);
-                    req.query = null === checkNonEmptyObjectSync("query", req.query) ? req.query : query ?? {};
+                    req.params = null === checkNonEmptyObjectSync("params", req.params) ? req.params : extractParams(req.pattern, pathname);
+                    req.query = null === checkNonEmptyObjectSync("query", req.query) ? req.query : query;
 
                     if (null !== checkNonEmptyObjectSync("headers", req.headers)) {
-                        req.headers = null === checkNonEmptyObjectSync("header", req.header) ? req.header as Record<string, any> : {};
+                        req.headers = null === checkNonEmptyObjectSync("header", req.header) ? req.header as iIncomingMessage["headers"] : {};
                     }
 
                     if (null !== checkNonEmptyObjectSync("cookies", req.cookies)) {
-                        req.cookies = null === checkNonEmptyObjectSync("header", req.cookie) ? req.cookie as Record<string, any> : extractCookies(req);
+                        req.cookies = null === checkNonEmptyObjectSync("header", req.cookie) ? req.cookie as iIncomingMessage["headers"] : extractCookies(req);
                     }
 
                     // ensure content length formate
                     if ("undefined" === typeof req.headers["content-length"]) {
-                        req.headers["content-length"] = 0;
+                        req.headers["content-length"] = "0";
                     }
-                    else if ("string" === typeof req.headers["content-length"]) {
-                        req.headers["content-length"] = parseInt(req.headers["content-length"], 10);
+                    else if ("number" === typeof req.headers["content-length"]) {
+                        req.headers["content-length"] = String(req.headers["content-length"]);
                     }
 
                 }
@@ -261,22 +287,36 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                     return next(e as Error);
                 }
 
-                if (!(this._Descriptor as OpenApiDocument).paths[req.pattern] || !((this._Descriptor as OpenApiDocument).paths[req.pattern] as Record<string, any>)[req.method]) {
+                const { paths } = this._Descriptor as OpenApiDocument;
+
+                // enforce with try to avoid unexpected (data are theoretically validated by types, but can be wrong in practice, like with pure JS dev)
+                try {
+
+                    if (!paths[req.pattern][req.method]) {
+                        return next();
+                    }
+
+                }
+                catch {
                     return next();
                 }
 
-                const { operationId }: { "operationId": string; } = ((this._Descriptor as OpenApiDocument).paths[req.pattern] as Record<string, any>)[req.method];
-                const apiVersion: string = (this._Descriptor as OpenApiDocument).info.version;
+                const operation = paths[req.pattern][req.method] as OperationObject;
 
-                const contentType: string = req.headers["content-type"] ?? req.headers["Content-Type"] ?? "";
-                const responses = ((this._Descriptor as OpenApiDocument).paths[req.pattern] as Record<string, any>)[req.method].responses;
+                const { operationId } = operation as { "operationId"?: string | undefined }; // operationId is "any", had to specify the type to avoid lint errors
+                const apiVersion = (this._Descriptor as OpenApiDocument).info.version;
+
+                const contentType = req.headers["content-type"] ?? req.headers["Content-Type"] as string | undefined ?? "";
+                const { responses } = operation as { "responses": unknown }; // response is "any", had to specify the type to avoid lint errors
+
+                const contentLengthParsed = parseInt(req.headers["content-length"], 10);
 
                 this._log("info", ""
                     + "=> [" + req.validatedIp + "] " + req.url + " (" + req.method.toUpperCase() + ")"
-                    + (operationId ? EOL + "operationId    : " + operationId : "")
-                    + (req.headers["content-type"] ? EOL + "content-type   : " + req.headers["content-type"] : "")
+                    + ("undefined" !== typeof operationId ? EOL + "operationId    : " + operationId : "")
+                    + ("undefined" !== typeof req.headers["content-type"] ? EOL + "content-type   : " + req.headers["content-type"] : "")
                     + (
-                        "get" !== req.method && req.headers["content-length"] && 4 < req.headers["content-length"]
+                        "get" !== req.method && !Number.isNaN(contentLengthParsed) && 4 < contentLengthParsed
                             ? EOL + "content-length : " + req.headers["content-length"]
                             : ""
                     )
@@ -287,9 +327,9 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                     // add current server
 
-                    const port: number = res.socket && res.socket.localPort ? res.socket.localPort : (res.socket?.address() as AddressInfo).port;
+                    const port = res.socket?.localPort ?? (res.socket?.address() as AddressInfo).port;
 
-                    const descriptor: OpenApiDocument = { ...(this._Descriptor as OpenApiDocument) };
+                    const descriptor = { ...(this._Descriptor as OpenApiDocument) };
 
                     (descriptor.servers as Array<{
                         "url": string;
@@ -299,7 +339,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                         "description": "Actual current server"
                     });
 
-                    const content: string = JSON.stringify(descriptor);
+                    const content = JSON.stringify(descriptor);
 
                     this._log("info", "<= [" + req.validatedIp + "] " + content);
 
@@ -311,7 +351,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                         this._log("error", err);
 
-                        const result: string = JSON.stringify({
+                        const result = JSON.stringify({
                             "code": "INTERNAL_SERVER_ERROR",
                             "message": cleanSendedError(err)
                         });
@@ -322,6 +362,8 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                             "apiVersion": apiVersion,
                             "cors": this._cors,
                             "mime": extractMime(contentType, SERVER_CODES.INTERNAL_SERVER_ERROR, responses)
+                        }).then((): void => {
+                            // force return nothing
                         });
 
                     });
@@ -331,8 +373,8 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                 // get plugin status
                 else if ("/" + (this._Descriptor as OpenApiDocument).info.title + "/api/status" === req.pattern && "get" === req.method) {
 
-                    const initialized: boolean = this.initialized && (this._Mediator as Mediator).initialized;
-                    const status: "INITIALIZED" | "ENABLED" = initialized ? "INITIALIZED" : "ENABLED";
+                    const initialized = this.initialized && (this._Mediator as Mediator).initialized;
+                    const status = initialized ? "INITIALIZED" : "ENABLED";
 
                     this._log("info", "<= [" + req.validatedIp + "] " + status);
 
@@ -340,14 +382,16 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                         "apiVersion": apiVersion,
                         "cors": this._cors,
                         "mime": extractMime(contentType, SERVER_CODES.OK, responses)
+                    }).then((): void => {
+                        // force return nothing
                     });
 
                 }
 
                 // missing operationId
-                else if (!operationId) {
+                else if ("undefined" === typeof operationId) {
 
-                    const result: string = JSON.stringify({
+                    const result = JSON.stringify({
                         "code": "NOT_IMPLEMENTED",
                         "message": "Missing \"operationId\" in the Descriptor for this request"
                     });
@@ -358,14 +402,16 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                         "apiVersion": apiVersion,
                         "cors": this._cors,
                         "mime": extractMime(contentType, SERVER_CODES.NOT_IMPLEMENTED, responses)
+                    }).then((): void => {
+                        // force return nothing
                     });
 
                 }
 
                 // not implemented operationId
-                else if ("function" !== typeof (this._Mediator as Record<string, any>)[operationId]) {
+                else if ("function" !== typeof (this._Mediator as Mediator & Record<string, iOperationHandler>)[operationId]) {
 
-                    const result: string = JSON.stringify({
+                    const result = JSON.stringify({
                         "code": "NOT_IMPLEMENTED",
                         "message": "Unknown Mediator's \"operationId\" method for this request"
                     });
@@ -376,16 +422,18 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                         "apiVersion": apiVersion,
                         "cors": this._cors,
                         "mime": extractMime(contentType, SERVER_CODES.NOT_IMPLEMENTED, responses)
+                    }).then((): void => {
+                        // force return nothing
                     });
 
                 }
 
                 // no "Content-Length" header found
                 else if ("get" !== req.method && null !== checkIntegerSync(
-                    "headers[\"content-length\"]", req.headers["content-length"]
+                    "headers[\"content-length\"]", contentLengthParsed
                 )) {
 
-                    const result: string = JSON.stringify({
+                    const result = JSON.stringify({
                         "code": "MISSING_HEADER",
                         "message": "No valid \"Content-Length\" header found"
                     });
@@ -396,6 +444,8 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                         "apiVersion": apiVersion,
                         "cors": this._cors,
                         "mime": extractMime(contentType, SERVER_CODES.MISSING_HEADER, responses)
+                    }).then((): void => {
+                        // force return nothing
                     });
 
                 }
@@ -403,113 +453,111 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                 else {
 
                     // force formate for path parameters
-                    return Promise.resolve().then((): Promise<void> => {
+                    return Promise.resolve().then((): void => {
 
                         const keys: string[] = Object.keys(req.params);
-                        return !keys.length ? Promise.resolve() : Promise.resolve().then((): Promise<void> => {
 
-                            const docParameters: Array<Record<string, any>> = ((this._Descriptor as OpenApiDocument).paths[req.pattern] as Record<string, any>)[req.method].parameters.filter((p: Record<string, any>): boolean => {
-                                return "path" === p.in;
-                            });
+                        if (!keys.length) {
+                            return;
+                        }
 
-                            return !docParameters.length ? Promise.resolve() : Promise.resolve().then((): Promise<void> => {
+                        const docParameters = (paths[req.pattern][req.method]?.parameters?.filter((p): boolean => {
+                            return "path" === (p as { "in"?: string }).in;
+                        }) ?? []) as unknown as Array<Record<string, unknown>>;
 
-                                let err: Error | null = null;
-                                for (let i: number = 0; i < keys.length; ++i) {
+                        if (!docParameters.length) {
+                            return;
+                        }
 
-                                    const key: string = keys[i];
+                        for (let i: number = 0; i < keys.length; ++i) {
 
-                                    const schema = docParameters.find((dp: Record<string, any>): boolean => {
-                                        return dp.name === key;
-                                    })?.schema ?? null;
+                            const key: string = keys[i];
 
-                                    if (!schema) {
-                                        err = new ReferenceError("Unknown parameter: request.params['" + key + "']"); break;
-                                    }
+                            const schema: OpenAPIV3_1.SchemaObject | OpenAPIV3_1.ReferenceObject | null = docParameters.find((dp): boolean => {
+                                return dp.name === key;
+                            })?.schema ?? null;
 
-                                    switch (extractSchemaType(schema, ((this._Descriptor as OpenApiDocument).components as Record<string, any>).schemas)) {
+                            if (!schema) {
+                                throw new ReferenceError("Unknown parameter: request.params['" + key + "']");
+                            }
 
-                                        case "boolean":
+                            switch (extractSchemaType(schema, ((this._Descriptor as OpenApiDocument).components?.schemas ?? { }) as Record<string, OpenAPIV3_1.SchemaObject>)) {
 
-                                            if ("boolean" !== typeof req.params[key]) {
+                                case "boolean":
 
-                                                if ("true" === req.params[key]) {
-                                                    req.params[key] = true;
-                                                }
-                                                else if ("false" === req.params[key]) {
-                                                    req.params[key] = false;
-                                                }
-                                                else {
+                                    if ("boolean" !== typeof req.params[key]) {
 
-                                                    err = new TypeError(
-                                                        "Error while validating request: request.params['" + key + "'] should be boolean"
-                                                    ); break;
+                                        if ("true" === req.params[key]) {
+                                            req.params[key] = true;
+                                        }
+                                        else if ("false" === req.params[key]) {
+                                            req.params[key] = false;
+                                        }
+                                        else {
 
-                                                }
+                                            throw new TypeError(
+                                                "Error while validating request: request.params['" + key + "'] should be boolean"
+                                            );
 
-                                            }
-
-                                        break;
-
-                                        case "integer":
-
-                                            // error returned, not an integer
-                                            if (null !== checkIntegerSync("request.params['" + key + "']", req.params[key])) {
-
-                                                const value: number = parseInt(req.params[key], 10);
-
-                                                if (!Number.isNaN(value)) {
-                                                    req.params[key] = value;
-                                                }
-                                                else {
-
-                                                    err = new TypeError(
-                                                        "Error while validating request: request.params['" + key + "'] should be integer"
-                                                    ); break;
-
-                                                }
-
-                                            }
-
-                                        break;
-
-                                        case "number":
-
-                                            if ("number" !== typeof req.params[key]) {
-
-                                                const value: number = parseFloat(req.params[key]);
-
-                                                if (!Number.isNaN(value)) {
-                                                    req.params[key] = value;
-                                                }
-                                                else {
-
-                                                    err = new TypeError(
-                                                        "Error while validating request: request.params['" + key + "'] should be number"
-                                                    ); break;
-
-                                                }
-
-                                            }
-
-                                        break;
-
-                                        default:
-                                            // nothing to do here
-                                        break;
+                                        }
 
                                     }
 
-                                }
+                                break;
 
-                                return err ? Promise.reject(err) : Promise.resolve();
+                                case "integer":
 
-                            });
+                                    // error returned, not an integer
+                                    if (null !== checkIntegerSync("request.params['" + key + "']", req.params[key])) {
 
-                        });
+                                        const value: number = parseInt(req.params[key] as string, 10);
+
+                                        if (!Number.isNaN(value)) {
+                                            req.params[key] = value;
+                                        }
+                                        else {
+
+                                            throw new TypeError(
+                                                "Error while validating request: request.params['" + key + "'] should be integer"
+                                            );
+
+                                        }
+
+                                    }
+
+                                break;
+
+                                case "number":
+
+                                    if ("number" !== typeof req.params[key]) {
+
+                                        const value: number = parseFloat(req.params[key] as string);
+
+                                        if (!Number.isNaN(value)) {
+                                            req.params[key] = value;
+                                        }
+                                        else {
+
+                                            throw new TypeError(
+                                                "Error while validating request: request.params['" + key + "'] should be number"
+                                            );
+
+                                        }
+
+                                    }
+
+                                break;
+
+                                default:
+                                    // nothing to do here
+                                break;
+
+                            }
+
+                        }
 
                     // extract body
-                    }).then((): Promise<any> => {
+                    }).then((): Promise<unknown> => {
 
                         if ("get" === req.method.toLowerCase()) {
                             return Promise.resolve("");
@@ -519,27 +567,32 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                         }
                         else {
 
-                            return extractBody(req).then((body: string): Promise<any> => {
+                            return extractBody(req).then((body: string): unknown => {
 
                                 if (body.length) {
 
                                     this._log("log", body);
 
-                                    req.body = jsonParser(body);
+                                    try {
+                                        req.body = JSON.parse(body) as unknown;
+                                    }
+                                    catch {
+                                        // nothing to do here
+                                    }
 
                                 }
                                 else {
                                     req.body = "";
                                 }
 
-                                return Promise.resolve(req.body);
+                                return req.body;
 
                             });
 
                         }
 
                     // formate data
-                    }).then((body: any): Promise<string> => {
+                    }).then((body: unknown): Promise<string> => {
 
                         const parsed = {
                             "url": {
@@ -561,12 +614,12 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                         // execute Mediator method
                         }).then((): Promise<string> => {
 
-                            return (this._Mediator as Record<string, any>)[operationId](parsed.url, parsed.body);
+                            return (this._Mediator as Mediator & Record<string, iOperationHandler>)[operationId](parsed.url, parsed.body);
 
                         });
 
                     // send response
-                    }).then((content: any): Promise<void> => {
+                    }).then((content: unknown): Promise<iFormatedServerResponseForValidation> => {
 
                         // no content
                         if ("undefined" === typeof content || null === content) {
@@ -591,7 +644,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                             else if ("application/json" === contentType) {
                                 this._log("success", "<= [" + req.validatedIp + "] <" + contentType + "> " + JSON.stringify(content));
                             }
-                            else if ([ "application/xml", "text/plain" ].includes(contentType)) {
+                            else if ([ "application/xml", "text/plain" ].includes(contentType) && "string" === typeof content) {
                                 this._log("success", "<= [" + req.validatedIp + "] <" + contentType + "> " + content);
                             }
                             else {
@@ -608,143 +661,152 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                         }
 
+                    // check response
+                    }).then((response: iFormatedServerResponseForValidation): Promise<void> => {
+
+                        return this._checkResponse ? (this._Mediator as Mediator).checkResponse(operationId, response) : Promise.resolve();
+
                     }).catch((err: Error): Promise<void> => {
 
-                        if (err instanceof ReferenceError) {
+                        return Promise.resolve().then((): Promise<iFormatedServerResponseForValidation> => {
 
-                            const result: string = JSON.stringify({
-                                "code": "MISSING_PARAMETER",
-                                "message": cleanSendedError(err)
-                            });
+                            if (err instanceof ReferenceError) {
 
-                            this._log("error", "<= [" + req.validatedIp + "] " + result);
+                                const result = JSON.stringify({
+                                    "code": "MISSING_PARAMETER",
+                                    "message": cleanSendedError(err)
+                                });
 
-                            return send(req, res, SERVER_CODES.MISSING_PARAMETER, result, {
-                                "apiVersion": apiVersion,
-                                "cors": this._cors,
-                                "mime": extractMime(contentType, SERVER_CODES.MISSING_PARAMETER, responses)
-                            });
+                                this._log("error", "<= [" + req.validatedIp + "] " + result);
 
-                        }
-                        else if (err instanceof TypeError) {
+                                return send(req, res, SERVER_CODES.MISSING_PARAMETER, result, {
+                                    "apiVersion": apiVersion,
+                                    "cors": this._cors,
+                                    "mime": extractMime(contentType, SERVER_CODES.MISSING_PARAMETER, responses)
+                                });
 
-                            const result: string = JSON.stringify({
-                                "code": "WRONG_TYPE_PARAMETER",
-                                "message": cleanSendedError(err)
-                            });
+                            }
+                            else if (err instanceof TypeError) {
 
-                            this._log("error", "<= [" + req.validatedIp + "] " + result);
+                                const result: string = JSON.stringify({
+                                    "code": "WRONG_TYPE_PARAMETER",
+                                    "message": cleanSendedError(err)
+                                });
 
-                            return send(req, res, SERVER_CODES.WRONG_TYPE_PARAMETER, result, {
-                                "apiVersion": apiVersion,
-                                "cors": this._cors,
-                                "mime": extractMime(contentType, SERVER_CODES.WRONG_TYPE_PARAMETER, responses)
-                            });
+                                this._log("error", "<= [" + req.validatedIp + "] " + result);
 
-                        }
-                        else if (err instanceof RangeError) {
+                                return send(req, res, SERVER_CODES.WRONG_TYPE_PARAMETER, result, {
+                                    "apiVersion": apiVersion,
+                                    "cors": this._cors,
+                                    "mime": extractMime(contentType, SERVER_CODES.WRONG_TYPE_PARAMETER, responses)
+                                });
 
-                            const result: string = JSON.stringify({
-                                "code": "EMPTY_OR_RANGE_OR_ENUM_PARAMETER",
-                                "message": cleanSendedError(err)
-                            });
+                            }
+                            else if (err instanceof RangeError) {
 
-                            this._log("error", "<= [" + req.validatedIp + "] " + result);
+                                const result = JSON.stringify({
+                                    "code": "EMPTY_OR_RANGE_OR_ENUM_PARAMETER",
+                                    "message": cleanSendedError(err)
+                                });
 
-                            return send(req, res, SERVER_CODES.EMPTY_OR_RANGE_OR_ENUM_PARAMETER, result, {
-                                "apiVersion": apiVersion,
-                                "cors": this._cors,
-                                "mime": extractMime(contentType, SERVER_CODES.EMPTY_OR_RANGE_OR_ENUM_PARAMETER, responses)
-                            });
+                                this._log("error", "<= [" + req.validatedIp + "] " + result);
 
-                        }
-                        else if (err instanceof SyntaxError) {
+                                return send(req, res, SERVER_CODES.EMPTY_OR_RANGE_OR_ENUM_PARAMETER, result, {
+                                    "apiVersion": apiVersion,
+                                    "cors": this._cors,
+                                    "mime": extractMime(contentType, SERVER_CODES.EMPTY_OR_RANGE_OR_ENUM_PARAMETER, responses)
+                                });
 
-                            const result: string = JSON.stringify({
-                                "code": "JSON_PARSE",
-                                "message": cleanSendedError(err)
-                            });
+                            }
+                            else if (err instanceof SyntaxError) {
 
-                            this._log("error", "<= [" + req.validatedIp + "] " + result);
+                                const result = JSON.stringify({
+                                    "code": "JSON_PARSE",
+                                    "message": cleanSendedError(err)
+                                });
 
-                            return send(req, res, SERVER_CODES.JSON_PARSE, result, {
-                                "apiVersion": apiVersion,
-                                "cors": this._cors,
-                                "mime": extractMime(contentType, SERVER_CODES.JSON_PARSE, responses)
-                            });
+                                this._log("error", "<= [" + req.validatedIp + "] " + result);
 
-                        }
-                        else if (err instanceof UnauthorizedError) {
+                                return send(req, res, SERVER_CODES.JSON_PARSE, result, {
+                                    "apiVersion": apiVersion,
+                                    "cors": this._cors,
+                                    "mime": extractMime(contentType, SERVER_CODES.JSON_PARSE, responses)
+                                });
 
-                            const result: string = JSON.stringify({
-                                "code": "UNAUTHORIZED",
-                                "message": cleanSendedError(err)
-                            });
+                            }
+                            else if (err instanceof UnauthorizedError) {
 
-                            this._log("error", "<= [" + req.validatedIp + "] " + result);
+                                const result = JSON.stringify({
+                                    "code": "UNAUTHORIZED",
+                                    "message": cleanSendedError(err)
+                                });
 
-                            return send(req, res, SERVER_CODES.UNAUTHORIZED, result, {
-                                "apiVersion": apiVersion,
-                                "cors": this._cors,
-                                "mime": extractMime(contentType, SERVER_CODES.UNAUTHORIZED, responses)
-                            });
+                                this._log("error", "<= [" + req.validatedIp + "] " + result);
 
-                        }
-                        else if (err instanceof NotFoundError) {
+                                return send(req, res, SERVER_CODES.UNAUTHORIZED, result, {
+                                    "apiVersion": apiVersion,
+                                    "cors": this._cors,
+                                    "mime": extractMime(contentType, SERVER_CODES.UNAUTHORIZED, responses)
+                                });
 
-                            const result: string = JSON.stringify({
-                                "code": "NOT_FOUND",
-                                "message": cleanSendedError(err)
-                            });
+                            }
+                            else if (err instanceof NotFoundError) {
 
-                            this._log("error", "<= [" + req.validatedIp + "] " + result);
+                                const result = JSON.stringify({
+                                    "code": "NOT_FOUND",
+                                    "message": cleanSendedError(err)
+                                });
 
-                            return send(req, res, SERVER_CODES.NOT_FOUND, result, {
-                                "apiVersion": apiVersion,
-                                "cors": this._cors,
-                                "mime": extractMime(contentType, SERVER_CODES.NOT_FOUND, responses)
-                            });
+                                this._log("error", "<= [" + req.validatedIp + "] " + result);
 
-                        }
-                        else if (err instanceof LockedError) {
+                                return send(req, res, SERVER_CODES.NOT_FOUND, result, {
+                                    "apiVersion": apiVersion,
+                                    "cors": this._cors,
+                                    "mime": extractMime(contentType, SERVER_CODES.NOT_FOUND, responses)
+                                });
 
-                            const result: string = JSON.stringify({
-                                "code": "LOCKED",
-                                "message": cleanSendedError(err)
-                            });
+                            }
+                            else if (err instanceof LockedError) {
 
-                            this._log("error", "<= [" + req.validatedIp + "] " + result);
+                                const result = JSON.stringify({
+                                    "code": "LOCKED",
+                                    "message": cleanSendedError(err)
+                                });
 
-                            return send(req, res, SERVER_CODES.LOCKED, result, {
-                                "apiVersion": apiVersion,
-                                "cors": this._cors,
-                                "mime": extractMime(contentType, SERVER_CODES.LOCKED, responses)
-                            });
+                                this._log("error", "<= [" + req.validatedIp + "] " + result);
 
-                        }
-                        else {
+                                return send(req, res, SERVER_CODES.LOCKED, result, {
+                                    "apiVersion": apiVersion,
+                                    "cors": this._cors,
+                                    "mime": extractMime(contentType, SERVER_CODES.LOCKED, responses)
+                                });
 
-                            this._log("error", err);
+                            }
+                            else {
 
-                            const result: string = JSON.stringify({
-                                "code": "INTERNAL_SERVER_ERROR",
-                                "message": cleanSendedError(err)
-                            });
+                                this._log("error", err);
 
-                            this._log("error", "<= [" + req.validatedIp + "] " + result);
+                                const result = JSON.stringify({
+                                    "code": "INTERNAL_SERVER_ERROR",
+                                    "message": cleanSendedError(err)
+                                });
 
-                            return send(req, res, SERVER_CODES.INTERNAL_SERVER_ERROR, result, {
-                                "apiVersion": apiVersion,
-                                "cors": this._cors,
-                                "mime": extractMime(contentType, SERVER_CODES.INTERNAL_SERVER_ERROR, responses)
-                            });
+                                this._log("error", "<= [" + req.validatedIp + "] " + result);
 
-                        }
+                                return send(req, res, SERVER_CODES.INTERNAL_SERVER_ERROR, result, {
+                                    "apiVersion": apiVersion,
+                                    "cors": this._cors,
+                                    "mime": extractMime(contentType, SERVER_CODES.INTERNAL_SERVER_ERROR, responses)
+                                });
 
-                    // check response
-                    }).then((): Promise<void> => {
+                            }
 
-                        return this._checkResponse ? (this._Mediator as Mediator).checkResponse(operationId, res) : Promise.resolve();
+                        // still check response for errors
+                        }).then((response: iFormatedServerResponseForValidation): Promise<void> => {
+
+                            return this._checkResponse ? (this._Mediator as Mediator).checkResponse(operationId, response) : Promise.resolve();
+
+                        });
 
                     });
 
@@ -761,13 +823,13 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
         }
 
-        public socketMiddleware (socketServer: WebSocketServer | SocketIOServer): void {
+        public socketMiddleware (socketServer: WebSocketServer | SocketIOServer | SocketIOServerV2): void {
             this._socketServer = socketServer;
         }
 
-        public push (command: string, data?: any, log: boolean = true): this {
+        public push (command: string, data?: unknown, log: boolean = true): this {
 
-            const serverType: "NO_SERVER" | "WEBSOCKET" | "SOCKETIO" | "UNKNOWN" = this._serverType();
+            const serverType = this._getServerType();
 
             if (![ "WEBSOCKET", "SOCKETIO" ].includes(serverType)) {
                 return this;
@@ -801,9 +863,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                         (this._socketServer as WebSocketServer).clients.forEach((client: iWebSocketWithId): void => {
 
-                            if (!client.id) {
-                                client.id = uniqid();
-                            }
+                            client.id ??= uniqid();
 
                             if (WEBSOCKET_STATE_OPEN === client.readyState) {
                                 client.send(result);
@@ -813,9 +873,13 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                     break;
 
-                    case "SOCKETIO":
-                        (this._socketServer as SocketIOServer).sockets.emit("message", result);
-                    break;
+                    case "SOCKETIO": {
+
+                        const sockets = (this._socketServer as SocketIOServer | SocketIOServerV2).sockets;
+
+                        (sockets.emit as (event: string, ...args: unknown[]) => void)("message", result);
+
+                    } break;
 
                     default:
                         // nothing to do here
@@ -833,22 +897,20 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
         public getClients (): iClient[] {
 
-            switch (this._serverType()) {
+            switch (this._getServerType()) {
 
                 case "WEBSOCKET": {
 
                     const result: iClient[] = [];
 
-                        (this._socketServer as WebSocketServer).clients.forEach((s: { "id"?: string; "readyState": number; }): iClient => {
+                        (this._socketServer as WebSocketServer).clients.forEach((s: { "id"?: string; "readyState": number; }): void => {
 
-                            if (!s.id) {
-                                s.id = uniqid();
-                            }
+                            s.id ??= uniqid();
 
-                            return {
-                                "id": s.id as string,
+                            result.push({
+                                "id": s.id,
                                 "status": WEBSOCKET_STATE_OPEN === s.readyState ? "CONNECTED" : "DISCONNECTED"
-                            };
+                            });
 
                         });
 
@@ -858,13 +920,17 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                 case "SOCKETIO": {
 
+                    const socketIOVersion = this._getSocketIOVersion();
+
                     const result: iClient[] = [];
 
-                        if ("function" !== typeof (this._socketServer as SocketIOServer).sockets?.sockets?.has) { // SocketIO V2
+                        if ("V2" === socketIOVersion) {
 
-                            for (const key in (this._socketServer as SocketIOServer).sockets.sockets) {
+                            const { sockets } = (this._socketServer as SocketIOServerV2).sockets;
 
-                                const s: any = ((this._socketServer as SocketIOServer).sockets.sockets as Record<string, any>)[key];
+                            for (const key in sockets) {
+
+                                const s: { "id": string; "connected": boolean; } = sockets[key];
 
                                 result.push({
                                     "id": s.id,
@@ -874,9 +940,9 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                             }
 
                         }
-                        else {
+                        else if ("V3-V4" === socketIOVersion) {
 
-                            (this._socketServer as SocketIOServer).sockets.sockets.forEach((s: any): void => { // SocketIO V3&4
+                            (this._socketServer as SocketIOServer).sockets.sockets.forEach((s: SocketIOSocket): void => {
 
                                 result.push({
                                     "id": s.id,
@@ -899,9 +965,9 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
         }
 
-        public pushClient (clientId: string, command: string, data?: any, log: boolean = true): this {
+        public pushClient (clientId: string, command: string, data?: unknown, log: boolean = true): this {
 
-            const serverType = this._serverType();
+            const serverType = this._getServerType();
 
             if (![ "WEBSOCKET", "SOCKETIO" ].includes(serverType)) {
                 return this;
@@ -931,7 +997,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                         (this._socketServer as WebSocketServer).clients.forEach((client: iWebSocketWithId): void => {
 
-                            if (!client.id) {
+                            if ("undefined" === typeof client.id) {
                                 client.id = uniqid();
                             }
                             else if (client.id === clientId && WEBSOCKET_STATE_OPEN === client.readyState) {
@@ -969,6 +1035,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                     break;
 
                 }
+
             }).catch((err: Error): void => {
                 this._log("error", err);
             });
@@ -979,7 +1046,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
         // init / release
 
-            public init (...data: any): Promise<void> {
+            public init (...data: unknown[]): Promise<void> {
 
                 return this.checkDescriptor().then((): Promise<void> => {
                     return this.checkMediator();
@@ -988,13 +1055,13 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                 }).then((): void => {
 
                     this.initialized = true;
-                    this._emitEventGenericForTSPurposeDONOTUSE("initialized", ...data);
+                    (this.emit as (event: "initialized", ...args: unknown[]) => boolean)("initialized", ...data);
 
                 });
 
             }
 
-            public release (...data: any): Promise<void> {
+            public release (...data: unknown[]): Promise<void> {
 
                 return this._releaseWorkSpace(...data).then((): void => {
 
@@ -1008,11 +1075,11 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                         this._Mediator = null;
                     }
 
-                    this._externalRessourcesDirectory = "";
+                    this._externalResourcesDirectory = "";
                     this._socketServer = null;
 
                     this.initialized = false;
-                    this._emitEventGenericForTSPurposeDONOTUSE("released", ...data);
+                    (this.emit as (event: "released", ...args: unknown[]) => boolean)("released", ...data);
 
                 }).then((): void => {
 

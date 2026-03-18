@@ -1,3 +1,8 @@
+/*
+    eslint-disable @typescript-eslint/no-unused-vars
+*/
+// => @typescript-eslint/no-unused-vars is disabled to allow inheritance with proper signature
+
 //  deps
 
     // natives
@@ -14,22 +19,23 @@
     import type { OpenApiDocument } from "express-openapi-validate";
 
     // locals
+    import type { tMethod } from "../openAPITypes";
 
     export type tLogType = "data" | "debug" | "log" | "info" | "success" | "warning" | "error";
     export type tLogger = (type: tLogType, message: string | Error, bold?: boolean, pluginName?: string) => void;
 
     export interface iDescriptorUserOptions {
-        "externalRessourcesDirectory": string; // used to write local data like sqlite database, json files, pictures, etc...
-        "descriptor"?: OpenApiDocument; // not sended by Orchestrator
+        "externalResourcesDirectory": string; // used to write local data like sqlite database, json files, pictures, etc...
+        "descriptor"?: OpenApiDocument; // not sent by Orchestrator
         "logger"?: tLogger;
     }
 
-    export type tEventMap<T> = Record<keyof T, any[]> | tEventsNoEvent;
-    export type tEventsNoEvent = [never];
+    export type tEventMap<T> = Record<keyof T, unknown[]>;
+    export type tEventsNoEvent = {};
     export interface iEventsMinimal {
         "error": [ Error ];
-        "initialized": [ any ];
-        "released": [ any ];
+        "initialized": [ unknown ];
+        "released": [ unknown ];
     }
 
 // consts
@@ -44,8 +50,8 @@
 
 // module
 
-// Please note the fact that "_initWorkSpace" and "_releaseWorkSpace" method MUST be re-writted in Mediator class, and not in MediatorUser childs.
-// Please note the fact that "init" and "release" method MUST NOT be re-writted. Each child has is own init logic.
+// Please note the fact that "_initWorkSpace" and "_releaseWorkSpace" method MUST be re-written in Mediator class, and not in MediatorUser childs.
+// Please note the fact that "init" and "release" method MUST NOT be re-written. Each child has its own init logic.
 export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> extends EventEmitter<T> {
 
     // attributes
@@ -57,7 +63,7 @@ export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> ext
         // protected
 
             protected _descriptorValidated: boolean;
-            protected _externalRessourcesDirectory: string;
+            protected _externalResourcesDirectory: string;
             protected _Descriptor: OpenApiDocument | null;
             protected _Logger: tLogger | null;
 
@@ -75,31 +81,34 @@ export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> ext
 
             this._descriptorValidated = false;
 
-            this._externalRessourcesDirectory = "string" === typeof options?.externalRessourcesDirectory
-                ? options.externalRessourcesDirectory
-                : "";
+            // mandatory props
 
-            this._Descriptor = "object" === typeof options?.descriptor
-                ? options.descriptor
-                : null;
+            if ("object" !== typeof options) {
+                throw new ReferenceError("\"options\" must be a non-null object");
+            }
+            if ("string" !== typeof options.externalResourcesDirectory) {
+                throw new ReferenceError("\"options.externalResourcesDirectory\" must be a string");
+            }
 
-            this._Logger = "function" === typeof options?.logger
-                ? options.logger
-                : null;
+            // optional props
+
+            this._externalResourcesDirectory = options.externalResourcesDirectory;
+            this._Descriptor = options.descriptor ?? null;
+            this._Logger = options.logger ?? null;
 
     }
 
     // protected
 
         // must be inherited
-        protected _initWorkSpace (...data: any): Promise<void> {
+        protected _initWorkSpace (...data: unknown[]): Promise<void> {
 
             return Promise.reject(new Error("\"_initWorkSpace\" method must be inherited"));
 
         }
 
         // must be inherited
-        protected _releaseWorkSpace (...data: any): Promise<void> {
+        protected _releaseWorkSpace (...data: unknown[]): Promise<void> {
 
             return Promise.reject(new Error("\"_releaseWorkSpace\" method must be inherited"));
 
@@ -108,47 +117,36 @@ export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> ext
         protected _log (type: tLogType, message: string | Error, bold?: boolean): this {
 
             if (Boolean(message) && "function" === typeof this._Logger && LOG_TYPES_ALLOWED.includes(type)) {
-                (this._Logger as tLogger)(type, message, bold, this.getPluginName());
+                this._Logger(type, message, bold, this.getPluginName());
             }
 
             return this;
 
         }
 
-        // used to faint the typing of EventEmitter for emit into a generic class (which MUST be inherited anyway) like Mediator/Server/Orchestrator
-        protected _emitEventGenericForTSPurposeDONOTUSE (event: string, ...args: any[]): boolean {
-
-            return this.emit(event as any, ...args as any);
-
-        }
-
     // public
 
         public getPluginName (): string {
-            return this._Descriptor && this._Descriptor.info && this._Descriptor.info.title ? this._Descriptor.info.title : "";
+            return this._Descriptor?.info.title ?? "";
         }
 
         public getPluginVersion (): string {
-            return this._Descriptor && this._Descriptor.info && this._Descriptor.info.version ? this._Descriptor.info.version : "";
+            return this._Descriptor?.info.version ?? "";
         }
 
         public getPluginDescription (): string {
-            return this._Descriptor && this._Descriptor.info && this._Descriptor.info.description ? this._Descriptor.info.description : "";
+            return this._Descriptor?.info.description ?? "";
         }
 
         // must be inherited
-        public init (...data: any): Promise<void> {
-
-            console.log("DescriptorUser", "init", ...data);
+        public init (...data: unknown[]): Promise<void> {
 
             return Promise.reject(new Error("\"init\" method must be inherited"));
 
         }
 
         // must be inherited
-        public release (...data: any): Promise<void> {
-
-            console.log("DescriptorUser", "release", ...data);
+        public release (...data: unknown[]): Promise<void> {
 
             return Promise.reject(new Error("\"release\" method must be inherited"));
 
@@ -157,46 +155,56 @@ export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> ext
         // must be inherited
         public checkDescriptor (): Promise<void> {
 
+            if (this._descriptorValidated) {
+                return Promise.resolve();
+            }
+
             // check Descriptor object
-            return this._descriptorValidated ? Promise.resolve() : checkNonEmptyObject("Descriptor", this._Descriptor).then((): Promise<void> => {
+            return checkNonEmptyObject("Descriptor", this._Descriptor).then((): Promise<void> => {
 
                 // check info object
                 return checkNonEmptyObject("Descriptor.info", (this._Descriptor as OpenApiDocument).info).then((): Promise<void> => {
 
-                    // check title
-                    return checkNonEmptyString("Descriptor.info.title", (this._Descriptor as OpenApiDocument).info.title).then((): Promise<void> => {
+                    const { title, version } = (this._Descriptor as OpenApiDocument).info;
 
-                        return (this._Descriptor as OpenApiDocument).info.title !== (this._Descriptor as OpenApiDocument).info.title.toLowerCase()
+                    // check title
+                    return checkNonEmptyString("Descriptor.info.title", title).then((): Promise<void> => {
+
+                        return title !== title.toLowerCase()
                             ? Promise.reject(new Error(
-                                "The descriptor's title (\"" + (this._Descriptor as OpenApiDocument).info.title + "\") "
+                                "The descriptor's title (\"" + title + "\") "
                                 + "is not equals in lower case (package.json convention)"
                             ))
                             : Promise.resolve();
 
                     // check version
                     }).then((): Promise<void> => {
-                        return checkNonEmptyString("Descriptor.info.version", (this._Descriptor as OpenApiDocument).info.version);
+                        return checkNonEmptyString("Descriptor.info.version", version);
                     });
 
                 });
 
             }).then((): Promise<void> => {
 
+                const { paths } = this._Descriptor as OpenApiDocument;
+
                 // check paths object
-                return (checkObject("Descriptor.paths", (this._Descriptor as OpenApiDocument).paths)).then((): Promise<void> => {
+                return checkObject("Descriptor.paths", paths).then((): Promise<void> => {
 
                     // check multiple operationIds
                     return Promise.resolve().then((): Promise<void> => {
 
                         const operationIds: string[] = [];
-                        Object.keys((this._Descriptor as OpenApiDocument).paths).forEach((p: string): void => {
+                        Object.keys(paths).forEach((pathname: string): void => {
 
-                            Object.keys((this._Descriptor as OpenApiDocument).paths[p]).forEach((m: string): void => {
+                            const path = paths[pathname];
 
-                                const path: Record<string, any> = (this._Descriptor as OpenApiDocument).paths[p];
+                            Object.keys(path).forEach((method: string): void => {
 
-                                if (path[m].operationId) {
-                                    operationIds.push(path[m].operationId);
+                                const operation = path[method as tMethod];
+
+                                if ("string" === typeof operation?.operationId) {
+                                    operationIds.push(operation.operationId);
                                 }
 
                             });
@@ -204,21 +212,19 @@ export default class DescriptorUser<T extends tEventMap<T> = tEventsNoEvent> ext
                         });
 
                         let multiple: boolean = false;
-                        for (let i: number = 0; i < operationIds.length - 1; ++i) {
 
-                            for (let j: number = i + 1; j < operationIds.length; ++j) {
+                            const seen: Set<string> = new Set();
 
-                                if (operationIds[i] === operationIds[j]) {
-                                    multiple = true; break;
+                            for (let i: number = 0; i < operationIds.length; ++i) {
+
+                                if (seen.has(operationIds[i])) {
+                                    multiple = true;
+                                    break;
                                 }
 
-                            }
+                                seen.add(operationIds[i]);
 
-                            if (multiple) {
-                                break;
                             }
-
-                        }
 
                         return multiple ? Promise.reject(new Error(
                             "There is multiple operationIds in [\" " + operationIds.join("\", ") + " \"]"

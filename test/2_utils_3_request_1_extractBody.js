@@ -1,295 +1,293 @@
-"use strict";
-
 // deps
 
-	// natives
-	const { strictEqual } = require("assert");
-	const { join } = require("path");
-	const EventEmitter = require("events");
+    // natives
+    const { strictEqual, ok } = require("node:assert");
+    const EventEmitter = require("node:events");
+    const { join } = require("node:path");
 
-	// locals
-	const extractBody = require(join(__dirname, "..", "lib", "cjs", "utils", "request", "extractBody.js"));
+    // locals
+    const extractBody = require(join(__dirname, "..", "lib", "cjs", "utils", "request", "extractBody.js"));
 
 // tests
 
 describe("utils / request / extractBody", () => {
 
-	it("should test with missing data", (done) => {
+    it("should test with missing data", (done) => {
 
-		extractBody.default().then(() => {
-			done(new Error("There is no generated error"));
-		}).catch((err) => {
+        extractBody.default().then(() => {
+            done(new Error("There is no generated error"));
+        }).catch((err) => {
 
-			strictEqual(typeof err, "object");
-			strictEqual(err instanceof ReferenceError, true);
+            strictEqual(typeof err, "object");
+            ok(err instanceof ReferenceError);
 
-			done();
+            done();
 
-		});
+        });
 
-	});
+    });
 
-	it("should test with wrong data", (done) => {
+    it("should test with wrong data", (done) => {
 
-		extractBody.default(false).then(() => {
-			done(new Error("There is no generated error"));
-		}).catch((err) => {
+        extractBody.default(false).then(() => {
+            done(new Error("There is no generated error"));
+        }).catch((err) => {
 
-			strictEqual(typeof err, "object");
-			strictEqual(err instanceof TypeError, true);
+            strictEqual(typeof err, "object");
+            ok(err instanceof TypeError);
 
-			done();
+            done();
 
-		});
+        });
 
-	});
+    });
 
-	it("should test with empty object", (done) => {
+    it("should test with empty object", (done) => {
 
-		extractBody.default({}).then(() => {
-			done(new Error("There is no generated error"));
-		}).catch((err) => {
+        extractBody.default({}).then(() => {
+            done(new Error("There is no generated error"));
+        }).catch((err) => {
 
-			strictEqual(typeof err, "object");
-			strictEqual(err instanceof RangeError, true);
+            strictEqual(typeof err, "object");
+            ok(err instanceof RangeError);
 
-			done();
+            done();
 
-		});
+        });
 
-	});
+    });
 
-	describe("on", () => {
+    describe("on", () => {
 
-		it("should test with missing data", (done) => {
+        it("should test with missing data", (done) => {
 
-			extractBody.default({
-				"test": "test"
-			}).then(() => {
-				done(new Error("There is no generated error"));
-			}).catch((err) => {
+            extractBody.default({
+                "test": "test"
+            }).then(() => {
+                done(new Error("There is no generated error"));
+            }).catch((err) => {
 
-				strictEqual(typeof err, "object");
-				strictEqual(err instanceof ReferenceError, true);
+                strictEqual(typeof err, "object");
+                ok(err instanceof ReferenceError);
 
-				done();
+                done();
 
-			});
+            });
 
-		});
+        });
 
-		it("should test with wrong data", (done) => {
+        it("should test with wrong data", (done) => {
 
-			extractBody.default({
-				"on": "test"
-			}).then(() => {
-				done(new Error("There is no generated error"));
-			}).catch((err) => {
+            extractBody.default({
+                "on": "test"
+            }).then(() => {
+                done(new Error("There is no generated error"));
+            }).catch((err) => {
 
-				strictEqual(typeof err, "object");
-				strictEqual(err instanceof TypeError, true);
+                strictEqual(typeof err, "object");
+                ok(err instanceof TypeError);
 
-				done();
+                done();
 
-			});
+            });
 
-		});
+        });
 
-	});
+    });
 
-	describe("headers", () => {
+    describe("headers", () => {
 
-		it("should test with missing data", (done) => {
+        it("should test with missing data", (done) => {
 
-			extractBody.default({
-				"on": () => {
-					// nothing to do here
-				}
-			}).then(() => {
-				done(new Error("There is no generated error"));
-			}).catch((err) => {
+            extractBody.default({
+                "on": () => {
+                    // nothing to do here
+                }
+            }).then(() => {
+                done(new Error("There is no generated error"));
+            }).catch((err) => {
 
-				strictEqual(typeof err, "object");
-				strictEqual(err instanceof ReferenceError, true);
+                strictEqual(typeof err, "object");
+                ok(err instanceof ReferenceError);
 
-				done();
+                done();
 
-			});
+            });
 
-		});
+        });
 
-		it("should test with wrong data", (done) => {
+        it("should test with wrong data", (done) => {
 
-			extractBody.default({
-				"on": () => {
-					// nothing to do here
-				},
-				"headers": "test"
-			}).then(() => {
-				done(new Error("There is no generated error"));
-			}).catch((err) => {
+            extractBody.default({
+                "on": () => {
+                    // nothing to do here
+                },
+                "headers": "test"
+            }).then(() => {
+                done(new Error("There is no generated error"));
+            }).catch((err) => {
 
-				strictEqual(typeof err, "object");
-				strictEqual(err instanceof TypeError, true);
+                strictEqual(typeof err, "object");
+                ok(err instanceof TypeError);
 
-				done();
+                done();
 
-			});
+            });
 
-		});
+        });
 
-		it("should test with empty data", (done) => {
+        it("should test with empty data", (done) => {
 
-			extractBody.default({
-				"on": () => {
-					// nothing to do here
-				},
-				"headers": {}
-			}).then(() => {
-				done(new Error("There is no generated error"));
-			}).catch((err) => {
+            extractBody.default({
+                "on": () => {
+                    // nothing to do here
+                },
+                "headers": {}
+            }).then(() => {
+                done(new Error("There is no generated error"));
+            }).catch((err) => {
 
-				strictEqual(typeof err, "object");
-				strictEqual(err instanceof RangeError, true);
+                strictEqual(typeof err, "object");
+                ok(err instanceof RangeError);
 
-				done();
+                done();
 
-			});
+            });
 
-		});
+        });
 
-		describe("content-length", () => {
+        describe("content-length", () => {
 
-			it("should test with missing data", (done) => {
+            it("should test with missing data", (done) => {
 
-				extractBody.default({
-					"on": () => {
-						// nothing to do here
-					},
-					"headers": {
-						"test": "test"
-					}
-				}).then(() => {
-					done(new Error("There is no generated error"));
-				}).catch((err) => {
+                extractBody.default({
+                    "on": () => {
+                        // nothing to do here
+                    },
+                    "headers": {
+                        "test": "test"
+                    }
+                }).then(() => {
+                    done(new Error("There is no generated error"));
+                }).catch((err) => {
 
-					strictEqual(typeof err, "object");
-					strictEqual(err instanceof ReferenceError, true);
+                    strictEqual(typeof err, "object");
+                    ok(err instanceof ReferenceError);
 
-					done();
+                    done();
 
-				});
+                });
 
-			});
+            });
 
-			it("should test with wrong data", (done) => {
+            it("should test with wrong data", (done) => {
 
-				extractBody.default({
-					"on": () => {
-						// nothing to do here
-					},
-					"headers": {
-						"content-length": "test"
-					}
-				}).then(() => {
-					done(new Error("There is no generated error"));
-				}).catch((err) => {
+                extractBody.default({
+                    "on": () => {
+                        // nothing to do here
+                    },
+                    "headers": {
+                        "content-length": "test"
+                    }
+                }).then(() => {
+                    done(new Error("There is no generated error"));
+                }).catch((err) => {
 
-					strictEqual(typeof err, "object");
-					strictEqual(err instanceof TypeError, true);
+                    strictEqual(typeof err, "object");
+                    ok(err instanceof TypeError);
 
-					done();
+                    done();
 
-				});
+                });
 
-			});
+            });
 
-		});
+        });
 
-	});
+    });
 
-	describe("execute", () => {
+    describe("execute", () => {
 
-		const event = new EventEmitter();
+        const event = new EventEmitter();
 
-		it("should test with empty body", () => {
+        it("should test with empty body", () => {
 
-			event.headers = {
-				"content-length": Buffer.byteLength("")
-			};
+            event.headers = {
+                "content-length": "0"
+            };
 
-			return new Promise((resolve, reject) => {
+            return new Promise((resolve, reject) => {
 
-				extractBody.default(event)
-					.then(resolve)
-					.catch(reject);
+                extractBody.default(event)
+                    .then(resolve)
+                    .catch(reject);
 
-				setTimeout(() => {
-					event.emit("end");
-				}, 150);
+                setTimeout(() => {
+                    event.emit("end");
+                }, 150);
 
-			});
+            });
 
-		});
+        });
 
-		it("should test with object body (result is \"[object Object]\", fail on content-lenght)", (done) => {
+        it("should test with object body (result is \"[object Object]\", fail on content-lenght)", (done) => {
 
-			const data = {
-				"test1": "test1",
-				"test2": "test2"
-			};
+            const data = {
+                "test1": "test1",
+                "test2": "test2"
+            };
 
-			event.headers = {
-				"content-length": Buffer.byteLength(JSON.stringify(data))
-			};
+            event.headers = {
+                "content-length": String(Buffer.byteLength(JSON.stringify(data)))
+            };
 
-			extractBody.default(event)
-				.then(() => {
-					done(new Error("There is no generated error"));
-				})
-				.catch((err) => {
+            extractBody.default(event)
+                .then(() => {
+                    done(new Error("There is no generated error"));
+                })
+                .catch((err) => {
 
-					strictEqual(typeof err, "object");
-					strictEqual(err instanceof Error, true);
+                    strictEqual(typeof err, "object");
+                    ok(err instanceof Error);
 
-					done();
+                    done();
 
-				});
+                });
 
-			setTimeout(() => {
+            setTimeout(() => {
 
-				event.emit("data", data);
-				event.emit("end");
+                event.emit("data", data);
+                event.emit("end");
 
-			}, 150);
+            }, 150);
 
-		});
+        });
 
-		it("should test with string body", () => {
+        it("should test with string body", () => {
 
-			const data = "{ \"test\": \"test2\" }";
+            const data = "{ \"test\": \"test2\" }";
 
-			event.headers = {
-				"content-length": Buffer.byteLength(data)
-			};
+            event.headers = {
+                "content-length": String(Buffer.byteLength(data))
+            };
 
-			return new Promise((resolve, reject) => {
+            return new Promise((resolve, reject) => {
 
-				extractBody.default(event)
-					.then(resolve)
-					.catch(reject);
+                extractBody.default(event)
+                    .then(resolve)
+                    .catch(reject);
 
-				setTimeout(() => {
+                setTimeout(() => {
 
-					event.emit("data", data);
-					event.emit("end");
+                    event.emit("data", data);
+                    event.emit("end");
 
-				}, 150);
+                }, 150);
 
-			});
+            });
 
-		});
+        });
 
-	});
+    });
 
 });

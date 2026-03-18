@@ -1,8 +1,7 @@
-import type { OpenApiDocument } from "express-openapi-validate";
-export type tMethod = "get" | "put" | "post" | "delete" | "options" | "head" | "patch" | "trace";
+import type { PathsObject, tMethod } from "../../openAPITypes";
 export interface iPathMethod {
     "path": string;
     "method": tMethod;
     "operationId": string;
 }
-export default function extractPathMethodByOperationId(paths: OpenApiDocument["paths"], operationId: string): iPathMethod | null;
+export default function extractPathMethodByOperationId(paths: PathsObject | null | undefined, operationId: string): iPathMethod | undefined;

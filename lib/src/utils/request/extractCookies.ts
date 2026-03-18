@@ -25,7 +25,7 @@
 
                         const parts: string[] = cookie.split("=");
 
-                        result[parts[0]] = decodeURI(parts[1]);
+                        result[parts[0]] = parts[1] ? decodeURI(parts[1]) : "";
 
                     });
 
@@ -37,7 +37,7 @@
 
 // module
 
-export default function extractCookies (req: iIncomingMessage): Record<string, string> {
+export default function extractCookies (req: iIncomingMessage): Record<string, unknown> {
 
     if ("object" !== typeof req) {
         return {};
@@ -45,18 +45,18 @@ export default function extractCookies (req: iIncomingMessage): Record<string, s
     else if ("object" === typeof req.cookies) {
         return req.cookies;
     }
-    else if (req.headers) {
+    else if ("object" === typeof req.headers) {
 
-        if (req.headers.cookie) {
-            return _parseCookies(req.headers.cookie as string);
+        if ("undefined" !== typeof req.headers.cookie) {
+            return _parseCookies(req.headers.cookie);
         }
-        else if (req.headers.Cookie) {
+        else if ("undefined" !== typeof req.headers.Cookie) {
             return _parseCookies(req.headers.Cookie as string);
         }
-        else if (req.headers.cookies) {
+        else if ("undefined" !== typeof req.headers.cookies) {
             return _parseCookies(req.headers.cookies as string);
         }
-        else if (req.headers.Cookies) {
+        else if ("undefined" !== typeof req.headers.Cookies) {
             return _parseCookies(req.headers.Cookies as string);
         }
         else {

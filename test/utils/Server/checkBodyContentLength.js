@@ -1,77 +1,75 @@
-"use strict";
-
 // deps
 
-	// natives
-	const { join } = require("path");
-	const { strictEqual } = require("assert");
+    // natives
+    const { strictEqual, ok } = require("node:assert");
+    const { join } = require("node:path");
 
-	// locals
+    // locals
 
-		// utils
-		const httpRequestWithWrongHeader = require(join(__dirname, "..", "..", "utils", "httpRequestWithWrongHeader.js"));
+        // utils
+        const httpRequestWithWrongHeader = require(join(__dirname, "..", "..", "utils", "httpRequestWithWrongHeader.js"));
 
 // module
 
 module.exports = function checkBodyContentType (URL_API) {
 
-	describe("content-length", () => {
+    describe("content-length", () => {
 
-		// must crash request body parsing
-		it("should test request with wrong content-length", (done) => {
+        // must crash request body parsing
+        it("should test request with wrong content-length", (done) => {
 
-			httpRequestWithWrongHeader(URL_API + "/create?url-param=ok", "put", {
-				"body-param": "test"
-			}, {
-				"Content-Type": "application/json; charset=utf-8",
-				"Content-Length": "test"
-			}, 411, "Length Required").then(() => {
-				done(new Error("There is no generated error"));
-			}).catch((err) => {
+            httpRequestWithWrongHeader(URL_API + "/create?url-param=ok", "put", {
+                "body-param": "test"
+            }, {
+                "Content-Type": "application/json; charset=utf-8",
+                "Content-Length": "test"
+            }, 411, "Length Required").then(() => {
+                done(new Error("There is no generated error"));
+            }).catch((err) => {
 
-				strictEqual(typeof err, "object", "generated error is not as expected");
-				strictEqual(err instanceof Error, true, "generated error is not as expected");
+                strictEqual(typeof err, "object", "generated error is not as expected");
+                ok(err instanceof Error, "generated error is not as expected");
 
-				done();
+                done();
 
-			});
+            });
 
-		});
+        });
 
-		// must interrupt request body parsing before the end and generate a socket error
-		it("should test request with inexact content-length", (done) => {
+        // must interrupt request body parsing before the end and generate a socket error
+        it("should test request with inexact content-length", (done) => {
 
-			httpRequestWithWrongHeader(URL_API + "/create?url-param=ok", "put", {
-				"body-param": "test"
-			}, {
-				"Content-Type": "application/json; charset=utf-8",
-				"Content-Length": 2
-			}, 411, "Length Required").then(() => {
-				done(new Error("There is no generated error"));
-			}).catch((err) => {
+            httpRequestWithWrongHeader(URL_API + "/create?url-param=ok", "put", {
+                "body-param": "test"
+            }, {
+                "Content-Type": "application/json; charset=utf-8",
+                "Content-Length": 2
+            }, 411, "Length Required").then(() => {
+                done(new Error("There is no generated error"));
+            }).catch((err) => {
 
-				strictEqual(typeof err, "object", "generated error is not as expected");
-				strictEqual(err instanceof Error, true, "generated error is not as expected");
+                strictEqual(typeof err, "object", "generated error is not as expected");
+                ok(err instanceof Error, "generated error is not as expected");
 
-				done();
+                done();
 
-			});
+            });
 
-		});
+        });
 
-		it("should test valid request", () => {
+        it("should test valid request", () => {
 
-			const params = {
-				"body-param": "test"
-			};
+            const params = {
+                "body-param": "test"
+            };
 
-			return httpRequestWithWrongHeader(URL_API + "/create?url-param=ok", "put", params, {
-				"Content-Type": "application/json; charset=utf-8",
-				"Content-Length": Buffer.byteLength(JSON.stringify(params))
-			}, 201, "Created");
+            return httpRequestWithWrongHeader(URL_API + "/create?url-param=ok", "put", params, {
+                "Content-Type": "application/json; charset=utf-8",
+                "Content-Length": Buffer.byteLength(JSON.stringify(params))
+            }, 201, "Created");
 
-		});
+        });
 
-	});
+    });
 
 };

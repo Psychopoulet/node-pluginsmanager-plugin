@@ -1,63 +1,61 @@
-"use strict";
-
 // deps
 
-	// natives
-	const { strictEqual } = require("assert");
+    // natives
+    const { strictEqual } = require("node:assert");
 
-	// externals
-	const WebSocket = require("ws");
-	const socketIOClient = require("socket.io-client");
+    // externals
+    const WebSocket = require("ws");
+    const socketIOClient = require("socket.io-client");
 
 // module
 
 module.exports = function socketRequestTest (port, requestName, returnName, socketIO = false) {
 
-	const client = socketIO ?
-		socketIOClient("http://127.0.0.1:" + port) :
-		new WebSocket("ws://127.0.0.1:" + port);
+    const client = socketIO
+        ? socketIOClient("http://127.0.0.1:" + port)
+        : new WebSocket("ws://127.0.0.1:" + port);
 
-	// connection
-	return new Promise((resolve) => {
+    // connection
+    return new Promise((resolve) => {
 
-		client.on(socketIO ? "connect" : "open", resolve);
+        client.on(socketIO ? "connect" : "open", resolve);
 
-	// send & wait for response
-	}).then(() => {
+    // send & wait for response
+    }).then(() => {
 
-		return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
 
-			client.on("message", (message) => {
+            client.on("message", (message) => {
 
-				try {
+                try {
 
-					const req = JSON.parse(message);
+                    const req = JSON.parse(message);
 
-					strictEqual(req.command, returnName, "The command is not " + returnName);
+                    strictEqual(req.command, returnName, "The command is not " + returnName);
 
-					resolve();
+                    resolve();
 
-				}
-				catch (e) {
-					reject(e);
-				}
+                }
+                catch (e) {
+                    reject(e);
+                }
 
-			});
+            });
 
-			client.send(JSON.stringify({
-				"plugin": "node-pluginsmanager-plugin",
-				"command": requestName
-			}));
+            client.send(JSON.stringify({
+                "plugin": "node-pluginsmanager-plugin",
+                "command": requestName
+            }));
 
-		});
+        });
 
-	// close
-	}).then(() => {
+    // close
+    }).then(() => {
 
-		return new Promise((resolve) => {
-			client.on(socketIO ? "disconnect" : "close", resolve).close();
-		});
+        return new Promise((resolve) => {
+            client.on(socketIO ? "disconnect" : "close", resolve).close();
+        });
 
-	});
+    });
 
 };

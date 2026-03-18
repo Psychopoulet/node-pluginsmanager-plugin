@@ -1,48 +1,59 @@
-"use strict";
-
 // deps
 
-	// natives
-	const { join } = require("path");
+    // natives
+    const { join } = require("node:path");
 
-	// locals
-	const { Orchestrator } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
-	const LocalOrchestrator = require(join(__dirname, "utils", "Orchestrator", "LocalOrchestrator.js"));
+    // locals
+    const { Orchestrator } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
+
+// private
+
+    function _getOrchestrator () {
+
+        return new Orchestrator({
+            "externalResourcesDirectory": "",
+            "packageFile": "",
+            "descriptorFile": "",
+            "mediatorFile": "",
+            "serverFile": ""
+        });
+
+    }
 
 // tests
 
 describe("Orchestrator / write", () => {
 
-	describe("native", () => {
+    describe("native", () => {
 
-		it("should test install", () => {
-			return new Orchestrator().install();
-		});
+        it("should test install", () => {
+            return _getOrchestrator().install();
+        });
 
-		it("should test update", () => {
-			return new Orchestrator().update();
-		});
+        it("should test update", () => {
+            return _getOrchestrator().update();
+        });
 
-		it("should test uninstall", () => {
-			return new Orchestrator().uninstall();
-		});
+        it("should test uninstall", () => {
+            return _getOrchestrator().uninstall();
+        });
 
-	});
+    });
 
-	describe("inherited", () => {
+    describe("inherited", () => {
 
-		it("should test install", () => {
-			return new LocalOrchestrator().install();
-		});
+        it("should test install", () => {
+            return _getOrchestrator().install();
+        });
 
-		it("should test update", () => {
-			return new LocalOrchestrator().update();
-		});
+        it("should test update", () => {
+            return _getOrchestrator().update();
+        });
 
-		it("should test uninstall", () => {
-			return new LocalOrchestrator().uninstall();
-		});
+        it("should test uninstall", () => {
+            return _getOrchestrator().uninstall();
+        });
 
-	});
+    });
 
 });

@@ -1,118 +1,134 @@
-"use strict";
-
 // deps
 
-	// natives
-	const { join } = require("path");
-	const { strictEqual } = require("assert");
-	const Events = require("events");
+    // natives
+    const { strictEqual, ok, throws } = require("node:assert");
+    const { join } = require("node:path");
+    const Events = require("node:events");
 
-	// locals
+    // locals
 
-		// plugin
-		const { DescriptorUser, Mediator } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
-		const LocalMediator = require(join(__dirname, "utils", "Mediator", "LocalMediator.js"));
+        // plugin
+        const { DescriptorUser, Mediator } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
+        const LocalMediator = require(join(__dirname, "utils", "Mediator", "LocalMediator.js"));
 
 // consts
 
-	const DESCRIPTOR_ONLY_URL = require(join(__dirname, "utils", "DescriptorUser", "DescriptorOnlyUrl.js"));
+    const DESCRIPTOR_ONLY_URL = require(join(__dirname, "utils", "DescriptorUser", "DescriptorOnlyUrl.js"));
+
+// private
+
+    function _getMediator () {
+
+        return new Mediator({
+            "externalResourcesDirectory": ""
+        });
+
+    }
 
 // tests
 
 describe("Mediator", () => {
 
-	it("should test constructor", () => {
+    it("should test constructor", () => {
 
-		const mediator = new LocalMediator();
+        throws(() => {
+            new Mediator();
+        });
 
-		strictEqual(typeof mediator, "object", "Generated mediator is not an object");
-		strictEqual(mediator instanceof Events, true, "Generated mediator is not a Events instance");
-		strictEqual(mediator instanceof DescriptorUser, true, "Generated mediator is not a DescriptorUser instance");
-		strictEqual(mediator instanceof Mediator, true, "Generated mediator is not a Mediator instance");
-		strictEqual(mediator instanceof LocalMediator, true, "Generated mediator is not a LocalMediator instance");
+        throws(() => {
+            new Mediator({});
+        });
 
-		strictEqual(typeof mediator.initialized, "boolean", "Generated mediator is not as expected");
-		strictEqual(mediator.initialized, false, "Generated mediator is not as expected");
+        const mediator = new LocalMediator();
 
-	});
+        strictEqual(typeof mediator, "object", "Generated mediator is not an object");
+        ok(mediator instanceof Events, "Generated mediator is not a Events instance");
+        ok(mediator instanceof DescriptorUser, "Generated mediator is not a DescriptorUser instance");
+        ok(mediator instanceof Mediator, "Generated mediator is not a Mediator instance");
+        ok(mediator instanceof LocalMediator, "Generated mediator is not a LocalMediator instance");
 
-	it("should test init", () => {
+        strictEqual(typeof mediator.initialized, "boolean", "Generated mediator is not as expected");
+        strictEqual(mediator.initialized, false, "Generated mediator is not as expected");
 
-		const mediator = new LocalMediator({
-			"descriptor": DESCRIPTOR_ONLY_URL
-		});
+    });
 
-		return mediator.init().then(() => {
+    it("should test init", () => {
 
-			strictEqual(typeof mediator.initialized, "boolean", "Generated mediator is not as expected");
-			strictEqual(mediator.initialized, true, "Generated mediator is not as expected");
+        const mediator = new LocalMediator({
+            "descriptor": DESCRIPTOR_ONLY_URL
+        });
 
-			return Promise.resolve();
+        return mediator.init().then(() => {
 
-		});
+            strictEqual(typeof mediator.initialized, "boolean", "Generated mediator is not as expected");
+            ok(mediator.initialized, "Generated mediator is not as expected");
 
-	});
+            return Promise.resolve();
 
-	it("should test non-herited _initWorkSpace", (done) => {
+        });
 
-		const nonHerited = new Mediator();
+    });
 
-		nonHerited.init().then(() => {
+    it("should test non-herited _initWorkSpace", (done) => {
 
-			done(new Error("There is no generated Error"));
+        const nonHerited = _getMediator();
 
-		}).catch((err) => {
+        nonHerited.init().then(() => {
 
-			strictEqual(typeof err, "object", "Generated Error is not as expected");
-			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+            done(new Error("There is no generated Error"));
 
-			done();
+        }).catch((err) => {
 
-		});
+            strictEqual(typeof err, "object", "Generated Error is not as expected");
+            ok(err instanceof Error, "Generated Error is not as expected");
 
-	});
+            done();
 
-	it("should test non-herited _releaseWorkSpace", (done) => {
+        });
 
-		const nonHerited = new Mediator();
+    });
 
-		nonHerited.release().then(() => {
+    it("should test non-herited _releaseWorkSpace", (done) => {
 
-			done(new Error("There is no generated Error"));
+        const nonHerited = _getMediator();
 
-		}).catch((err) => {
+        nonHerited.release().then(() => {
 
-			strictEqual(typeof err, "object", "Generated Error is not as expected");
-			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+            done(new Error("There is no generated Error"));
 
-			done();
+        }).catch((err) => {
 
-		});
+            strictEqual(typeof err, "object", "Generated Error is not as expected");
+            ok(err instanceof Error, "Generated Error is not as expected");
 
-	});
+            done();
 
-	it("should test release", () => {
+        });
 
-		const mediator = new LocalMediator({
-			"descriptor": DESCRIPTOR_ONLY_URL
-		});
+    });
 
-		return mediator.init().then(() => {
+    it("should test release", () => {
 
-			strictEqual(typeof mediator.initialized, "boolean", "Generated mediator is not as expected");
-			strictEqual(mediator.initialized, true, "Generated mediator is not as expected");
+        const mediator = new LocalMediator({
+            "descriptor": DESCRIPTOR_ONLY_URL
+        });
 
-			return mediator.release();
+        return mediator.init().then(() => {
 
-		}).then(() => {
+            strictEqual(typeof mediator.initialized, "boolean", "Generated mediator is not as expected");
+            ok(mediator.initialized, "Generated mediator is not as expected");
 
-			strictEqual(typeof mediator.initialized, "boolean", "Generated mediator is not as expected");
-			strictEqual(mediator.initialized, false, "Generated mediator is not as expected");
+            return mediator.release();
 
-			return Promise.resolve();
+        }).then(() => {
 
-		});
+            strictEqual(typeof mediator.initialized, "boolean", "Generated mediator is not as expected");
+            strictEqual(mediator.initialized, false, "Generated mediator is not as expected");
 
-	});
+            return Promise.resolve();
+
+        });
+
+    });
 
 });

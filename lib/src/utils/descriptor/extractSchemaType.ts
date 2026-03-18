@@ -1,3 +1,8 @@
+/*
+    eslint-disable camelcase
+*/
+// => camelcase is disabled because of "openapi-types" types
+
 // types & interfaces
 
     // externals
@@ -5,23 +10,26 @@
 
 // module
 
-export default function extractSchemaType (schema: OpenAPIV3_1.SchemaObject | OpenAPIV3_1.ReferenceObject, schemas: Record<string, any>): "boolean" | "object" | "number" | "string" | "integer" | "array" {
+export default function extractSchemaType (schema: unknown, schemas: Record<string, OpenAPIV3_1.SchemaObject>): OpenAPIV3_1.SchemaObject["type"] {
 
-    let result: "boolean" | "object" | "number" | "string" | "integer" = "string";
+    if ("object" !== typeof schema || null === schema) {
+        return "string";
+    }
 
-        if ((schema as OpenAPIV3_1.SchemaObject).type) {
-            result = (schema as OpenAPIV3_1.SchemaObject).type as "boolean" | "object" | "number" | "string" | "integer";
+    if ("string" === typeof (schema as OpenAPIV3_1.SchemaObject).type) {
+        return (schema as OpenAPIV3_1.SchemaObject).type;
+    }
+
+    if ("string" === typeof (schema as OpenAPIV3_1.ReferenceObject).$ref) {
+
+        const ref: string = (schema as OpenAPIV3_1.ReferenceObject).$ref.replace("#/components/schemas/", "");
+
+        if ("object" === typeof schemas[ref] && "string" === typeof schemas[ref].type) {
+            return schemas[ref].type;
         }
-        else if ((schema as OpenAPIV3_1.ReferenceObject).$ref) {
 
-            const ref: string = (schema as OpenAPIV3_1.ReferenceObject).$ref.replace("#/components/schemas/", "");
+    }
 
-            if (schemas[ref] && schemas[ref].type) {
-                result = schemas[ref].type;
-            }
-
-        }
-
-    return result;
+    return "string";
 
 }

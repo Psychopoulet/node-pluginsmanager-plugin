@@ -1,7 +1,7 @@
 // deps
 
     // externals
-    import { OpenApiValidator, ValidationError, type OpenApiDocument } from "express-openapi-validate";
+    import { OpenApiValidator, ValidationError } from "express-openapi-validate";
 
     // locals
     import { checkObject } from "../checkers/TypeError/checkObject";
@@ -13,35 +13,35 @@
 
 // types & interfaces
 
+    // externals
+    import type { Request, Response } from "express"; // only here for express validators
+    import type { OpenApiDocument } from "express-openapi-validate";
+
     // locals
 
     import type { iDescriptorUserOptions, tEventMap, iEventsMinimal } from "./DescriptorUser";
-    import type { iIncomingMessage, iServerResponse } from "./Server";
-    import type { iPathMethod } from "../utils/descriptor/extractPathMethodByOperationId";
-
-    export interface iIncomingMessageForMediatorValidation extends iIncomingMessage {
-        "body": any;
-    }
-
-    export interface iServerResponseForMediatorValidation extends iServerResponse {
-        "body": any;
-    }
+    import type { iFormatedServerResponseForValidation } from "./Server";
 
     interface iUrControlledParameters {
-        "path": Record<string, any>;
-        "query": Record<string, any>;
-        "headers": Record<string, any>;
-        "cookies": Record<string, any>;
+        "path": Record<string, unknown>;
+        "query": Record<string, unknown>;
+        "headers": Record<string, unknown>;
+        "cookies": Record<string, unknown>;
     }
 
     export interface iUrlAllowedParameters {
-        "path"?: Record<string, any>;
-        "query"?: Record<string, any>;
-        "headers"?: Record<string, any>;
-        "cookies"?: Record<string, any>;
-        "header"?: Record<string, any>;
-        "cookie"?: Record<string, any>;
+        "path"?: Record<string, unknown>;
+        "query"?: Record<string, unknown>;
+        "headers"?: Record<string, unknown>;
+        "cookies"?: Record<string, unknown>;
+        "header"?: Record<string, unknown>;
+        "cookie"?: Record<string, unknown>;
     }
+
+    export type iOperationHandler = (
+        url: iUrlAllowedParameters,
+        body: unknown
+    ) => Promise<string>;
 
 // module
 
@@ -66,13 +66,13 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
     // public
 
         // Check sended parameters by method name (used by the Server)
-        public checkParameters (operationId: string, urlParams?: iUrlAllowedParameters, bodyParams?: any): Promise<void> {
+        public checkParameters (operationId: string, urlParams?: iUrlAllowedParameters, bodyParams?: unknown): Promise<void> {
 
             const urlControlledParameters: iUrControlledParameters = {
-                "path": urlParams ? urlParams?.path ?? {} : {},
-                "query": urlParams ? urlParams?.query ?? {} : {},
-                "headers": urlParams ? urlParams?.headers ?? urlParams?.header ?? {} : {},
-                "cookies": urlParams ? urlParams?.cookies ?? urlParams?.cookie ?? {} : {},
+                "path": urlParams?.path ?? {},
+                "query": urlParams?.query ?? {},
+                "headers": urlParams?.headers ?? urlParams?.header ?? {},
+                "cookies": urlParams?.cookies ?? urlParams?.cookie ?? {}
             };
 
             // parameters validation
@@ -97,7 +97,10 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
             }).then((): Promise<void> => {
 
                 // search wanted operation
-                const foundPathMethod: iPathMethod | null = extractPathMethodByOperationId((this._Descriptor as OpenApiDocument).paths, operationId);
+                const foundPathMethod = extractPathMethodByOperationId(
+                    this._Descriptor?.paths,
+                    operationId
+                );
 
                 return !foundPathMethod ? Promise.reject(
                     new ReferenceError("Unknown operationId \"" + operationId + "\"")
@@ -113,49 +116,79 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
                         "body": bodyParams
                     };
 
-                    const validateRequest: any = (this._validator as OpenApiValidator).validate(req.method, req.path); // set to "any" for ts validation
+                    const validateRequest = (this._validator as OpenApiValidator).validate(req.method, req.path);
 
-                    validateRequest(req, null, (err: Error): void => {
-                        return err ? reject(err) : resolve();
+                    validateRequest(req as Request, null as unknown as Response, (err?: unknown): void => {
+
+                        if ("undefined" === typeof err || null === err) {
+                            return resolve();
+                        }
+                        else if (err instanceof Error) {
+                            return reject(err);
+                        }
+                        else if ("object" === typeof err) {
+
+                            if ("undefined" !== typeof (err as Record<string, unknown>).message) {
+
+                                return reject(new Error((err as {
+                                    "message": string;
+                                }).message));
+
+                            }
+
+                            return reject(new Error(err as unknown as string));
+
+                        }
+
+                        return reject(new Error(String(err as unknown as string)));
+
                     });
 
                 });
 
             }).catch((err: Error): Promise<void> => {
 
-                return err instanceof ValidationError ? Promise.resolve().then((): Promise<void> => {
+                if (!(err instanceof ValidationError)) {
+                    return Promise.reject(err);
+                }
 
-                    switch ((err as ValidationError).data[0].keyword) { // extract first Error
+                if ("object" !== typeof err.data
+                    || !(err.data instanceof Array)
+                    || 0 >= err.data.length
+                    || "object" !== typeof err.data[0]
+                    || "string" !== typeof err.data[0].keyword) {
+                    return Promise.reject(new Error(err.message));
+                }
 
-                        case "required":
-                            return Promise.reject(new ReferenceError(err.message));
+                switch (err.data[0].keyword) { // extract first Error
 
-                        case "type":
-                        case "pattern":
-                            return Promise.reject(new TypeError(err.message));
+                    case "required":
+                        return Promise.reject(new ReferenceError(err.message));
 
-                        case "minimum":
-                        case "maximum":
-                        case "minLength":
-                        case "maxLength":
-                        case "minItems":
-                        case "maxItems":
-                        case "enum":
-                            return Promise.reject(new RangeError(err.message));
+                    case "type":
+                    case "pattern":
+                        return Promise.reject(new TypeError(err.message));
 
-                        default:
-                            return Promise.reject(new Error(err.message));
+                    case "minimum":
+                    case "maximum":
+                    case "minLength":
+                    case "maxLength":
+                    case "minItems":
+                    case "maxItems":
+                    case "enum":
+                        return Promise.reject(new RangeError(err.message));
 
-                    }
+                    default:
+                        return Promise.reject(new Error(err.message));
 
-                }) : Promise.reject(err);
+                }
 
             });
 
         }
 
         // Check sended parameters by method name (used by the Server)
-        public checkResponse (operationId: string, res: iServerResponseForMediatorValidation): Promise<void> {
+        public checkResponse (operationId: string, res: iFormatedServerResponseForValidation): Promise<void> {
 
             // parameters validation
             return this.checkDescriptor().then((): Promise<void> => {
@@ -163,7 +196,10 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
             }).then((): Promise<void> => {
 
                 // search wanted operation
-                const foundPathMethod: iPathMethod | null = extractPathMethodByOperationId((this._Descriptor as OpenApiDocument).paths, operationId);
+                const foundPathMethod = extractPathMethodByOperationId(
+                    this._Descriptor?.paths,
+                    operationId
+                );
 
                 return !foundPathMethod ? Promise.reject(
                     new ReferenceError("Unknown operationId \"" + operationId + "\"")
@@ -184,7 +220,9 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
                     }
 
                     // validator cannot correctly check pure boolean return
-                    else if ("undefined" !== typeof res.body && [ "true", "false", true, false ].includes(res.body)) {
+                    else if ("undefined" !== typeof res.body && [
+                        "true", "false", true, false
+                    ].includes(res.body)) {
                         return resolve();
                     }
 
@@ -192,16 +230,10 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
 
                         try {
 
-                            const mutedRes = { ...res };
+                            const validateResponse = (this._validator as OpenApiValidator)
+                                .validateResponse(foundPathMethod.method, foundPathMethod.path);
 
-                            mutedRes.headers = res.getHeaders();
-
-                            if ("undefined" === typeof mutedRes.body || "" === mutedRes.body) {
-                                mutedRes.body = {};
-                            }
-
-                            const validateResponse = (this._validator as OpenApiValidator).validateResponse(foundPathMethod.method, foundPathMethod.path);
-                            validateResponse(mutedRes);
+                            validateResponse(res);
 
                             return resolve();
 
@@ -213,7 +245,7 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
                                 + " (" + foundPathMethod.operationId + ") => "
                                 + res.statusCode
                                 + "\r\n"
-                                + ((e as Error).message ? (e as Error).message : e) as string
+                                + ((e as Error).message ? (e as Error).message : String(e))
                             ));
 
                         }
@@ -228,20 +260,20 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
 
         // init / release
 
-        public init (...data: any): Promise<void> {
+        public init (...data: unknown[]): Promise<void> {
 
             return this._initWorkSpace(...data).then((): void => {
 
                 this._validator = new OpenApiValidator(this._Descriptor as OpenApiDocument);
 
                 this.initialized = true;
-                this._emitEventGenericForTSPurposeDONOTUSE("initialized", [ ...data ]);
+                (this.emit as (event: "initialized", ...args: unknown[]) => boolean)("initialized", ...data);
 
             });
 
         }
 
-        public release (...data: any): Promise<void> {
+        public release (...data: unknown[]): Promise<void> {
 
             return this._releaseWorkSpace(...data).then((): void => {
 
@@ -250,7 +282,7 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
                 this._validator = null;
 
                 this.initialized = false;
-                this._emitEventGenericForTSPurposeDONOTUSE("released", [ ...data ]);
+                (this.emit as (event: "released", ...args: unknown[]) => boolean)("released", ...data);
 
             }).then((): void => {
 

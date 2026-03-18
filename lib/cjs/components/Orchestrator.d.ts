@@ -1,21 +1,21 @@
 import MediatorUser from "./MediatorUser";
 import Server from "./Server";
-import type { IncomingMessage } from "node:http";
+import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Server as SocketIOServer } from "socket.io";
 import type { Server as WebSocketServer } from "ws";
-import type { iServerResponse } from "./Server";
+import type { Server as SocketIOServerV2 } from "../../@types/socket.io-v2";
 import type { tLogger, tEventMap, iEventsMinimal } from "./DescriptorUser";
 export interface iOrchestratorOptions {
-    "externalRessourcesDirectory": string;
+    "externalResourcesDirectory": string;
     "packageFile": string;
     "descriptorFile": string;
     "mediatorFile": string;
     "serverFile": string;
     "logger"?: tLogger;
 }
-export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> extends MediatorUser<T> {
+export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEventsMinimal> extends MediatorUser<T> {
     protected _Server: Server | null;
-    protected _socketServer: WebSocketServer | SocketIOServer | null;
+    protected _socketServer: WebSocketServer | SocketIOServer | SocketIOServerV2 | null;
     protected _checkParameters: boolean;
     protected _checkResponse: boolean;
     protected _packageFile: string;
@@ -45,13 +45,13 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
     enableCheckResponse(): this;
     disableCors(): this;
     enableCors(): this;
-    appMiddleware(req: IncomingMessage, res: iServerResponse, next: () => void): void;
+    appMiddleware(req: IncomingMessage, res: ServerResponse, next: () => void): void;
     socketMiddleware(server: WebSocketServer | SocketIOServer): void;
-    load(...data: any): Promise<void>;
-    destroy(...data: any): Promise<void>;
-    init(...data: any): Promise<void>;
-    release(...data: any): Promise<void>;
-    install(...data: any): Promise<void>;
-    update(...data: any): Promise<void>;
-    uninstall(...data: any): Promise<void>;
+    load(...data: unknown[]): Promise<void>;
+    destroy(...data: unknown[]): Promise<void>;
+    init(...data: unknown[]): Promise<void>;
+    release(...data: unknown[]): Promise<void>;
+    install(...data: unknown[]): Promise<void>;
+    update(...data: unknown[]): Promise<void>;
+    uninstall(...data: unknown[]): Promise<void>;
 }

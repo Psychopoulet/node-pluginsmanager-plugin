@@ -1,18 +1,23 @@
+/*
+    eslint-disable @typescript-eslint/no-base-to-string
+*/
+// => @typescript-eslint/no-base-to-string is disabled to allow stringification of unattented content ('[object Object]' for example)
+
 // types & interfaces
 
     // natives
-    import type { IncomingMessage } from "node:http";
+    import type { IncomingMessage, OutgoingHttpHeaders, ServerResponse } from "node:http";
 
     // locals
-    import type { iServerResponse } from "../components/Server";
+    import type { iFormatedServerResponseForValidation } from "../components/Server";
 
 // module
 
-export default function send (req: IncomingMessage, res: iServerResponse, code: number, content: any, options: {
+export default function send (req: IncomingMessage, res: ServerResponse, code: number, content: unknown, options: {
     "apiVersion": string,
     "cors": boolean,
     "mime": string
-}): Promise<void> {
+}): Promise<iFormatedServerResponseForValidation> {
 
     return Promise.resolve().then((): Buffer | string => {
 
@@ -25,44 +30,39 @@ export default function send (req: IncomingMessage, res: iServerResponse, code: 
         else if ("string" === typeof content && "" === content) {
             return "";
         }
-        else {
+        else if (options.mime.includes("application/json")) {
 
             let result: string = "";
 
-                if (options.mime.includes("application/json")) {
+                if ("string" === typeof content) {
 
-                    if ("string" === typeof content) {
+                    try {
 
-                        try {
+                        JSON.parse(content); // is content json & parseable ?
 
-                            JSON.parse(content); // is content json & parseable ?
-
-                            result = content; // yes => valid JSON string, send it as it is
-
-                        }
-                        catch (e) {
-                            result = JSON.stringify(content); // no => not JSON string, send formatted one
-                        }
+                        result = content; // yes => valid JSON string, send it as it is
 
                     }
-                    else {
-
-                        const stringified: string = JSON.stringify(content);
-
-                        if (stringified !== content) {
-                            result = stringified;
-                        }
-
+                    catch {
+                        result = JSON.stringify(content); // no => not JSON string, send formatted one
                     }
 
                 }
                 else {
-                    result = content;
+
+                    const stringified: string = JSON.stringify(content);
+
+                    if (stringified !== content) {
+                        result = stringified;
+                    }
+
                 }
 
             return result;
 
         }
+
+        return String(content);
 
     }).then((formattedContent: Buffer | string): Promise<void> => {
 
@@ -72,48 +72,45 @@ export default function send (req: IncomingMessage, res: iServerResponse, code: 
 
             res.statusCode = code;
 
-            res.headers = Object.assign({
+            (res as iFormatedServerResponseForValidation).headers = {
                 "Content-Type": options.mime,
                 "Content-Length": 0 < formattedContent.length ? Buffer.byteLength(formattedContent) : 0,
                 "Status-Code-Url-Cat": "https://http.cat/" + code,
-                "API-Version": options.apiVersion
-            }, options.cors ? {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Credentials": true,
-                "Access-Control-Allow-Methods": req.headers["access-control-request-method"]
-                    ? req.headers["access-control-request-method"] as string
-                    : [
-                        "GET",
-                        "POST",
-                        "PUT",
-                        "DELETE",
-                        "PATCH",
-                        "OPTIONS"
-                    ].join(", "),
-                "Access-Control-Allow-Headers": req.headers["access-control-request-headers"]
-                    ? req.headers["access-control-request-headers"] as string
-                    : [
-                        "Origin",
-                        "Accept",
-                        "Accept-Version",
-                        "Content-Length",
-                        "Content-MD5",
-                        "Content-Type",
-                        "Date",
-                        "X-Api-Version",
-                        "X-File-Name",
-                        "X-CSRF-Token",
-                        "X-Requested-With"
-                    ].join(", ")
-            } : {});
+                "API-Version": options.apiVersion,
+                ...options.cors ? {
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Credentials": true,
+                    "Access-Control-Allow-Methods": req.headers["access-control-request-method"] ?? [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "DELETE",
+                            "PATCH",
+                            "OPTIONS"
+                        ].join(", "),
+                    "Access-Control-Allow-Headers": req.headers["access-control-request-headers"] ?? [
+                            "Origin",
+                            "Accept",
+                            "Accept-Version",
+                            "Content-Length",
+                            "Content-MD5",
+                            "Content-Type",
+                            "Date",
+                            "X-Api-Version",
+                            "X-File-Name",
+                            "X-CSRF-Token",
+                            "X-Requested-With"
+                        ].join(", ")
+                } : {}
+            };
 
             // send data
 
-            res.writeHead(res.statusCode, res.headers);
+            res.writeHead(res.statusCode, (res as iFormatedServerResponseForValidation).headers as OutgoingHttpHeaders);
 
             if ("string" === typeof formattedContent) {
 
-                res.body = content as string; // for Mediator response validator
+                (res as iFormatedServerResponseForValidation).body = content as string; // for Mediator response validator
 
                 res.end(formattedContent, "utf-8", (): void => {
                     resolve();
@@ -136,6 +133,9 @@ export default function send (req: IncomingMessage, res: iServerResponse, code: 
             }
 
         });
+
+    }).then((): iFormatedServerResponseForValidation => {
+        return res as iFormatedServerResponseForValidation;
     });
 
 }

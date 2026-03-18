@@ -1,3 +1,11 @@
+/*
+    eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-dynamic-delete, @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
+*/
+// => @typescript-eslint/no-unused-vars is disabled to allow inheritance with proper signature
+// => @typescript-eslint/no-dynamic-delete is disabled to allow data release
+// => @typescript-eslint/no-require-imports is disabled to allow dynamic Mediator import on plugin load
+// => @typescript-eslint/no-var-requires is disabled for the same reason as @typescript-eslint/no-require-imports
+
 // deps
 
     // natives
@@ -16,7 +24,7 @@
 // types & interfaces
 
     // natives
-    import type { IncomingMessage } from "node:http";
+    import type { IncomingMessage, ServerResponse } from "node:http";
 
     // externals
 
@@ -27,13 +35,15 @@
 
     // locals
 
-    import type { iServerResponse } from "./Server";
+    import type { Server as SocketIOServerV2 } from "../../@types/socket.io-v2";
 
     import type Mediator from "./Mediator";
     import type { tLogger, tEventMap, iEventsMinimal } from "./DescriptorUser";
 
+    import type SwaggerParser from "@apidevtools/swagger-parser";
+
     export interface iOrchestratorOptions {
-        "externalRessourcesDirectory": string; // used to write local data like sqlite database, json files, pictures, etc...
+        "externalResourcesDirectory": string; // used to write local data like sqlite database, json files, pictures, etc...
         "packageFile": string; // package file used by the plugin (absolute path)
         "descriptorFile": string; // descriptor file used by the plugin (absolute path)
         "mediatorFile": string; // mediator file used by the plugin (absolute path)
@@ -43,14 +53,14 @@
 
 // module
 
-export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> extends MediatorUser<T> {
+export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEventsMinimal> extends MediatorUser<T> {
 
     // attributes
 
         // protected
 
             protected _Server: Server | null;
-            protected _socketServer: WebSocketServer | SocketIOServer | null;
+            protected _socketServer: WebSocketServer | SocketIOServer | SocketIOServerV2 | null;
             protected _checkParameters: boolean;
             protected _checkResponse: boolean;
 
@@ -91,11 +101,25 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
             this._checkParameters = true; // to delay checkParameters if necessary
             this._checkResponse = true; // to delay checkResponse if necessary
 
-            // params
-            this._packageFile = options && "string" === typeof options.packageFile ? options.packageFile : "";
-            this._descriptorFile = options && "string" === typeof options.descriptorFile ? options.descriptorFile : "";
-            this._mediatorFile = options && "string" === typeof options.mediatorFile ? options.mediatorFile : "";
-            this._serverFile = options && "string" === typeof options.serverFile ? options.serverFile : "";
+            // mandatory props
+
+            if ("string" !== typeof options.packageFile) {
+                throw new ReferenceError("\"options.packageFile\" must be a string");
+            }
+            if ("string" !== typeof options.descriptorFile) {
+                throw new ReferenceError("\"options.descriptorFile\" must be a string");
+            }
+            if ("string" !== typeof options.mediatorFile) {
+                throw new ReferenceError("\"options.mediatorFile\" must be a string");
+            }
+            if ("string" !== typeof options.serverFile) {
+                throw new ReferenceError("\"options.serverFile\" must be a string");
+            }
+
+            this._packageFile = options.packageFile;
+            this._descriptorFile = options.descriptorFile;
+            this._mediatorFile = options.mediatorFile;
+            this._serverFile = options.serverFile;
 
             // extended
             this._extended = [];
@@ -269,7 +293,7 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
                     (this._Server as Server).disableCors();
 
                 }).catch((err: Error): void => {
-                    this._emitEventGenericForTSPurposeDONOTUSE("error", err);
+                    (this.emit as (event: "error", err: Error) => boolean)("error", err);
                 });
 
                 return this;
@@ -283,38 +307,33 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
                     (this._Server as Server).enableCors();
 
                 }).catch((err: Error): void => {
-                    this._emitEventGenericForTSPurposeDONOTUSE("error", err);
+                    (this.emit as (event: "error", err: Error) => boolean)("error", err);
                 });
 
                 return this;
 
             }
 
-            public appMiddleware (req: IncomingMessage, res: iServerResponse, next: () => void): void {
+            public appMiddleware (req: IncomingMessage, res: ServerResponse, next: () => void): void {
 
                 if (!this.enabled) {
-
                     next();
-
+                    return;
                 }
                 else if (!this.initialized) {
+                    next();
+                    return;
+                }
+
+                this.checkServer().then((): void => {
+
+                    (this._Server as Server).appMiddleware(req, res, next);
+
+                }).catch((): void => {
 
                     next();
 
-                }
-                else {
-
-                    this.checkServer().then((): void => {
-
-                        (this._Server as Server).appMiddleware(req, res, next);
-
-                    }).catch((): void => {
-
-                        next();
-
-                    });
-
-                }
+                });
 
             }
 
@@ -343,11 +362,13 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
 
         // load / destroy
 
-            public load (...data: any): Promise<void> {
+            public load (...data: unknown[]): Promise<void> {
 
-                return this.checkFiles().then((): Promise<any> => {
-                    return readJSONFile(join(__dirname, "..", "..", "..", "package.json"));
-                }).then(({ engines }: { "engines": { "node": string; }; }): Promise<any> => {
+                type tEnginesData = { "engines": { "node": string; }; };
+
+                return this.checkFiles().then((): Promise<tEnginesData> => {
+                    return readJSONFile(join(__dirname, "..", "..", "..", "package.json")) as Promise<tEnginesData>; // enforce current core engine version
+                }).then(({ engines }: tEnginesData): Promise<Record<string, unknown>> => {
 
                     // native
                     this.authors = [];
@@ -361,52 +382,61 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
                     this.scripts = {};
                     this.version = "";
 
-                    return readJSONFile(this._packageFile);
+                    return readJSONFile(this._packageFile) as Promise<Record<string, unknown>>;
 
                 // formate authors
-                }).then((data: Record<string, any>): Promise<Record<string, any>> => {
+                }).then((packageData: Record<string, unknown>): Record<string, unknown> => {
 
-                    if (data.authors) {
+                    if ("undefined" !== typeof packageData.authors) {
 
-                        this.authors = data.authors;
-                        delete data.authors;
+                        if (Array.isArray(packageData.authors)) {
 
-                        if (data.author) {
+                            this.authors = packageData.authors as string[];
+                            delete packageData.authors;
 
-                            if (!this.authors.includes(data.author)) {
-                                this.authors.push(data.author);
+                            if ("string" === typeof packageData.author) {
+
+                                const { author } = packageData;
+
+                                if (!this.authors.includes(author)) {
+                                    this.authors.push(author);
+                                }
+
+                                delete packageData.author;
+
                             }
-
-                            delete data.author;
 
                         }
 
-                    }
-                    else if (data.author) {
-
-                        this.authors = [ data.author as string ];
-                        delete data.author;
+                        delete packageData.authors;
 
                     }
+                    else if ("string" === typeof packageData.author) {
 
-                    return Promise.resolve(data);
+                        this.authors = [ packageData.author ];
+                        delete packageData.author;
+
+                    }
+
+                    return packageData;
 
                 // formate other data
-                }).then((data: Record<string, any>): void => {
+                }).then((packageData: Record<string, unknown>): void => {
 
-                    const self: Record<string, any> = this;
+                    Object.keys(packageData).forEach((key: string): void => {
 
-                    Object.keys(data).forEach((key: string): void => {
-
-                        if ("function" !== typeof self[key]) {
-
-                            if ("undefined" === typeof self[key]) {
-                                this._extended.push(key);
-                            }
-
-                            self[key] = data[key];
-
+                        if ("__proto__" === key || "constructor" === key || "prototype" === key) {
+                            return;
                         }
+                        if ("function" === typeof (this as Record<string, unknown>)[key]) {
+                            return;
+                        }
+
+                        if ("undefined" === typeof (this as Record<string, unknown>)[key]) {
+                            this._extended.push(key);
+                        }
+
+                        (this as Record<string, unknown>)[key] = packageData[key];
 
                     });
 
@@ -414,7 +444,7 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
 
             }
 
-            public destroy (...data: any): Promise<void> {
+            public destroy (...data: unknown[]): Promise<void> {
 
                 return Promise.resolve().then((): void => {
 
@@ -429,7 +459,7 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
                         // extended
 
                         this._extended.forEach((key: string): void => {
-                            delete (this as Record<string, any>)[key];
+                            delete (this as Record<string, unknown>)[key];
                         });
 
                         this._extended = [];
@@ -458,7 +488,7 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
 
         // init / release
 
-            public init (...data: any): Promise<void> {
+            public init (...data: unknown[]): Promise<void> {
 
                 // ensure conf validity
                 return Promise.resolve().then((): Promise<void> => {
@@ -472,51 +502,56 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
 
                 }).then((): Promise<void> => {
 
-                    return !this.enabled ? Promise.resolve() : Promise.resolve().then((): Promise<void> => {
+                    if (!this.enabled) {
+                        return Promise.resolve();
+                    }
 
-                        const SwaggerParser = require("@apidevtools/swagger-parser");
+                    const SwaggerParser = require("@apidevtools/swagger-parser") as SwaggerParser;
 
-                        // generate descriptor
-                        return SwaggerParser.bundle(this._descriptorFile).then((bundledDescriptor: OpenAPI.Document): Promise<OpenApiDocument> => {
+                    // generate descriptor
+                    return SwaggerParser.bundle(this._descriptorFile).then((bundledDescriptor: OpenAPI.Document): Promise<void> => {
 
-                            // force validate because of stupid malformatted references
-                            return SwaggerParser.validate(bundledDescriptor).then((validatedDescriptor: OpenApiDocument): void => {
+                        // force validate because of stupid malformatted references
+                        return SwaggerParser.validate(bundledDescriptor).then((validatedDescriptor: OpenAPI.Document): void => {
 
-                                this._Descriptor = validatedDescriptor;
+                            this._Descriptor = validatedDescriptor as OpenApiDocument;
+                            this._Descriptor.servers ??= [];
 
-                                if (!(this._Descriptor as OpenApiDocument).servers) {
-                                    (this._Descriptor as OpenApiDocument).servers = [];
-                                }
+                        });
 
-                            });
+                    }).then((): Promise<void> => {
 
-                        }).then((): Promise<void> => {
+                        return this.checkDescriptor().then((): void => {
 
-                            return this.checkDescriptor().catch((err: Error): Promise<void> => {
+                            const { info } = this._Descriptor as OpenApiDocument;
 
-                                this._Descriptor = null;
+                            // check title
+                            if (info.title !== this.name) {
 
-                                return Promise.reject(err);
+                                throw new Error(
+                                    "The descriptor's title (\"" + info.title + "\") "
+                                    + "is not equals to "
+                                    + "the package's name (\"" + this.name + "\")"
+                                );
 
-                            });
+                            }
 
-                        // compare title to package name
-                        }).then((): Promise<void> => {
+                            // compare version to package version
+                            if (info.version !== this.version) {
 
-                            return (this._Descriptor as OpenApiDocument).info.title !== this.name ? Promise.reject(new Error(
-                                "The descriptor's title (\"" + (this._Descriptor as OpenApiDocument).info.title + "\") "
-                                + "is not equals to "
-                                + "the package's name (\"" + this.name + "\")"
-                            )) : Promise.resolve();
+                                throw new Error(
+                                    "The descriptor's version (\"" + info.version + "\") "
+                                    + "is not equals to "
+                                    + "the package's version (\"" + this.version + "\")"
+                                );
 
-                        // compare version to package version
-                        }).then((): Promise<void> => {
+                            }
 
-                            return (this._Descriptor as OpenApiDocument).info.version !== this.version ? Promise.reject(new Error(
-                                "The descriptor's version (\"" + (this._Descriptor as OpenApiDocument).info.version + "\") "
-                                + "is not equals to "
-                                + "the package's version (\"" + this.version + "\")"
-                            )) : Promise.resolve();
+                        }).catch((err: Error): Promise<void> => {
+
+                            this._Descriptor = null;
+
+                            return Promise.reject(err);
 
                         });
 
@@ -528,13 +563,13 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
 
                             try {
 
-                                const val: any = require(this._mediatorFile);
+                                const val = require(this._mediatorFile) as typeof Mediator | { "default": typeof Mediator };
 
                                 if ("object" === typeof val && "function" === typeof val.default) {
-                                    resolve(val.default as typeof Mediator);
+                                    resolve(val.default);
                                 }
                                 else if ("function" === typeof val) {
-                                    resolve(val as typeof Mediator);
+                                    resolve(val);
                                 }
                                 else {
                                     reject(new Error("Mediator file loaded (\"" + this._mediatorFile + "\") does not contain a valid Mediator"));
@@ -542,7 +577,7 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
 
                             }
                             catch (e) {
-                                reject(e as Error);
+                                reject(e instanceof Error ? e : new Error(String(e)));
                             }
 
                         // init
@@ -550,7 +585,7 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
 
                             this._Mediator = new PluginMediator({
                                 "descriptor": this._Descriptor as OpenApiDocument,
-                                "externalRessourcesDirectory": this._externalRessourcesDirectory,
+                                "externalResourcesDirectory": this._externalResourcesDirectory,
                                 "logger": this._Logger as tLogger
                             });
 
@@ -561,7 +596,7 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
 
                                 // intercept errors to avoid non-catched ones
                                 (this._Mediator as Mediator).on("error", (err: Error): void => {
-                                    this._emitEventGenericForTSPurposeDONOTUSE("error", err);
+                                    (this.emit as (event: "error", err: Error) => boolean)("error", err);
                                 });
 
                             });
@@ -576,13 +611,13 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
 
                             try {
 
-                                const val: any = require(this._serverFile);
+                                const val = require(this._serverFile) as typeof Server | { "default": typeof Server };
 
                                 if ("object" === typeof val && "function" === typeof val.default) {
-                                    resolve(val.default as typeof Server);
+                                    resolve(val.default);
                                 }
                                 else if ("function" === typeof val) {
-                                    resolve(val as typeof Server);
+                                    resolve(val);
                                 }
                                 else {
                                     reject(new Error("Server file loaded (\"" + this._serverFile + "\") does not contain a valid Server"));
@@ -590,7 +625,7 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
 
                             }
                             catch (e) {
-                                reject(e as Error);
+                                reject(e instanceof Error ? e : new Error(String(e)));
                             }
 
                         // init
@@ -599,7 +634,7 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
                             this._Server = new PluginServer({
                                 "descriptor": this._Descriptor as OpenApiDocument,
                                 "mediator": this._Mediator as Mediator,
-                                "externalRessourcesDirectory": this._externalRessourcesDirectory,
+                                "externalResourcesDirectory": this._externalResourcesDirectory,
                                 "logger": this._Logger as tLogger
                             });
 
@@ -610,7 +645,7 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
 
                                 // intercept errors to avoid non-catched ones
                                 (this._Server as Server).on("error", (err: Error): void => {
-                                    this._emitEventGenericForTSPurposeDONOTUSE("error", err);
+                                    (this.emit as (event: "error", err: Error) => boolean)("error", err);
                                 });
 
                             });
@@ -648,7 +683,7 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
                     }).then((): void => {
 
                         this.initialized = true;
-                        this._emitEventGenericForTSPurposeDONOTUSE("initialized", ...data);
+                        (this.emit as (event: "initialized", ...args: unknown[]) => boolean)("initialized", ...data);
 
                     });
 
@@ -656,7 +691,7 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
 
             }
 
-            public release (...data: any): Promise<void> {
+            public release (...data: unknown[]): Promise<void> {
 
                 return Promise.resolve().then((): Promise<void> => {
 
@@ -679,7 +714,7 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
                     this._Descriptor = null;
 
                     this.initialized = false;
-                    this._emitEventGenericForTSPurposeDONOTUSE("released", ...data);
+                    (this.emit as (event: "released", ...args: unknown[]) => boolean)("released", ...data);
 
                 });
 
@@ -687,19 +722,19 @@ export default class Orchestrator<T extends tEventMap<T> = iEventsMinimal> exten
 
         // write
 
-            public install (...data: any): Promise<void> {
+            public install (...data: unknown[]): Promise<void> {
 
                 return Promise.resolve();
 
             }
 
-            public update (...data: any): Promise<void> {
+            public update (...data: unknown[]): Promise<void> {
 
                 return Promise.resolve();
 
             }
 
-            public uninstall (...data: any): Promise<void> {
+            public uninstall (...data: unknown[]): Promise<void> {
 
                 return Promise.resolve();
 
