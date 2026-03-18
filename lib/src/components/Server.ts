@@ -309,7 +309,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                 const contentType = req.headers["content-type"] ?? req.headers["Content-Type"] as string | undefined ?? "";
                 const { responses } = operation as { "responses": unknown }; // response is "any", had to specify the type to avoid lint errors
 
-                const contentLengthParsed = parseInt(req.headers["content-length"], 10);
+                const contentLengthParsed = Number.parseInt(req.headers["content-length"], 10);
 
                 this._log("info", ""
                     + "=> [" + req.validatedIp + "] " + req.url + " (" + req.method.toUpperCase() + ")"
@@ -510,7 +510,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                                     // error returned, not an integer
                                     if (null !== checkIntegerSync("request.params['" + key + "']", req.params[key])) {
 
-                                        const value: number = parseInt(req.params[key] as string, 10);
+                                        const value: number = Number.parseInt(req.params[key] as string, 10);
 
                                         if (!Number.isNaN(value)) {
                                             req.params[key] = value;
@@ -531,7 +531,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
 
                                     if ("number" !== typeof req.params[key]) {
 
-                                        const value: number = parseFloat(req.params[key] as string);
+                                        const value: number = Number.parseFloat(req.params[key] as string);
 
                                         if (!Number.isNaN(value)) {
                                             req.params[key] = value;

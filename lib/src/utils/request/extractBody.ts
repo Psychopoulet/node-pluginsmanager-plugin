@@ -41,7 +41,7 @@ export default function extractBody (req: iIncomingMessage): Promise<string> {
                 }
                 else {
 
-                    const contentLength: number = parseInt(req.headers["content-length"] as string, 10);
+                    const contentLength: number = Number.parseInt(req.headers["content-length"] as string, 10);
 
                     if (contentLength !== Buffer.byteLength(queryData)) {
 
