@@ -55,11 +55,11 @@
   },
   "devDependencies": {
     "@types/express": "5.0.6",
-    "@types/node": "25.5.0",
+    "@types/node": "25.6.0",
     "@types/socket.io": "3.0.2",
     "@types/uniqid": "5.3.4",
     "@types/ws": "8.18.1",
-    "check-version-modules": "2.2.2",
+    "check-version-modules": "2.3.0",
     "colors": "1.4.0",
     "eslint-plugin-personnallinter": "git+ssh://git@github.com/Psychopoulet/eslint-plugin-personnallinter",
     "express": "5.2.1",
@@ -71,8 +71,8 @@
     "socket.io": "4.8.3",
     "socket.io-client": "4.8.3",
     "typescript": "5.9.3",
-    "used-deps-analyzer": "0.2.0",
-    "ws": "8.19.0"
+    "used-deps-analyzer": "0.3.0",
+    "ws": "8.20.0"
   },
 
   "husky": {
