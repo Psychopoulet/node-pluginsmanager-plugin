@@ -1,3 +1,9 @@
+/*
+    eslint-disable @typescript-eslint/no-base-to-string
+*/
+// => @typescript-eslint/no-base-to-string is disabled to allow strinfication of unknown errors
+
+
 // deps
 
     // externals
@@ -140,7 +146,7 @@ export default class Mediator<T extends tEventMap<T> = iEventsMinimal> extends D
 
                         }
 
-                        return reject(new Error(String(err as unknown as string)));
+                        return reject(new Error(String(err))); // unknown err type
 
                     });
 
