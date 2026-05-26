@@ -59,7 +59,6 @@ describe("Orchestrator / load & destroy", () => {
                     "typings",
                     "exports",
                     "files",
-                    "husky",
                     "keywords",
                     "homepage",
                     "repository",
