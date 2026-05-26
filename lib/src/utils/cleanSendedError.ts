@@ -12,7 +12,7 @@ export default function cleanSendedError (data: unknown): unknown {
         }
         else {
 
-            Object.keys(data as Record<string, unknown>).forEach((key: string): void => {
+            Object.keys(data).forEach((key: string): void => {
                 (data as Record<string, unknown>)[key] = cleanSendedError((data as Record<string, unknown>)[key]); // in practice, it's unknown, had to specify the type for linter
             });
 

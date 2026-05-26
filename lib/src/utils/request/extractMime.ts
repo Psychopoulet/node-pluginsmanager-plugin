@@ -38,14 +38,14 @@ export default function extractMime (contentType: string, code: number, response
             if ("object" === typeof res[stringifiedCode]) {
 
                 if ("object" === typeof res[stringifiedCode].content) {
-                    descriptorContent = res[stringifiedCode].content as unknown as Record<string, unknown>;
+                    descriptorContent = res[stringifiedCode].content;
                 }
 
             }
             else if ("object" === typeof res.default) {
 
                 if ("object" === typeof res.default.content) {
-                    descriptorContent = res.default.content as unknown as Record<string, unknown>;
+                    descriptorContent = res.default.content;
                 }
 
             }
