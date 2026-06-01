@@ -563,7 +563,7 @@ export default class Server<T extends tEventMap<T> = iEventsMinimal> extends Med
                         if ("get" === req.method.toLowerCase()) {
                             return Promise.resolve("");
                         }
-                        else if (!checkNonEmptyStringSync("body", req.body)) {
+                        else if ("undefined" !== typeof req.body) {
                             return Promise.resolve(req.body);
                         }
                         else {
