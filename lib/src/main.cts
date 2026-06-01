@@ -50,6 +50,8 @@
     import NotFoundError from "./components/errors/NotFoundError";
     import LockedError from "./components/errors/LockedError";
 
+    import formateError, { type iFormattedError } from "./utils/server/formateError";
+
     export type {
         tLogType, tLogger, iEventsMinimal,
         iUrlAllowedParameters,
@@ -73,6 +75,9 @@
 
         UnauthorizedError,
         NotFoundError,
-        LockedError
+        LockedError,
+
+        formateError,
+        type iFormattedError
 
     };

@@ -82,7 +82,7 @@ describe("main entry exports", () => {
     it("should have exactly the expected exports (no missing or extra)", () => {
 
         const expected = new Set([
-            ...CHECKER_NAMES, ...COMPONENT_NAMES, ...ERROR_NAMES
+            ...CHECKER_NAMES, ...COMPONENT_NAMES, ...ERROR_NAMES, "formateError"
         ]);
 
         const actual = new Set(Object.keys(main).filter((k) => {
