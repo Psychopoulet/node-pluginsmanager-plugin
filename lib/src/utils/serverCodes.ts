@@ -10,6 +10,7 @@ export default {
     "JSON_PARSE": 400,
     "UNAUTHORIZED": 401,
     "NOT_FOUND": 404,
+    "CONFLICT": 409,
     "MISSING_HEADER": 411,
     "LOCKED": 423,
 
