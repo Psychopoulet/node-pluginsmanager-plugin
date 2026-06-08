@@ -1,6 +1,7 @@
 // deps
 
     // locals
+    import ConflictError from "../../components/errors/ConflictError";
     import LockedError from "../../components/errors/LockedError";
     import NotFoundError from "../../components/errors/NotFoundError";
     import UnauthorizedError from "../../components/errors/UnauthorizedError";
@@ -73,6 +74,14 @@ export default function formateError (err: Error): iFormattedError {
             "message": cleanSendedError(err) as string
         };
 
+    }
+    else if (err instanceof ConflictError) {
+
+        return {
+            "httpCode": SERVER_CODES.CONFLICT,
+            "code": "CONFLICT",
+            "message": cleanSendedError(err) as string
+        };
     }
     else if (err instanceof LockedError) {
 

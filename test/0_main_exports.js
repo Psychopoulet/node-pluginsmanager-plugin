@@ -39,9 +39,10 @@
     ];
 
     const ERROR_NAMES = [
-        "UnauthorizedError",
+        "ConflictError",
+        "LockedError",
         "NotFoundError",
-        "LockedError"
+        "UnauthorizedError"
     ];
 
 // tests

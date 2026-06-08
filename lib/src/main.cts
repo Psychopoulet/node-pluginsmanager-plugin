@@ -46,9 +46,10 @@
     import Orchestrator, { type iOrchestratorOptions } from "./components/Orchestrator";
     import Server, { type iClient } from "./components/Server";
 
-    import UnauthorizedError from "./components/errors/UnauthorizedError";
-    import NotFoundError from "./components/errors/NotFoundError";
+    import ConflictError from "./components/errors/ConflictError";
     import LockedError from "./components/errors/LockedError";
+    import NotFoundError from "./components/errors/NotFoundError";
+    import UnauthorizedError from "./components/errors/UnauthorizedError";
 
     import formateError, { type iFormattedError } from "./utils/server/formateError";
 
@@ -73,9 +74,10 @@
 
         Server,
 
-        UnauthorizedError,
-        NotFoundError,
+        ConflictError,
         LockedError,
+        NotFoundError,
+        UnauthorizedError,
 
         formateError,
         type iFormattedError
