@@ -30,6 +30,13 @@
         "checkNonEmptyStringSync"
     ];
 
+    const UTILS_NAMES = [
+        "isDirectory",
+        "isFile",
+        "isPlainObject",
+        "readJSONFile"
+    ];
+
     const COMPONENT_NAMES = [
         "DescriptorUser",
         "Mediator",
@@ -64,6 +71,13 @@ describe("main entry exports", () => {
 
     });
 
+    it("should export all utils functions", () => {
+
+        for (const name of UTILS_NAMES) {
+            strictEqual(typeof main[name], "function", "export \"" + name + "\" must be a function");
+        }
+    });
+
     it("should export all component classes", () => {
 
         for (const name of COMPONENT_NAMES) {
@@ -83,7 +97,7 @@ describe("main entry exports", () => {
     it("should have exactly the expected exports (no missing or extra)", () => {
 
         const expected = new Set([
-            ...CHECKER_NAMES, ...COMPONENT_NAMES, ...ERROR_NAMES, "formateError"
+            ...CHECKER_NAMES, ...UTILS_NAMES, ...COMPONENT_NAMES, ...ERROR_NAMES, "formateError"
         ]);
 
         const actual = new Set(Object.keys(main).filter((k) => {
