@@ -38,6 +38,18 @@
 
     };
 
+// utils
+
+    import isDirectory from "./utils/file/isDirectory";
+    import isFile from "./utils/file/isFile";
+    import isPlainObject from "./utils/isPlainObject";
+
+    export {
+        isDirectory,
+        isFile,
+        isPlainObject
+    };
+
 // components
 
     import DescriptorUser, { type iDescriptorUserOptions, type tLogType, type tLogger, type iEventsMinimal } from "./components/DescriptorUser";

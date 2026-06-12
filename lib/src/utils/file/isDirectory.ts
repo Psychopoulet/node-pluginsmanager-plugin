@@ -13,14 +13,14 @@
 
 // module
 
-export default function isFile (filePath: string): Promise<boolean> {
+export default function isDirectory (directoryPath: string): Promise<boolean> {
 
-    return checkNonEmptyString("filePath", filePath).then((): Promise<boolean> => {
+    return checkNonEmptyString("directoryPath", directoryPath).then((): Promise<boolean> => {
 
         return new Promise((resolve: (value: boolean) => void): void => {
 
-            lstat(filePath, (err: NodeJS.ErrnoException | null, stats: Stats): void => {
-                return resolve(Boolean(!err && stats.isFile()));
+            lstat(directoryPath, (err: NodeJS.ErrnoException | null, stats: Stats): void => {
+                return resolve(Boolean(!err && stats.isDirectory()));
             });
 
         });
