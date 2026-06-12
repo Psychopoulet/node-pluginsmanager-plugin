@@ -40,14 +40,16 @@
 
 // utils
 
-    import isDirectory from "./utils/file/isDirectory";
-    import isFile from "./utils/file/isFile";
     import isPlainObject from "./utils/isPlainObject";
+    import isFile from "./utils/file/isFile";
+    import readJSONFile from "./utils/file/readJSONFile";
+    import isDirectory from "./utils/file/isDirectory";
 
     export {
-        isDirectory,
+        isPlainObject,
         isFile,
-        isPlainObject
+        readJSONFile,
+        isDirectory
     };
 
 // components
