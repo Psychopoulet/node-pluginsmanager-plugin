@@ -57,7 +57,7 @@
     import DescriptorUser, { type iDescriptorUserOptions, type tLogType, type tLogger, type iEventsMinimal } from "./components/DescriptorUser";
     import Mediator, { type iUrlAllowedParameters } from "./components/Mediator";
     import MediatorUser, { type iMediatorUserOptions } from "./components/MediatorUser";
-    import Orchestrator, { type iOrchestratorOptions } from "./components/Orchestrator";
+    import Orchestrator, { type iOrchestratorOptions, type iEngines } from "./components/Orchestrator";
     import Server, { type iClient } from "./components/Server";
 
     import ConflictError from "./components/errors/ConflictError";
@@ -85,6 +85,7 @@
 
         Orchestrator,
         type iOrchestratorOptions,
+        type iEngines,
 
         Server,
 
