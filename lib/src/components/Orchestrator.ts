@@ -8,9 +8,6 @@
 
 // deps
 
-    // natives
-    import { join } from "node:path";
-
     // locals
 
     import { checkObject } from "../checkers/TypeError/checkObject";
@@ -51,6 +48,11 @@
         "logger"?: tLogger;
     }
 
+    export interface iEngines {
+        [key: string]: string;
+        "node": string;
+    }
+
 // module
 
 export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEventsMinimal> extends MediatorUser<T> {
@@ -79,13 +81,13 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
             // native
             public authors: string[];
             public description: string;
-            public dependencies: object | null;
-            public devDependencies: object | null;
-            public engines: object | null;
+            public dependencies: Record<string, string> | null;
+            public devDependencies: Record<string, string> | null;
+            public engines: iEngines | null;
             public license: string;
             public main: string;
             public name: string;
-            public scripts: object | null;
+            public scripts: Record<string, string> | null;
             public version: string;
 
     // constructor
@@ -364,28 +366,19 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
 
             public load (...data: unknown[]): Promise<void> {
 
-                type tEnginesData = { "engines": { "node": string; }; };
+                // native
+                this.authors = [];
+                this.description = "";
+                this.dependencies = {};
+                this.devDependencies = {};
+                this.engines = null;
+                this.license = "MIT";
+                this.main = "lib/main.js";
+                this.name = "";
+                this.scripts = {};
+                this.version = "";
 
-                return this.checkFiles().then((): Promise<tEnginesData> => {
-                    return readJSONFile(join(__dirname, "..", "..", "..", "package.json")) as Promise<tEnginesData>; // enforce current core engine version
-                }).then(({ engines }: tEnginesData): Promise<Record<string, unknown>> => {
-
-                    // native
-                    this.authors = [];
-                    this.description = "";
-                    this.dependencies = {};
-                    this.devDependencies = {};
-                    this.engines = engines;
-                    this.license = "MIT";
-                    this.main = "lib/main.js";
-                    this.name = "";
-                    this.scripts = {};
-                    this.version = "";
-
-                    return readJSONFile(this._packageFile) as Promise<Record<string, unknown>>;
-
-                // formate authors
-                }).then((packageData: Record<string, unknown>): Record<string, unknown> => {
+                return (readJSONFile(this._packageFile) as Promise<Record<string, unknown>>).then((packageData: Record<string, unknown>): Record<string, unknown> => {
 
                     if ("undefined" !== typeof packageData.authors) {
 
