@@ -35,7 +35,7 @@ describe("Orchestrator / load / authors & repository", () => {
             return orchestrator.load().then(() => {
 
                 strictEqual(typeof orchestrator.authors, "object", "Generated orchestrator authors is not an object");
-                ok(orchestrator.authors instanceof Array, "Generated orchestrator authors is not an Array");
+                ok(Array.isArray(orchestrator.authors), "Generated orchestrator authors is not an Array");
                 deepStrictEqual(orchestrator.authors, [ "Sébastien VIDAL" ], "Generated orchestrator authors is not as expected");
                 ok(!orchestrator._extended.includes("author"), "author should not be in extended properties");
                 ok(!orchestrator._extended.includes("authors"), "authors should not be in extended properties");
@@ -53,7 +53,7 @@ describe("Orchestrator / load / authors & repository", () => {
             return orchestrator.load().then(() => {
 
                 strictEqual(typeof orchestrator.authors, "object", "Generated orchestrator authors is not an object");
-                ok(orchestrator.authors instanceof Array, "Generated orchestrator authors is not an Array");
+                ok(Array.isArray(orchestrator.authors), "Generated orchestrator authors is not an Array");
                 deepStrictEqual(orchestrator.authors, [
                     "Sébastien VIDAL",
                     "Fabien VIDAL"

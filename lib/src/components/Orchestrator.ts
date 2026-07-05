@@ -415,6 +415,10 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
 
                     }
 
+                    return packageData;
+
+                }).then((packageData: Record<string, unknown>): Record<string, unknown> => {
+
                     // extract repository
                     if ("string" === typeof packageData.repository) {
 
