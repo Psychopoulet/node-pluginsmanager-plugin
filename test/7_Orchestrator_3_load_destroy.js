@@ -61,7 +61,6 @@ describe("Orchestrator / load & destroy", () => {
                     "files",
                     "keywords",
                     "homepage",
-                    "repository",
                     "bugs"
                 ], "Generated orchestrator extended is not as expected");
 
@@ -95,6 +94,9 @@ describe("Orchestrator / load & destroy", () => {
 
                 strictEqual(typeof orchestrator.name, "string", "Generated orchestrator name is not a string");
                 strictEqual(orchestrator.name, data.name, "Generated orchestrator name is not as expected");
+
+                strictEqual(typeof orchestrator.repository, "string", "Generated orchestrator repository is not a string");
+                strictEqual(orchestrator.repository, "git://github.com/Psychopoulet/node-pluginsmanager-plugin.git", "Generated orchestrator repository is not as expected");
 
                 strictEqual(typeof orchestrator.scripts, "object", "Generated orchestrator scripts is not an object");
                 deepStrictEqual(orchestrator.scripts, data.scripts, "Generated orchestrator scripts is not as expected");

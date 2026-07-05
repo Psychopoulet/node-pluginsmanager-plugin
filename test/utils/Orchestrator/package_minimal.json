@@ -1,0 +1,9 @@
+{
+  "name": "minimal",
+  "version": "1.0.0",
+  "description": "A simple test",
+  "main": "lib/main.js",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {}
+}

@@ -1,0 +1,13 @@
+{
+  "name": "repository_object",
+  "version": "1.0.0",
+  "description": "A simple test",
+  "main": "lib/main.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/user/repo.git"
+  },
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {}
+}

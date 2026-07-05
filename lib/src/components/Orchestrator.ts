@@ -87,6 +87,7 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
             public license: string;
             public main: string;
             public name: string;
+            public repository: string;
             public scripts: Record<string, string> | null;
             public version: string;
 
@@ -139,6 +140,7 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
             this.license = "";
             this.main = "";
             this.name = "";
+            this.repository = "";
             this.scripts = null;
             this.version = "";
 
@@ -375,11 +377,13 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
                 this.license = "MIT";
                 this.main = "lib/main.js";
                 this.name = "";
+                this.repository = "";
                 this.scripts = {};
                 this.version = "";
 
                 return (readJSONFile(this._packageFile) as Promise<Record<string, unknown>>).then((packageData: Record<string, unknown>): Record<string, unknown> => {
 
+                    // extract authors
                     if ("undefined" !== typeof packageData.authors) {
 
                         if (Array.isArray(packageData.authors)) {
@@ -408,6 +412,30 @@ export default class Orchestrator<T extends iEventsMinimal & tEventMap<T> = iEve
 
                         this.authors = [ packageData.author ];
                         delete packageData.author;
+
+                    }
+
+                    return packageData;
+
+                }).then((packageData: Record<string, unknown>): Record<string, unknown> => {
+
+                    // extract repository
+                    if ("string" === typeof packageData.repository) {
+
+                        this.repository = packageData.repository;
+                        delete packageData.repository;
+
+                    }
+                    else if ("object" === typeof packageData.repository && null !== packageData.repository) {
+
+                        const { url } = packageData.repository as { "url": string };
+
+                        if ("string" === typeof url) {
+
+                            this.repository = url;
+                            delete packageData.repository;
+
+                        }
 
                     }
 
