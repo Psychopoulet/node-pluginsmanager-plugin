@@ -1,0 +1,10 @@
+{
+  "name": "repository_string",
+  "version": "1.0.0",
+  "description": "A simple test",
+  "main": "lib/main.js",
+  "repository": "https://github.com/user/repo",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {}
+}

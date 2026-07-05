@@ -1,0 +1,11 @@
+{
+  "name": "authors_duplicate_author",
+  "version": "1.0.0",
+  "description": "A simple test",
+  "main": "lib/main.js",
+  "authors": [ "Sébastien VIDAL" ],
+  "author": "Sébastien VIDAL",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {}
+}

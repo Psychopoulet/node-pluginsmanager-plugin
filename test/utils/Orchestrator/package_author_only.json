@@ -1,0 +1,10 @@
+{
+  "name": "author_only",
+  "version": "1.0.0",
+  "description": "A simple test",
+  "main": "lib/main.js",
+  "author": "Sébastien VIDAL",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {}
+}
