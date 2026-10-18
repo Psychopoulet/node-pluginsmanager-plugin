@@ -5,9 +5,9 @@
     const { join } = require("node:path");
 
     // locals
-    const { ConflictError, LockedError, NotFoundError, UnauthorizedError } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
-    const formateError = require(join(__dirname, "..", "lib", "cjs", "utils", "server", "formateError.js"));
-    const SERVER_CODES = require(join(__dirname, "..", "lib", "cjs", "utils", "serverCodes.js"));
+    const { ConflictError, LockedError, NotFoundError, UnauthorizedError } = require(join(__dirname, "..", "lib", "src", "main.cts"));
+    const formateError = require(join(__dirname, "..", "lib", "src", "utils", "server", "formateError.ts"));
+    const SERVER_CODES = require(join(__dirname, "..", "lib", "src", "utils", "serverCodes.ts"));
 
 // tests
 

@@ -5,7 +5,7 @@
 
     // locals
     const LocalMediator = require(join(__dirname, "LocalMediator.js"));
-    const { UnauthorizedError, LockedError } = require(join(__dirname, "..", "..", "..", "lib", "cjs", "main.cjs"));
+    const { UnauthorizedError, LockedError } = require(join(__dirname, "..", "..", "..", "lib", "src", "main.cts"));
 
 // module
 

@@ -5,7 +5,7 @@
     const { join } = require("node:path");
 
     // locals
-    const extractPathMethodByOperationId = require(join(__dirname, "..", "lib", "cjs", "utils", "descriptor", "extractPathMethodByOperationId.js"));
+    const extractPathMethodByOperationId = require(join(__dirname, "..", "lib", "src", "utils", "descriptor", "extractPathMethodByOperationId.ts"));
 
 // tests
 

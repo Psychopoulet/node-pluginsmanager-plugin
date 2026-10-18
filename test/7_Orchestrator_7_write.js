@@ -4,7 +4,7 @@
     const { join } = require("node:path");
 
     // locals
-    const { Orchestrator } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
+    const { Orchestrator } = require(join(__dirname, "..", "lib", "src", "main.cts"));
 
 // private
 

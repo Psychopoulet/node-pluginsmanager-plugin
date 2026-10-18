@@ -5,7 +5,7 @@
     const { join } = require("node:path");
 
     // locals
-    const { checkNonEmptyObject, checkNonEmptyObjectSync } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
+    const { checkNonEmptyObject, checkNonEmptyObjectSync } = require(join(__dirname, "..", "lib", "src", "main.cts"));
 
 // tests
 

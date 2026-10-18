@@ -5,7 +5,7 @@
     const { join } = require("node:path");
 
     // locals
-    const extractIp = require(join(__dirname, "..", "lib", "cjs", "utils", "request", "extractIp.js"));
+    const extractIp = require(join(__dirname, "..", "lib", "src", "utils", "request", "extractIp.ts"));
 
 // tests
 

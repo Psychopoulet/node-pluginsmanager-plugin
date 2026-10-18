@@ -6,8 +6,8 @@
     const { homedir } = require("node:os");
 
     // locals
-    const isFile = require(join(__dirname, "..", "..", "..", "lib", "cjs", "utils", "file", "isFile.js"));
-    const { Orchestrator } = require(join(__dirname, "..", "..", "..", "lib", "cjs", "main.cjs"));
+    const isFile = require(join(__dirname, "..", "..", "..", "lib", "src", "utils", "file", "isFile.ts"));
+    const { Orchestrator } = require(join(__dirname, "..", "..", "..", "lib", "src", "main.cts"));
 
 // consts
 

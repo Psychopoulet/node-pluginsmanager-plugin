@@ -4,7 +4,10 @@
     const { join } = require("node:path");
 
     // locals
-    const { Mediator } = require(join(__dirname, "..", "..", "..", "lib", "cjs", "main.cjs"));
+    const MAIN = (0, process).env.PLUGIN_COMPILED_MAIN
+        ? join(__dirname, "..", "..", "..", "lib", "cjs", "main.cjs")
+        : join(__dirname, "..", "..", "..", "lib", "src", "main.cts");
+    const { Mediator } = require(MAIN);
 
 // module
 

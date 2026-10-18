@@ -5,7 +5,7 @@
     const { join } = require("node:path");
 
     // locals
-    const extractParams = require(join(__dirname, "..", "lib", "cjs", "utils", "descriptor", "extractParams.js"));
+    const extractParams = require(join(__dirname, "..", "lib", "src", "utils", "descriptor", "extractParams.ts"));
 
 // tests
 

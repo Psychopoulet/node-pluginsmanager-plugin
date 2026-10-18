@@ -5,7 +5,7 @@
     const { join } = require("node:path");
 
     // locals
-    const extractMime = require(join(__dirname, "..", "lib", "cjs", "utils", "request", "extractMime.js"));
+    const extractMime = require(join(__dirname, "..", "lib", "src", "utils", "request", "extractMime.ts"));
 
 // tests
 

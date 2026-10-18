@@ -5,7 +5,7 @@
     const { join } = require("node:path");
 
     // locals
-    const cleanSendedError = require(join(__dirname, "..", "lib", "cjs", "utils", "cleanSendedError.js"));
+    const cleanSendedError = require(join(__dirname, "..", "lib", "src", "utils", "cleanSendedError.ts"));
 
 // tests
 

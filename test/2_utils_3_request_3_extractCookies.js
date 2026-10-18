@@ -5,7 +5,7 @@
     const { join } = require("node:path");
 
     // locals
-    const extractCookies = require(join(__dirname, "..", "lib", "cjs", "utils", "request", "extractCookies.js"));
+    const extractCookies = require(join(__dirname, "..", "lib", "src", "utils", "request", "extractCookies.ts"));
 
 // tests
 

@@ -5,7 +5,7 @@
     const { join } = require("node:path");
 
     // locals
-    const removeFirstSlash = require(join(__dirname, "..", "lib", "cjs", "utils", "removeFirstSlash.js"));
+    const removeFirstSlash = require(join(__dirname, "..", "lib", "src", "utils", "removeFirstSlash.ts"));
 
 // tests
 

@@ -5,7 +5,7 @@
     const { join } = require("node:path");
 
     // locals
-    const isPlainObject = require(join(__dirname, "..", "lib", "cjs", "utils", "isPlainObject.js"));
+    const isPlainObject = require(join(__dirname, "..", "lib", "src", "utils", "isPlainObject.ts"));
 
 // tests
 

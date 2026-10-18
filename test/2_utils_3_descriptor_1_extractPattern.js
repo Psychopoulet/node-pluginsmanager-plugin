@@ -5,7 +5,7 @@
     const { join } = require("node:path");
 
     // locals
-    const extractPattern = require(join(__dirname, "..", "lib", "cjs", "utils", "descriptor", "extractPattern.js"));
+    const extractPattern = require(join(__dirname, "..", "lib", "src", "utils", "descriptor", "extractPattern.ts"));
 
 // tests
 
