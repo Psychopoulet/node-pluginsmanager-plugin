@@ -48,7 +48,7 @@
   },
 
   "dependencies": {
-    "@apidevtools/swagger-parser": "12.1.0",
+    "@apidevtools/swagger-parser": "13.1.0",
     "express-openapi-validate": "0.6.1",
     "uniqid": "5.4.0"
   },
