@@ -109,4 +109,14 @@ describe("utils / request / extractIp", () => {
 
     });
 
+    it("should ignore a connection socket without an address", () => {
+
+        strictEqual(extractIp.default({
+            "connection": {
+                "socket": {}
+            }
+        }), "");
+
+    });
+
 });

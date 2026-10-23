@@ -6,6 +6,7 @@
 
     // locals
     const main = require(join(__dirname, "..", "lib", "src", "main.cts"));
+    const openAPITypes = require(join(__dirname, "..", "lib", "src", "openAPITypes.ts"));
 
 // consts
 
@@ -113,6 +114,14 @@ describe("main entry exports", () => {
         for (const key of actual) {
             ok(expected.has(key), "unexpected export \"" + key + "\"");
         }
+
+    });
+
+    it("should load openapi types", () => {
+
+        const types = openAPITypes;
+
+        strictEqual(typeof types, "object", "openapi types must load");
 
     });
 

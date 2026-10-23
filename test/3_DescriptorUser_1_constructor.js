@@ -54,6 +54,16 @@ describe("DescriptorUser / constructor", () => {
 
     });
 
+    it("should return empty plugin info without a descriptor", () => {
+
+        const bootable = new LocalDescriptorUser();
+
+        strictEqual(bootable.getPluginName(), "", "plugin name must be empty without a descriptor");
+        strictEqual(bootable.getPluginVersion(), "", "plugin version must be empty without a descriptor");
+        strictEqual(bootable.getPluginDescription(), "", "plugin description must be empty without a descriptor");
+
+    });
+
     it("should test constructor with descriptor", () => {
 
         const bootable = new LocalDescriptorUser({
