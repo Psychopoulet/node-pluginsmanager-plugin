@@ -59,8 +59,8 @@
     "@types/uniqid": "5.3.4",
     "@types/ws": "8.18.2",
     "c8": "12.0.0",
-    "check-node-engine": "1.2.0",
-    "check-version-modules": "2.5.0",
+    "check-node-engine": "1.2.1",
+    "check-version-modules": "2.5.2",
     "colors": "1.4.0",
     "eslint-plugin-personnallinter": "git+ssh://git@github.com/Psychopoulet/eslint-plugin-personnallinter",
     "express": "5.3.0",
@@ -71,7 +71,7 @@
     "socket.io": "4.8.4",
     "socket.io-client": "4.8.4",
     "typescript": "6.0.3",
-    "used-deps-analyzer": "0.4.0",
+    "used-deps-analyzer": "0.4.1",
     "ws": "8.22.0"
   },
 
