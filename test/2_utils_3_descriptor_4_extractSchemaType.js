@@ -5,7 +5,7 @@
     const { join } = require("node:path");
 
     // locals
-    const extractSchemaType = require(join(__dirname, "..", "lib", "cjs", "utils", "descriptor", "extractSchemaType.js"));
+    const extractSchemaType = require(join(__dirname, "..", "lib", "src", "utils", "descriptor", "extractSchemaType.ts"));
 
 // tests
 

@@ -6,7 +6,7 @@
     // locals
 
         // plugin
-        const { Server } = require(join(__dirname, "..", "..", "..", "lib", "cjs", "main.cjs"));
+        const { Server } = require(join(__dirname, "..", "..", "..", "lib", "src", "main.cts"));
 
 // module
 

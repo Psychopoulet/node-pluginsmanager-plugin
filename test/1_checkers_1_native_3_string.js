@@ -5,7 +5,7 @@
     const { join } = require("node:path");
 
     // locals
-    const { checkString, checkStringSync } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
+    const { checkString, checkStringSync } = require(join(__dirname, "..", "lib", "src", "main.cts"));
 
 // tests
 

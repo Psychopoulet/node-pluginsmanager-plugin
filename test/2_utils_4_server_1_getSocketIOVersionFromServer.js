@@ -9,7 +9,7 @@
     const socketIO = require("socket.io");
 
     // locals
-    const getSocketIOVersionFromServer = require(join(__dirname, "..", "lib", "cjs", "utils", "server", "getSocketIOVersionFromServer.js"));
+    const getSocketIOVersionFromServer = require(join(__dirname, "..", "lib", "src", "utils", "server", "getSocketIOVersionFromServer.ts"));
 
 // private
 

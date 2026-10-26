@@ -8,7 +8,7 @@
     // locals
 
         // plugin
-        const { DescriptorUser } = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
+        const { DescriptorUser } = require(join(__dirname, "..", "lib", "src", "main.cts"));
         const LocalDescriptorUser = require(join(__dirname, "utils", "DescriptorUser", "LocalDescriptorUser.js"));
 
 // tests
@@ -51,6 +51,16 @@ describe("DescriptorUser / constructor", () => {
             bootable._externalResourcesDirectory, "",
             "Generated bootable _externalResourcesDirectory is not as expected"
         );
+
+    });
+
+    it("should return empty plugin info without a descriptor", () => {
+
+        const bootable = new LocalDescriptorUser();
+
+        strictEqual(bootable.getPluginName(), "", "plugin name must be empty without a descriptor");
+        strictEqual(bootable.getPluginVersion(), "", "plugin version must be empty without a descriptor");
+        strictEqual(bootable.getPluginDescription(), "", "plugin description must be empty without a descriptor");
 
     });
 

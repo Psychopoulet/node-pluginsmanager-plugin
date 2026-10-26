@@ -5,7 +5,7 @@
     const { join } = require("node:path");
 
     // locals
-    const readJSONFile = require(join(__dirname, "..", "lib", "cjs", "utils", "file", "readJSONFile.js"));
+    const readJSONFile = require(join(__dirname, "..", "lib", "src", "utils", "file", "readJSONFile.ts"));
 
 // tests
 

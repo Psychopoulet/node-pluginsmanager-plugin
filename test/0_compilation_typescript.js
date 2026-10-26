@@ -54,7 +54,9 @@ describe("compilation typescript", () => {
                 compilationSource,
                 "--target es6",
                 "--module commonjs",
-                "--esModuleInterop"
+                "--esModuleInterop",
+                "--ignoreConfig",
+                "--types node"
             ];
 
             exec(args.join(" "), {
@@ -77,6 +79,10 @@ describe("compilation typescript", () => {
 
         exec(args.join(" "), {
             "cwd": join(__dirname, ".."),
+            "env": {
+                ...(0, process).env,
+                "PLUGIN_COMPILED_MAIN": "1"
+            },
             "windowsHide": true
         }, (err) => {
             return err ? done(err) : done();

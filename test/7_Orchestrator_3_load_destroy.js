@@ -7,7 +7,7 @@
     // locals
 
         // plugin
-        const readJSONFile = require(join(__dirname, "..", "lib", "cjs", "utils", "file", "readJSONFile.js"));
+        const readJSONFile = require(join(__dirname, "..", "lib", "src", "utils", "file", "readJSONFile.ts"));
 
         // utils
         const LocalOrchestrator = require(join(__dirname, "utils", "Orchestrator", "LocalOrchestrator.js"));

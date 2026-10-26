@@ -4,7 +4,7 @@
     const { join } = require("node:path");
 
     // locals
-    const { DescriptorUser } = require(join(__dirname, "..", "..", "..", "lib", "cjs", "main.cjs"));
+    const { DescriptorUser } = require(join(__dirname, "..", "..", "..", "lib", "src", "main.cts"));
 
 // module
 

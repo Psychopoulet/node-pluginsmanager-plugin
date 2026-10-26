@@ -6,7 +6,7 @@
     const { join } = require("node:path");
 
     // locals
-    const extractBody = require(join(__dirname, "..", "lib", "cjs", "utils", "request", "extractBody.js"));
+    const extractBody = require(join(__dirname, "..", "lib", "src", "utils", "request", "extractBody.ts"));
 
 // tests
 
